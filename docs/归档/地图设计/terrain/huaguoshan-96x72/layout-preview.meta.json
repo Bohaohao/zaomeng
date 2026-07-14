@@ -1,0 +1,19 @@
+{
+    "status":  "rendered",
+    "renderer":  "chrome-headless",
+    "htmlPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\归档\\地图设计\\terrain\\huaguoshan-96x72\\layout-preview.html",
+    "imagePath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\归档\\地图设计\\terrain\\huaguoshan-96x72\\layout-preview.png",
+    "metaPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\归档\\地图设计\\terrain\\huaguoshan-96x72\\layout-preview.meta.json",
+    "width":  1200,
+    "height":  900,
+    "mapWidth":  96,
+    "mapHeight":  72,
+    "canvasWidth":  978.67,
+    "canvasHeight":  734,
+    "scale":  10.194444444444445,
+    "error":  null,
+    "notes":  [
+                  "Preview is generated from structured layout JSON.",
+                  "Y3 left-bottom coordinates are converted to HTML left-top coordinates."
+              ]
+}

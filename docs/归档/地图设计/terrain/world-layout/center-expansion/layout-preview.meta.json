@@ -1,0 +1,19 @@
+{
+    "status":  "rendered",
+    "renderer":  "chrome-headless",
+    "htmlPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\terrain\\world-layout\\center-expansion\\layout-preview.html",
+    "imagePath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\terrain\\world-layout\\center-expansion\\layout-preview.png",
+    "metaPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\terrain\\world-layout\\center-expansion\\layout-preview.meta.json",
+    "width":  1440,
+    "height":  1080,
+    "mapWidth":  100,
+    "mapHeight":  80,
+    "canvasWidth":  1142.5,
+    "canvasHeight":  914,
+    "scale":  11.425,
+    "error":  null,
+    "notes":  [
+                  "Preview is generated from structured layout JSON.",
+                  "Y3 left-bottom coordinates are converted to HTML left-top coordinates."
+              ]
+}

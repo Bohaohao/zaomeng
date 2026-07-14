@@ -1,0 +1,569 @@
+{
+  "version": 1,
+  "mode": "dry-run",
+  "referenceSources": [
+    "default: 当前策划案与统一世界观",
+    "docs/07-花果山篇副本与掉落设计.md",
+    "docs/08-花果山篇野外怪物与BOSS设计.md",
+    "docs/10-项目统一世界观总纲.md",
+    "docs/11-世界篇章与地图扩展蓝图.md",
+    "docs/13-首发地图推理基线与验证TODO.md",
+    "docs/归档/地图设计/14-花果山96x72白盒拆分.md",
+    "docs/归档/职业设计/10-巡猎法门猎印资源循环与完整技能组.md",
+    "docs/归档/职业设计/11-巡猎P1修订与验收.md"
+  ],
+  "worldview": {
+    "theme": "花果山96x72首发白盒：猴族山门、水帘溪谷、桃林洞窟双路、七星高崖、东海边界",
+    "hardRules": [
+      "花果山是东胜神州中的首发可玩场景，96x72只表示玩法空间，不表示地理占比。",
+      "每篇章固定设置主城、副本枢纽、团本入口三个传送点，并与复活闭环相连。",
+      "公共BOSS战斗口袋不得阻断主路，蛟魔王和鲨魔王只使用一阶段。",
+      "鹏魔王不是花果山最终BOSS，只作为七星区域高阶守门精英。",
+      "花果山只保留龙宫隐藏入口，龙宫四份独立挑战房位于四海层。",
+      "花果山只保留火焰山团本集结口，牛魔正式战场位于梦墟中的牛魔旧战场。",
+      "鲨魔王首通后开启熔脉裂口路线，团本入口传送点随后解锁。",
+      "公共BOSS击杀按有效伤害归属，同队成员伤害占比严格大于10%时同步计入击杀。",
+      "三处公共BOSS行为必须使用具名交互点和3 cell圆形交互区，四名玩家可并发且不能占用主路。",
+      "巡猎教学卡使用actor私有逻辑会话，session_epoch一律取attempt_sequence；与狮驼王或鹏魔王战斗圈重叠的高阶卡必须启用private_microphase，隔离公共BOSS仇恨、伤害和奖励。",
+      "Lv15真实定猎回收使用公开的承命回照石和无奖励回照靶，不创建私有会话、不写trace_resolution或公共BOSS贡献。",
+      "所有C04私有教学卡使用会话训练覆盖层；成功、失败或离场都恢复入场普通状态，并从声明的安全点返回且获得2秒非战斗保护。",
+      "所有C04私有教学入口先结算同tick公共事件并检查公共战斗锁；公共仇恨、Boss参与、待结算公共事件或5秒公共战斗冷却未清时不得创建会话。"
+    ]
+  },
+  "map": {
+    "width": 96,
+    "height": 72,
+    "reason": "花果山局部白盒采用96x72 terrain cell，对应总图人界中的世界坐标x[-48,48)、z[-36,36)。横向表达从猴族主城到东海边界的推进，纵向用于公共BOSS侧袋、精英庭、隐藏入口与团本集结口；龙宫四房和牛魔正式战场不占用本画布。"
+  },
+  "regions": [
+    {
+      "id": "safe_hub",
+      "name": "花果山主城",
+      "type": "safe",
+      "worldviewTag": "猴族山门与篇章归返",
+      "bounds": {"x": 3, "z": 26, "width": 12, "height": 20},
+      "purpose": "出生复活、主城功能、传送点一和第一段任务集散",
+      "visualIdentity": "山门、石台、猴族旗帜、水帘远景"
+    },
+    {
+      "id": "mountain_road",
+      "name": "花果山山道",
+      "type": "public",
+      "worldviewTag": "山林新手区",
+      "bounds": {"x": 15, "z": 28, "width": 12, "height": 16},
+      "purpose": "基础战斗教学、猴群头目和大猩猩大精英",
+      "visualIdentity": "宽土路、草坡、散石、低矮林线"
+    },
+    {
+      "id": "waterfall_valley",
+      "name": "水帘溪谷",
+      "type": "public",
+      "worldviewTag": "临水暗河与龙宫线索",
+      "bounds": {"x": 27, "z": 22, "width": 16, "height": 28},
+      "purpose": "水系怪物预热、龙宫入口线索、猕猴王支路入口",
+      "visualIdentity": "瀑布高差、浅水溪、湿岩、水雾"
+    },
+    {
+      "id": "mihou_pocket",
+      "name": "猕猴王瀑布台",
+      "type": "boss",
+      "worldviewTag": "猴族首领高台",
+      "bounds": {"x": 28, "z": 51, "width": 24, "height": 18},
+      "purpose": "第一处公共区域BOSS侧袋，主路保持常通",
+      "visualIdentity": "环形浅水、瀑布石台、猴族图腾"
+    },
+    {
+      "id": "dungeon_hub",
+      "name": "花果山副本枢纽",
+      "type": "safe",
+      "worldviewTag": "篇章中段驿站",
+      "bounds": {"x": 43, "z": 28, "width": 10, "height": 16},
+      "purpose": "传送点二、上下分路转折、副本方向识别和短暂恢复",
+      "visualIdentity": "石亭、传送石、路标、小型补给台"
+    },
+    {
+      "id": "peach_surface",
+      "name": "桃林地表线",
+      "type": "public",
+      "worldviewTag": "明亮桃林支路",
+      "bounds": {"x": 53, "z": 40, "width": 12, "height": 12},
+      "purpose": "桃花妖、迷踪猴和禺狨王大精英路线",
+      "visualIdentity": "桃树、花瓣、草地、浅色石径"
+    },
+    {
+      "id": "bat_cave",
+      "name": "蝙蝠窟洞线",
+      "type": "public",
+      "worldviewTag": "阴暗洞窟支路",
+      "bounds": {"x": 53, "z": 22, "width": 12, "height": 12},
+      "purpose": "洞窟蝙蝠、洞窟小妖和蝙蝠石像机关战",
+      "visualIdentity": "暗岩、石像、蝙蝠巢、窄洞出口"
+    },
+    {
+      "id": "sevenstar_garuda",
+      "name": "七星洞与迦楼罗崖",
+      "type": "public",
+      "worldviewTag": "山海边界守门区",
+      "bounds": {"x": 65, "z": 26, "width": 13, "height": 20},
+      "purpose": "双路汇合、牛魔斥候、狮驼王战力检查和东海通行门",
+      "visualIdentity": "七星石阵、崖台、风口、开启后的石门"
+    },
+    {
+      "id": "sevenstar_elite_court",
+      "name": "迦楼罗高崖精英庭",
+      "type": "public",
+      "worldviewTag": "高空风口与守门精英",
+      "bounds": {"x": 52, "z": 53, "width": 17, "height": 16},
+      "purpose": "鹏魔王独立高阶精英侧袋，并承接七星区首通奖励",
+      "visualIdentity": "断崖风口、羽饰石柱、环形风痕"
+    },
+    {
+      "id": "east_sea_foreland",
+      "name": "东海前缘",
+      "type": "public",
+      "worldviewTag": "东海外府边界",
+      "bounds": {"x": 78, "z": 24, "width": 15, "height": 24},
+      "purpose": "水域怪物公共区、蛟魔与鲨魔分路、后续东海篇接口",
+      "visualIdentity": "浅滩、礁石、破损海墙、潮汐路标"
+    },
+    {
+      "id": "jiao_pocket",
+      "name": "蛟魔王潮汐侧湾",
+      "type": "boss",
+      "worldviewTag": "潮汐水族强敌",
+      "bounds": {"x": 70, "z": 49, "width": 23, "height": 21},
+      "purpose": "东海前缘北侧公共BOSS一阶段战斗口袋",
+      "visualIdentity": "半封闭潮池、水柱石、珊瑚、深水边界"
+    },
+    {
+      "id": "shark_vortex",
+      "name": "鲨之涡流战斗湾",
+      "type": "boss",
+      "worldviewTag": "东海浅岸压轴",
+      "bounds": {"x": 70, "z": 2, "width": 23, "height": 21},
+      "purpose": "花果山公共野外压轴和熔脉裂口解锁点",
+      "visualIdentity": "暗色浅滩、涡流纹、碎礁、鲨齿残骸"
+    },
+    {
+      "id": "raid_staging",
+      "name": "熔脉裂口团本前哨",
+      "type": "safe",
+      "worldviewTag": "通往牛魔旧战场的劫痕",
+      "bounds": {"x": 52, "z": 3, "width": 16, "height": 16},
+      "purpose": "传送点三、四人集结、团本确认和失败回退",
+      "visualIdentity": "焦黑岩、熔纹封印门、补给旗、传送阵"
+    },
+    {
+      "id": "dragon_entry_cove",
+      "name": "龙宫暗潮入口",
+      "type": "hidden",
+      "worldviewTag": "水帘暗河通往四海",
+      "bounds": {"x": 36, "z": 10, "width": 12, "height": 10},
+      "purpose": "发现线索后触发龙宫四房分配，不在本地展开副本房间",
+      "visualIdentity": "暗瀑、潮汐石门、龙纹水痕、低亮水光"
+    },
+    {
+      "id": "east_sea_gate",
+      "name": "东海海眼接口",
+      "type": "transition",
+      "worldviewTag": "人界与四海层边界",
+      "bounds": {"x": 93, "z": 31, "width": 3, "height": 10},
+      "purpose": "后续进入四海层和东海篇的固定拓扑接口",
+      "visualIdentity": "海眼、滨海石门、不可涉水深界"
+    }
+  ],
+  "routes": [
+    {
+      "id": "main_route_city_to_hub",
+      "name": "主城至副本枢纽主路",
+      "type": "main-route",
+      "width": 8,
+      "points": [{"x": 9, "z": 36}, {"x": 20, "z": 36}, {"x": 35, "z": 36}, {"x": 48, "z": 36}],
+      "purpose": "出生后依次经过山道和水帘溪谷到达传送点二，避开猕猴王战斗圈。"
+    },
+    {
+      "id": "route_peach_surface",
+      "name": "桃林地表分路",
+      "type": "side-route",
+      "width": 6,
+      "points": [{"x": 48, "z": 39}, {"x": 58, "z": 46}, {"x": 64, "z": 46}, {"x": 71, "z": 42}],
+      "purpose": "明亮地表路线从狮驼王战圈南侧汇入七星绕行主路。"
+    },
+    {
+      "id": "route_bat_cave",
+      "name": "蝙蝠窟洞线",
+      "type": "side-route",
+      "width": 6,
+      "points": [{"x": 48, "z": 33}, {"x": 58, "z": 28}, {"x": 62, "z": 28}, {"x": 62, "z": 39}, {"x": 71, "z": 42}],
+      "purpose": "阴暗洞窟路线沿狮驼王战圈西侧、南侧绕入七星主路，不穿首领活动圈。"
+    },
+    {
+      "id": "route_sevenstar_to_eastsea",
+      "name": "七星崖至东海前缘",
+      "type": "main-route",
+      "width": 8,
+      "points": [{"x": 71, "z": 42}, {"x": 78, "z": 42}, {"x": 84, "z": 36}, {"x": 94.5, "z": 36}],
+      "purpose": "通过狮驼王战力检查的南侧八格绕行带进入东海前缘；主路不穿狮驼、蛟魔或鲨魔战斗圈。"
+    },
+    {
+      "id": "route_mihou_pocket",
+      "name": "猕猴王瀑布台支路",
+      "type": "boss-route",
+      "width": 10,
+      "points": [{"x": 35, "z": 44}, {"x": 38, "z": 52}, {"x": 40, "z": 60}],
+      "purpose": "从水帘溪谷进入第一处公共BOSS侧袋，入口留出退场宽度。"
+    },
+    {
+      "id": "route_elite_court",
+      "name": "迦楼罗高崖支路",
+      "type": "side-route",
+      "width": 6,
+      "points": [{"x": 71, "z": 43}, {"x": 67, "z": 50}, {"x": 61, "z": 60}],
+      "purpose": "把鹏魔王从主路抽离；挑战后可由支路返回七星通行门，东海通行始终走南侧绕行主路且不受其击杀状态影响。"
+    },
+    {
+      "id": "route_jiao_pocket",
+      "name": "蛟魔王潮汐支路",
+      "type": "boss-route",
+      "width": 10,
+      "points": [{"x": 85, "z": 43}, {"x": 84, "z": 50}, {"x": 82, "z": 59}],
+      "purpose": "东海前缘北侧BOSS口袋，战斗不会封锁海眼接口。"
+    },
+    {
+      "id": "route_shark_pocket",
+      "name": "鲨之涡流支路",
+      "type": "boss-route",
+      "width": 10,
+      "points": [{"x": 85, "z": 29}, {"x": 84, "z": 23}, {"x": 82, "z": 13}],
+      "purpose": "东海前缘南侧压轴BOSS口袋，首通后开启熔脉裂口。"
+    },
+    {
+      "id": "route_dragon_entry",
+      "name": "龙宫暗潮隐藏路",
+      "type": "hidden-route",
+      "width": 6,
+      "points": [{"x": 36, "z": 26}, {"x": 38, "z": 21}, {"x": 42, "z": 15}],
+      "purpose": "从水帘溪谷暗瀑转入隐藏入口，入口负责把单人分配到四海层空闲挑战房。"
+    },
+    {
+      "id": "route_fire_rift",
+      "name": "鲨魔战后熔脉裂口",
+      "type": "gated-route",
+      "width": 6,
+      "points": [{"x": 82, "z": 13}, {"x": 69, "z": 13}, {"x": 65, "z": 11}, {"x": 60, "z": 11}],
+      "purpose": "鲨魔王首通后从南侧战斗湾向西回折至团本前哨，不制造花果山与真实火焰山地理相邻。"
+    },
+    {
+      "id": "route_east_sea_exit",
+      "name": "东海资料片接口",
+      "type": "transition-route",
+      "width": 8,
+      "points": [{"x": 88, "z": 36}, {"x": 94.5, "z": 36}, {"x": 96, "z": 36}],
+      "purpose": "保持花果山东岸与四海层拓扑相邻，当前版本可封印。"
+    }
+  ],
+  "spawns": [
+    {"id": "spawn_mountain_monkey_a", "name": "山猴群A", "monster": "山猴", "position": {"x": 18, "z": 32}, "regionId": "mountain_road", "density": "normal"},
+    {"id": "spawn_stone_beast_a", "name": "石皮山怪", "monster": "石皮山怪", "position": {"x": 18, "z": 41}, "regionId": "mountain_road", "density": "sparse"},
+    {"id": "spawn_vine_imp_a", "name": "藤叶小妖", "monster": "藤叶小妖", "position": {"x": 25, "z": 32}, "regionId": "mountain_road", "density": "normal"},
+    {"id": "spawn_monkey_leader", "name": "猴群头目", "monster": "猴群头目", "position": {"x": 25, "z": 40}, "regionId": "mountain_road", "density": "sparse"},
+    {"id": "spawn_water_imp", "name": "水帘小妖", "monster": "水帘小妖", "position": {"x": 30, "z": 30}, "regionId": "waterfall_valley", "density": "normal"},
+    {"id": "spawn_spring_spirit", "name": "泉灵", "monster": "泉灵", "position": {"x": 36, "z": 31}, "regionId": "waterfall_valley", "density": "sparse"},
+    {"id": "spawn_fish_sentry", "name": "鱼妖哨兵", "monster": "鱼妖哨兵", "position": {"x": 41, "z": 25}, "regionId": "waterfall_valley", "density": "normal"},
+    {"id": "spawn_water_guard", "name": "水帘妖卫", "monster": "水帘妖卫", "position": {"x": 42, "z": 49}, "regionId": "waterfall_valley", "density": "sparse"},
+    {"id": "spawn_peach_demon", "name": "桃花妖", "monster": "桃花妖", "position": {"x": 56, "z": 47}, "regionId": "peach_surface", "density": "normal"},
+    {"id": "spawn_agile_monkey", "name": "迷踪猴", "monster": "迷踪猴", "position": {"x": 62, "z": 48}, "regionId": "peach_surface", "density": "normal"},
+    {"id": "spawn_cave_bat", "name": "洞窟蝙蝠", "monster": "洞窟蝙蝠", "position": {"x": 56, "z": 27}, "regionId": "bat_cave", "density": "dense"},
+    {"id": "spawn_cave_imp", "name": "洞窟小妖", "monster": "洞窟小妖", "position": {"x": 62, "z": 30}, "regionId": "bat_cave", "density": "normal"},
+    {"id": "spawn_sevenstar_demon", "name": "七星洞妖", "monster": "七星洞妖", "position": {"x": 77, "z": 31}, "regionId": "sevenstar_garuda", "density": "normal"},
+    {"id": "spawn_mandrill_shaman", "name": "山魈术士", "monster": "山魈术士", "position": {"x": 75, "z": 41}, "regionId": "sevenstar_garuda", "density": "normal"},
+    {"id": "spawn_winged_demon", "name": "飞翼妖", "monster": "飞翼妖", "position": {"x": 74, "z": 30}, "regionId": "sevenstar_garuda", "density": "normal"},
+    {"id": "spawn_bull_scout", "name": "牛魔斥候", "monster": "牛魔斥候", "position": {"x": 75, "z": 31}, "regionId": "sevenstar_garuda", "density": "sparse"},
+    {"id": "spawn_fish_patrol", "name": "鱼妖巡兵", "monster": "鱼妖巡兵", "position": {"x": 81, "z": 32}, "regionId": "east_sea_foreland", "density": "normal"},
+    {"id": "spawn_turtle_guard", "name": "龟甲守卫", "monster": "龟甲守卫", "position": {"x": 91, "z": 42}, "regionId": "east_sea_foreland", "density": "normal"},
+    {"id": "spawn_water_shaman", "name": "水灵术士", "monster": "水灵术士", "position": {"x": 82, "z": 26}, "regionId": "east_sea_foreland", "density": "normal"},
+    {"id": "spawn_vortex_soldier", "name": "漩涡妖兵", "monster": "漩涡妖兵", "position": {"x": 92, "z": 45}, "regionId": "east_sea_foreland", "density": "sparse"}
+  ],
+  "bossZones": [
+    {"id": "arena_gorilla", "name": "大猩猩教学战圈", "boss": "大猩猩", "regionId": "mountain_road", "bounds": {"x": 16, "z": 33, "width": 10, "height": 10}, "notes": "大精英，不锁路，低血量狂怒。"},
+    {"id": "arena_mihouwang", "name": "猕猴王瀑布台战斗圈", "boss": "猕猴王", "regionId": "mihou_pocket", "bounds": {"x": 30, "z": 53, "width": 20, "height": 14}, "notes": "首个公共区域BOSS，轻狂暴。"},
+    {"id": "arena_yurongwang", "name": "禺狨王迷雾圈", "boss": "禺狨王", "regionId": "peach_surface", "bounds": {"x": 54, "z": 41, "width": 10, "height": 10}, "notes": "桃林大精英，保留幻影与迷雾。"},
+    {"id": "arena_bat_statue", "name": "蝙蝠石像机关圈", "boss": "蝙蝠石像", "regionId": "bat_cave", "bounds": {"x": 54, "z": 23, "width": 10, "height": 10}, "notes": "洞窟机关大精英，召唤蝙蝠。"},
+    {"id": "arena_lion", "name": "狮驼王通行门战圈", "boss": "狮驼王", "regionId": "sevenstar_garuda", "bounds": {"x": 66, "z": 26, "width": 11, "height": 11}, "notes": "高阶大精英，承担战力检查；南侧保留八格绕行主路，不封锁已解锁东海通行。"},
+    {"id": "arena_peng", "name": "鹏魔王高崖战圈", "boss": "鹏魔王", "regionId": "sevenstar_elite_court", "bounds": {"x": 54, "z": 55, "width": 13, "height": 12}, "notes": "独立侧袋高阶大精英，不承担篇章终局。"},
+    {"id": "arena_jiaomowang_phase1", "name": "蛟魔王潮汐战圈", "boss": "蛟魔王一阶段", "regionId": "jiao_pocket", "bounds": {"x": 72, "z": 51, "width": 19, "height": 17}, "notes": "公共区域BOSS，只做一阶段；二阶段留给东海篇。"},
+    {"id": "arena_shamowang_phase1", "name": "鲨魔王涡流战圈", "boss": "鲨魔王一阶段", "regionId": "shark_vortex", "bounds": {"x": 72, "z": 4, "width": 19, "height": 17}, "notes": "公共野外压轴，只做一阶段；首通解锁熔脉裂口。"}
+  ],
+  "publicAreas": [
+    {"id": "public_mountain_road", "name": "花果山山道公共区", "bounds": {"x": 15, "z": 28, "width": 12, "height": 16}, "purpose": "新手怪群与大猩猩教学。"},
+    {"id": "public_waterfall_valley", "name": "水帘溪谷公共区", "bounds": {"x": 27, "z": 22, "width": 16, "height": 28}, "purpose": "水系怪物、龙宫线索和猕猴王分路。"},
+    {"id": "public_mihou_pocket", "name": "猕猴王公共战斗区", "bounds": {"x": 28, "z": 51, "width": 24, "height": 18}, "purpose": "第一处公共区域BOSS。"},
+    {"id": "public_peach_surface", "name": "桃林公共区", "bounds": {"x": 53, "z": 40, "width": 12, "height": 12}, "purpose": "明亮地表怪群和禺狨王。"},
+    {"id": "public_bat_cave", "name": "蝙蝠窟公共区", "bounds": {"x": 53, "z": 22, "width": 12, "height": 12}, "purpose": "飞行怪群和机关精英。"},
+    {"id": "public_sevenstar", "name": "七星洞公共区", "bounds": {"x": 65, "z": 26, "width": 13, "height": 20}, "purpose": "高阶怪群、狮驼王和东海门。"},
+    {"id": "public_elite_court", "name": "迦楼罗高崖公共区", "bounds": {"x": 52, "z": 53, "width": 17, "height": 16}, "purpose": "鹏魔王高阶精英侧袋。"},
+    {"id": "public_east_sea", "name": "东海前缘公共区", "bounds": {"x": 78, "z": 24, "width": 15, "height": 24}, "purpose": "水域怪群与双BOSS分路。"},
+    {"id": "public_jiao_pocket", "name": "蛟魔王公共战斗区", "bounds": {"x": 70, "z": 49, "width": 23, "height": 21}, "purpose": "蛟魔王一阶段公共挑战。"},
+    {"id": "public_shark_pocket", "name": "鲨魔王公共战斗区", "bounds": {"x": 70, "z": 2, "width": 23, "height": 21}, "purpose": "鲨魔王一阶段公共挑战和团本前置。"}
+  ],
+  "hiddenAreas": [
+    {
+      "id": "hidden_dragon_portal",
+      "name": "龙宫隐藏入口",
+      "bounds": {"x": 36, "z": 10, "width": 12, "height": 10},
+      "entrance": {"x": 42, "z": 15},
+      "entranceDescription": "水帘溪谷暗瀑后的潮汐石门",
+      "target": "四海层龙宫四房总格80x64",
+      "purpose": "发现后为单个玩家分配一份空闲挑战房，花果山本体不承载副本房间。"
+    },
+    {
+      "id": "hidden_fire_raid_portal",
+      "name": "牛魔旧战场团本入口",
+      "bounds": {"x": 52, "z": 3, "width": 16, "height": 16},
+      "entrance": {"x": 63, "z": 11},
+      "entranceDescription": "鲨魔王首通后开启熔脉裂口，由入口NPC确认团队",
+      "target": "梦墟层牛魔旧战场48x36",
+      "purpose": "四人集结并确认后传送到正式团队战场。"
+    }
+  ],
+  "npcPoints": [
+    {"id": "npc_spawn_revival", "name": "出生复活点", "role": "revive", "position": {"x": 7, "z": 36}, "regionId": "safe_hub"},
+    {"id": "npc_huaguoshan_quest", "name": "花果山任务NPC", "role": "quest", "position": {"x": 8, "z": 42}, "regionId": "safe_hub"},
+    {"id": "npc_strengthen", "name": "强化与修整NPC", "role": "shop", "position": {"x": 11, "z": 31}, "regionId": "safe_hub"},
+    {"id": "tp_huaguoshan_city", "name": "传送点一·主城", "role": "teleport", "position": {"x": 10, "z": 36}, "regionId": "safe_hub"},
+    {"id": "tp_huaguoshan_hub", "name": "传送点二·副本枢纽", "role": "teleport", "position": {"x": 48, "z": 36}, "regionId": "dungeon_hub"},
+    {"id": "npc_hub_guide", "name": "副本方向引导NPC", "role": "guide", "position": {"x": 50, "z": 41}, "regionId": "dungeon_hub"},
+    {"id": "tp_huaguoshan_team", "name": "传送点三·团本入口", "role": "teleport", "position": {"x": 59, "z": 11}, "regionId": "raid_staging"},
+    {"id": "npc_fire_raid_entry", "name": "牛魔旧战场入口NPC", "role": "raid-entry", "position": {"x": 63, "z": 11}, "regionId": "raid_staging"}
+  ],
+  "terrainLayers": [
+    {"id": "terrain_safe_hub", "type": "ground", "regionId": "safe_hub", "material": "浅草地+灰白石台", "elevation": "平整安全区，边缘低台阶", "water": "none"},
+    {"id": "terrain_mountain_road", "type": "ground", "regionId": "mountain_road", "material": "草地+暖灰土路", "elevation": "缓坡", "water": "none"},
+    {"id": "terrain_waterfall_valley", "type": "water", "regionId": "waterfall_valley", "material": "湿岩+浅水溪", "elevation": "两级瀑布落差", "water": "shallow"},
+    {"id": "terrain_mihou_pocket", "type": "arena", "regionId": "mihou_pocket", "material": "湿岩石台+环形浅水", "elevation": "独立高台", "water": "shallow-edge"},
+    {"id": "terrain_dungeon_hub", "type": "safe", "regionId": "dungeon_hub", "material": "浅色石坪+草边", "elevation": "平整", "water": "none"},
+    {"id": "terrain_peach_surface", "type": "ground", "regionId": "peach_surface", "material": "草地+浅色石径", "elevation": "轻起伏", "water": "none"},
+    {"id": "terrain_bat_cave", "type": "cave", "regionId": "bat_cave", "material": "暗岩+碎石洞地", "elevation": "下沉洞线", "water": "none"},
+    {"id": "terrain_sevenstar", "type": "cliff", "regionId": "sevenstar_garuda", "material": "深灰岩+七星石板", "elevation": "上升崖路", "water": "none"},
+    {"id": "terrain_elite_court", "type": "arena", "regionId": "sevenstar_elite_court", "material": "风化岩台+风痕纹", "elevation": "高崖独台", "water": "none"},
+    {"id": "terrain_east_sea", "type": "coast", "regionId": "east_sea_foreland", "material": "浅色沙砾+湿礁", "elevation": "向东缓降", "water": "shallow-edge"},
+    {"id": "terrain_jiao", "type": "arena", "regionId": "jiao_pocket", "material": "潮池湿岩+水纹", "elevation": "半封闭潮湾", "water": "shallow"},
+    {"id": "terrain_shark", "type": "arena", "regionId": "shark_vortex", "material": "暗礁+涡流纹", "elevation": "下沉浅湾", "water": "shallow"},
+    {"id": "terrain_raid_staging", "type": "safe", "regionId": "raid_staging", "material": "焦黑岩+熔纹石板", "elevation": "平整集结台", "water": "none"},
+    {"id": "terrain_dragon_entry", "type": "hidden", "regionId": "dragon_entry_cove", "material": "暗湿岩+潮汐石板", "elevation": "瀑后下沉", "water": "shallow"},
+    {"id": "terrain_east_sea_gate", "type": "transition", "regionId": "east_sea_gate", "material": "海眼石门+深水边界", "elevation": "边界坡口", "water": "deep-blocked"}
+  ],
+  "decorations": [
+    {"id": "decor_safe_gate", "kind": "building", "regionId": "safe_hub", "resourceName": "西游山门/石台/木牌坊关键词", "density": "sparse"},
+    {"id": "decor_mountain_trees", "kind": "tree", "regionId": "mountain_road", "resourceName": "山林树/灌木/藤蔓关键词", "density": "normal"},
+    {"id": "decor_waterfall_rocks", "kind": "rock", "regionId": "waterfall_valley", "resourceName": "瀑布岩石/浅水石/水雾关键词", "density": "normal"},
+    {"id": "decor_mihou_totem", "kind": "prop", "regionId": "mihou_pocket", "resourceName": "猴族图腾/瀑布石台关键词", "density": "sparse"},
+    {"id": "decor_dungeon_hub", "kind": "building", "regionId": "dungeon_hub", "resourceName": "石亭/路标/传送石关键词", "density": "sparse"},
+    {"id": "decor_peach_trees", "kind": "tree", "regionId": "peach_surface", "resourceName": "桃树/花瓣/桃林关键词", "density": "normal"},
+    {"id": "decor_cave_props", "kind": "prop", "regionId": "bat_cave", "resourceName": "洞窟石像/蝙蝠巢/暗岩关键词", "density": "normal"},
+    {"id": "decor_sevenstar_stones", "kind": "prop", "regionId": "sevenstar_garuda", "resourceName": "七星石阵/崖壁/风口关键词", "density": "normal"},
+    {"id": "decor_garuda_cliff", "kind": "prop", "regionId": "sevenstar_elite_court", "resourceName": "羽饰石柱/风痕/断崖关键词", "density": "sparse"},
+    {"id": "decor_east_sea_props", "kind": "prop", "regionId": "east_sea_foreland", "resourceName": "珊瑚/碎礁/破损水府外墙关键词", "density": "normal"},
+    {"id": "decor_jiao_bay", "kind": "rock", "regionId": "jiao_pocket", "resourceName": "潮池礁石/水柱石/珊瑚关键词", "density": "sparse"},
+    {"id": "decor_vortex_props", "kind": "prop", "regionId": "shark_vortex", "resourceName": "漩涡纹理/鲨齿残骸/深水礁石关键词", "density": "sparse"},
+    {"id": "decor_fire_staging", "kind": "building", "regionId": "raid_staging", "resourceName": "熔纹封印门/传送阵/补给旗关键词", "density": "sparse"},
+    {"id": "decor_dragon_entry", "kind": "building", "regionId": "dragon_entry_cove", "resourceName": "龙纹石门/暗瀑/潮汐纹关键词", "density": "sparse"},
+    {"id": "decor_east_sea_gate", "kind": "building", "regionId": "east_sea_gate", "resourceName": "滨海石门/海眼/深水界碑关键词", "density": "sparse"}
+  ],
+  "logicResources": [
+    {"type": "point", "id": "pt_hg_spawn", "name": "出生复活点", "position": {"x": 7, "z": 36}},
+    {"type": "point", "id": "pt_hg_teleport_city", "name": "传送点一·主城", "position": {"x": 10, "z": 36}},
+    {"type": "point", "id": "pt_hg_teleport_hub", "name": "传送点二·副本枢纽", "position": {"x": 48, "z": 36}},
+    {"type": "point", "id": "pt_hg_teleport_team", "name": "传送点三·团本入口", "position": {"x": 59, "z": 11}},
+    {"type": "point", "id": "pt_longgong_entry", "name": "龙宫隐藏入口点", "position": {"x": 42, "z": 15}},
+    {"type": "point", "id": "pt_fire_dungeon_entry", "name": "牛魔旧战场入口点", "position": {"x": 63, "z": 11}},
+    {"type": "point", "id": "pt_east_sea_anchor", "name": "四海层拓扑锚点", "position": {"x": 95, "z": 36}},
+    {"type": "point", "id": "pt_hg_wind_eye_slot", "name": "猕猴王残风眼交互点", "position": {"x": 47, "z": 58}, "regionId": "mihou_pocket", "boss_zone_id": "arena_mihouwang", "encounter_action_key": "stabilize_wind_eye", "concurrent_actors": 4, "primary_arbitration": "authority_completed_tick_actor_id", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "event_schema_ref": "HG_PUBLIC_BOSS_BEHAVIOR_V1", "reward_boundary": "behavior_record_only_no_rare_eligibility"},
+    {"type": "point", "id": "pt_hg_tide_eye_slot", "name": "蛟魔王潮眼交互点", "position": {"x": 88, "z": 62}, "regionId": "jiao_pocket", "boss_zone_id": "arena_jiaomowang_phase1", "encounter_action_key": "drain_tide_eye", "concurrent_actors": 4, "primary_arbitration": "authority_completed_tick_actor_id", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "event_schema_ref": "HG_PUBLIC_BOSS_BEHAVIOR_V1", "reward_boundary": "behavior_record_only_no_rare_eligibility"},
+    {"type": "point", "id": "pt_hg_vortex_anchor_slot", "name": "鲨魔王涡流锚点", "position": {"x": 88, "z": 10}, "regionId": "shark_vortex", "boss_zone_id": "arena_shamowang_phase1", "encounter_action_key": "stabilize_vortex_anchor", "concurrent_actors": 4, "primary_arbitration": "authority_completed_tick_actor_id", "required_inside_area_id": "area_hg_shark_anchor_safe_line", "required_outside_area_id": "area_hg_shark_vortex_core", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "event_schema_ref": "HG_PUBLIC_BOSS_BEHAVIOR_V1", "reward_boundary": "behavior_record_only_no_rare_eligibility"},
+    {"type": "point", "id": "spawn_trace_tide_guard", "name": "潮痕载体公共刷新锚", "position": {"x": 36, "z": 29}, "regionId": "waterfall_valley", "encounter_scope": "public_trace", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "trace_bearing": true, "trace_resolution": "stabilize_tide_trace", "event_schema_ref": "C04_ENC_WSL_01", "success_result": "external_tide_trace_stabilized_waterway_recovers", "failure_result": "ordinary_defeat_no_rescue_claimed_waterway_unstable", "resolution_text_scope": "initiator_team_same_map", "world_state_scope": "encounter_local_18", "world_state_lifetime_seconds": 30, "world_state_reset_reason": "resolution_expiry_or_next_carrier_instance", "next_spawn_narrative": "水脉平复后再受外来潮息扰动", "route_progression_policy": "none", "profession_reward_policy": "none", "rare_reward_policy": "encounter_global_only_no_profession_bonus", "spawn_role": "waterfall_trace_carrier", "carrier_logic_target_id": "C04_TRACE_TIDE_GUARD", "interaction_anchor_id": "pt_hg_tide_trace_stone", "carrier_anchor_clearance_cells": 3, "ambient_spawn_exclusion_radius": 4, "spawn_role_state": "trace_exposed_active_instance"},
+    {"type": "point", "id": "pt_hg_tide_trace_stone", "name": "潮痕石交互点", "position": {"x": 39, "z": 29}, "regionId": "waterfall_valley", "encounter_scope": "public_trace", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "encounter_action_key": "stabilize_tide_trace", "event_schema_ref": "C04_ENC_WSL_01", "concurrent_actors": 4, "trace_bearing": true, "trace_resolution": "stabilize_tide_trace", "success_result": "external_tide_trace_stabilized_waterway_recovers", "failure_result": "ordinary_defeat_no_rescue_claimed_waterway_unstable", "resolution_text_scope": "initiator_team_same_map", "world_state_scope": "encounter_local_18", "world_state_lifetime_seconds": 30, "world_state_reset_reason": "resolution_expiry_or_next_carrier_instance", "next_spawn_narrative": "水脉平复后再受外来潮息扰动", "route_progression_policy": "none", "profession_reward_policy": "none", "rare_reward_policy": "encounter_global_only_no_profession_bonus", "carrier_spawn_anchor_id": "spawn_trace_tide_guard", "carrier_logic_target_id": "C04_TRACE_TIDE_GUARD", "interaction_activation": "matching_active_carrier_instance_trace_exposed", "carrier_collision_policy": "carrier_stays_outside_interaction_radius", "ambient_spawn_exclusion_radius": 4},
+    {"type": "point", "id": "spawn_trace_vortex_node", "name": "裂潮节点公共刷新锚", "position": {"x": 87, "z": 27}, "regionId": "east_sea_foreland", "encounter_scope": "public_trace", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "trace_bearing": true, "trace_resolution": "seal_vortex", "event_schema_ref": "C04_ENC_EF_01", "success_result": "vortex_node_sealed_no_extra_vortex_wave", "failure_result": "ordinary_defeat_no_seal_claimed_original_waves_continue", "resolution_text_scope": "initiator_team_same_map", "world_state_scope": "encounter_local_18", "world_state_lifetime_seconds": 30, "world_state_reset_reason": "resolution_expiry_or_next_carrier_instance", "next_spawn_narrative": "裂潮封止后海面暂稳，下一节点仍可能显形", "route_progression_policy": "none", "profession_reward_policy": "none", "rare_reward_policy": "encounter_global_only_no_profession_bonus", "spawn_role": "east_sea_trace_carrier", "carrier_logic_target_id": "C04_TRACE_VORTEX_NODE", "interaction_anchor_id": "pt_hg_vortex_trace_anchor", "carrier_anchor_clearance_cells": 3, "ambient_spawn_exclusion_radius": 4, "spawn_role_state": "trace_exposed_active_instance"},
+    {"type": "point", "id": "pt_hg_vortex_trace_anchor", "name": "裂潮锚点交互点", "position": {"x": 90, "z": 27}, "regionId": "east_sea_foreland", "encounter_scope": "public_trace", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "encounter_action_key": "seal_vortex", "event_schema_ref": "C04_ENC_EF_01", "concurrent_actors": 4, "trace_bearing": true, "trace_resolution": "seal_vortex", "success_result": "vortex_node_sealed_no_extra_vortex_wave", "failure_result": "ordinary_defeat_no_seal_claimed_original_waves_continue", "resolution_text_scope": "initiator_team_same_map", "world_state_scope": "encounter_local_18", "world_state_lifetime_seconds": 30, "world_state_reset_reason": "resolution_expiry_or_next_carrier_instance", "next_spawn_narrative": "裂潮封止后海面暂稳，下一节点仍可能显形", "route_progression_policy": "none", "profession_reward_policy": "none", "rare_reward_policy": "encounter_global_only_no_profession_bonus", "carrier_spawn_anchor_id": "spawn_trace_vortex_node", "carrier_logic_target_id": "C04_TRACE_VORTEX_NODE", "interaction_activation": "matching_active_carrier_instance_trace_exposed", "carrier_collision_policy": "carrier_stays_outside_interaction_radius", "ambient_spawn_exclusion_radius": 4},
+    {"type": "point", "id": "pt_hg_c04_lv8_01_safe", "name": "巡猎Lv8猎首试炼入口安全点", "position": {"x": 28, "z": 25}, "regionId": "waterfall_valley", "return_safety_radius_cells": 2, "return_spawn_exclusion_radius_cells": 4, "public_aggro_clear_required": true, "ground_hazard_policy": "clear_or_exit_protection", "return_protection_seconds": 2, "return_direction": "northwest_to_main_route"},
+    {"type": "point", "id": "pt_hg_c04_lv8_02_safe", "name": "巡猎Lv8逐风试炼入口安全点", "position": {"x": 42, "z": 44}, "regionId": "waterfall_valley", "return_safety_radius_cells": 2, "return_spawn_exclusion_radius_cells": 4, "public_aggro_clear_required": true, "ground_hazard_policy": "clear_or_exit_protection", "return_protection_seconds": 2, "return_direction": "west_to_waterfall_branch"},
+    {"type": "point", "id": "pt_hg_c04_lv8_03_safe", "name": "巡猎Lv8缚影试炼入口安全点", "position": {"x": 27, "z": 44}, "regionId": "waterfall_valley", "return_safety_radius_cells": 2, "return_spawn_exclusion_radius_cells": 4, "public_aggro_clear_required": true, "ground_hazard_policy": "clear_or_exit_protection", "return_protection_seconds": 2, "return_direction": "southwest_to_waterfall_branch"},
+    {
+      "type": "point", "id": "pt_hg_c04_lv8_route_choice", "name": "巡猎Lv8猎路选择石", "position": {"x": 28, "z": 49}, "regionId": "waterfall_valley",
+      "encounter_scope": "public_teaching", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null,
+      "entry_trigger": "explicit_interact", "min_level": 8, "actor_id_contract": "stable_character_profile_id",
+      "selection_key_pattern": "C04_ROUTE_LV8_SELECTION:<actor_id>", "selection_values": ["hunt", "wind", "bind"],
+      "selection_skill_policy": "atomic_if_core_rank_zero:validate_level_and_one_free_skill_point,spend_one_point,set_selected_core_rank_one,write_selection; if_core_rank_at_least_one:write_selection_only; failure_writes_nothing",
+      "selection_change_policy": "selection_write_free_until_first_route_completion; changing_to_unlearned_core_uses_normal_skill_point; no_auto_refund_or_revoke",
+      "selection_freeze_keys": ["C04_ROUTE_LV8_hunt", "C04_ROUTE_LV8_wind", "C04_ROUTE_LV8_bind"], "selection_key_is_not_freeze_key": true,
+      "missing_selection_feedback": "请选择本次猎路 0/1", "missing_skill_point_feedback": "需要 1 点自由技能点学习对应核心",
+      "safety_radius_cells": 2, "ambient_spawn_exclusion_radius": 4, "ground_hazard_policy": "none_inside_selection_radius"
+    },
+    {"type": "point", "id": "pt_hg_c04_recovery_prelude", "name": "巡猎Lv15承命回照石", "position": {"x": 32, "z": 49}, "regionId": "waterfall_valley", "encounter_scope": "public_practice", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "concurrent_actors": 4, "actor_id_contract": "stable_character_profile_id", "target_logic_id": "C04_PRACTICE_TARGET", "practice_hit_event_schema": "C04_PRACTICE_HIT_V1", "practice_hit_payload": "actor_id|character_profile_id|lifecycle_id|source_unit_id|source_unit_ref|cast_id|phase|hit_key|sync_tick|target_logic_id|target_unit_id|target_lifecycle_id|target_rank|rank_policy|combat_scope|session_instance_id|session_epoch|event_category|practice_damage_dealt|native_health_delta|virtual_vitality_revision", "native_damage_intercept_required": true, "progression_key_pattern": "C04_REAL_RECOVERY_INTRO:<actor_id>", "candidate_key_pattern": "C04_RECOVERY_CANDIDATE:<actor_id>:<lifecycle_id>:<cast_id>:<phase>:<hit_key>", "claim_state_key_pattern": "C04_RECOVERY_CLAIM:<actor_id>", "safety_radius_cells": 2, "ambient_spawn_exclusion_radius": 2, "ground_hazard_policy": "none_inside_practice_radius"},
+    {"type": "point", "id": "pt_hg_c04_lv15_u01_safe", "name": "巡猎Lv15绝技试炼入口安全点", "position": {"x": 35, "z": 48}, "regionId": "waterfall_valley", "return_safety_radius_cells": 2, "return_spawn_exclusion_radius_cells": 4, "public_aggro_clear_required": true, "ground_hazard_policy": "clear_or_exit_protection", "return_protection_seconds": 2, "return_direction": "west_to_waterfall_branch"},
+    {"type": "point", "id": "pt_hg_c04_lv20_01_safe", "name": "巡猎Lv20猎首试炼入口与回传安全点", "position": {"x": 65, "z": 45}, "regionId": "sevenstar_garuda", "outside_boss_zone_id": "arena_lion", "minimum_boss_clearance_cells": 3, "return_safety_radius_cells": 2, "return_spawn_exclusion_radius_cells": 4, "public_aggro_clear_required": true, "ground_hazard_policy": "clear_or_exit_protection", "return_protection_seconds": 2, "return_direction": "southwest_to_bypass_route"},
+    {"type": "point", "id": "pt_hg_c04_lv20_02_safe", "name": "巡猎Lv20逐风试炼入口与回传安全点", "position": {"x": 52, "z": 53}, "regionId": "sevenstar_elite_court", "outside_boss_zone_id": "arena_peng", "minimum_boss_clearance_cells": 2, "return_safety_radius_cells": 2, "return_spawn_exclusion_radius_cells": 4, "public_aggro_clear_required": true, "ground_hazard_policy": "clear_or_exit_protection", "return_protection_seconds": 2, "return_direction": "southwest_to_elite_court_exit"},
+    {"type": "point", "id": "pt_hg_c04_lv20_03_safe", "name": "巡猎Lv20缚影试炼入口安全点", "position": {"x": 80, "z": 44}, "regionId": "east_sea_foreland", "return_safety_radius_cells": 2, "return_spawn_exclusion_radius_cells": 4, "public_aggro_clear_required": true, "ground_hazard_policy": "clear_or_exit_protection", "return_protection_seconds": 2, "return_direction": "west_to_east_sea_main_route"},
+    {"type": "path", "id": "path_hg_main", "name": "花果山主线路径", "regionId": "mountain_road"},
+    {"type": "path", "id": "path_hg_peach", "name": "桃林地表路线", "regionId": "peach_surface"},
+    {"type": "path", "id": "path_hg_bat", "name": "蝙蝠窟洞线", "regionId": "bat_cave"},
+    {"type": "path", "id": "path_hg_mihou", "name": "猕猴王支路", "regionId": "mihou_pocket"},
+    {"type": "path", "id": "path_hg_garuda", "name": "迦楼罗高崖支路", "regionId": "sevenstar_elite_court"},
+    {"type": "path", "id": "path_hg_jiao", "name": "蛟魔王支路", "regionId": "jiao_pocket"},
+    {"type": "path", "id": "path_hg_shark", "name": "鲨魔王支路", "regionId": "shark_vortex"},
+    {"type": "path", "id": "path_hg_dragon", "name": "龙宫隐藏路线", "regionId": "dragon_entry_cove"},
+    {"type": "path", "id": "path_hg_fire_rift", "name": "熔脉裂口路线", "regionId": "raid_staging"},
+    {"type": "rectArea", "id": "area_hg_safe_hub", "name": "花果山主城安全区", "regionId": "safe_hub", "bounds": {"x": 3, "z": 26, "width": 12, "height": 20}},
+    {"type": "rectArea", "id": "area_hg_dungeon_hub", "name": "花果山副本枢纽安全区", "regionId": "dungeon_hub", "bounds": {"x": 43, "z": 28, "width": 10, "height": 16}},
+    {"type": "rectArea", "id": "area_hg_raid_staging", "name": "熔脉裂口团本前哨安全区", "regionId": "raid_staging", "bounds": {"x": 52, "z": 3, "width": 16, "height": 16}},
+    {"type": "rectArea", "id": "area_hg_public_mountain", "name": "花果山山道公共区", "regionId": "mountain_road", "bounds": {"x": 15, "z": 28, "width": 12, "height": 16}},
+    {"type": "rectArea", "id": "area_hg_public_waterfall", "name": "水帘溪谷公共区", "regionId": "waterfall_valley", "bounds": {"x": 27, "z": 22, "width": 16, "height": 28}},
+    {"type": "rectArea", "id": "area_hg_main_route_waterfall", "name": "水帘溪谷八格主路白盒带", "regionId": "waterfall_valley", "bounds": {"x": 27, "z": 33, "width": 16, "height": 8}, "purpose": "巡猎私有教学区不得与该八格公共主路重叠。"},
+    {"type": "rectArea", "id": "area_hg_boss_mihou", "name": "猕猴王战斗口袋", "regionId": "mihou_pocket", "bounds": {"x": 28, "z": 51, "width": 24, "height": 18}},
+    {"type": "rectArea", "id": "area_hg_public_peach", "name": "桃林地表公共区", "regionId": "peach_surface", "bounds": {"x": 53, "z": 40, "width": 12, "height": 12}},
+    {"type": "rectArea", "id": "area_hg_public_bat", "name": "蝙蝠窟公共区", "regionId": "bat_cave", "bounds": {"x": 53, "z": 22, "width": 12, "height": 12}},
+    {"type": "rectArea", "id": "area_hg_public_sevenstar", "name": "七星迦楼罗公共区", "regionId": "sevenstar_garuda", "bounds": {"x": 65, "z": 26, "width": 13, "height": 20}},
+    {"type": "rectArea", "id": "area_hg_main_route_sevenstar", "name": "七星洞八格主路白盒带", "regionId": "sevenstar_garuda", "bounds": {"x": 65, "z": 38, "width": 13, "height": 8}, "purpose": "狮驼王战圈南侧的八格公共绕行带；巡猎私有教学区与首领战圈均不得占用。"},
+    {"type": "rectArea", "id": "area_hg_elite_garuda", "name": "鹏魔王高崖口袋", "regionId": "sevenstar_elite_court", "bounds": {"x": 52, "z": 53, "width": 17, "height": 16}},
+    {"type": "rectArea", "id": "area_hg_public_east_sea", "name": "东海前缘公共区", "regionId": "east_sea_foreland", "bounds": {"x": 78, "z": 24, "width": 15, "height": 24}},
+    {"type": "rectArea", "id": "area_hg_main_route_east_sea", "name": "东海前缘八格主路白盒带", "regionId": "east_sea_foreland", "bounds": {"x": 78, "z": 32, "width": 15, "height": 8}, "purpose": "巡猎私有教学区不得与该八格公共主路重叠。"},
+    {"type": "rectArea", "id": "area_hg_boss_jiao", "name": "蛟魔王战斗口袋", "regionId": "jiao_pocket", "bounds": {"x": 70, "z": 49, "width": 23, "height": 21}},
+    {"type": "rectArea", "id": "area_hg_boss_shark", "name": "鲨魔王战斗口袋", "regionId": "shark_vortex", "bounds": {"x": 70, "z": 2, "width": 23, "height": 21}},
+    {"type": "rectArea", "id": "area_hg_hidden_dragon_entry", "name": "龙宫暗潮入口区", "regionId": "dragon_entry_cove", "bounds": {"x": 36, "z": 10, "width": 12, "height": 10}},
+    {"type": "rectArea", "id": "area_hg_east_sea_gate", "name": "东海海眼接口区", "regionId": "east_sea_gate", "bounds": {"x": 93, "z": 31, "width": 3, "height": 10}},
+    {"type": "circleArea", "id": "area_hg_wind_eye_interact", "name": "残风眼交互圆区", "regionId": "mihou_pocket", "position": {"x": 47, "z": 58}, "radius": 3, "anchor_point_id": "pt_hg_wind_eye_slot", "boss_zone_id": "arena_mihouwang", "encounter_action_key": "stabilize_wind_eye", "concurrent_actors": 4, "primary_arbitration": "authority_completed_tick_actor_id", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "event_schema_ref": "HG_PUBLIC_BOSS_BEHAVIOR_V1", "reward_boundary": "behavior_record_only_no_rare_eligibility", "purpose": "公共BOSS分身结束后的全职业并发交互区。"},
+    {"type": "circleArea", "id": "area_hg_tide_eye_interact", "name": "潮眼交互圆区", "regionId": "jiao_pocket", "position": {"x": 88, "z": 62}, "radius": 3, "anchor_point_id": "pt_hg_tide_eye_slot", "boss_zone_id": "arena_jiaomowang_phase1", "encounter_action_key": "drain_tide_eye", "concurrent_actors": 4, "primary_arbitration": "authority_completed_tick_actor_id", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "event_schema_ref": "HG_PUBLIC_BOSS_BEHAVIOR_V1", "reward_boundary": "behavior_record_only_no_rare_eligibility", "purpose": "公共BOSS潜入期间的全职业并发交互区。"},
+    {"type": "circleArea", "id": "area_hg_vortex_anchor_interact", "name": "涡流锚点交互圆区", "regionId": "shark_vortex", "position": {"x": 88, "z": 10}, "radius": 3, "anchor_point_id": "pt_hg_vortex_anchor_slot", "boss_zone_id": "arena_shamowang_phase1", "encounter_action_key": "stabilize_vortex_anchor", "concurrent_actors": 4, "primary_arbitration": "authority_completed_tick_actor_id", "required_inside_area_id": "area_hg_shark_anchor_safe_line", "required_outside_area_id": "area_hg_shark_vortex_core", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "event_schema_ref": "HG_PUBLIC_BOSS_BEHAVIOR_V1", "reward_boundary": "behavior_record_only_no_rare_eligibility", "purpose": "公共BOSS涡流预警期间的全职业并发交互区，避开涡流核心。"},
+    {"type": "circleArea", "id": "area_hg_tide_trace_interact", "name": "潮痕石公共交互圆区", "regionId": "waterfall_valley", "position": {"x": 39, "z": 29}, "radius": 2, "anchor_point_id": "pt_hg_tide_trace_stone", "encounter_action_key": "stabilize_tide_trace", "encounter_scope": "public_trace", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "event_schema_ref": "C04_ENC_WSL_01", "concurrent_actors": 4, "trace_bearing": true, "trace_resolution": "stabilize_tide_trace", "success_result": "external_tide_trace_stabilized_waterway_recovers", "failure_result": "ordinary_defeat_no_rescue_claimed_waterway_unstable", "resolution_text_scope": "initiator_team_same_map", "world_state_scope": "encounter_local_18", "world_state_lifetime_seconds": 30, "world_state_reset_reason": "resolution_expiry_or_next_carrier_instance", "next_spawn_narrative": "水脉平复后再受外来潮息扰动", "route_progression_policy": "none", "profession_reward_policy": "none", "rare_reward_policy": "encounter_global_only_no_profession_bonus", "carrier_spawn_anchor_id": "spawn_trace_tide_guard", "carrier_logic_target_id": "C04_TRACE_TIDE_GUARD", "interaction_activation": "matching_active_carrier_instance_trace_exposed", "carrier_collision_policy": "carrier_stays_outside_interaction_radius", "ambient_spawn_exclusion_radius": 4, "purpose": "水帘溪谷潮痕载体的公共残响收束区。"},
+    {"type": "circleArea", "id": "area_hg_vortex_trace_interact", "name": "裂潮锚点公共交互圆区", "regionId": "east_sea_foreland", "position": {"x": 90, "z": 27}, "radius": 2, "anchor_point_id": "pt_hg_vortex_trace_anchor", "encounter_action_key": "seal_vortex", "encounter_scope": "public_trace", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null, "event_schema_ref": "C04_ENC_EF_01", "concurrent_actors": 4, "trace_bearing": true, "trace_resolution": "seal_vortex", "success_result": "vortex_node_sealed_no_extra_vortex_wave", "failure_result": "ordinary_defeat_no_seal_claimed_original_waves_continue", "resolution_text_scope": "initiator_team_same_map", "world_state_scope": "encounter_local_18", "world_state_lifetime_seconds": 30, "world_state_reset_reason": "resolution_expiry_or_next_carrier_instance", "next_spawn_narrative": "裂潮封止后海面暂稳，下一节点仍可能显形", "route_progression_policy": "none", "profession_reward_policy": "none", "rare_reward_policy": "encounter_global_only_no_profession_bonus", "carrier_spawn_anchor_id": "spawn_trace_vortex_node", "carrier_logic_target_id": "C04_TRACE_VORTEX_NODE", "interaction_activation": "matching_active_carrier_instance_trace_exposed", "carrier_collision_policy": "carrier_stays_outside_interaction_radius", "ambient_spawn_exclusion_radius": 4, "purpose": "东海前缘裂潮节点的公共残响收束区。"},
+    {
+      "type": "circleArea", "id": "area_hg_c04_lv8_route_choice", "name": "巡猎Lv8猎路选择区", "regionId": "waterfall_valley", "position": {"x": 28, "z": 49}, "radius": 1.2,
+      "anchor_point_id": "pt_hg_c04_lv8_route_choice", "encounter_scope": "public_teaching", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null,
+      "entry_trigger": "explicit_interact", "entry_requirements": {"min_level": 8},
+      "selection_contract": {"key_pattern": "C04_ROUTE_LV8_SELECTION:<actor_id>", "choices": ["hunt", "wind", "bind"], "skill_transaction": "atomic_if_unlearned_core_spend_one_point_set_rank_one_then_write_selection; learned_core_writes_selection_only; failures_write_nothing", "allow_change_until": "first_route_completion_key_written", "freeze_after_any_of": ["C04_ROUTE_LV8_hunt", "C04_ROUTE_LV8_wind", "C04_ROUTE_LV8_bind"], "explicitly_excludes": "C04_ROUTE_LV8_SELECTION:<actor_id>", "missing_selection_feedback": "请选择本次猎路 0/1", "missing_skill_point_feedback": "需要 1 点自由技能点学习对应核心"},
+      "purpose": "在进入Lv8私有试炼前，以角色稳定身份显式选择一条猎路。"
+    },
+    {
+      "type": "circleArea", "id": "area_hg_c04_recovery_prelude", "name": "巡猎Lv15承命回照石公共预演区", "regionId": "waterfall_valley", "position": {"x": 32, "z": 49}, "radius": 1,
+      "anchor_point_id": "pt_hg_c04_recovery_prelude", "encounter_scope": "public_practice", "combat_scope": "public", "session_context": "none", "session_instance_id": null, "session_epoch": null,
+      "entry_trigger": "explicit_interact", "entry_requirements": {"min_level": 15, "required_progression_key_pattern": "C04_U01_TRIAL_ELIGIBLE:<actor_id>", "required_any_skill_keys": ["C04_A03", "C04_A04", "C04_A05"], "required_any_skill_rank_at_least": 1},
+      "actor_id_contract": "stable_character_profile_id", "target_plan": "one_stable_logic_target_with_actor_private_virtual_state", "target_logic_id": "C04_PRACTICE_TARGET", "practice_hit_event_schema": "C04_PRACTICE_HIT_V1",
+      "practice_target_contract": {"skill_filter_targetable": true, "target_rank": "normal", "rank_policy": "skill_filter_only_no_public_control_break_or_contribution", "native_damage_intercept_required": true, "native_health_delta": 0, "event_category": "public_training_noncombat", "target_lifecycle_policy": "stable_never_despawn_or_replace", "target_health_policy": "per_actor_virtual_vitality_not_shared_never_killable", "target_aggro_policy": "none", "target_collision_policy": "nonblocking", "forbidden_outputs": "public_health|aggro|loot|xp|ordinary_death|boss_contribution"},
+      "practice_hit_contract": {"required_fields": "actor_id|character_profile_id|lifecycle_id|source_unit_id|source_unit_ref|cast_id|phase|hit_key|sync_tick|target_logic_id|target_unit_id|target_lifecycle_id|target_rank|rank_policy|combat_scope|session_instance_id|session_epoch|event_category|practice_damage_dealt|native_health_delta|virtual_vitality_revision", "accept_if": "character_profile_id_equals_actor_id_and_current_actor_lifecycle_source_cast_target_target_rank_public_empty_session_and_virtual_vitality_revision_match_and_practice_damage_dealt_gt0_and_native_health_delta_equals_0_and_event_category_is_public_training_noncombat", "reject_if": "old_lifecycle|source_or_cast_mismatch|duplicate_hit_key|wrong_logic_or_unit_target|nonpositive_practice_damage|any_native_health_write|wrong_public_session|wrong_event_category|stale_virtual_vitality_revision", "damage_ledger": "practice_only_never_public_final_damage"},
+      "concurrent_actors": 4, "actor_scoped_state": "marks|recovery_candidate|recovery|claim", "completion_policy": "once_per_actor", "progression_key_pattern": "C04_REAL_RECOVERY_INTRO:<actor_id>", "progression_write_condition": "C04-LV15-RECOVERY-INTRO:own_5_marks_to_less_than_5_eligible_recovery_candidate",
+      "completion_claim": {"candidate_key_pattern": "C04_RECOVERY_CANDIDATE:<actor_id>:<lifecycle_id>:<cast_id>:<phase>:<hit_key>", "claim_state_key_pattern": "C04_RECOVERY_CLAIM:<actor_id>", "claim_id_pattern": "C04_RECOVERY_CLAIM:<actor_id>:<lifecycle_id>:<recovery_event_id>", "states": "unclaimed|pending|claimed", "candidate_required": "uncommitted_current_lifecycle_C04_PRACTICE_HIT_V1_recovery_candidate", "compare_and_set": "unclaimed_to_pending_then_claimed_once", "atomic_commit": "normal_recovery_plus20|recovery_next_eligible_tick_equals_accepted_tick_plus960|C04_REAL_RECOVERY_INTRO|M12_if_eligible|actor_read_only_lock", "pending_lifecycle_invalidation": "rollback_to_unclaimed_without_resource_or_timer_write_if_not_committed", "pending_reject_feedback": "回照未记录，请重新完成", "claimed_interaction": "actor_read_only_no_marks_recovery_heal_or_cooldown_change"},
+      "same_tick_noncombat_exclusion": {"gate_id": "C04_PUBLIC_COMBAT_IDLE_GATE", "destination_session_blueprint_id": "C04_TUT_LV15_U01", "event_schema_ref": "C04_PRACTICE_HIT_V1", "event_identity_fields": "actor_id|lifecycle_id|hit_key", "require_character_profile_equals_actor": true, "require_target_logic_id": "C04_PRACTICE_TARGET", "require_event_category": "public_training_noncombat", "require_public_empty_session": true, "entry_tick_relation": "entry_tick_equals_event_sync_tick", "exclude_only": "this_event_from_pending_public_hit_projectile_or_periodic", "require_no_other_relevant_public_state": true, "persistent_bypass": "forbidden"}, "safety_contract": "2_cell_no_spawn_no_ground_hazard_neutral_boundary", "retry_policy": "free_unlimited_until_completion", "reward_policy": "no_xp_no_loot_no_material_no_repeat_ultimate_no_boss_contribution", "success_text_scope": "initiator_only", "observer_text_scope": "neutral_stone_echo_only", "trace_bearing": false,
+      "purpose": "公开低压真实定猎回收预演；不创建session_instance_id或attempt_sequence。"
+    },
+    {"type": "circleArea", "id": "area_hg_shark_vortex_core", "name": "鲨魔王涡流核心危险区", "regionId": "shark_vortex", "position": {"x": 79, "z": 12}, "radius": 3, "purpose": "涡流锚点禁止进入的核心区。"},
+    {"type": "rectArea", "id": "area_hg_shark_anchor_safe_line", "name": "鲨魔王涡流锚点安全线", "regionId": "shark_vortex", "bounds": {"x": 85, "z": 7, "width": 7, "height": 7}, "purpose": "涡流锚点必须位于该安全线内。"},
+    {
+      "type": "rectArea", "id": "area_hg_c04_lv8_01", "name": "巡猎Lv8猎首私有试炼", "regionId": "waterfall_valley", "bounds": {"x": 29, "z": 22, "width": 6, "height": 6}, "actor_private": true,
+      "session_blueprint_id": "C04_TUT_LV8_HUNT", "session_profile_id": "C04_PRIVATE_TRAINING_OVERLAY", "session_instance_pattern": "c04:<actor_id>:<lifecycle_id>:<area_id>:<attempt_sequence>", "session_epoch_source": "attempt_sequence", "active_session_policy": "one_active_c04_session_per_actor", "public_combat_entry_gate": "C04_PUBLIC_COMBAT_IDLE_GATE",
+      "preview_trigger": "first_enter", "entry_trigger": "explicit_interact", "entry_point_id": "pt_hg_c04_lv8_01_safe", "entry_interact_point_id": "pt_hg_c04_lv8_01_safe", "failure_return_point_id": "pt_hg_c04_lv8_01_safe", "success_return_point_id": "pt_hg_c04_lv8_01_safe",
+      "entry_requirements": {"min_level": 8, "first_clear_route_selection": {"key_pattern": "C04_ROUTE_LV8_SELECTION:<actor_id>", "equals": "hunt"}, "retrain_or_access": "C04_ROUTE_LV8_hunt|C04_TUTORIAL_ACCESS_hunt:<actor_id>", "route_gate": "selection_match_or_existing_same_route_completion_or_explicit_access", "required_skill_key": "C04_A03", "required_skill_rank": 1}, "progression_key": "C04_ROUTE_LV8_hunt", "retry_policy": "free_unlimited",
+      "combat_visibility_scope": "actor_private", "combat_layer": "shared_terrain_private_combat", "combat_scope": "private_session", "private_target_presentation": "daoist_echo_bow_trace", "observer_presentation": "boundary_actor_afterimage_result_ripple_only", "private_target_collision": "none_for_non_owner", "private_target_aggro": "owner_session_only", "public_unit_isolation": "filter_public_targeting_damage_aggro_collision_rewards_and_encounter_actions", "public_unit_visual_policy": "noninteractive_silhouette_inside_training_boundary", "public_spawn_anchor_overlap": "forbidden", "session_exit_invalidate": "effects|timers|callbacks|reservations|training_overlay", "boundary_visual_policy": "waterfall_stone_outline_and_west_northwest_return_arrow", "private_wave_summary": "waterfall_guard_echo_elite_1", "valid_point_or_safe_line": "single_target_sightline_on_waterfall_stone", "retreat_direction": "northwest_to_main_route", "purpose": "水帘妖卫·弓痕回照的单角色教学会话。"
+    },
+    {
+      "type": "rectArea", "id": "area_hg_c04_lv8_02", "name": "巡猎Lv8逐风私有试炼", "regionId": "waterfall_valley", "bounds": {"x": 36, "z": 41, "width": 6, "height": 6}, "actor_private": true,
+      "session_blueprint_id": "C04_TUT_LV8_WIND", "session_profile_id": "C04_PRIVATE_TRAINING_OVERLAY", "session_instance_pattern": "c04:<actor_id>:<lifecycle_id>:<area_id>:<attempt_sequence>", "session_epoch_source": "attempt_sequence", "active_session_policy": "one_active_c04_session_per_actor", "public_combat_entry_gate": "C04_PUBLIC_COMBAT_IDLE_GATE",
+      "preview_trigger": "first_enter", "entry_trigger": "explicit_interact", "entry_point_id": "pt_hg_c04_lv8_02_safe", "entry_interact_point_id": "pt_hg_c04_lv8_02_safe", "failure_return_point_id": "pt_hg_c04_lv8_02_safe", "success_return_point_id": "pt_hg_c04_lv8_02_safe",
+      "entry_requirements": {"min_level": 8, "first_clear_route_selection": {"key_pattern": "C04_ROUTE_LV8_SELECTION:<actor_id>", "equals": "wind"}, "retrain_or_access": "C04_ROUTE_LV8_wind|C04_TUTORIAL_ACCESS_wind:<actor_id>", "route_gate": "selection_match_or_existing_same_route_completion_or_explicit_access", "required_skill_key": "C04_A04", "required_skill_rank": 1}, "progression_key": "C04_ROUTE_LV8_wind", "retry_policy": "free_unlimited",
+      "combat_visibility_scope": "actor_private", "combat_layer": "shared_terrain_private_combat", "combat_scope": "private_session", "private_target_presentation": "daoist_echo_bow_trace", "observer_presentation": "boundary_actor_afterimage_result_ripple_only", "private_target_collision": "none_for_non_owner", "private_target_aggro": "owner_session_only", "public_unit_isolation": "filter_public_targeting_damage_aggro_collision_rewards_and_encounter_actions", "public_unit_visual_policy": "noninteractive_silhouette_inside_training_boundary", "public_spawn_anchor_overlap": "forbidden", "session_exit_invalidate": "effects|timers|callbacks|reservations|training_overlay", "boundary_visual_policy": "shallow_water_step_line_and_west_return_arrow", "private_wave_summary": "fish_sentry_echo_normal_2", "valid_point_or_safe_line": "marked_safe_landing_line_and_no_water_landing_edge", "retreat_direction": "west_to_waterfall_branch", "purpose": "折步与追风箭的单角色教学会话。"
+    },
+    {
+      "type": "rectArea", "id": "area_hg_c04_lv8_03", "name": "巡猎Lv8缚影私有试炼", "regionId": "waterfall_valley", "bounds": {"x": 28, "z": 41, "width": 7, "height": 7}, "actor_private": true,
+      "session_blueprint_id": "C04_TUT_LV8_BIND", "session_profile_id": "C04_PRIVATE_TRAINING_OVERLAY", "session_instance_pattern": "c04:<actor_id>:<lifecycle_id>:<area_id>:<attempt_sequence>", "session_epoch_source": "attempt_sequence", "active_session_policy": "one_active_c04_session_per_actor", "public_combat_entry_gate": "C04_PUBLIC_COMBAT_IDLE_GATE",
+      "preview_trigger": "first_enter", "entry_trigger": "explicit_interact", "entry_point_id": "pt_hg_c04_lv8_03_safe", "entry_interact_point_id": "pt_hg_c04_lv8_03_safe", "failure_return_point_id": "pt_hg_c04_lv8_03_safe", "success_return_point_id": "pt_hg_c04_lv8_03_safe",
+      "entry_requirements": {"min_level": 8, "first_clear_route_selection": {"key_pattern": "C04_ROUTE_LV8_SELECTION:<actor_id>", "equals": "bind"}, "retrain_or_access": "C04_ROUTE_LV8_bind|C04_TUTORIAL_ACCESS_bind:<actor_id>", "route_gate": "selection_match_or_existing_same_route_completion_or_explicit_access", "required_skill_key": "C04_A05", "required_skill_rank": 1}, "progression_key": "C04_ROUTE_LV8_bind", "retry_policy": "free_unlimited",
+      "combat_visibility_scope": "actor_private", "combat_layer": "shared_terrain_private_combat", "combat_scope": "private_session", "private_target_presentation": "daoist_echo_bow_trace", "observer_presentation": "boundary_actor_afterimage_result_ripple_only", "private_target_collision": "none_for_non_owner", "private_target_aggro": "owner_session_only", "public_unit_isolation": "filter_public_targeting_damage_aggro_collision_rewards_and_encounter_actions", "public_unit_visual_policy": "noninteractive_silhouette_inside_training_boundary", "public_spawn_anchor_overlap": "forbidden", "session_exit_invalidate": "effects|timers|callbacks|reservations|training_overlay", "boundary_visual_policy": "waterfall_gate_semicircle_and_southwest_return_arrow", "private_wave_summary": "waterfall_imp_echo_normal_4_plus_spring_echo_normal_1", "valid_point_or_safe_line": "authoritative_semicircle_cast_point_and_outer_safe_line", "retreat_direction": "southwest_to_waterfall_branch", "purpose": "权威施法点与初击收网的单角色教学会话。"
+    },
+    {
+      "type": "rectArea", "id": "area_hg_c04_lv15_u01", "name": "巡猎Lv15绝技私有试炼", "regionId": "waterfall_valley", "bounds": {"x": 36, "z": 47, "width": 6, "height": 3}, "actor_private": true,
+      "session_blueprint_id": "C04_TUT_LV15_U01", "session_profile_id": "C04_PRIVATE_TRAINING_OVERLAY", "session_instance_pattern": "c04:<actor_id>:<lifecycle_id>:<area_id>:<attempt_sequence>", "session_epoch_source": "attempt_sequence", "active_session_policy": "one_active_c04_session_per_actor", "public_combat_entry_gate": "C04_PUBLIC_COMBAT_IDLE_GATE",
+      "preview_trigger": "first_enter", "entry_trigger": "explicit_interact", "entry_point_id": "pt_hg_c04_lv15_u01_safe", "entry_interact_point_id": "pt_hg_c04_lv15_u01_safe", "failure_return_point_id": "pt_hg_c04_lv15_u01_safe", "success_return_point_id": "pt_hg_c04_lv15_u01_safe",
+      "entry_requirements": {"min_level": 15, "required_progression_key_pattern": "C04_U01_TRIAL_ELIGIBLE:<actor_id>", "required_recovery_key_pattern": "C04_REAL_RECOVERY_INTRO:<actor_id>", "u01_tier_equals": 0}, "retry_policy": "free_unlimited",
+      "combat_visibility_scope": "actor_private", "combat_layer": "shared_terrain_private_combat", "combat_scope": "private_session", "private_target_presentation": "daoist_echo_main_mark_and_two_side_marks", "observer_presentation": "boundary_actor_afterimage_result_ripple_only", "private_target_collision": "none_for_non_owner", "private_target_aggro": "owner_session_only", "public_unit_isolation": "filter_public_targeting_damage_aggro_collision_rewards_and_encounter_actions", "public_unit_visual_policy": "noninteractive_silhouette_inside_training_boundary", "public_spawn_anchor_overlap": "forbidden", "session_exit_invalidate": "effects|timers|callbacks|reservations|training_overlay", "boundary_visual_policy": "stone_platform_outline_and_west_return_arrow",
+      "target_plan": "main_elite_1_plus_side_echo_2", "side_target_mark_requirement": "own_m01_at_least_1_within_3.0_of_main", "opening_rebound_success_requirement": "at_least_1_side_echo_hit", "entry_confirmation_text": "本次仅需命中一枚回弦", "hud_counter_text": "回弦目标 0/1（可命中两枚）", "target_layout": {"main": {"position": {"x": 39.0, "z": 48.5}, "collision_radius": 0.45}, "side_1": {"position": {"x": 38.0, "z": 47.8}, "collision_radius": 0.35}, "side_2": {"position": {"x": 40.0, "z": 49.2}, "collision_radius": 0.35}}, "player_valid_staging": {"position": {"x": 36.8, "z": 48.5}, "minimum_walk_width": 1.2, "retreat_boundary": "west_edge_to_safe_point"}, "ordinary_ultimate_snapshot_key": "ordinary_ultimate_before", "training_u01_tier": 1, "training_ultimate_policy": "session_exact_100_from_ordinary_snapshot", "training_ultimate_value": 100, "u01_tier_grant_on_success": 1, "u01_tier_on_non_success": "restore_pre_session", "temporary_state_clear_on": "leave|failure|success|lifecycle_end", "purpose": "入口门禁通过后，主痕与两枚弓痕侧影教学U01主击、开场回弦与衰减冻结。"
+    },
+    {
+      "type": "rectArea", "id": "area_hg_c04_lv20_01", "name": "巡猎Lv20猎首私有试炼", "regionId": "sevenstar_garuda", "bounds": {"x": 65, "z": 27, "width": 6, "height": 7}, "actor_private": true, "private_microphase": true, "overlay_boss_zone_id": "arena_lion",
+      "session_blueprint_id": "C04_TUT_LV20_HUNT", "session_profile_id": "C04_PRIVATE_TRAINING_OVERLAY", "session_instance_pattern": "c04:<actor_id>:<lifecycle_id>:<area_id>:<attempt_sequence>", "session_epoch_source": "attempt_sequence", "active_session_policy": "one_active_c04_session_per_actor", "public_combat_entry_gate": "C04_PUBLIC_COMBAT_IDLE_GATE",
+      "preview_trigger": "first_enter", "entry_trigger": "explicit_interact", "entry_point_id": "pt_hg_c04_lv20_01_safe", "entry_interact_point_id": "pt_hg_c04_lv20_01_safe", "failure_return_point_id": "pt_hg_c04_lv20_01_safe", "success_return_point_id": "pt_hg_c04_lv20_01_safe",
+      "entry_requirements": {"min_level": 20, "required_skill_key": "C04_A03", "required_skill_rank": 3, "required_advanced_skill_key": "C04_A06", "required_advanced_skill_rank": 1}, "retry_policy": "free_unlimited",
+      "combat_visibility_scope": "actor_private", "combat_layer": "shared_terrain_private_combat", "combat_scope": "private_session", "private_target_presentation": "daoist_echo_bow_trace", "observer_presentation": "boundary_actor_afterimage_result_ripple_only", "private_target_collision": "none_for_non_owner", "private_target_aggro": "owner_session_only", "public_unit_isolation": "filter_public_targeting_damage_aggro_collision_rewards_and_encounter_actions", "public_unit_visual_policy": "noninteractive_silhouette_inside_training_boundary", "public_spawn_anchor_overlap": "forbidden", "session_exit_invalidate": "effects|timers|callbacks|reservations|training_overlay", "boundary_visual_policy": "central_rock_platform_north_safe_line_and_northwest_return_arrow", "private_wave_summary": "sevenstar_echo_normal_2_plus_bull_scout_echo_elite_1", "valid_point_or_safe_line": "single_target_full_cull_sightline_and_north_safe_line",
+      "public_boss_isolation": "filter_public_targeting_damage_rewards_and_encounter_actions", "public_boss_collision_policy": "ghost_public_boss_for_private_session_actor", "public_boss_damage_policy": "ignore_public_boss_damage_for_private_session_actor", "public_boss_visual_policy": "noninteractive_outline", "purpose": "五印裁星试炼；与狮驼王战圈重叠时使用私有微相位。"
+    },
+    {
+      "type": "rectArea", "id": "area_hg_c04_lv20_02", "name": "巡猎Lv20逐风私有试炼", "regionId": "sevenstar_elite_court", "bounds": {"x": 58, "z": 55, "width": 8, "height": 8}, "actor_private": true, "private_microphase": true, "overlay_boss_zone_id": "arena_peng",
+      "session_blueprint_id": "C04_TUT_LV20_WIND", "session_profile_id": "C04_PRIVATE_TRAINING_OVERLAY", "session_instance_pattern": "c04:<actor_id>:<lifecycle_id>:<area_id>:<attempt_sequence>", "session_epoch_source": "attempt_sequence", "active_session_policy": "one_active_c04_session_per_actor", "public_combat_entry_gate": "C04_PUBLIC_COMBAT_IDLE_GATE",
+      "preview_trigger": "first_enter", "entry_trigger": "explicit_interact", "entry_point_id": "pt_hg_c04_lv20_02_safe", "entry_interact_point_id": "pt_hg_c04_lv20_02_safe", "failure_return_point_id": "pt_hg_c04_lv20_02_safe", "success_return_point_id": "pt_hg_c04_lv20_02_safe",
+      "entry_requirements": {"min_level": 20, "required_skill_key": "C04_A04", "required_skill_rank": 3, "required_advanced_skill_key": "C04_A07", "required_advanced_skill_rank": 1}, "retry_policy": "free_unlimited",
+      "combat_visibility_scope": "actor_private", "combat_layer": "shared_terrain_private_combat", "combat_scope": "private_session", "private_target_presentation": "daoist_echo_bow_trace", "observer_presentation": "boundary_actor_afterimage_result_ripple_only", "private_target_collision": "none_for_non_owner", "private_target_aggro": "owner_session_only", "public_unit_isolation": "filter_public_targeting_damage_aggro_collision_rewards_and_encounter_actions", "public_unit_visual_policy": "noninteractive_silhouette_inside_training_boundary", "public_spawn_anchor_overlap": "forbidden", "session_exit_invalidate": "effects|timers|callbacks|reservations|training_overlay", "boundary_visual_policy": "cliff_inner_safe_line_and_southwest_return_arrow", "private_wave_summary": "winged_echo_normal_1_plus_bull_scout_echo_elite_1", "valid_point_or_safe_line": "cliff_inner_step_safe_line",
+      "public_boss_isolation": "filter_public_targeting_damage_rewards_and_encounter_actions", "public_boss_collision_policy": "ghost_public_boss_for_private_session_actor", "public_boss_damage_policy": "ignore_public_boss_damage_for_private_session_actor", "public_boss_visual_policy": "noninteractive_outline", "purpose": "三段连弦试炼；与鹏魔王战圈重叠时使用私有微相位。"
+    },
+    {
+      "type": "rectArea", "id": "area_hg_c04_lv20_03", "name": "巡猎Lv20缚影私有试炼", "regionId": "east_sea_foreland", "bounds": {"x": 81, "z": 40, "width": 9, "height": 8}, "actor_private": true,
+      "session_blueprint_id": "C04_TUT_LV20_BIND", "session_profile_id": "C04_PRIVATE_TRAINING_OVERLAY", "session_instance_pattern": "c04:<actor_id>:<lifecycle_id>:<area_id>:<attempt_sequence>", "session_epoch_source": "attempt_sequence", "active_session_policy": "one_active_c04_session_per_actor", "public_combat_entry_gate": "C04_PUBLIC_COMBAT_IDLE_GATE",
+      "preview_trigger": "first_enter", "entry_trigger": "explicit_interact", "entry_point_id": "pt_hg_c04_lv20_03_safe", "entry_interact_point_id": "pt_hg_c04_lv20_03_safe", "failure_return_point_id": "pt_hg_c04_lv20_03_safe", "success_return_point_id": "pt_hg_c04_lv20_03_safe",
+      "entry_requirements": {"min_level": 20, "required_skill_key": "C04_A05", "required_skill_rank": 3, "required_advanced_skill_key": "C04_A08", "required_advanced_skill_rank": 1}, "retry_policy": "free_unlimited",
+      "combat_visibility_scope": "actor_private", "combat_layer": "shared_terrain_private_combat", "combat_scope": "private_session", "private_target_presentation": "daoist_echo_bow_trace", "observer_presentation": "boundary_actor_afterimage_result_ripple_only", "private_target_collision": "none_for_non_owner", "private_target_aggro": "owner_session_only", "public_unit_isolation": "filter_public_targeting_damage_aggro_collision_rewards_and_encounter_actions", "public_unit_visual_policy": "noninteractive_silhouette_inside_training_boundary", "public_spawn_anchor_overlap": "forbidden", "session_exit_invalidate": "effects|timers|callbacks|reservations|training_overlay", "boundary_visual_policy": "vortex_ring_selection_zone_and_west_return_arrow", "private_wave_summary": "fish_patrol_echo_normal_4_plus_vortex_echo_elite_1", "valid_point_or_safe_line": "fixed_selectable_ring_and_outer_waterline", "retreat_direction": "west_to_east_sea_main_route", "purpose": "罗网猎场脉冲与绞猎的单角色教学会话。"
+    }
+  ],
+  "sessionProfiles": [
+    {
+      "id": "C04_PRIVATE_TRAINING_OVERLAY",
+      "timebase_contract": "project_global_authoritative_monotonic_60hz_sync_tick; no reset on map/layer/private-session/death/reconnect; missing_or_epoch_mismatch_rejects_time_critical_entry_or_resource_commit",
+      "one_active_session_per_actor": true,
+      "session_health": "full",
+      "session_cooldowns": "ready",
+      "ordinary_state_snapshot": "health|cooldowns|ultimate",
+      "exit_restore": "exact_pre_session_ordinary_snapshot",
+      "public_consumables": "unchanged",
+      "public_currency": "unchanged",
+      "public_durability": "unchanged",
+      "public_death_cost": "none",
+      "exit_noncombat_protection_seconds": 2,
+      "public_boss_overlay_default": "unaffected",
+      "public_unit_overlay_default": "noninteractive_silhouette_for_private_session_actor",
+      "return_point_contract": "declared_return_safety_radius_spawn_exclusion_public_aggro_clear_and_hazard_policy_required",
+      "public_combat_entry_gate": {
+        "id": "C04_PUBLIC_COMBAT_IDLE_GATE", "required_state": "authoritative_public_idle", "lock_duration_ticks": 300,
+        "evaluation_order": "process_accepted_public_events_through_entry_tick_then_gate",
+        "reject_if": "active_public_aggro|active_boss_participation|pending_public_hit_projectile_or_periodic|public_damage_within_lock",
+        "reject_session_creation": true, "public_scope_required": "public_with_nil_session",
+        "feedback_selection": "highest_priority_active_reason_only; recompute_each_interaction",
+        "feedback_priority": [
+          {"reason": "active_boss_participation", "text": "请离开首领战斗范围", "countdown": "none"},
+          {"reason": "active_public_aggro", "text": "请脱离公共战斗范围", "countdown": "none"},
+          {"reason": "pending_public_hit_projectile_or_periodic", "text": "等待投射物或持续伤害结算：剩余 X.X 秒", "countdown_source": "max_pending_end_tick_minus_entry_tick"},
+          {"reason": "public_damage_within_lock", "text": "脱战冷却：剩余 X.X 秒", "countdown_source": "last_public_damage_tick_plus_300_minus_entry_tick"}
+        ],
+        "same_tick_noncombat_exclusion": {"destination_session_blueprint_id": "C04_TUT_LV15_U01", "event_schema_ref": "C04_PRACTICE_HIT_V1", "event_identity_fields": "actor_id|lifecycle_id|hit_key", "require_character_profile_equals_actor": true, "require_target_logic_id": "C04_PRACTICE_TARGET", "require_event_category": "public_training_noncombat", "require_public_empty_session": true, "entry_tick_relation": "entry_tick_equals_event_sync_tick", "exclude_only": "this_event_from_pending_public_hit_projectile_or_periodic", "require_no_other_relevant_public_state": true, "persistent_bypass": "forbidden"},
+        "exception_excludes": "public_monster|boss|projectile|periodic|other_interactables"
+      },
+      "exit_public_aggro_policy": "entry_locked_no_public_aggro_on_exit",
+      "exit_ground_hazard_policy": "return_point_clear_or_2s_noncombat_protection"
+    }
+  ],
+  "preview": {
+    "status": "rendered",
+    "htmlPath": "layout-preview.html",
+    "imagePath": "layout-preview.png",
+    "metaPath": "layout-preview.meta.json",
+    "renderer": "chrome-headless",
+    "notes": ["确定性DOM/CSS白盒预览，不代表最终美术。"]
+  },
+  "unresolved": [
+    "Y3编辑器与Y3 MCP当前未暴露，96x72尚未换算为真实世界单位，也未写入地图。",
+    "猕猴王24x18、蛟魔王与鲨魔王23x21是压缩白盒候选，需要四人战斗、镜头和技能预警实测；若拥堵，优先扩大侧袋而不是改主线拓扑。",
+    "狮驼王13x20守门段和鹏魔王17x16高崖侧袋需要验证位移技能不会把玩家推入不可达边界。",
+    "主路8 cell、支路6 cell、BOSS入口10 cell需要使用实际英雄碰撞体和四客户端会车测试。",
+    "三个传送点的激活条件、传送冷却、战斗中禁用和复活回退规则需要后续Lua规格确认。",
+    "龙宫四房的空闲分配、等级分流和清理逻辑位于四海层，不在本次花果山地形施工范围。",
+    "牛魔旧战场48x36位于梦墟层，熔脉裂口只负责集结与跨层传送。",
+    "怪群数量、刷新周期、公共BOSS掉落、四人资源吞吐与高等级收益衰减待地图白盒验证后制作。",
+    "官方地形贴图、装饰模型和静态资源ID尚未通过Y3 MCP读取，当前只记录资源关键词。",
+    "96x72的15-25秒首战、2-3分钟副本枢纽和6-8分钟首次主线单程目标需要实机计时。"
+  ]
+}

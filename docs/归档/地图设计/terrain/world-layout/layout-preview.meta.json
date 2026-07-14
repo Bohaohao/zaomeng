@@ -1,0 +1,19 @@
+{
+    "status":  "rendered",
+    "renderer":  "chrome-headless",
+    "htmlPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\terrain\\world-layout\\layout-preview.html",
+    "imagePath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\terrain\\world-layout\\layout-preview.png",
+    "metaPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\terrain\\world-layout\\layout-preview.meta.json",
+    "width":  1440,
+    "height":  1100,
+    "mapWidth":  640,
+    "mapHeight":  512,
+    "canvasWidth":  1167.5,
+    "canvasHeight":  934,
+    "scale":  1.82421875,
+    "error":  null,
+    "notes":  [
+                  "Preview is generated from structured layout JSON.",
+                  "Y3 left-bottom coordinates are converted to HTML left-top coordinates."
+              ]
+}

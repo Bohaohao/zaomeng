@@ -1,0 +1,8 @@
+# Keep text artifacts stable across Windows and Unix checkouts.
+* text=auto
+*.md text eol=lf
+*.lua text eol=lf
+*.ps1 text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.png binary

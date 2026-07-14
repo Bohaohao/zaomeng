@@ -1,0 +1,19 @@
+{
+    "status":  "rendered",
+    "renderer":  "chrome-headless",
+    "htmlPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\terrain\\world-layout\\east-shengzhou\\layout-preview.html",
+    "imagePath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\terrain\\world-layout\\east-shengzhou\\layout-preview.png",
+    "metaPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\terrain\\world-layout\\east-shengzhou\\layout-preview.meta.json",
+    "width":  1200,
+    "height":  760,
+    "mapWidth":  176,
+    "mapHeight":  88,
+    "canvasWidth":  1144,
+    "canvasHeight":  572,
+    "scale":  6.5,
+    "error":  null,
+    "notes":  [
+                  "Preview is generated from structured layout JSON.",
+                  "Y3 left-bottom coordinates are converted to HTML left-top coordinates."
+              ]
+}

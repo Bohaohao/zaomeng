@@ -1,0 +1,574 @@
+{
+  "version": 1,
+  "kind": "powang-preconstruction-manifest",
+  "status": "offline-stage-accepted",
+  "stage_acceptance": {
+    "accepted_on": "2026-07-11",
+    "scope": "design-and-offline-construction",
+    "editor_integration": "deferred",
+    "runtime_validation": "deferred",
+    "verified_in_y3": false
+  },
+  "record_schema": {
+    "inherits_defaults": true,
+    "a_layer_property": "object_fields",
+    "a_layer_canonical_name": "y3_fields",
+    "runtime_property": "runtime_fields",
+    "note": "object_fields is the executable serialization name for canonical y3_fields"
+  },
+  "record_defaults": {
+    "status": "reviewed",
+    "operation": "create",
+    "chapter": "职业系统/破妄法门",
+    "source_doc": "docs/归档/职业设计/02-破妄法门资源循环与完整技能组.md",
+    "acceptance": ["field preflight", "command materialization", "editor readback deferred"]
+  },
+  "source_documents": [
+    "docs/归档/职业设计/02-破妄法门资源循环与完整技能组.md",
+    "docs/物编/01-破妄法门技能物编规格.md",
+    "docs/物编/02-破妄英雄单位与基础属性规格.md",
+    "docs/归档/职业设计/06-职业模板v1.1反查报告.md",
+    "docs/归档/职业设计/07-破妄P1修订与验收.md"
+  ],
+  "expected_counts": {
+    "heroes": 1,
+    "abilities": 18,
+    "modifiers": 12,
+    "projectiles": 0
+  },
+  "execution_gates": {
+    "map_path": null,
+    "script_root": null,
+    "y3_obj_edit_script": "C:\\Users\\Administrator\\.codex\\skills\\y3-terrain-layout\\sources\\y3-maker-config\\skills\\y3-obj-edit\\scripts\\y3_obj_edit.py",
+    "python_dependencies_ready": false,
+    "y3editor_connected": false,
+    "unit_id_assigned": false,
+    "ability_ids_assigned": false,
+    "modifier_ids_assigned": false,
+    "model_id_assigned": false,
+    "icon_ids_assigned": false,
+    "cast_types_verified": true,
+    "distance_scale_verified": false,
+    "guardable_damage_classifier_bound": false,
+    "lifecycle_callback_contract_bound": false,
+    "target_rank_resolver_bound": false,
+    "melee_template_verified": false
+  },
+  "hero": {
+    "record_key": "C01_HERO",
+    "object_type": "unit",
+    "status": "reviewed",
+    "operation": "create",
+    "y3_id": null,
+    "name": "破妄承命者",
+    "unit_type": "近战英雄",
+    "model_id": null,
+    "icon_id": null,
+    "dependencies": ["C01_F01", "C01_U01"],
+    "object_fields": {
+      "hp_max": 620,
+      "hp_max_grow": 68,
+      "mp_max": 0,
+      "mp_max_grow": 0,
+      "attack_phy": 48,
+      "attack_phy_grow": 5.7,
+      "attack_mag": 0,
+      "defense_phy": 22,
+      "defense_mag": 16,
+      "attack_speed": 100,
+      "attack_interval": 1.05,
+      "ori_speed": 3.8
+    },
+    "runtime_fields": {
+      "defense_phy_growth": 1.9,
+      "defense_mag_growth": 1.5,
+      "base_critical_chance": 0.05,
+      "base_critical_damage": 1.5,
+      "base_hit_rate": 1.0,
+      "base_dodge_rate": 0.0,
+      "base_cooldown_reduction": 0.0,
+      "max_battle_momentum": 100,
+      "max_ultimate_gauge": 100,
+      "normal_attack_combo_window": 1.4,
+      "normal_attack_momentum": [4, 4, 7],
+      "skill_loadout_slots": 5
+    },
+    "unresolved_fields": [
+      "y3_id",
+      "model_id",
+      "icon_id",
+      "common_atk_type",
+      "turn_speed",
+      "sight_range",
+      "common_atk_range",
+      "hero_ability_list",
+      "common_ability_list"
+    ]
+  },
+  "abilities": [
+    {
+      "record_key": "C01_F01",
+      "name": "破妄真意",
+      "category": "fixed-passive",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_M01_DONGMING"],
+      "object_fields": {
+        "ability_max_level": 1,
+        "sight_type": 0,
+        "ability_cast_type": 3,
+        "cold_down_time": [0],
+        "ability_cost": [0],
+        "ability_hp_cost": [0],
+        "ability_damage": [0],
+        "required_level": [1]
+      },
+      "unresolved_fields": []
+    },
+    {
+      "record_key": "C01_A01",
+      "name": "开锋式",
+      "category": "active-generator",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_F01"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 1,
+        "ability_cast_type": 2,
+        "ability_cast_point": 0.15,
+        "ability_bw_point": 0.15,
+        "is_immediate": false,
+        "is_meele": true,
+        "cold_down_time": [4.2, 4.2, 4.0, 3.8, 3.6],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [1, 4, 8, 14, 20]
+      },
+      "unresolved_fields": ["sector_radius", "sector_angle", "ability_damage_range"]
+    },
+    {
+      "record_key": "C01_A02",
+      "name": "贯心式",
+      "category": "active-spender",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_F01", "C01_M01_DONGMING"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 2,
+        "ability_cast_type": 2,
+        "ability_cast_point": 0.3,
+        "ability_bw_point": 0.2,
+        "is_immediate": false,
+        "is_meele": true,
+        "cold_down_time": [7.0, 7.0, 7.0, 6.5, 6.0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [3, 6, 10, 16, 22]
+      },
+      "unresolved_fields": ["arrow_length", "arrow_width", "ability_damage_range"]
+    },
+    {
+      "record_key": "C01_A03",
+      "name": "叠锋三破",
+      "category": "active-generator",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_F01"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 1,
+        "ability_cast_type": 2,
+        "ability_cast_point": 0.1,
+        "ability_bw_point": 0.1,
+        "is_immediate": false,
+        "is_meele": true,
+        "cold_down_time": [9.5, 9.5, 9.0, 8.5, 8.0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [8, 11, 15, 22, 30]
+      },
+      "unresolved_fields": ["sector_radius", "sector_angle", "ability_damage_range"]
+    },
+    {
+      "record_key": "C01_A04",
+      "name": "踏虚行",
+      "category": "active-generator",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_F01", "C01_M03_TAXU_SWIFT"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 7,
+        "ability_cast_type": 2,
+        "ability_cast_point": 0.05,
+        "ability_bw_point": 0.0,
+        "is_immediate": false,
+        "is_meele": true,
+        "cold_down_time": [10.0, 10.0, 9.5, 9.0, 10.0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [8, 11, 15, 22, 30]
+      },
+      "unresolved_fields": ["arrow_length", "arrow_width", "ability_damage_range"]
+    },
+    {
+      "record_key": "C01_A05",
+      "name": "照妄横扫",
+      "category": "active-generator",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_F01", "C01_M02_XIANWANG"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 0,
+        "ability_cast_type": 2,
+        "ability_cast_point": 0.25,
+        "ability_bw_point": 0.2,
+        "is_immediate": false,
+        "is_meele": true,
+        "cold_down_time": [11.0, 11.0, 10.5, 10.0, 9.5],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [8, 11, 15, 22, 30]
+      },
+      "unresolved_fields": ["ability_damage_range"]
+    },
+    {
+      "record_key": "C01_A06",
+      "name": "断岳裁",
+      "category": "active-spender",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_F01", "C01_M01_DONGMING"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 2,
+        "ability_cast_type": 2,
+        "ability_cast_point": 0.55,
+        "ability_bw_point": 0.25,
+        "is_immediate": false,
+        "is_meele": true,
+        "cold_down_time": [16.0, 16.0, 15.5, 15.0, 14.0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [20, 25, 31, 39, 48]
+      },
+      "unresolved_fields": ["arrow_length", "arrow_width", "ability_damage_range"]
+    },
+    {
+      "record_key": "C01_A07",
+      "name": "回锋照影",
+      "category": "active-spender",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_F01", "C01_M01_DONGMING", "C01_M04_HUIFENG_GUARD", "C01_M05_HUIFENG_SHIELD"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 7,
+        "ability_cast_type": 2,
+        "ability_cast_point": 0.0,
+        "ability_bw_point": 0.1,
+        "is_immediate": true,
+        "is_meele": true,
+        "cold_down_time": [13.0, 13.0, 12.5, 12.0, 11.0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [20, 25, 31, 39, 48]
+      },
+      "unresolved_fields": ["arrow_length", "arrow_width", "ability_damage_range"]
+    },
+    {
+      "record_key": "C01_A08",
+      "name": "定真贯阵",
+      "category": "active-spender",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_F01", "C01_M01_DONGMING", "C01_M02_XIANWANG"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 2,
+        "ability_cast_type": 2,
+        "ability_cast_point": 0.4,
+        "ability_bw_point": 0.2,
+        "is_immediate": false,
+        "is_meele": true,
+        "cold_down_time": [15.0, 15.0, 14.5, 14.0, 13.0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [20, 25, 31, 39, 48]
+      },
+      "unresolved_fields": ["arrow_length", "arrow_width", "ability_damage_range"]
+    },
+    {
+      "record_key": "C01_P01",
+      "name": "势行不滞",
+      "category": "learnable-passive",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_M06_SHIXING_READY"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 0,
+        "ability_cast_type": 3,
+        "cold_down_time": [0, 0, 0, 0, 0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [10, 14, 19, 25, 32]
+      },
+      "unresolved_fields": []
+    },
+    {
+      "record_key": "C01_P02",
+      "name": "锋随势涨",
+      "category": "learnable-passive",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_M01_DONGMING"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 0,
+        "ability_cast_type": 3,
+        "cold_down_time": [0, 0, 0, 0, 0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [15, 20, 26, 33, 41]
+      },
+      "unresolved_fields": []
+    },
+    {
+      "record_key": "C01_P03",
+      "name": "踏虚生风",
+      "category": "learnable-passive",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_M09_TAXU_WIND"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 0,
+        "ability_cast_type": 3,
+        "cold_down_time": [0, 0, 0, 0, 0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [15, 20, 26, 33, 41]
+      },
+      "unresolved_fields": []
+    },
+    {
+      "record_key": "C01_P04",
+      "name": "妄痕可见",
+      "category": "learnable-passive",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_M02_XIANWANG"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 0,
+        "ability_cast_type": 3,
+        "cold_down_time": [0, 0, 0, 0, 0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [15, 20, 26, 33, 41]
+      },
+      "unresolved_fields": []
+    },
+    {
+      "record_key": "C01_P05",
+      "name": "守意归元",
+      "category": "learnable-passive",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_M07_SHOUYI_GUARD"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 0,
+        "ability_cast_type": 3,
+        "cold_down_time": [0, 0, 0, 0, 0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [25, 30, 36, 43, 51]
+      },
+      "unresolved_fields": []
+    },
+    {
+      "record_key": "C01_P06",
+      "name": "破隙连裁",
+      "category": "learnable-passive",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_M08_POXI"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 0,
+        "ability_cast_type": 3,
+        "cold_down_time": [0, 0, 0, 0, 0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [30, 36, 43, 51, 59]
+      },
+      "unresolved_fields": []
+    },
+    {
+      "record_key": "C01_P07",
+      "name": "进退无碍",
+      "category": "learnable-passive",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_M10_JINTUI_GUARD"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 0,
+        "ability_cast_type": 3,
+        "cold_down_time": [0, 0, 0, 0, 0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [30, 36, 43, 51, 59]
+      },
+      "unresolved_fields": []
+    },
+    {
+      "record_key": "C01_P08",
+      "name": "照真同证",
+      "category": "learnable-passive",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_M02_XIANWANG", "C01_M11_MINGSHI"],
+      "object_fields": {
+        "ability_max_level": 5,
+        "sight_type": 0,
+        "ability_cast_type": 3,
+        "cold_down_time": [0, 0, 0, 0, 0],
+        "ability_cost": [0, 0, 0, 0, 0],
+        "ability_hp_cost": [0, 0, 0, 0, 0],
+        "ability_damage": [0, 0, 0, 0, 0],
+        "required_level": [30, 36, 43, 51, 59]
+      },
+      "unresolved_fields": []
+    },
+    {
+      "record_key": "C01_U01",
+      "name": "万妄俱破",
+      "category": "ultimate",
+      "y3_id": null,
+      "icon_id": null,
+      "dependencies": ["C01_F01", "C01_M01_DONGMING", "C01_M12_ZHENJING"],
+      "object_fields": {
+        "ability_max_level": 3,
+        "sight_type": 0,
+        "ability_cast_type": 2,
+        "ability_cast_point": 0.35,
+        "ability_bw_point": 0.3,
+        "is_immediate": false,
+        "is_meele": true,
+        "cold_down_time": [0, 0, 0],
+        "ability_cost": [0, 0, 0],
+        "ability_hp_cost": [0, 0, 0],
+        "ability_damage": [0, 0, 0],
+        "required_level": [15, 35, 55]
+      },
+      "unresolved_fields": ["ability_damage_range"]
+    }
+  ],
+  "modifiers": [
+    {
+      "record_key": "C01_M01_DONGMING",
+      "name": "洞明",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+    },
+    {
+      "record_key": "C01_M02_XIANWANG",
+      "name": "显妄",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 3, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+    },
+    {
+      "record_key": "C01_M03_TAXU_SWIFT",
+      "name": "踏虚疾行",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+    },
+    {
+      "record_key": "C01_M04_HUIFENG_GUARD",
+      "name": "回锋守势",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+    },
+    {
+      "record_key": "C01_M05_HUIFENG_SHIELD",
+      "name": "回锋护盾",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 4, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true, "shield_type": 2}
+    },
+    {
+      "record_key": "C01_M06_SHIXING_READY",
+      "name": "势行不滞",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+    },
+    {
+      "record_key": "C01_M07_SHOUYI_GUARD",
+      "name": "守意归元",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+    },
+    {
+      "record_key": "C01_M08_POXI",
+      "name": "破隙",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 3, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": false}
+    },
+    {
+      "record_key": "C01_M09_TAXU_WIND",
+      "name": "踏虚生风",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+    },
+    {
+      "record_key": "C01_M10_JINTUI_GUARD",
+      "name": "进退无碍",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": false}
+    },
+    {
+      "record_key": "C01_M11_MINGSHI",
+      "name": "明识",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+    },
+    {
+      "record_key": "C01_M12_ZHENJING",
+      "name": "真境",
+      "y3_id": null,
+      "icon_id": null,
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+    }
+  ]
+}

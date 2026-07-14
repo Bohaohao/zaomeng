@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Y3 &#22320;&#24418;&#24067;&#23616;&#31034;&#24847;&#22270;</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  width: 1440px;
+  height: 1100px;
+  overflow: hidden;
+  background: #f4f1ea;
+  color: #1e2528;
+  font-family: "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
+}
+.page { width: 100%; height: 100%; padding: 24px; }
+.summary {
+  height: 86px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: start;
+}
+h1 { margin: 0 0 8px; font-size: 24px; font-weight: 700; letter-spacing: 0; }
+.sub { margin: 0; font-size: 13px; color: #526066; max-width: 820px; line-height: 1.45; }
+.stats { display: grid; grid-template-columns: repeat(4, auto); gap: 8px; }
+.stat { border: 1px solid #c9d1ce; background: #ffffffcc; padding: 7px 9px; border-radius: 6px; font-size: 12px; white-space: nowrap; }
+.map-wrap {
+  position: relative;
+  height: calc(100% - 86px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-canvas {
+  position: relative;
+  width: 1167.5px;
+  height: 934px;
+  background:
+    linear-gradient(rgba(30,37,40,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,37,40,.045) 1px, transparent 1px),
+    #fbfaf5;
+  background-size: 32px 32px;
+  border: 2px solid #263238;
+  box-shadow: 0 10px 30px rgba(30,37,40,.18);
+  overflow: hidden;
+}
+.region {
+  position: absolute;
+  border: 2px solid rgba(32, 45, 48, .38);
+  background: rgba(160, 166, 160, .28);
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 6px;
+  font-size: 12px;
+  font-weight: 650;
+  color: #182123;
+  overflow: hidden;
+}
+.region span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 0 rgba(255,255,255,.75); }
+.region-public { background: rgba(81, 157, 100, .30); border-color: #3d9a54; }
+.region-safe { background: rgba(74, 158, 148, .28); border-color: #267c74; }
+.region-main-route { background: rgba(192, 143, 67, .30); border-color: #b1752c; }
+.region-side-route { background: rgba(225, 200, 105, .34); border-color: #c9a83e; }
+.region-monster { background: rgba(217, 97, 57, .27); border-color: #cf573a; }
+.region-boss { background: rgba(170, 56, 118, .22); border-color: #a83276; border-width: 4px; }
+.region-hidden { background: rgba(93, 80, 170, .18); border-color: #5d50aa; border-style: dashed; }
+.region-transition { background: rgba(128, 137, 141, .25); border-color: #7c8589; }
+.region-buffer { background: rgba(181, 187, 184, .22); border-color: #a5adab; }
+.region-water { background: rgba(71, 138, 190, .26); border-color: #377dad; }
+.route-segment {
+  position: absolute;
+  height: 6px;
+  border-radius: 999px;
+  transform-origin: left center;
+  z-index: 20;
+  opacity: .94;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.55);
+}
+.route-main-route { background: #87551e; }
+.route-side-route { background: #c9a83e; height: 4px; opacity: .84; }
+.marker {
+  position: absolute;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.22);
+}
+.marker span {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translate(5px, -50%);
+  min-width: max-content;
+  max-width: 88px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: rgba(255,255,255,.88);
+  border: 1px solid rgba(38,50,56,.18);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 10px;
+  color: #1e2528;
+}
+.marker-spawn { background: #d74835; border-radius: 50%; }
+.marker-boss { background: #a83276; transform: rotate(45deg); }
+.marker-boss span { transform: rotate(-45deg) translate(5px, -50%); transform-origin: left top; }
+.marker-npc { background: #3e78b2; border-radius: 3px; }
+.marker-shop { background: #16a3a3; border-radius: 3px; }
+.marker-hiddenEntry { background: transparent; border: 3px solid #5d50aa; border-radius: 50%; }
+.marker-resource { background: #d7a928; border-radius: 50%; }
+.legend {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 5px 10px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid rgba(38,50,56,.18);
+  border-radius: 6px;
+  background: rgba(255,255,255,.88);
+  font-size: 10px;
+}
+.swatch { width: 14px; height: 10px; border-radius: 3px; border: 1px solid rgba(38,50,56,.28); }
+.s-public { background: rgba(81,157,100,.45); }
+.s-monster { background: rgba(217,97,57,.42); }
+.s-boss { background: rgba(170,56,118,.42); border: 2px solid #a83276; }
+.s-hidden { background: rgba(93,80,170,.22); border-style: dashed; }
+.s-route { background: #87551e; }
+.s-point { background: #3e78b2; border-radius: 50%; }
+</style>
+</head>
+<body>
+<div class="page">
+  <section class="summary">
+    <div>
+      <h1>Y3 &#22320;&#24418;&#24067;&#23616;&#31034;&#24847;&#22270;</h1>
+      <p class="sub">&#20027;&#39064;: 六层西游世界：外天、天界、人界、四海、幽冥、梦墟 | &#35774;&#35745;&#20381;&#25454;: 采用 5:4 横向总画布和三横排双层板布局。640 与 512 均为 32 的倍数；人界获得最大连续面积，花果山东岸可直接衔接东海；其余层板通过 8 tile 不可达缝和 16 tile 外边界隔离。总图保留 15.04% 结构缓冲，既容纳首发三篇和通天塔，也为四洲、四海、多天宫与深层幽冥留出扩展槽位。当前无可读取目标地图信息的 Y3 MCP 端点，因此此尺寸不是当前编辑器地图事实。</p>
+    </div>
+    <div class="stats">
+      <div class="stat">&#22320;&#22270;: 640 x 512</div>
+      <div class="stat">&#24341;&#29992;&#28304;: 5</div>
+      <div class="stat">&#20998;&#21306;: 47</div>
+      <div class="stat">&#36335;&#32447;: 1 / &#21047;&#24618;&#28857;: 3</div>
+    </div>
+  </section>
+  <div class="map-wrap">
+    <div class="map-canvas">
+<div class="region region-default" style="left:29.188px;top:29.188px;width:408.625px;height:248.094px;"><span>外天层 224x136 | 10....</span></div>
+<div class="region region-default" style="left:452.406px;top:29.188px;width:685.906px;height:248.094px;"><span>天界层 376x136 | 18....</span></div>
+<div class="region region-default" style="left:29.188px;top:291.875px;width:700.5px;height:350.25px;"><span>人界层 384x192 | 26....</span></div>
+<div class="region region-default" style="left:744.281px;top:291.875px;width:394.031px;height:350.25px;"><span>四海层 216x192 | 14....</span></div>
+<div class="region region-default" style="left:29.188px;top:656.719px;width:539.969px;height:248.094px;"><span>幽冥层 296x136 | 14....</span></div>
+<div class="region region-default" style="left:583.75px;top:656.719px;width:554.563px;height:248.094px;"><span>梦墟层 304x136 | 14....</span></div>
+<div class="region region-buffer" style="left:29.188px;top:277.281px;width:1109.125px;height:14.594px;"><span>层板隔离缝 A 8 tile</span></div>
+<div class="region region-buffer" style="left:29.188px;top:642.125px;width:1109.125px;height:14.594px;"><span>层板隔离缝 B 8 tile</span></div>
+<div class="region region-buffer" style="left:437.813px;top:29.188px;width:14.594px;height:248.094px;"><span>上排隔离缝 8 tile</span></div>
+<div class="region region-buffer" style="left:729.688px;top:291.875px;width:14.594px;height:350.25px;"><span>中排隔离缝 8 tile</span></div>
+<div class="region region-buffer" style="left:569.156px;top:656.719px;width:14.594px;height:248.094px;"><span>下排隔离缝 8 tile</span></div>
+<div class="region region-buffer" style="left:43.781px;top:43.781px;width:175.125px;height:218.906px;"><span>十洲三岛预留</span></div>
+<div class="region region-buffer" style="left:233.5px;top:43.781px;width:189.719px;height:102.156px;"><span>星宫天律预留</span></div>
+<div class="region region-buffer" style="left:233.5px;top:160.531px;width:189.719px;height:102.156px;"><span>古帝遗迹/洪荒裂界</span></div>
+<div class="region region-public" style="left:467px;top:65.672px;width:233.5px;height:175.125px;"><span>首发天庭篇 128x96</span></div>
+<div class="region region-buffer" style="left:715.094px;top:43.781px;width:189.719px;height:102.156px;"><span>瑶池仙境预留</span></div>
+<div class="region region-buffer" style="left:919.406px;top:43.781px;width:204.313px;height:102.156px;"><span>神雷玉府预留</span></div>
+<div class="region region-buffer" style="left:715.094px;top:160.531px;width:189.719px;height:102.156px;"><span>北极天宫预留</span></div>
+<div class="region region-buffer" style="left:919.406px;top:160.531px;width:204.313px;height:102.156px;"><span>青华仙境预留</span></div>
+<div class="region region-buffer" style="left:43.781px;top:306.469px;width:321.063px;height:160.531px;"><span>南瞻部洲预留</span></div>
+<div class="region region-buffer" style="left:43.781px;top:481.594px;width:321.063px;height:145.938px;"><span>西牛贺洲预留</span></div>
+<div class="region region-buffer" style="left:394.031px;top:481.594px;width:321.063px;height:145.938px;"><span>北俱芦洲预留</span></div>
+<div class="region region-default" style="left:394.031px;top:306.469px;width:321.063px;height:160.531px;"><span>东胜神州完整大区 176x88 |...</span></div>
+<div class="region region-buffer" style="left:394.031px;top:306.469px;width:145.938px;height:80.266px;"><span>傲来国预留 80x44</span></div>
+<div class="region region-buffer" style="left:394.031px;top:386.734px;width:145.938px;height:80.266px;"><span>东胜腹地预留 80x44</span></div>
+<div class="region region-buffer" style="left:539.969px;top:306.469px;width:14.594px;height:160.531px;"><span>七星山脊封界 8x88</span></div>
+<div class="region region-public" style="left:554.563px;top:328.359px;width:160.531px;height:116.75px;"><span>花果山篇 88x64 | 东胜36...</span></div>
+<div class="region region-water" style="left:554.563px;top:306.469px;width:160.531px;height:21.891px;"><span>东胜北岸封闭带</span></div>
+<div class="region region-water" style="left:554.563px;top:445.109px;width:160.531px;height:21.891px;"><span>东胜南岸封闭带</span></div>
+<div class="region region-transition" style="left:715.094px;top:372.141px;width:43.781px;height:43.781px;"><span>花果山-东海海眼 24x24</span></div>
+<div class="region region-public" style="left:758.875px;top:306.469px;width:175.125px;height:160.531px;"><span>东海公共区预留 96x88</span></div>
+<div class="region region-hidden" style="left:948.594px;top:313.766px;width:175.125px;height:145.938px;"><span>首发龙宫四房 96x80</span></div>
+<div class="region region-buffer" style="left:758.875px;top:481.594px;width:116.75px;height:145.938px;"><span>北海预留</span></div>
+<div class="region region-buffer" style="left:882.922px;top:481.594px;width:116.75px;height:145.938px;"><span>西海预留</span></div>
+<div class="region region-buffer" style="left:1006.969px;top:481.594px;width:116.75px;height:145.938px;"><span>南海预留</span></div>
+<div class="region region-hidden" style="left:955.891px;top:321.063px;width:76.617px;height:62.023px;"><span>龙宫挑战房1</span></div>
+<div class="region region-hidden" style="left:1039.805px;top:321.063px;width:76.617px;height:62.023px;"><span>龙宫挑战房2</span></div>
+<div class="region region-hidden" style="left:955.891px;top:390.383px;width:76.617px;height:62.023px;"><span>龙宫挑战房3</span></div>
+<div class="region region-hidden" style="left:1039.805px;top:390.383px;width:76.617px;height:62.023px;"><span>龙宫挑战房4</span></div>
+<div class="region region-public" style="left:43.781px;top:693.203px;width:233.5px;height:175.125px;"><span>首发地府篇 128x96</span></div>
+<div class="region region-buffer" style="left:291.875px;top:671.313px;width:262.688px;height:102.156px;"><span>十殿地府预留</span></div>
+<div class="region region-buffer" style="left:291.875px;top:788.063px;width:262.688px;height:102.156px;"><span>黄泉/幽都/血河预留</span></div>
+<div class="region region-safe" style="left:598.344px;top:744.281px;width:72.969px;height:72.969px;"><span>界门台 40x40</span></div>
+<div class="region region-public" style="left:685.906px;top:685.906px;width:131.344px;height:189.719px;"><span>通天塔 72x104</span></div>
+<div class="region region-boss" style="left:831.844px;top:685.906px;width:116.75px;height:87.563px;"><span>牛魔旧战场 64x48</span></div>
+<div class="region region-buffer" style="left:831.844px;top:788.063px;width:116.75px;height:102.156px;"><span>副本口袋预留</span></div>
+<div class="region region-buffer" style="left:963.188px;top:671.313px;width:160.531px;height:218.906px;"><span>心魔/历史战场预留</span></div>
+<div class="route-segment route-main-route" style="left:656.719px;top:394.031px;width:69.32px;transform:rotate(0deg);"></div>
+<div class="route-segment route-main-route" style="left:726.039px;top:394.031px;width:62.451px;transform:rotate(-6.71deg);"></div>
+<div class="marker marker-spawn" style="left:569.453px;top:379.734px;width:14px;height:14px;"><span>花果山出生点</span></div>
+<div class="marker marker-spawn" style="left:65.969px;top:773.766px;width:14px;height:14px;"><span>地府篇出生点</span></div>
+<div class="marker marker-spawn" style="left:489.188px;top:153.531px;width:14px;height:14px;"><span>天庭篇出生点</span></div>
+<div class="marker marker-boss" style="left:881.219px;top:720.688px;width:18px;height:18px;"><span>牛魔旧战场</span></div>
+<div class="marker marker-boss" style="left:742.578px;top:771.766px;width:18px;height:18px;"><span>通天塔循环战斗区</span></div>
+<div class="marker marker-npc" style="left:627.828px;top:773.766px;width:14px;height:14px;"><span>界门使</span></div>
+<div class="marker marker-npc" style="left:576.75px;top:394.328px;width:14px;height:14px;"><span>花果山传送使</span></div>
+<div class="marker marker-npc" style="left:73.266px;top:788.359px;width:14px;height:14px;"><span>地府传送使</span></div>
+<div class="marker marker-npc" style="left:496.484px;top:168.125px;width:14px;height:14px;"><span>天庭传送使</span></div>
+<div class="marker marker-hiddenEntry" style="left:697.148px;top:387.031px;width:14px;height:14px;"><span>龙宫四份独立挑战区</span></div>
+<div class="marker marker-resource" style="left:731.984px;top:389.031px;width:10px;height:10px;"><span>花果山海眼接口</span></div>
+<div class="marker marker-resource" style="left:629.828px;top:775.766px;width:10px;height:10px;"><span>界门台中心</span></div>
+      <div class="legend">
+        <span class="swatch s-public"></span><span>&#20844;&#20849;/&#23433;&#20840;</span>
+        <span class="swatch s-monster"></span><span>&#21047;&#24618;</span>
+        <span class="swatch s-boss"></span><span>BOSS</span>
+        <span class="swatch s-hidden"></span><span>&#38544;&#34255;</span>
+        <span class="swatch s-route"></span><span>&#36335;&#32447;</span>
+        <span class="swatch s-point"></span><span>&#28857;&#20301;</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

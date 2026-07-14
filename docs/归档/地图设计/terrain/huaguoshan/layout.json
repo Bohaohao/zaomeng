@@ -1,0 +1,493 @@
+{
+  "version": 1,
+  "mode": "preview",
+  "referenceSources": [
+    "default: 当前策划案与世界观约束",
+    "用户最新确认：每篇章三点传送、公共BOSS按有效伤害归属、龙宫四份独立挑战区、资源吞吐表后置",
+    "docs/01-地图与多主城结构.md",
+    "docs/02-公共野外与副本规则.md",
+    "docs/04-v1.0首发内容范围.md",
+    "docs/06-造梦1-3参考核对与整合建议.md",
+    "docs/07-花果山篇副本与掉落设计.md",
+    "docs/08-花果山篇野外怪物与BOSS设计.md"
+  ],
+  "worldview": {
+    "theme": "花果山篇：山林、水帘、桃林与洞窟分路、东海边界、火焰山前哨",
+    "hardRules": [
+      "花果山篇是首发第一篇章，需要新手友好但内容密度充足。",
+      "每篇章固定设置主城传送点、副本枢纽传送点、团本入口传送点。",
+      "龙宫是临水隐藏单人本，首发复制四份独立挑战区域。",
+      "公共BOSS战斗口袋不得阻断主路；鹏魔王仅作为高阶守门精英。",
+      "蛟魔王和鲨魔王保留在花果山篇且只做一阶段。",
+      "鲨魔王后开启独立焦黑崖道直达火焰山前哨，不折返穿过蛟魔王区域。",
+      "火焰山前哨是团本安全集结区，正式牛魔战场与公共野外物理隔离。"
+    ]
+  },
+  "map": {
+    "width": 360,
+    "height": 260,
+    "reason": "候选局部施工画布。横向维持花果山主城到东海边界的章节推进，纵向新增空间用于上方公共BOSS口袋与火焰山前哨、下方四份龙宫独立挑战区。相较旧版340x224，扩容用于隔离战斗与回程节点，不增加主线通勤长度。若后续在花果山篇追加新的完整副本或要求把三主城直接铺入同一局部画布，需要重新评估总图尺寸。"
+  },
+  "regions": [
+    {
+      "id": "safe_hub",
+      "name": "花果山主城安全区",
+      "type": "safe",
+      "worldviewTag": "猴族山门与篇章归返",
+      "bounds": {"x": 0, "z": 116, "width": 50, "height": 64},
+      "purpose": "出生复活、主城功能、篇章传送点一",
+      "visualIdentity": "山门、石台、猴族旗帜与水帘远景"
+    },
+    {
+      "id": "mountain_road",
+      "name": "花果山山道",
+      "type": "public",
+      "worldviewTag": "山林新手区",
+      "bounds": {"x": 50, "z": 120, "width": 48, "height": 56},
+      "purpose": "新手战斗、基础怪物、首个大精英",
+      "visualIdentity": "宽土路、草坡、散石与山林边界"
+    },
+    {
+      "id": "waterfall_valley",
+      "name": "水帘溪谷",
+      "type": "public",
+      "worldviewTag": "临水暗河与龙宫线索",
+      "bounds": {"x": 98, "z": 108, "width": 62, "height": 76},
+      "purpose": "水系怪物预热、龙宫入口线索、猕猴王侧袋入口",
+      "visualIdentity": "瀑布高差、浅水溪、湿岩与水雾"
+    },
+    {
+      "id": "mihou_pocket",
+      "name": "猕猴王瀑布台",
+      "type": "public",
+      "worldviewTag": "猴族首领高台",
+      "bounds": {"x": 106, "z": 184, "width": 34, "height": 32},
+      "purpose": "主路旁独立公共BOSS战斗口袋",
+      "visualIdentity": "高层瀑布石台、猴族图腾与环形浅水"
+    },
+    {
+      "id": "dungeon_hub",
+      "name": "花果山副本枢纽",
+      "type": "safe",
+      "worldviewTag": "篇章中段驿站",
+      "bounds": {"x": 160, "z": 120, "width": 38, "height": 60},
+      "purpose": "篇章传送点二、路线转折、副本方向识别与玩家集结",
+      "visualIdentity": "小型石亭、传送石、路标与低密度安全广场"
+    },
+    {
+      "id": "peach_surface",
+      "name": "桃林地表线",
+      "type": "public",
+      "worldviewTag": "明亮桃林支路",
+      "bounds": {"x": 198, "z": 148, "width": 52, "height": 40},
+      "purpose": "明亮地表分路、桃花妖与禺狨王",
+      "visualIdentity": "桃树、花瓣、草地与浅色石径"
+    },
+    {
+      "id": "bat_cave",
+      "name": "蝙蝠窟洞线",
+      "type": "public",
+      "worldviewTag": "阴暗洞窟支路",
+      "bounds": {"x": 198, "z": 104, "width": 52, "height": 40},
+      "purpose": "阴暗洞窟分路、蝙蝠群与机关精英",
+      "visualIdentity": "暗岩、石像、蝙蝠巢与窄洞出口"
+    },
+    {
+      "id": "sevenstar_garuda",
+      "name": "七星洞与迦楼罗崖",
+      "type": "public",
+      "worldviewTag": "山海边界守门区",
+      "bounds": {"x": 250, "z": 110, "width": 42, "height": 78},
+      "purpose": "双路汇合、高阶怪物、鹏魔王守门",
+      "visualIdentity": "七星石阵、崖台、风口与开启后的通行门"
+    },
+    {
+      "id": "east_sea_hub",
+      "name": "东海前缘驿站",
+      "type": "public",
+      "worldviewTag": "东海外府边界",
+      "bounds": {"x": 292, "z": 118, "width": 44, "height": 60},
+      "purpose": "东海公共野外、蛟魔与鲨魔分路、后续东海篇接口",
+      "visualIdentity": "浅滩、礁石、破损外府海墙与潮汐路标"
+    },
+    {
+      "id": "jiao_pocket",
+      "name": "蛟魔王潮汐侧湾",
+      "type": "public",
+      "worldviewTag": "潮汐水族强敌",
+      "bounds": {"x": 292, "z": 180, "width": 44, "height": 36},
+      "purpose": "主路北侧独立公共BOSS战斗口袋",
+      "visualIdentity": "半封闭潮池、水柱石、珊瑚与深水边界"
+    },
+    {
+      "id": "shark_vortex",
+      "name": "鲨之涡流战斗湾",
+      "type": "public",
+      "worldviewTag": "东海浅岸压轴",
+      "bounds": {"x": 292, "z": 62, "width": 44, "height": 48},
+      "purpose": "主路南侧公共野外压轴、火焰山路线解锁点",
+      "visualIdentity": "暗蓝浅滩、漩涡纹理、碎礁与鲨齿残骸"
+    },
+    {
+      "id": "fire_cliff_route",
+      "name": "焦黑崖道",
+      "type": "transition",
+      "worldviewTag": "海火交界入侵痕迹",
+      "bounds": {"x": 336, "z": 104, "width": 20, "height": 112},
+      "purpose": "鲨魔王后直达火焰山前哨的独立路线",
+      "visualIdentity": "焦黑礁石、受热海水、熔岩裂纹与牛魔旗"
+    },
+    {
+      "id": "fire_staging",
+      "name": "火焰山团本前哨",
+      "type": "safe",
+      "worldviewTag": "火焰山封印前哨",
+      "bounds": {"x": 292, "z": 216, "width": 64, "height": 34},
+      "purpose": "篇章传送点三、团队集结、确认与团本传送",
+      "visualIdentity": "无怪安全平台、封印门、传送阵与补给旗"
+    },
+    {
+      "id": "fire_team_instance",
+      "name": "火焰山牛魔战场",
+      "type": "hidden",
+      "worldviewTag": "牛魔王团队终局",
+      "bounds": {"x": 208, "z": 200, "width": 72, "height": 52},
+      "purpose": "与公共野外物理隔离的团队本正式战场",
+      "visualIdentity": "环形焦土、熔岩裂隙、火山岩墙与牛魔王旗"
+    },
+    {
+      "id": "dragon_lobby",
+      "name": "龙宫隐藏分配厅",
+      "type": "hidden",
+      "worldviewTag": "水帘暗河通往龙宫",
+      "bounds": {"x": 105, "z": 86, "width": 55, "height": 20},
+      "purpose": "隐藏入口后的挑战区域分配与隔离缓冲",
+      "visualIdentity": "水府门廊、龙纹石门与四向传送阵"
+    },
+    {
+      "id": "dragon_room_1",
+      "name": "龙宫挑战区一",
+      "type": "hidden",
+      "worldviewTag": "龙宫单人试炼",
+      "bounds": {"x": 60, "z": 44, "width": 46, "height": 36},
+      "purpose": "独立单人挑战区域一",
+      "visualIdentity": "水府地砖、龙柱、晶石与环形战斗场"
+    },
+    {
+      "id": "dragon_room_2",
+      "name": "龙宫挑战区二",
+      "type": "hidden",
+      "worldviewTag": "龙宫单人试炼",
+      "bounds": {"x": 112, "z": 44, "width": 46, "height": 36},
+      "purpose": "独立单人挑战区域二",
+      "visualIdentity": "水府地砖、龙柱、晶石与环形战斗场"
+    },
+    {
+      "id": "dragon_room_3",
+      "name": "龙宫挑战区三",
+      "type": "hidden",
+      "worldviewTag": "龙宫单人试炼",
+      "bounds": {"x": 60, "z": 4, "width": 46, "height": 36},
+      "purpose": "独立单人挑战区域三",
+      "visualIdentity": "水府地砖、龙柱、晶石与环形战斗场"
+    },
+    {
+      "id": "dragon_room_4",
+      "name": "龙宫挑战区四",
+      "type": "hidden",
+      "worldviewTag": "龙宫单人试炼",
+      "bounds": {"x": 112, "z": 4, "width": 46, "height": 36},
+      "purpose": "独立单人挑战区域四",
+      "visualIdentity": "水府地砖、龙柱、晶石与环形战斗场"
+    }
+  ],
+  "routes": [
+    {
+      "id": "main_route_huaguoshan",
+      "name": "花果山主线公共路线",
+      "type": "main-route",
+      "points": [
+        {"x": 22, "z": 146},
+        {"x": 72, "z": 146},
+        {"x": 126, "z": 145},
+        {"x": 178, "z": 146},
+        {"x": 194, "z": 146}
+      ],
+      "purpose": "主城经山道和水帘溪谷到达副本枢纽；不穿过公共BOSS战斗圈。"
+    },
+    {
+      "id": "route_peach_surface",
+      "name": "桃林地表分路",
+      "type": "side-route",
+      "points": [
+        {"x": 190, "z": 151},
+        {"x": 220, "z": 168},
+        {"x": 248, "z": 158},
+        {"x": 260, "z": 148}
+      ],
+      "purpose": "明亮地表路线，与蝙蝠窟路线在七星洞前汇合。"
+    },
+    {
+      "id": "route_bat_cave",
+      "name": "蝙蝠窟洞线",
+      "type": "side-route",
+      "points": [
+        {"x": 190, "z": 139},
+        {"x": 220, "z": 122},
+        {"x": 248, "z": 132},
+        {"x": 260, "z": 144}
+      ],
+      "purpose": "阴暗洞窟路线，与桃林路线在七星洞前汇合。"
+    },
+    {
+      "id": "route_sevenstar_to_eastsea",
+      "name": "七星崖至东海前缘",
+      "type": "main-route",
+      "points": [
+        {"x": 260, "z": 146},
+        {"x": 282, "z": 146},
+        {"x": 306, "z": 146}
+      ],
+      "purpose": "通过鹏魔王守门区进入东海前缘；首次击败后保持通行。"
+    },
+    {
+      "id": "route_mihou_pocket",
+      "name": "猕猴王瀑布台支路",
+      "type": "side-route",
+      "points": [
+        {"x": 126, "z": 154},
+        {"x": 122, "z": 184},
+        {"x": 123, "z": 198}
+      ],
+      "purpose": "将猕猴王战斗移出主路并保留原路返回。"
+    },
+    {
+      "id": "route_jiao_pocket",
+      "name": "蛟魔王潮汐侧湾支路",
+      "type": "side-route",
+      "points": [
+        {"x": 314, "z": 158},
+        {"x": 320, "z": 182},
+        {"x": 322, "z": 198}
+      ],
+      "purpose": "东海驿站北侧独立BOSS口袋，不阻断鲨魔王与火焰山路线。"
+    },
+    {
+      "id": "route_shark_pocket",
+      "name": "鲨之涡流战斗湾支路",
+      "type": "side-route",
+      "points": [
+        {"x": 312, "z": 132},
+        {"x": 318, "z": 106},
+        {"x": 320, "z": 84}
+      ],
+      "purpose": "东海驿站南侧公共野外压轴口袋。"
+    },
+    {
+      "id": "route_fire_cliff",
+      "name": "鲨之涡流至火焰山前哨",
+      "type": "side-route",
+      "points": [
+        {"x": 330, "z": 84},
+        {"x": 347, "z": 108},
+        {"x": 347, "z": 170},
+        {"x": 347, "z": 222},
+        {"x": 320, "z": 230}
+      ],
+      "purpose": "鲨魔王前置完成后开启的焦黑崖道；不经过蛟魔王战斗圈。"
+    },
+    {
+      "id": "hidden_route_dragon_palace",
+      "name": "龙宫隐藏入口路线",
+      "type": "side-route",
+      "points": [
+        {"x": 132, "z": 112},
+        {"x": 132, "z": 102},
+        {"x": 132, "z": 94}
+      ],
+      "purpose": "从水帘溪谷临水入口进入龙宫分配厅，再分配空闲挑战区域。"
+    },
+    {
+      "id": "route_fire_instance",
+      "name": "火焰山团本传送",
+      "type": "side-route",
+      "points": [
+        {"x": 298, "z": 232},
+        {"x": 280, "z": 232},
+        {"x": 274, "z": 226}
+      ],
+      "purpose": "前哨确认成员后传送进入隔离的牛魔战场；示意线不代表可步行道路。"
+    }
+  ],
+  "spawns": [
+    {"id": "spawn_mountain_monkey_a", "name": "山猴刷新点A", "monster": "山猴", "position": {"x": 60, "z": 142}, "regionId": "mountain_road", "density": "normal"},
+    {"id": "spawn_stone_beast_a", "name": "石皮山怪刷新点", "monster": "石皮山怪", "position": {"x": 76, "z": 160}, "regionId": "mountain_road", "density": "sparse"},
+    {"id": "spawn_vine_imp_a", "name": "藤叶小妖刷新点", "monster": "藤叶小妖", "position": {"x": 88, "z": 136}, "regionId": "mountain_road", "density": "normal"},
+    {"id": "elite_gorilla", "name": "大猩猩大精英", "monster": "大猩猩", "position": {"x": 86, "z": 168}, "regionId": "mountain_road", "density": "single"},
+    {"id": "spawn_water_imp_a", "name": "水帘小妖刷新点", "monster": "水帘小妖", "position": {"x": 106, "z": 142}, "regionId": "waterfall_valley", "density": "normal"},
+    {"id": "spawn_spring_spirit", "name": "泉灵刷新点", "monster": "泉灵", "position": {"x": 138, "z": 166}, "regionId": "waterfall_valley", "density": "sparse"},
+    {"id": "spawn_fish_scout", "name": "鱼妖哨兵刷新点", "monster": "鱼妖哨兵", "position": {"x": 148, "z": 126}, "regionId": "waterfall_valley", "density": "normal"},
+    {"id": "boss_mihouwang_spawn", "name": "猕猴王", "monster": "猕猴王", "position": {"x": 123, "z": 199}, "regionId": "mihou_pocket", "density": "single"},
+    {"id": "spawn_peach_fairy", "name": "桃花妖刷新点", "monster": "桃花妖", "position": {"x": 208, "z": 164}, "regionId": "peach_surface", "density": "normal"},
+    {"id": "spawn_mist_monkey", "name": "迷踪猴刷新点", "monster": "迷踪猴", "position": {"x": 224, "z": 176}, "regionId": "peach_surface", "density": "normal"},
+    {"id": "elite_yuyongwang", "name": "禺狨王", "monster": "禺狨王", "position": {"x": 240, "z": 164}, "regionId": "peach_surface", "density": "single"},
+    {"id": "spawn_cave_bat", "name": "洞窟蝙蝠刷新点", "monster": "洞窟蝙蝠", "position": {"x": 208, "z": 124}, "regionId": "bat_cave", "density": "dense"},
+    {"id": "spawn_cave_imp", "name": "洞窟小妖刷新点", "monster": "洞窟小妖", "position": {"x": 225, "z": 116}, "regionId": "bat_cave", "density": "normal"},
+    {"id": "elite_bat_statue", "name": "蝙蝠石像", "monster": "蝙蝠石像", "position": {"x": 242, "z": 132}, "regionId": "bat_cave", "density": "single"},
+    {"id": "spawn_sevenstar_demon", "name": "七星洞妖刷新点", "monster": "七星洞妖", "position": {"x": 258, "z": 140}, "regionId": "sevenstar_garuda", "density": "normal"},
+    {"id": "spawn_shanxiao_caster", "name": "山魈术士刷新点", "monster": "山魈术士", "position": {"x": 270, "z": 170}, "regionId": "sevenstar_garuda", "density": "sparse"},
+    {"id": "spawn_flying_wing", "name": "飞翼妖刷新点", "monster": "飞翼妖", "position": {"x": 280, "z": 156}, "regionId": "sevenstar_garuda", "density": "normal"},
+    {"id": "spawn_bull_scout", "name": "牛魔斥候", "monster": "牛魔斥候", "position": {"x": 264, "z": 122}, "regionId": "sevenstar_garuda", "density": "sparse"},
+    {"id": "elite_shituowang", "name": "狮驼王", "monster": "狮驼王", "position": {"x": 274, "z": 132}, "regionId": "sevenstar_garuda", "density": "single"},
+    {"id": "elite_pengmowang", "name": "鹏魔王守门", "monster": "鹏魔王", "position": {"x": 286, "z": 148}, "regionId": "sevenstar_garuda", "density": "single"},
+    {"id": "spawn_fish_patrol", "name": "鱼妖巡兵刷新点", "monster": "鱼妖巡兵", "position": {"x": 300, "z": 146}, "regionId": "east_sea_hub", "density": "normal"},
+    {"id": "spawn_turtle_guard", "name": "龟甲守卫刷新点", "monster": "龟甲守卫", "position": {"x": 316, "z": 162}, "regionId": "east_sea_hub", "density": "normal"},
+    {"id": "spawn_water_caster", "name": "水灵术士刷新点", "monster": "水灵术士", "position": {"x": 326, "z": 132}, "regionId": "east_sea_hub", "density": "sparse"},
+    {"id": "boss_jiaomowang_spawn", "name": "蛟魔一阶", "monster": "蛟魔王一阶段", "position": {"x": 316, "z": 198}, "regionId": "jiao_pocket", "density": "single"},
+    {"id": "spawn_vortex_demon", "name": "漩涡妖兵刷新点", "monster": "漩涡妖兵", "position": {"x": 306, "z": 94}, "regionId": "shark_vortex", "density": "normal"},
+    {"id": "boss_shamowang_spawn", "name": "鲨魔一阶", "monster": "鲨魔王一阶段", "position": {"x": 321, "z": 82}, "regionId": "shark_vortex", "density": "single"},
+    {"id": "spawn_dragon_guard_1", "name": "龙宫龟兵一", "monster": "龙宫龟兵", "position": {"x": 68, "z": 62}, "regionId": "dragon_room_1", "density": "normal"},
+    {"id": "boss_dragon_king_1", "name": "龙王一号房", "monster": "龙王一/二阶段", "position": {"x": 92, "z": 62}, "regionId": "dragon_room_1", "density": "single"},
+    {"id": "spawn_dragon_guard_2", "name": "龙宫龟兵二", "monster": "龙宫龟兵", "position": {"x": 120, "z": 62}, "regionId": "dragon_room_2", "density": "normal"},
+    {"id": "boss_dragon_king_2", "name": "龙王二号房", "monster": "龙王一/二阶段", "position": {"x": 144, "z": 62}, "regionId": "dragon_room_2", "density": "single"},
+    {"id": "spawn_dragon_guard_3", "name": "龙宫龟兵三", "monster": "龙宫龟兵", "position": {"x": 68, "z": 22}, "regionId": "dragon_room_3", "density": "normal"},
+    {"id": "boss_dragon_king_3", "name": "龙王三号房", "monster": "龙王一/二阶段", "position": {"x": 92, "z": 22}, "regionId": "dragon_room_3", "density": "single"},
+    {"id": "spawn_dragon_guard_4", "name": "龙宫龟兵四", "monster": "龙宫龟兵", "position": {"x": 120, "z": 22}, "regionId": "dragon_room_4", "density": "normal"},
+    {"id": "boss_dragon_king_4", "name": "龙王四号房", "monster": "龙王一/二阶段", "position": {"x": 144, "z": 22}, "regionId": "dragon_room_4", "density": "single"},
+    {"id": "spawn_fire_scout", "name": "牛魔斥候战场", "monster": "牛魔斥候", "position": {"x": 220, "z": 226}, "regionId": "fire_team_instance", "density": "sparse"},
+    {"id": "boss_niumo_spawn", "name": "牛魔王", "monster": "牛魔人形态/披甲白牛", "position": {"x": 248, "z": 226}, "regionId": "fire_team_instance", "density": "single"}
+  ],
+  "bossZones": [
+    {"id": "arena_mihouwang", "name": "猕猴王瀑布台战斗圈", "boss": "猕猴王", "bounds": {"x": 108, "z": 186, "width": 30, "height": 26}, "notes": "独立侧袋，主路保留常通路线。"},
+    {"id": "arena_jiaomowang_phase1", "name": "蛟魔王潮汐侧湾战斗圈", "boss": "蛟魔王一阶段", "bounds": {"x": 300, "z": 184, "width": 32, "height": 28}, "notes": "北侧潮池，不与鲨魔或火焰山路线相交。"},
+    {"id": "arena_shamowang_phase1", "name": "鲨魔王涡流湾战斗圈", "boss": "鲨魔王一阶段", "bounds": {"x": 304, "z": 68, "width": 34, "height": 30}, "notes": "南侧压轴口袋，击杀后开启焦黑崖道。"},
+    {"id": "arena_dragon_king_1", "name": "龙王挑战圈一", "boss": "龙王一/二阶段", "bounds": {"x": 64, "z": 47, "width": 38, "height": 28}, "notes": "独立单人挑战区一。"},
+    {"id": "arena_dragon_king_2", "name": "龙王挑战圈二", "boss": "龙王一/二阶段", "bounds": {"x": 116, "z": 47, "width": 38, "height": 28}, "notes": "独立单人挑战区二。"},
+    {"id": "arena_dragon_king_3", "name": "龙王挑战圈三", "boss": "龙王一/二阶段", "bounds": {"x": 64, "z": 7, "width": 38, "height": 28}, "notes": "独立单人挑战区三。"},
+    {"id": "arena_dragon_king_4", "name": "龙王挑战圈四", "boss": "龙王一/二阶段", "bounds": {"x": 116, "z": 7, "width": 38, "height": 28}, "notes": "独立单人挑战区四。"},
+    {"id": "arena_niumo_team", "name": "牛魔王团队战斗圈", "boss": "牛魔人形态/披甲白牛", "bounds": {"x": 214, "z": 207, "width": 60, "height": 38}, "notes": "与前哨及公共野外隔离，成员确认后传送进入。"}
+  ],
+  "publicAreas": [
+    {"id": "public_mountain_road", "name": "花果山山道公共区", "bounds": {"x": 50, "z": 120, "width": 48, "height": 56}},
+    {"id": "public_waterfall_valley", "name": "水帘溪谷公共区", "bounds": {"x": 98, "z": 108, "width": 62, "height": 76}},
+    {"id": "public_mihou_pocket", "name": "猕猴王战斗口袋", "bounds": {"x": 106, "z": 184, "width": 34, "height": 32}},
+    {"id": "public_peach_surface", "name": "桃林地表公共区", "bounds": {"x": 198, "z": 148, "width": 52, "height": 40}},
+    {"id": "public_bat_cave", "name": "蝙蝠窟公共区", "bounds": {"x": 198, "z": 104, "width": 52, "height": 40}},
+    {"id": "public_sevenstar", "name": "七星迦楼罗公共区", "bounds": {"x": 250, "z": 110, "width": 42, "height": 78}},
+    {"id": "public_east_sea", "name": "东海前缘公共区", "bounds": {"x": 292, "z": 118, "width": 44, "height": 60}},
+    {"id": "public_jiao_pocket", "name": "蛟魔王潮汐侧湾", "bounds": {"x": 292, "z": 180, "width": 44, "height": 36}},
+    {"id": "public_shark_vortex", "name": "鲨之涡流公共区", "bounds": {"x": 292, "z": 62, "width": 44, "height": 48}}
+  ],
+  "hiddenAreas": [
+    {"id": "hidden_dragon_lobby", "name": "龙宫隐藏分配厅", "bounds": {"x": 105, "z": 86, "width": 55, "height": 20}, "entrance": {"x": 132, "z": 112}, "entryRule": "发现临水入口后进入分配厅，由同步逻辑分配空闲挑战区域。"},
+    {"id": "hidden_dragon_room_1", "name": "龙宫独立挑战区一", "bounds": {"x": 60, "z": 44, "width": 46, "height": 36}, "entrance": {"x": 132, "z": 96}, "entryRule": "单人独立锁；结束后只清理本区域。"},
+    {"id": "hidden_dragon_room_2", "name": "龙宫独立挑战区二", "bounds": {"x": 112, "z": 44, "width": 46, "height": 36}, "entrance": {"x": 132, "z": 96}, "entryRule": "单人独立锁；结束后只清理本区域。"},
+    {"id": "hidden_dragon_room_3", "name": "龙宫独立挑战区三", "bounds": {"x": 60, "z": 4, "width": 46, "height": 36}, "entrance": {"x": 132, "z": 96}, "entryRule": "单人独立锁；结束后只清理本区域。"},
+    {"id": "hidden_dragon_room_4", "name": "龙宫独立挑战区四", "bounds": {"x": 112, "z": 4, "width": 46, "height": 36}, "entrance": {"x": 132, "z": 96}, "entryRule": "单人独立锁；结束后只清理本区域。"}
+  ],
+  "npcPoints": [
+    {"id": "npc_spawn_revival", "name": "出生/复活点", "role": "revive", "position": {"x": 18, "z": 146}, "regionId": "safe_hub"},
+    {"id": "npc_huaguoshan_quest", "name": "花果山任务NPC", "role": "quest", "position": {"x": 30, "z": 160}, "regionId": "safe_hub"},
+    {"id": "npc_strengthen", "name": "强化NPC", "role": "shop", "position": {"x": 34, "z": 132}, "regionId": "safe_hub"},
+    {"id": "teleport_hg_city", "name": "传送点一·主城", "role": "chapterTeleport", "position": {"x": 22, "z": 146}, "regionId": "safe_hub"},
+    {"id": "teleport_hg_dungeon_hub", "name": "传送点二·副本枢纽", "role": "chapterTeleport", "position": {"x": 178, "z": 146}, "regionId": "dungeon_hub"},
+    {"id": "teleport_hg_team_gate", "name": "传送点三·团本入口", "role": "chapterTeleport", "position": {"x": 320, "z": 230}, "regionId": "fire_staging"},
+    {"id": "npc_dragon_hint", "name": "龙宫线索石碑", "role": "hiddenHint", "position": {"x": 126, "z": 116}, "regionId": "waterfall_valley"},
+    {"id": "npc_dragon_entry", "name": "龙宫隐藏入口", "role": "hiddenEntry", "position": {"x": 132, "z": 112}, "regionId": "waterfall_valley"},
+    {"id": "npc_fire_mountain_entry", "name": "火焰山团本入口", "role": "dungeonEntry", "position": {"x": 300, "z": 232}, "regionId": "fire_staging"},
+    {"id": "npc_fire_team_confirm", "name": "火焰山组队确认", "role": "dungeonConfirm", "position": {"x": 332, "z": 230}, "regionId": "fire_staging"}
+  ],
+  "terrainLayers": [
+    {"id": "terrain_safe_hub", "regionId": "safe_hub", "primary": "浅草地", "secondary": "石台路", "elevation": "平整安全区与低台阶", "water": "none"},
+    {"id": "terrain_mountain_road", "regionId": "mountain_road", "primary": "草地", "secondary": "宽土路和散石", "elevation": "轻微坡度", "water": "none"},
+    {"id": "terrain_waterfall_valley", "regionId": "waterfall_valley", "primary": "湿润草地", "secondary": "浅水溪与岩壁", "elevation": "瀑布高差和水边低地", "water": "shallow"},
+    {"id": "terrain_mihou_pocket", "regionId": "mihou_pocket", "primary": "湿岩石台", "secondary": "环形浅水", "elevation": "高于主路的瀑布台", "water": "shallow"},
+    {"id": "terrain_dungeon_hub", "regionId": "dungeon_hub", "primary": "平整石台", "secondary": "短草与路标石", "elevation": "低坡安全广场", "water": "none"},
+    {"id": "terrain_peach_surface", "regionId": "peach_surface", "primary": "桃林草地", "secondary": "浅色石径", "elevation": "缓坡地表线", "water": "none"},
+    {"id": "terrain_bat_cave", "regionId": "bat_cave", "primary": "洞窟暗岩", "secondary": "碎石与旧地砖", "elevation": "洞内低地与出口坡道", "water": "none"},
+    {"id": "terrain_sevenstar", "regionId": "sevenstar_garuda", "primary": "灰褐山岩", "secondary": "七星石纹路", "elevation": "高差崖台和可读坡道", "water": "none"},
+    {"id": "terrain_east_sea", "regionId": "east_sea_hub", "primary": "浅滩沙石", "secondary": "蓝绿浅水", "elevation": "低地与礁石边界", "water": "shallow"},
+    {"id": "terrain_jiao_pocket", "regionId": "jiao_pocket", "primary": "潮湿礁石", "secondary": "潮池地面", "elevation": "半封闭低地战斗圈", "water": "shallow"},
+    {"id": "terrain_shark_vortex", "regionId": "shark_vortex", "primary": "暗蓝水边", "secondary": "漩涡纹理和碎礁", "elevation": "平地战斗圈，边缘深水阻挡", "water": "plain"},
+    {"id": "terrain_fire_cliff", "regionId": "fire_cliff_route", "primary": "焦黑礁石", "secondary": "熔岩裂纹", "elevation": "沿东侧向上的窄崖道", "water": "none"},
+    {"id": "terrain_fire_staging", "regionId": "fire_staging", "primary": "平整焦土石台", "secondary": "封印纹路", "elevation": "无怪安全高台", "water": "none"},
+    {"id": "terrain_fire_instance", "regionId": "fire_team_instance", "primary": "焦土", "secondary": "熔岩裂隙和火山岩", "elevation": "封闭环形战场", "water": "none"},
+    {"id": "terrain_dragon_lobby", "regionId": "dragon_lobby", "primary": "水府门廊地砖", "secondary": "龙纹石门", "elevation": "平整分配厅", "water": "decorative"},
+    {"id": "terrain_dragon_room_1", "regionId": "dragon_room_1", "primary": "水府地砖", "secondary": "晶石与龙柱", "elevation": "平整单人战斗场", "water": "decorative"},
+    {"id": "terrain_dragon_room_2", "regionId": "dragon_room_2", "primary": "水府地砖", "secondary": "晶石与龙柱", "elevation": "平整单人战斗场", "water": "decorative"},
+    {"id": "terrain_dragon_room_3", "regionId": "dragon_room_3", "primary": "水府地砖", "secondary": "晶石与龙柱", "elevation": "平整单人战斗场", "water": "decorative"},
+    {"id": "terrain_dragon_room_4", "regionId": "dragon_room_4", "primary": "水府地砖", "secondary": "晶石与龙柱", "elevation": "平整单人战斗场", "water": "decorative"}
+  ],
+  "decorations": [
+    {"id": "decor_safe_gate", "kind": "building", "resourceName": "西游山门/石台/木牌坊关键词", "regionId": "safe_hub", "density": "sparse"},
+    {"id": "decor_mountain_trees", "kind": "tree", "resourceName": "山林树/灌木/藤蔓关键词", "regionId": "mountain_road", "density": "normal"},
+    {"id": "decor_waterfall_rocks", "kind": "rock", "resourceName": "瀑布岩石/浅水石/水雾关键词", "regionId": "waterfall_valley", "density": "normal"},
+    {"id": "decor_mihou_totem", "kind": "prop", "resourceName": "猴族图腾/瀑布石台关键词", "regionId": "mihou_pocket", "density": "sparse"},
+    {"id": "decor_dungeon_hub", "kind": "building", "resourceName": "石亭/路标/传送石关键词", "regionId": "dungeon_hub", "density": "sparse"},
+    {"id": "decor_peach_trees", "kind": "tree", "resourceName": "桃树/花瓣/桃林关键词", "regionId": "peach_surface", "density": "normal"},
+    {"id": "decor_cave_props", "kind": "prop", "resourceName": "洞窟石像/蝙蝠巢/暗岩关键词", "regionId": "bat_cave", "density": "normal"},
+    {"id": "decor_sevenstar_stones", "kind": "prop", "resourceName": "七星石阵/崖壁/风口关键词", "regionId": "sevenstar_garuda", "density": "normal"},
+    {"id": "decor_east_sea_props", "kind": "prop", "resourceName": "珊瑚/碎礁/破损水府外墙关键词", "regionId": "east_sea_hub", "density": "normal"},
+    {"id": "decor_jiao_bay", "kind": "rock", "resourceName": "潮池礁石/水柱石/珊瑚关键词", "regionId": "jiao_pocket", "density": "sparse"},
+    {"id": "decor_vortex_props", "kind": "prop", "resourceName": "漩涡纹理/鲨齿残骸/深水礁石关键词", "regionId": "shark_vortex", "density": "sparse"},
+    {"id": "decor_fire_cliff", "kind": "prop", "resourceName": "焦黑礁石/熔岩裂缝/牛魔旗关键词", "regionId": "fire_cliff_route", "density": "normal"},
+    {"id": "decor_fire_staging", "kind": "building", "resourceName": "封印门/传送阵/补给旗关键词", "regionId": "fire_staging", "density": "sparse"},
+    {"id": "decor_fire_instance", "kind": "prop", "resourceName": "火山岩/熔岩裂缝/牛魔王旗关键词", "regionId": "fire_team_instance", "density": "normal"},
+    {"id": "decor_dragon_lobby", "kind": "building", "resourceName": "龙纹石门/水府门廊/四向传送阵关键词", "regionId": "dragon_lobby", "density": "sparse"},
+    {"id": "decor_dragon_room_1", "kind": "building", "resourceName": "龙柱/水府地砖/晶石关键词", "regionId": "dragon_room_1", "density": "normal"},
+    {"id": "decor_dragon_room_2", "kind": "building", "resourceName": "龙柱/水府地砖/晶石关键词", "regionId": "dragon_room_2", "density": "normal"},
+    {"id": "decor_dragon_room_3", "kind": "building", "resourceName": "龙柱/水府地砖/晶石关键词", "regionId": "dragon_room_3", "density": "normal"},
+    {"id": "decor_dragon_room_4", "kind": "building", "resourceName": "龙柱/水府地砖/晶石关键词", "regionId": "dragon_room_4", "density": "normal"}
+  ],
+  "logicResources": [
+    {"type": "point", "id": "pt_hg_spawn", "name": "出生复活点", "position": {"x": 18, "z": 146}},
+    {"type": "point", "id": "pt_hg_teleport_city", "name": "传送点一·主城", "position": {"x": 22, "z": 146}},
+    {"type": "point", "id": "pt_hg_teleport_hub", "name": "传送点二·副本枢纽", "position": {"x": 178, "z": 146}},
+    {"type": "point", "id": "pt_hg_teleport_team", "name": "传送点三·团本入口", "position": {"x": 320, "z": 230}},
+    {"type": "point", "id": "pt_longgong_entry", "name": "龙宫隐藏入口点", "position": {"x": 132, "z": 112}},
+    {"type": "point", "id": "pt_fire_dungeon_entry", "name": "火焰山团本入口点", "position": {"x": 300, "z": 232}},
+    {"type": "path", "id": "path_hg_main", "name": "花果山主线路径", "points": [{"x": 22, "z": 146}, {"x": 72, "z": 146}, {"x": 126, "z": 145}, {"x": 178, "z": 146}, {"x": 194, "z": 146}]},
+    {"type": "path", "id": "path_hg_peach", "name": "桃林地表路线", "points": [{"x": 190, "z": 151}, {"x": 220, "z": 168}, {"x": 248, "z": 158}, {"x": 260, "z": 148}]},
+    {"type": "path", "id": "path_hg_bat", "name": "蝙蝠窟洞线", "points": [{"x": 190, "z": 139}, {"x": 220, "z": 122}, {"x": 248, "z": 132}, {"x": 260, "z": 144}]},
+    {"type": "path", "id": "path_hg_fire_cliff", "name": "焦黑崖道", "points": [{"x": 330, "z": 84}, {"x": 347, "z": 108}, {"x": 347, "z": 170}, {"x": 347, "z": 222}, {"x": 320, "z": 230}]},
+    {"type": "rectArea", "id": "area_hg_safe_hub", "name": "花果山主城安全区", "bounds": {"x": 0, "z": 116, "width": 50, "height": 64}},
+    {"type": "rectArea", "id": "area_hg_dungeon_hub", "name": "花果山副本枢纽安全区", "bounds": {"x": 160, "z": 120, "width": 38, "height": 60}},
+    {"type": "rectArea", "id": "area_hg_fire_staging", "name": "火焰山前哨安全区", "bounds": {"x": 292, "z": 216, "width": 64, "height": 34}},
+    {"type": "rectArea", "id": "area_hg_public_mountain", "name": "花果山山道公共区", "bounds": {"x": 50, "z": 120, "width": 48, "height": 56}},
+    {"type": "rectArea", "id": "area_hg_public_waterfall", "name": "水帘溪谷公共区", "bounds": {"x": 98, "z": 108, "width": 62, "height": 76}},
+    {"type": "rectArea", "id": "area_hg_boss_mihou", "name": "猕猴王战斗口袋", "bounds": {"x": 108, "z": 186, "width": 30, "height": 26}},
+    {"type": "rectArea", "id": "area_hg_public_peach", "name": "桃林地表公共区", "bounds": {"x": 198, "z": 148, "width": 52, "height": 40}},
+    {"type": "rectArea", "id": "area_hg_public_bat", "name": "蝙蝠窟公共区", "bounds": {"x": 198, "z": 104, "width": 52, "height": 40}},
+    {"type": "rectArea", "id": "area_hg_public_sevenstar", "name": "七星迦楼罗公共区", "bounds": {"x": 250, "z": 110, "width": 42, "height": 78}},
+    {"type": "rectArea", "id": "area_hg_public_east_sea", "name": "东海前缘公共区", "bounds": {"x": 292, "z": 118, "width": 44, "height": 60}},
+    {"type": "rectArea", "id": "area_hg_boss_jiao", "name": "蛟魔王战斗口袋", "bounds": {"x": 300, "z": 184, "width": 32, "height": 28}},
+    {"type": "rectArea", "id": "area_hg_boss_shark", "name": "鲨魔王战斗口袋", "bounds": {"x": 304, "z": 68, "width": 34, "height": 30}},
+    {"type": "rectArea", "id": "area_hg_hidden_dragon_lobby", "name": "龙宫隐藏分配厅", "bounds": {"x": 105, "z": 86, "width": 55, "height": 20}},
+    {"type": "rectArea", "id": "area_hg_hidden_dragon_1", "name": "龙宫挑战区一", "bounds": {"x": 60, "z": 44, "width": 46, "height": 36}},
+    {"type": "rectArea", "id": "area_hg_hidden_dragon_2", "name": "龙宫挑战区二", "bounds": {"x": 112, "z": 44, "width": 46, "height": 36}},
+    {"type": "rectArea", "id": "area_hg_hidden_dragon_3", "name": "龙宫挑战区三", "bounds": {"x": 60, "z": 4, "width": 46, "height": 36}},
+    {"type": "rectArea", "id": "area_hg_hidden_dragon_4", "name": "龙宫挑战区四", "bounds": {"x": 112, "z": 4, "width": 46, "height": 36}},
+    {"type": "rectArea", "id": "area_hg_fire_team", "name": "火焰山牛魔团队本", "bounds": {"x": 208, "z": 200, "width": 72, "height": 52}}
+  ],
+  "preview": {
+    "status": "not-requested",
+    "htmlPath": "layout-preview.html",
+    "imagePath": "layout-preview.png",
+    "metaPath": "layout-preview.meta.json",
+    "renderer": "",
+    "notes": [
+      "预览只表示施工分布，不表示最终美术效果。",
+      "三个篇章传送点以NPC点和逻辑点同时标记。",
+      "火焰山前哨与正式牛魔战场分离。"
+    ]
+  },
+  "unresolved": [
+    "当前Y3地图真实尺寸、相机尺度和现有地形未通过Y3 MCP读取，360x260仅为花果山篇局部候选画布。",
+    "官方地形贴图ID、装饰模型ID和单位模型ID未通过y3editor/y3-helper MCP读取，暂以资源关键词记录。",
+    "三个篇章传送点的激活条件、传送冷却和同步校验需要后续Lua逻辑规格确认。",
+    "龙宫四份挑战区的空闲分配、独立状态锁、等级分流和清理流程需要后续Lua逻辑规格确认。",
+    "鲨魔王击杀后焦黑崖道的开启方式及鹏魔王首次击败后的通行门状态需要后续Lua逻辑规格确认。",
+    "公共BOSS掉落池、怪群数量、刷新周期、四人资源吞吐与高等级收益衰减按用户决定在地图分布定稿后制作数值表。",
+    "各主路、坡道、洞口和战斗圈的最终可行走宽度需要结合角色体积、位移距离和相机范围进行白盒测试。"
+  ]
+}

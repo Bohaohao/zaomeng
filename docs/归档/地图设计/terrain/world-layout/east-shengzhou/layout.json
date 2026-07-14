@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "mode": "dry-run",
+  "referenceSources": [
+    "用户确认：东胜神州必须按完整大区锁定占比与布局",
+    "docs/10-项目统一世界观总纲.md",
+    "docs/11-世界篇章与地图扩展蓝图.md",
+    "docs/12-六层世界Tile比例与总图尺寸.md",
+    "docs/terrain/world-layout/layout.json"
+  ],
+  "worldview": {
+    "theme": "东胜神州完整大区：东方海国、神山腹地、花果山与东海岸",
+    "hardRules": [
+      "本图使用人界层局部坐标，施工时全局坐标叠加偏移 (216,256)。",
+      "东胜神州完整大区为 176x88，不得被南瞻部洲、北俱芦洲、西牛贺洲或副本借用。",
+      "v1.0 只开放花果山 88x64，其余区域保留版图但关闭寻路、刷怪、NPC 和采集。",
+      "花果山位于东胜神州最东侧，并通过东岸海眼连接四海层东海前缘。",
+      "七星山脊是首发封界，也是未来从花果山打开东胜腹地的正式扩展接口。"
+    ]
+  },
+  "map": {
+    "width": 176,
+    "height": 88,
+    "unit": "terrain-tile",
+    "globalOffset": {"x": 216, "z": 256},
+    "reason": "东胜神州占人界层 21.01%、占六层总图 4.73%。局部采用西部文明/腹地、中央山脊封界、东部花果山、南北海岸封闭带的完整分区；所有 tile 均有明确归属。"
+  },
+  "budget": {
+    "totalTiles": 15488,
+    "shareOfHumanPercent": 21.01,
+    "shareOfWorldPercent": 4.73,
+    "launchOpenTiles": 5632,
+    "launchOpenPercent": 36.36,
+    "closedReserveTiles": 9856,
+    "closedReservePercent": 63.64
+  },
+  "regions": [
+    {
+      "id": "east_aolai_reserve",
+      "name": "傲来国 80x44 | 封闭",
+      "type": "buffer",
+      "worldviewTag": "东胜神州文明区",
+      "bounds": {"x": 0, "z": 44, "width": 80, "height": 44},
+      "state": "closed",
+      "purpose": "未来傲来国主城、港口、居民区与海国成长线",
+      "visualIdentity": "海国城郭、港口、农田和沿海道路"
+    },
+    {
+      "id": "east_hinterland_reserve",
+      "name": "东胜腹地 80x44 | 封闭",
+      "type": "buffer",
+      "worldviewTag": "东胜神州内陆",
+      "bounds": {"x": 0, "z": 0, "width": 80, "height": 44},
+      "state": "closed",
+      "purpose": "未来神州山地、古道、高阶公共野外和灾变回访区",
+      "visualIdentity": "山脉、古道、遗迹与东方荒野"
+    },
+    {
+      "id": "east_sevenstar_spine",
+      "name": "七星山脊 8x88 | 封界",
+      "type": "buffer",
+      "worldviewTag": "东胜神州天然边界",
+      "bounds": {"x": 80, "z": 0, "width": 8, "height": 88},
+      "state": "closed",
+      "purpose": "首发阻断花果山与东胜腹地，后续按剧情打开山口",
+      "visualIdentity": "连续山脊、七星石阵和封闭隘口"
+    },
+    {
+      "id": "huaguoshan_launch",
+      "name": "花果山 88x64 | 首发开放",
+      "type": "public",
+      "worldviewTag": "东胜神州东部临海神山",
+      "bounds": {"x": 88, "z": 12, "width": 88, "height": 64},
+      "state": "launch-open",
+      "purpose": "首发主城、公共野外、公共 BOSS 口袋与东海接口",
+      "visualIdentity": "花果山山体、水帘溪谷、桃林洞窟和滨海断崖"
+    },
+    {
+      "id": "east_north_coast_reserve",
+      "name": "北岸 88x12 | 封闭",
+      "type": "water",
+      "worldviewTag": "东胜神州北部海岸",
+      "bounds": {"x": 88, "z": 76, "width": 88, "height": 12},
+      "state": "closed",
+      "purpose": "未来东海北岸、礁岛与沿海支路",
+      "visualIdentity": "高崖、海雾、礁岛远景"
+    },
+    {
+      "id": "east_south_coast_reserve",
+      "name": "南岸 88x12 | 封闭",
+      "type": "water",
+      "worldviewTag": "东胜神州南部海岸",
+      "bounds": {"x": 88, "z": 0, "width": 88, "height": 12},
+      "state": "closed",
+      "purpose": "未来傲来海路、潮滩与东海南岸支线",
+      "visualIdentity": "潮滩、礁岸、浅海远景"
+    }
+  ],
+  "routes": [
+    {
+      "id": "route_huaguoshan_to_east_sea",
+      "name": "花果山至东海海眼",
+      "type": "main-route",
+      "points": [
+        {"x": 116, "z": 44},
+        {"x": 150, "z": 44},
+        {"x": 174, "z": 44}
+      ],
+      "purpose": "花果山唯一对外连续海岸口；全局继续连接四海层海眼通道。"
+    }
+  ],
+  "spawns": [
+    {"id": "spawn_huaguoshan", "name": "花果山出生点", "regionId": "huaguoshan_launch", "position": {"x": 100, "z": 44}}
+  ],
+  "bossZones": [],
+  "publicAreas": [
+    {"id": "public_huaguoshan", "name": "花果山首发开放区", "purpose": "东胜神州 v1.0 唯一开放公共区"}
+  ],
+  "hiddenAreas": [
+    {
+      "id": "hidden_dragon_palace_entry",
+      "name": "龙宫隐藏入口",
+      "entrance": {"x": 170, "z": 40},
+      "entrancePosition": {"x": 170, "z": 40},
+      "purpose": "从花果山临水地形传送至四海层龙宫四挑战房"
+    }
+  ],
+  "npcPoints": [
+    {"id": "npc_huaguoshan_transfer", "name": "花果山传送使", "role": "transfer", "regionId": "huaguoshan_launch", "position": {"x": 104, "z": 36}}
+  ],
+  "terrainLayers": [
+    {"id": "terrain_aolai", "type": "future-terrain", "regionId": "east_aolai_reserve", "material": "暂不细铺；保留城郭和港口远景轮廓"},
+    {"id": "terrain_hinterland", "type": "future-terrain", "regionId": "east_hinterland_reserve", "material": "暂不细铺；保留山脉和古道轮廓"},
+    {"id": "terrain_spine", "type": "boundary-terrain", "regionId": "east_sevenstar_spine", "material": "连续不可通行山脊"},
+    {"id": "terrain_huaguoshan", "type": "launch-terrain", "regionId": "huaguoshan_launch", "material": "施工期从官方山林、溪谷、洞窟和海岸纹理中选定"},
+    {"id": "terrain_north_coast", "type": "future-terrain", "regionId": "east_north_coast_reserve", "material": "不可通行海岸远景"},
+    {"id": "terrain_south_coast", "type": "future-terrain", "regionId": "east_south_coast_reserve", "material": "不可通行潮滩远景"}
+  ],
+  "decorations": [],
+  "logicResources": [
+    {"id": "area_aolai_closed", "name": "傲来国封闭区", "type": "rectArea", "regionId": "east_aolai_reserve", "bounds": {"x": 0, "z": 44, "width": 80, "height": 44}},
+    {"id": "area_hinterland_closed", "name": "东胜腹地封闭区", "type": "rectArea", "regionId": "east_hinterland_reserve", "bounds": {"x": 0, "z": 0, "width": 80, "height": 44}},
+    {"id": "area_spine_closed", "name": "七星山脊封界", "type": "rectArea", "regionId": "east_sevenstar_spine", "bounds": {"x": 80, "z": 0, "width": 8, "height": 88}},
+    {"id": "area_huaguoshan_open", "name": "花果山开放边界", "type": "rectArea", "regionId": "huaguoshan_launch", "bounds": {"x": 88, "z": 12, "width": 88, "height": 64}},
+    {"id": "area_north_coast_closed", "name": "东胜北岸封闭区", "type": "rectArea", "regionId": "east_north_coast_reserve", "bounds": {"x": 88, "z": 76, "width": 88, "height": 12}},
+    {"id": "area_south_coast_closed", "name": "东胜南岸封闭区", "type": "rectArea", "regionId": "east_south_coast_reserve", "bounds": {"x": 88, "z": 0, "width": 88, "height": 12}},
+    {"id": "point_east_sea_eye", "name": "东海海眼接口", "type": "point", "regionId": "huaguoshan_launch", "position": {"x": 174, "z": 44}}
+  ],
+  "constructionHandoff": {
+    "globalOffset": {"x": 216, "z": 256},
+    "closedAreaPolicy": "保留版图边界和远景轮廓；不铺可寻路面、不放刷怪/NPC/采集点，不得借给其他区域。",
+    "expansionOrder": ["七星山脊开口", "傲来国", "东胜腹地", "南北海岸支路"],
+    "allTilesAssigned": true
+  },
+  "preview": {
+    "imagePath": "layout-preview.png",
+    "metaPath": "layout-preview.meta.json",
+    "htmlPath": "layout-preview.html",
+    "status": "rendered",
+    "renderer": "chrome-headless"
+  },
+  "unresolved": [
+    {"type": "camera-scale", "item": "花果山 88x64 对实际 2.5D 镜头与四人战斗密度的适配", "action": "单层细化前做战斗口袋与路线长度实测。"},
+    {"type": "resource-id", "item": "东胜神州各子区官方地形纹理与装饰资源 ID", "action": "施工时通过 Y3Maker/Y3 MCP 查询。"}
+  ]
+}

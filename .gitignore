@@ -1,0 +1,17 @@
+# Local agent and orchestration state. These files are not project deliverables.
+.omx/
+.omc/
+.subagent-runs/
+.codex/
+
+# Local dependencies, caches, and transient output.
+node_modules/
+.pnpm-store/
+coverage/
+*.log
+*.tmp
+
+# Local secrets. Commit an explicit example file instead when needed.
+.env
+.env.*
+!.env.example

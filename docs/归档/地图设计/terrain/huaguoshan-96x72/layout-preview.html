@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Y3 &#22320;&#24418;&#24067;&#23616;&#31034;&#24847;&#22270;</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  width: 1200px;
+  height: 900px;
+  overflow: hidden;
+  background: #f4f1ea;
+  color: #1e2528;
+  font-family: "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
+}
+.page { width: 100%; height: 100%; padding: 24px; }
+.summary {
+  height: 86px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: start;
+}
+h1 { margin: 0 0 8px; font-size: 24px; font-weight: 700; letter-spacing: 0; }
+.sub { margin: 0; font-size: 13px; color: #526066; max-width: 820px; line-height: 1.45; }
+.stats { display: grid; grid-template-columns: repeat(4, auto); gap: 8px; }
+.stat { border: 1px solid #c9d1ce; background: #ffffffcc; padding: 7px 9px; border-radius: 6px; font-size: 12px; white-space: nowrap; }
+.map-wrap {
+  position: relative;
+  height: calc(100% - 86px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-canvas {
+  position: relative;
+  width: 978.67px;
+  height: 734px;
+  background:
+    linear-gradient(rgba(30,37,40,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,37,40,.045) 1px, transparent 1px),
+    #fbfaf5;
+  background-size: 32px 32px;
+  border: 2px solid #263238;
+  box-shadow: 0 10px 30px rgba(30,37,40,.18);
+  overflow: hidden;
+}
+.region {
+  position: absolute;
+  border: 2px solid rgba(32, 45, 48, .38);
+  background: rgba(160, 166, 160, .28);
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 6px;
+  font-size: 12px;
+  font-weight: 650;
+  color: #182123;
+  overflow: hidden;
+}
+.region span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 0 rgba(255,255,255,.75); }
+.region-public { background: rgba(81, 157, 100, .30); border-color: #3d9a54; }
+.region-safe { background: rgba(74, 158, 148, .28); border-color: #267c74; }
+.region-main-route { background: rgba(192, 143, 67, .30); border-color: #b1752c; }
+.region-side-route { background: rgba(225, 200, 105, .34); border-color: #c9a83e; }
+.region-monster { background: rgba(217, 97, 57, .27); border-color: #cf573a; }
+.region-boss { background: rgba(170, 56, 118, .22); border-color: #a83276; border-width: 4px; }
+.region-hidden { background: rgba(93, 80, 170, .18); border-color: #5d50aa; border-style: dashed; }
+.region-transition { background: rgba(128, 137, 141, .25); border-color: #7c8589; }
+.region-buffer { background: rgba(181, 187, 184, .22); border-color: #a5adab; }
+.region-water { background: rgba(71, 138, 190, .26); border-color: #377dad; }
+.route-segment {
+  position: absolute;
+  height: 6px;
+  border-radius: 999px;
+  transform-origin: left center;
+  z-index: 20;
+  opacity: .94;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.55);
+}
+.route-main-route { background: #87551e; }
+.route-side-route { background: #c9a83e; height: 4px; opacity: .84; }
+.marker {
+  position: absolute;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.22);
+}
+.marker span {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translate(5px, -50%);
+  min-width: max-content;
+  max-width: 88px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: rgba(255,255,255,.88);
+  border: 1px solid rgba(38,50,56,.18);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 10px;
+  color: #1e2528;
+}
+.marker-spawn { background: #d74835; border-radius: 50%; }
+.marker-boss { background: #a83276; transform: rotate(45deg); }
+.marker-boss span { transform: rotate(-45deg) translate(5px, -50%); transform-origin: left top; }
+.marker-npc { background: #3e78b2; border-radius: 3px; }
+.marker-shop { background: #16a3a3; border-radius: 3px; }
+.marker-hiddenEntry { background: transparent; border: 3px solid #5d50aa; border-radius: 50%; }
+.marker-resource { background: #d7a928; border-radius: 50%; }
+.legend {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 5px 10px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid rgba(38,50,56,.18);
+  border-radius: 6px;
+  background: rgba(255,255,255,.88);
+  font-size: 10px;
+}
+.swatch { width: 14px; height: 10px; border-radius: 3px; border: 1px solid rgba(38,50,56,.28); }
+.s-public { background: rgba(81,157,100,.45); }
+.s-monster { background: rgba(217,97,57,.42); }
+.s-boss { background: rgba(170,56,118,.42); border: 2px solid #a83276; }
+.s-hidden { background: rgba(93,80,170,.22); border-style: dashed; }
+.s-route { background: #87551e; }
+.s-point { background: #3e78b2; border-radius: 50%; }
+</style>
+</head>
+<body>
+<div class="page">
+  <section class="summary">
+    <div>
+      <h1>Y3 &#22320;&#24418;&#24067;&#23616;&#31034;&#24847;&#22270;</h1>
+      <p class="sub">&#20027;&#39064;: 花果山96x72首发白盒：猴族山门、水帘溪谷、桃林洞窟双路、七星高崖、东海边界 | &#35774;&#35745;&#20381;&#25454;: 花果山局部白盒采用96x72 terrain cell，对应总图人界中的世界坐标x[-48,48)、z[-36,36)。横向表达从猴族主城到东海边界的推进，纵向用于公共BOSS侧袋、精英庭、隐藏入口与团本集结口；龙宫四房和牛魔正式战场不占用本画布。</p>
+    </div>
+    <div class="stats">
+      <div class="stat">&#22320;&#22270;: 96 x 72</div>
+      <div class="stat">&#24341;&#29992;&#28304;: 9</div>
+      <div class="stat">&#20998;&#21306;: 15</div>
+      <div class="stat">&#36335;&#32447;: 11 / &#21047;&#24618;&#28857;: 20</div>
+    </div>
+  </section>
+  <div class="map-wrap">
+    <div class="map-canvas">
+<div class="region region-safe" style="left:30.583px;top:265.056px;width:122.333px;height:203.889px;"><span>花果山主城</span></div>
+<div class="region region-public" style="left:152.917px;top:285.444px;width:122.333px;height:163.111px;"><span>花果山山道</span></div>
+<div class="region region-public" style="left:275.25px;top:224.278px;width:163.111px;height:285.444px;"><span>水帘溪谷</span></div>
+<div class="region region-boss" style="left:285.444px;top:30.583px;width:244.667px;height:183.5px;"><span>猕猴王瀑布台</span></div>
+<div class="region region-safe" style="left:438.361px;top:285.444px;width:101.944px;height:163.111px;"><span>花果山副本枢纽</span></div>
+<div class="region region-public" style="left:540.306px;top:203.889px;width:122.333px;height:122.333px;"><span>桃林地表线</span></div>
+<div class="region region-public" style="left:540.306px;top:387.389px;width:122.333px;height:122.333px;"><span>蝙蝠窟洞线</span></div>
+<div class="region region-public" style="left:662.639px;top:265.056px;width:132.528px;height:203.889px;"><span>七星洞与迦楼罗崖</span></div>
+<div class="region region-public" style="left:530.111px;top:30.583px;width:173.306px;height:163.111px;"><span>迦楼罗高崖精英庭</span></div>
+<div class="region region-public" style="left:795.167px;top:244.667px;width:152.917px;height:244.667px;"><span>东海前缘</span></div>
+<div class="region region-boss" style="left:713.611px;top:20.389px;width:234.472px;height:214.083px;"><span>蛟魔王潮汐侧湾</span></div>
+<div class="region region-boss" style="left:713.611px;top:499.528px;width:234.472px;height:214.083px;"><span>鲨之涡流战斗湾</span></div>
+<div class="region region-safe" style="left:530.111px;top:540.306px;width:163.111px;height:163.111px;"><span>熔脉裂口团本前哨</span></div>
+<div class="region region-hidden" style="left:367px;top:530.111px;width:122.333px;height:101.944px;"><span>龙宫暗潮入口</span></div>
+<div class="region region-transition" style="left:948.083px;top:316.028px;width:30.583px;height:101.944px;"><span>东海海眼接口</span></div>
+<div class="route-segment route-main-route" style="left:91.75px;top:367px;width:112.139px;transform:rotate(0deg);"></div>
+<div class="route-segment route-main-route" style="left:203.889px;top:367px;width:152.917px;transform:rotate(0deg);"></div>
+<div class="route-segment route-main-route" style="left:356.806px;top:367px;width:132.528px;transform:rotate(0deg);"></div>
+<div class="route-segment route-side-route" style="left:489.333px;top:336.417px;width:124.439px;transform:rotate(-34.992deg);"></div>
+<div class="route-segment route-side-route" style="left:591.278px;top:265.056px;width:61.167px;transform:rotate(0deg);"></div>
+<div class="route-segment route-side-route" style="left:652.444px;top:265.056px;width:82.19px;transform:rotate(29.745deg);"></div>
+<div class="route-segment route-side-route" style="left:489.333px;top:397.583px;width:113.977px;transform:rotate(26.565deg);"></div>
+<div class="route-segment route-side-route" style="left:591.278px;top:448.556px;width:40.778px;transform:rotate(0deg);"></div>
+<div class="route-segment route-side-route" style="left:632.056px;top:448.556px;width:112.139px;transform:rotate(-90deg);"></div>
+<div class="route-segment route-side-route" style="left:632.056px;top:336.417px;width:96.713px;transform:rotate(-18.435deg);"></div>
+<div class="route-segment route-main-route" style="left:723.806px;top:305.833px;width:71.361px;transform:rotate(0deg);"></div>
+<div class="route-segment route-main-route" style="left:795.167px;top:305.833px;width:86.503px;transform:rotate(45deg);"></div>
+<div class="route-segment route-main-route" style="left:856.333px;top:367px;width:107.042px;transform:rotate(0deg);"></div>
+<div class="route-segment route-main-route" style="left:356.806px;top:285.444px;width:87.101px;transform:rotate(-69.444deg);"></div>
+<div class="route-segment route-main-route" style="left:387.389px;top:203.889px;width:84.066px;transform:rotate(-75.964deg);"></div>
+<div class="route-segment route-side-route" style="left:723.806px;top:295.639px;width:82.19px;transform:rotate(-119.745deg);"></div>
+<div class="route-segment route-side-route" style="left:683.028px;top:224.278px;width:118.887px;transform:rotate(-120.964deg);"></div>
+<div class="route-segment route-main-route" style="left:866.528px;top:295.639px;width:72.086px;transform:rotate(-98.13deg);"></div>
+<div class="route-segment route-main-route" style="left:856.333px;top:224.278px;width:93.988px;transform:rotate(-102.529deg);"></div>
+<div class="route-segment route-main-route" style="left:866.528px;top:438.361px;width:62.01px;transform:rotate(99.462deg);"></div>
+<div class="route-segment route-main-route" style="left:856.333px;top:499.528px;width:103.963px;transform:rotate(101.31deg);"></div>
+<div class="route-segment route-main-route" style="left:367px;top:468.944px;width:54.899px;transform:rotate(68.199deg);"></div>
+<div class="route-segment route-main-route" style="left:387.389px;top:519.917px;width:73.513px;transform:rotate(56.31deg);"></div>
+<div class="route-segment route-main-route" style="left:835.944px;top:601.472px;width:132.528px;transform:rotate(180deg);"></div>
+<div class="route-segment route-main-route" style="left:703.417px;top:601.472px;width:45.591px;transform:rotate(153.435deg);"></div>
+<div class="route-segment route-main-route" style="left:662.639px;top:621.861px;width:50.972px;transform:rotate(180deg);"></div>
+<div class="route-segment route-main-route" style="left:897.111px;top:367px;width:66.264px;transform:rotate(0deg);"></div>
+<div class="route-segment route-main-route" style="left:963.375px;top:367px;width:15.292px;transform:rotate(0deg);"></div>
+<div class="marker marker-spawn" style="left:176.5px;top:400.778px;width:14px;height:14px;"><span>山猴群A</span></div>
+<div class="marker marker-spawn" style="left:176.5px;top:309.028px;width:14px;height:14px;"><span>石皮山怪</span></div>
+<div class="marker marker-spawn" style="left:247.861px;top:400.778px;width:14px;height:14px;"><span>藤叶小妖</span></div>
+<div class="marker marker-spawn" style="left:247.861px;top:319.222px;width:14px;height:14px;"><span>猴群头目</span></div>
+<div class="marker marker-spawn" style="left:298.833px;top:421.167px;width:14px;height:14px;"><span>水帘小妖</span></div>
+<div class="marker marker-spawn" style="left:360px;top:410.972px;width:14px;height:14px;"><span>泉灵</span></div>
+<div class="marker marker-spawn" style="left:410.972px;top:472.139px;width:14px;height:14px;"><span>鱼妖哨兵</span></div>
+<div class="marker marker-spawn" style="left:421.167px;top:227.472px;width:14px;height:14px;"><span>水帘妖卫</span></div>
+<div class="marker marker-spawn" style="left:563.889px;top:247.861px;width:14px;height:14px;"><span>桃花妖</span></div>
+<div class="marker marker-spawn" style="left:625.056px;top:237.667px;width:14px;height:14px;"><span>迷踪猴</span></div>
+<div class="marker marker-spawn" style="left:563.889px;top:451.75px;width:14px;height:14px;"><span>洞窟蝙蝠</span></div>
+<div class="marker marker-spawn" style="left:625.056px;top:421.167px;width:14px;height:14px;"><span>洞窟小妖</span></div>
+<div class="marker marker-spawn" style="left:777.972px;top:410.972px;width:14px;height:14px;"><span>七星洞妖</span></div>
+<div class="marker marker-spawn" style="left:757.583px;top:309.028px;width:14px;height:14px;"><span>山魈术士</span></div>
+<div class="marker marker-spawn" style="left:747.389px;top:421.167px;width:14px;height:14px;"><span>飞翼妖</span></div>
+<div class="marker marker-spawn" style="left:757.583px;top:410.972px;width:14px;height:14px;"><span>牛魔斥候</span></div>
+<div class="marker marker-spawn" style="left:818.75px;top:400.778px;width:14px;height:14px;"><span>鱼妖巡兵</span></div>
+<div class="marker marker-spawn" style="left:920.694px;top:298.833px;width:14px;height:14px;"><span>龟甲守卫</span></div>
+<div class="marker marker-spawn" style="left:828.944px;top:461.944px;width:14px;height:14px;"><span>水灵术士</span></div>
+<div class="marker marker-spawn" style="left:930.889px;top:268.25px;width:14px;height:14px;"><span>漩涡妖兵</span></div>
+<div class="marker marker-boss" style="left:205.083px;top:337.611px;width:18px;height:18px;"><span>大猩猩教学战圈</span></div>
+<div class="marker marker-boss" style="left:398.778px;top:113.333px;width:18px;height:18px;"><span>猕猴王瀑布台战斗圈</span></div>
+<div class="marker marker-boss" style="left:592.472px;top:256.056px;width:18px;height:18px;"><span>禺狨王迷雾圈</span></div>
+<div class="marker marker-boss" style="left:592.472px;top:439.556px;width:18px;height:18px;"><span>蝙蝠石像机关圈</span></div>
+<div class="marker marker-boss" style="left:719.903px;top:403.875px;width:18px;height:18px;"><span>狮驼王通行门战圈</span></div>
+<div class="marker marker-boss" style="left:607.764px;top:103.139px;width:18px;height:18px;"><span>鹏魔王高崖战圈</span></div>
+<div class="marker marker-boss" style="left:821.847px;top:118.431px;width:18px;height:18px;"><span>蛟魔王潮汐战圈</span></div>
+<div class="marker marker-boss" style="left:821.847px;top:597.569px;width:18px;height:18px;"><span>鲨魔王涡流战圈</span></div>
+<div class="marker marker-npc" style="left:64.361px;top:360px;width:14px;height:14px;"><span>出生复活点</span></div>
+<div class="marker marker-npc" style="left:74.556px;top:298.833px;width:14px;height:14px;"><span>花果山任务NPC</span></div>
+<div class="marker marker-shop" style="left:105.139px;top:410.972px;width:14px;height:14px;"><span>强化与修整NPC</span></div>
+<div class="marker marker-npc" style="left:94.944px;top:360px;width:14px;height:14px;"><span>传送点一&#183;主城</span></div>
+<div class="marker marker-npc" style="left:482.333px;top:360px;width:14px;height:14px;"><span>传送点二&#183;副本枢纽</span></div>
+<div class="marker marker-npc" style="left:502.722px;top:309.028px;width:14px;height:14px;"><span>副本方向引导NPC</span></div>
+<div class="marker marker-npc" style="left:594.472px;top:614.861px;width:14px;height:14px;"><span>传送点三&#183;团本入口</span></div>
+<div class="marker marker-npc" style="left:635.25px;top:614.861px;width:14px;height:14px;"><span>牛魔旧战场入口NPC</span></div>
+<div class="marker marker-hiddenEntry" style="left:421.167px;top:574.083px;width:14px;height:14px;"><span>龙宫隐藏入口</span></div>
+<div class="marker marker-hiddenEntry" style="left:635.25px;top:614.861px;width:14px;height:14px;"><span>牛魔旧战场团本入口</span></div>
+<div class="marker marker-resource" style="left:66.361px;top:362px;width:10px;height:10px;"><span>出生复活点</span></div>
+<div class="marker marker-resource" style="left:96.944px;top:362px;width:10px;height:10px;"><span>传送点一&#183;主城</span></div>
+<div class="marker marker-resource" style="left:484.333px;top:362px;width:10px;height:10px;"><span>传送点二&#183;副本枢纽</span></div>
+<div class="marker marker-resource" style="left:596.472px;top:616.861px;width:10px;height:10px;"><span>传送点三&#183;团本入口</span></div>
+<div class="marker marker-resource" style="left:423.167px;top:576.083px;width:10px;height:10px;"><span>龙宫隐藏入口点</span></div>
+<div class="marker marker-resource" style="left:637.25px;top:616.861px;width:10px;height:10px;"><span>牛魔旧战场入口点</span></div>
+<div class="marker marker-resource" style="left:963.472px;top:362px;width:10px;height:10px;"><span>四海层拓扑锚点</span></div>
+<div class="marker marker-resource" style="left:474.139px;top:137.722px;width:10px;height:10px;"><span>猕猴王残风眼交互点</span></div>
+<div class="marker marker-resource" style="left:892.111px;top:96.944px;width:10px;height:10px;"><span>蛟魔王潮眼交互点</span></div>
+<div class="marker marker-resource" style="left:892.111px;top:627.056px;width:10px;height:10px;"><span>鲨魔王涡流锚点</span></div>
+<div class="marker marker-resource" style="left:362px;top:433.361px;width:10px;height:10px;"><span>潮痕载体公共刷新锚</span></div>
+<div class="marker marker-resource" style="left:392.583px;top:433.361px;width:10px;height:10px;"><span>潮痕石交互点</span></div>
+<div class="marker marker-resource" style="left:881.917px;top:453.75px;width:10px;height:10px;"><span>裂潮节点公共刷新锚</span></div>
+<div class="marker marker-resource" style="left:912.5px;top:453.75px;width:10px;height:10px;"><span>裂潮锚点交互点</span></div>
+<div class="marker marker-resource" style="left:280.444px;top:474.139px;width:10px;height:10px;"><span>巡猎Lv8猎首试炼入口安全点</span></div>
+<div class="marker marker-resource" style="left:423.167px;top:280.444px;width:10px;height:10px;"><span>巡猎Lv8逐风试炼入口安全点</span></div>
+<div class="marker marker-resource" style="left:270.25px;top:280.444px;width:10px;height:10px;"><span>巡猎Lv8缚影试炼入口安全点</span></div>
+<div class="marker marker-resource" style="left:280.444px;top:229.472px;width:10px;height:10px;"><span>巡猎Lv8猎路选择石</span></div>
+<div class="marker marker-resource" style="left:321.222px;top:229.472px;width:10px;height:10px;"><span>巡猎Lv15承命回照石</span></div>
+<div class="marker marker-resource" style="left:351.806px;top:239.667px;width:10px;height:10px;"><span>巡猎Lv15绝技试炼入口安全点</span></div>
+<div class="marker marker-resource" style="left:657.639px;top:270.25px;width:10px;height:10px;"><span>巡猎Lv20猎首试炼入口与回传安全点</span></div>
+<div class="marker marker-resource" style="left:525.111px;top:188.694px;width:10px;height:10px;"><span>巡猎Lv20逐风试炼入口与回传安全点</span></div>
+<div class="marker marker-resource" style="left:810.556px;top:280.444px;width:10px;height:10px;"><span>巡猎Lv20缚影试炼入口安全点</span></div>
+      <div class="legend">
+        <span class="swatch s-public"></span><span>&#20844;&#20849;/&#23433;&#20840;</span>
+        <span class="swatch s-monster"></span><span>&#21047;&#24618;</span>
+        <span class="swatch s-boss"></span><span>BOSS</span>
+        <span class="swatch s-hidden"></span><span>&#38544;&#34255;</span>
+        <span class="swatch s-route"></span><span>&#36335;&#32447;</span>
+        <span class="swatch s-point"></span><span>&#28857;&#20301;</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
