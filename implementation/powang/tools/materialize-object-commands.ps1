@@ -94,6 +94,19 @@ foreach ($object in $objects) {
         $errors.Add("$($object.record_key): unresolved fields: $(@($object.unresolved_fields) -join ',')")
     }
 }
+if ($manifest.hero.object_type -ne 'unit') {
+    $errors.Add('C01_HERO: object_type must be unit')
+}
+foreach ($ability in $manifest.abilities) {
+    if ($ability.object_type -ne 'ability') {
+        $errors.Add("$($ability.record_key): object_type must be ability")
+    }
+}
+foreach ($modifier in $manifest.modifiers) {
+    if ($modifier.object_type -ne 'modifier') {
+        $errors.Add("$($modifier.record_key): object_type must be modifier")
+    }
+}
 if ($null -eq $manifest.hero.model_id) {
     $errors.Add('C01_HERO: model_id unresolved')
 }

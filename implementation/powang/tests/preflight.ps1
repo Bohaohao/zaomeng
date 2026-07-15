@@ -49,8 +49,10 @@ $allKeys = @($manifest.hero.record_key) + @($manifest.abilities.record_key) + @(
 $uniqueKeys = @($allKeys | Sort-Object -Unique)
 Assert-True ($allKeys.Count -eq 31) "Expected 31 stable keys including hero, found $($allKeys.Count)"
 Assert-True ($uniqueKeys.Count -eq $allKeys.Count) 'Stable keys must be unique'
+Assert-True ($manifest.hero.object_type -eq 'unit') 'C01_HERO.object_type must be unit'
 
 foreach ($ability in $manifest.abilities) {
+    Assert-True ($ability.object_type -eq 'ability') "$($ability.record_key).object_type must be ability"
     Assert-LevelArrays $ability
     $expectedCastType = if ($ability.category -in @('fixed-passive', 'learnable-passive')) { 3 } else { 2 }
     Assert-True ([int]$ability.object_fields.ability_cast_type -eq $expectedCastType) "$($ability.record_key).ability_cast_type expected $expectedCastType"
@@ -58,6 +60,10 @@ foreach ($ability in $manifest.abilities) {
     foreach ($dependency in @($ability.dependencies)) {
         Assert-True ($dependency -in $allKeys) "$($ability.record_key) has undefined dependency $dependency"
     }
+}
+
+foreach ($modifier in $manifest.modifiers) {
+    Assert-True ($modifier.object_type -eq 'modifier') "$($modifier.record_key).object_type must be modifier"
 }
 
 Assert-True ($manifest.execution_gates.cast_types_verified -eq $true) 'Cast type gate must be verified against the pinned y3-lualib baseline'

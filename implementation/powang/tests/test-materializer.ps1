@@ -8,6 +8,8 @@ $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ('powang-materializer-' 
 $fixturePath = Join-Path $tempRoot 'resolved-test-manifest.json'
 $outputPath = Join-Path $tempRoot 'commands.ps1'
 $refusedOutput = Join-Path $tempRoot 'must-not-exist.ps1'
+$invalidTypeFixturePath = Join-Path $tempRoot 'invalid-object-type-manifest.json'
+$invalidTypeOutput = Join-Path $tempRoot 'invalid-object-type.ps1'
 
 New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
 try {
@@ -83,6 +85,16 @@ try {
     }
     if ($generated.IndexOf('-type unit -edit') -lt $firstUnit) {
         throw 'Common attack range edit must occur after hero creation.'
+    }
+
+    $manifest.abilities[0].object_type = 'modifier'
+    $manifest | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $invalidTypeFixturePath -Encoding UTF8
+    $invalidTypeResult = & powershell -NoProfile -ExecutionPolicy Bypass -File $materializer -ManifestPath $invalidTypeFixturePath -OutputPath $invalidTypeOutput -SkipPathExistenceCheck 2>&1
+    if ($LASTEXITCODE -ne 1 -or ($invalidTypeResult -join "`n") -notmatch 'C01_F01: object_type must be ability') {
+        throw 'Materializer must reject a manifest with an invalid record object_type.'
+    }
+    if (Test-Path -LiteralPath $invalidTypeOutput) {
+        throw 'Invalid object type must not create an output file.'
     }
 
     $refusal = & powershell -NoProfile -ExecutionPolicy Bypass -File $materializer -ManifestPath $manifestPath -OutputPath $refusedOutput -SkipPathExistenceCheck 2>&1

@@ -65,6 +65,11 @@ local state_event_types = {
     p01_speed = true,
     a04_protection_speed = true,
     a07_protection_speed = true,
+    -- C04 hunt-mark resource notifications. They are intentionally neutral
+    -- state snapshots so shared adapters do not need to know C04's rules.
+    hunt_changed = true,
+    hunt_recovery = true,
+    ultimate_expired = true,
 }
 
 function M.execute(adapter, actor, commands, context)

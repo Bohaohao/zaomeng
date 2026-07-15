@@ -17,6 +17,10 @@ try {
     if ($PnpmPath) { $chimingArgs += @('-PnpmPath', $PnpmPath) }
     & powershell @chimingArgs
     if ($LASTEXITCODE -ne 0) { throw 'Chiming package failed.' }
+    $xunlieArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', '.\implementation\xunlie\tests\run-all.ps1')
+    if ($PnpmPath) { $xunlieArgs += @('-PnpmPath', $PnpmPath) }
+    & powershell @xunlieArgs
+    if ($LASTEXITCODE -ne 0) { throw 'Xunlie package failed.' }
 
     $nodePath = (Get-Command node -ErrorAction Stop).Source
     $fengariCli = Get-ChildItem -LiteralPath (Join-Path $env:LOCALAPPDATA 'pnpm\store') -Recurse -File -Filter 'lua-cli.js' -ErrorAction SilentlyContinue |
@@ -28,7 +32,7 @@ try {
     if ($LASTEXITCODE -ne 0 -or $output -notmatch '^PASS: \d+ common assertions$') {
         throw 'Profession common tests failed.'
     }
-    Write-Output 'PASS: C01/C02/C03 cross-profession offline construction packages.'
+    Write-Output 'PASS: C01/C02/C03/C04 cross-profession offline construction packages.'
 } finally {
     Pop-Location
 }

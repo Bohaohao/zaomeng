@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/y3-editor/y3-lualib.git",
+  "branch": "main",
+  "commit": "fe2fb0e55a76f73490cdcbef8cbfe7a61d124d63",
+  "refreshed_on": "2026-07-11",
+  "sync_rule": "All authoritative C04 callbacks use y3.timer and synchronized unit events; local UI is read-only.",
+  "modules": {
+    "Unit": ["add_attr", "add_buff", "add_hp", "damage", "event", "find_ability", "get_attr", "get_facing", "get_id", "get_level", "is_alive", "is_exist", "mover_line", "set_attr", "set_hp"],
+    "Ability": ["get_cd", "set_cd", "set_charge_time", "set_stack"],
+    "Buff": ["remove"],
+    "Timer": ["loop", "remove", "wait"],
+    "Trigger": ["remove"],
+    "Mover": ["mover_line"],
+    "Game": ["current_game_run_time"]
+  },
+  "events": ["单位-升级", "单位-死亡", "单位-造成伤害后"]
+}

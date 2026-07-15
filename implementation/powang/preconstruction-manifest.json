@@ -108,6 +108,7 @@
   "abilities": [
     {
       "record_key": "C01_F01",
+    "object_type": "ability",
       "name": "破妄真意",
       "category": "fixed-passive",
       "y3_id": null,
@@ -127,6 +128,7 @@
     },
     {
       "record_key": "C01_A01",
+    "object_type": "ability",
       "name": "开锋式",
       "category": "active-generator",
       "y3_id": null,
@@ -150,6 +152,7 @@
     },
     {
       "record_key": "C01_A02",
+    "object_type": "ability",
       "name": "贯心式",
       "category": "active-spender",
       "y3_id": null,
@@ -173,6 +176,7 @@
     },
     {
       "record_key": "C01_A03",
+    "object_type": "ability",
       "name": "叠锋三破",
       "category": "active-generator",
       "y3_id": null,
@@ -196,6 +200,7 @@
     },
     {
       "record_key": "C01_A04",
+    "object_type": "ability",
       "name": "踏虚行",
       "category": "active-generator",
       "y3_id": null,
@@ -219,6 +224,7 @@
     },
     {
       "record_key": "C01_A05",
+    "object_type": "ability",
       "name": "照妄横扫",
       "category": "active-generator",
       "y3_id": null,
@@ -242,6 +248,7 @@
     },
     {
       "record_key": "C01_A06",
+    "object_type": "ability",
       "name": "断岳裁",
       "category": "active-spender",
       "y3_id": null,
@@ -265,6 +272,7 @@
     },
     {
       "record_key": "C01_A07",
+    "object_type": "ability",
       "name": "回锋照影",
       "category": "active-spender",
       "y3_id": null,
@@ -288,6 +296,7 @@
     },
     {
       "record_key": "C01_A08",
+    "object_type": "ability",
       "name": "定真贯阵",
       "category": "active-spender",
       "y3_id": null,
@@ -311,6 +320,7 @@
     },
     {
       "record_key": "C01_P01",
+    "object_type": "ability",
       "name": "势行不滞",
       "category": "learnable-passive",
       "y3_id": null,
@@ -330,6 +340,7 @@
     },
     {
       "record_key": "C01_P02",
+    "object_type": "ability",
       "name": "锋随势涨",
       "category": "learnable-passive",
       "y3_id": null,
@@ -349,6 +360,7 @@
     },
     {
       "record_key": "C01_P03",
+    "object_type": "ability",
       "name": "踏虚生风",
       "category": "learnable-passive",
       "y3_id": null,
@@ -368,6 +380,7 @@
     },
     {
       "record_key": "C01_P04",
+    "object_type": "ability",
       "name": "妄痕可见",
       "category": "learnable-passive",
       "y3_id": null,
@@ -387,6 +400,7 @@
     },
     {
       "record_key": "C01_P05",
+    "object_type": "ability",
       "name": "守意归元",
       "category": "learnable-passive",
       "y3_id": null,
@@ -406,6 +420,7 @@
     },
     {
       "record_key": "C01_P06",
+    "object_type": "ability",
       "name": "破隙连裁",
       "category": "learnable-passive",
       "y3_id": null,
@@ -425,6 +440,7 @@
     },
     {
       "record_key": "C01_P07",
+    "object_type": "ability",
       "name": "进退无碍",
       "category": "learnable-passive",
       "y3_id": null,
@@ -444,6 +460,7 @@
     },
     {
       "record_key": "C01_P08",
+    "object_type": "ability",
       "name": "照真同证",
       "category": "learnable-passive",
       "y3_id": null,
@@ -463,6 +480,7 @@
     },
     {
       "record_key": "C01_U01",
+    "object_type": "ability",
       "name": "万妄俱破",
       "category": "ultimate",
       "y3_id": null,
@@ -488,6 +506,7 @@
   "modifiers": [
     {
       "record_key": "C01_M01_DONGMING",
+    "object_type": "modifier",
       "name": "洞明",
       "y3_id": null,
       "icon_id": null,
@@ -495,6 +514,7 @@
     },
     {
       "record_key": "C01_M02_XIANWANG",
+    "object_type": "modifier",
       "name": "显妄",
       "y3_id": null,
       "icon_id": null,
@@ -502,6 +522,7 @@
     },
     {
       "record_key": "C01_M03_TAXU_SWIFT",
+    "object_type": "modifier",
       "name": "踏虚疾行",
       "y3_id": null,
       "icon_id": null,
@@ -509,6 +530,7 @@
     },
     {
       "record_key": "C01_M04_HUIFENG_GUARD",
+    "object_type": "modifier",
       "name": "回锋守势",
       "y3_id": null,
       "icon_id": null,
@@ -516,6 +538,7 @@
     },
     {
       "record_key": "C01_M05_HUIFENG_SHIELD",
+    "object_type": "modifier",
       "name": "回锋护盾",
       "y3_id": null,
       "icon_id": null,
@@ -523,6 +546,7 @@
     },
     {
       "record_key": "C01_M06_SHIXING_READY",
+    "object_type": "modifier",
       "name": "势行不滞",
       "y3_id": null,
       "icon_id": null,
@@ -530,6 +554,7 @@
     },
     {
       "record_key": "C01_M07_SHOUYI_GUARD",
+    "object_type": "modifier",
       "name": "守意归元",
       "y3_id": null,
       "icon_id": null,
@@ -537,6 +562,7 @@
     },
     {
       "record_key": "C01_M08_POXI",
+    "object_type": "modifier",
       "name": "破隙",
       "y3_id": null,
       "icon_id": null,
@@ -544,6 +570,7 @@
     },
     {
       "record_key": "C01_M09_TAXU_WIND",
+    "object_type": "modifier",
       "name": "踏虚生风",
       "y3_id": null,
       "icon_id": null,
@@ -551,6 +578,7 @@
     },
     {
       "record_key": "C01_M10_JINTUI_GUARD",
+    "object_type": "modifier",
       "name": "进退无碍",
       "y3_id": null,
       "icon_id": null,
@@ -558,6 +586,7 @@
     },
     {
       "record_key": "C01_M11_MINGSHI",
+    "object_type": "modifier",
       "name": "明识",
       "y3_id": null,
       "icon_id": null,
@@ -565,6 +594,7 @@
     },
     {
       "record_key": "C01_M12_ZHENJING",
+    "object_type": "modifier",
       "name": "真境",
       "y3_id": null,
       "icon_id": null,
