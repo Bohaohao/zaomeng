@@ -510,7 +510,8 @@
       "name": "洞明",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M02_XIANWANG",
@@ -518,7 +519,8 @@
       "name": "显妄",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 3, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 3, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M03_TAXU_SWIFT",
@@ -526,7 +528,8 @@
       "name": "踏虚疾行",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M04_HUIFENG_GUARD",
@@ -534,7 +537,8 @@
       "name": "回锋守势",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M05_HUIFENG_SHIELD",
@@ -542,7 +546,8 @@
       "name": "回锋护盾",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 4, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true, "shield_type": 2}
+      "object_fields": {"modifier_type": 4, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true, "shield_type": 2},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M06_SHIXING_READY",
@@ -550,7 +555,8 @@
       "name": "势行不滞",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M07_SHOUYI_GUARD",
@@ -558,7 +564,8 @@
       "name": "守意归元",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M08_POXI",
@@ -566,7 +573,8 @@
       "name": "破隙",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 3, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": false}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 3, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": false},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M09_TAXU_WIND",
@@ -574,7 +582,8 @@
       "name": "踏虚生风",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M10_JINTUI_GUARD",
@@ -582,7 +591,8 @@
       "name": "进退无碍",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": false}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": false},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M11_MINGSHI",
@@ -590,7 +600,8 @@
       "name": "明识",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true},
+      "unresolved_fields": []
     },
     {
       "record_key": "C01_M12_ZHENJING",
@@ -598,7 +609,8 @@
       "name": "真境",
       "y3_id": null,
       "icon_id": null,
-      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true}
+      "object_fields": {"modifier_type": 1, "modifier_effect": 2, "layer_max": 1, "disappear_when_dead": true, "show_on_ui": true},
+      "unresolved_fields": []
     }
   ]
 }
