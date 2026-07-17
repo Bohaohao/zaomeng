@@ -864,31 +864,476 @@ function Get-CanonicalJson {
     return ConvertTo-Json -InputObject $canonicalValue -Depth 100 -Compress
 }
 
+if (-not ('HuaguoshanMaterializer.Trust.NativeFilePath' -as [type])) {
+    Add-Type -TypeDefinition @'
+using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Text;
+using Microsoft.Win32.SafeHandles;
+
+namespace HuaguoshanMaterializer.Trust
+{
+    public static class NativeFilePath
+    {
+        private const uint FileShareRead = 0x00000001;
+        private const uint FileShareWrite = 0x00000002;
+        private const uint FileShareDelete = 0x00000004;
+        private const uint OpenExisting = 3;
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern SafeFileHandle CreateFileW(
+            string fileName,
+            uint desiredAccess,
+            uint shareMode,
+            IntPtr securityAttributes,
+            uint creationDisposition,
+            uint flagsAndAttributes,
+            IntPtr templateFile);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern uint GetFinalPathNameByHandleW(
+            SafeFileHandle file,
+            StringBuilder filePath,
+            uint filePathLength,
+            uint flags);
+
+        public static string GetFinalPath(string path)
+        {
+            using (SafeFileHandle handle = CreateFileW(
+                path,
+                0,
+                FileShareRead | FileShareWrite | FileShareDelete,
+                IntPtr.Zero,
+                OpenExisting,
+                0,
+                IntPtr.Zero))
+            {
+                if (handle.IsInvalid)
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to open path: " + path);
+                }
+
+                StringBuilder buffer = new StringBuilder(1024);
+                uint length = GetFinalPathNameByHandleW(handle, buffer, (uint)buffer.Capacity, 0);
+                if (length == 0)
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to resolve final path: " + path);
+                }
+                if (length >= buffer.Capacity)
+                {
+                    buffer = new StringBuilder((int)length + 1);
+                    length = GetFinalPathNameByHandleW(handle, buffer, (uint)buffer.Capacity, 0);
+                    if (length == 0 || length >= buffer.Capacity)
+                    {
+                        throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to resolve final path: " + path);
+                    }
+                }
+                return buffer.ToString();
+            }
+        }
+    }
+}
+'@
+}
+
+function Get-MaterializerFinalFileSystemPath {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    $resolvedPath = (Resolve-Path -LiteralPath $Path -ErrorAction Stop).Path
+    $finalPath = [HuaguoshanMaterializer.Trust.NativeFilePath]::GetFinalPath($resolvedPath)
+    if ($finalPath.StartsWith('\\?\UNC\', [StringComparison]::OrdinalIgnoreCase)) {
+        return '\\' + $finalPath.Substring(8)
+    }
+    if ($finalPath.StartsWith('\\?\', [StringComparison]::OrdinalIgnoreCase)) {
+        return $finalPath.Substring(4)
+    }
+    return $finalPath
+}
+
+function Assert-MaterializerExecutionEnvironmentClean {
+    foreach ($name in @('NODE_OPTIONS','NODE_PATH')) {
+        if ($null -ne [Environment]::GetEnvironmentVariable($name, 'Process')) {
+            throw "Untrusted Node environment variable is set: $name"
+        }
+    }
+    $luaEnvironmentNames = @(
+        [Environment]::GetEnvironmentVariables('Process').Keys |
+            ForEach-Object { [string]$_ } |
+            Where-Object { $_ -match '(?i)^LUA_' } |
+            Sort-Object -Unique
+    )
+    foreach ($name in $luaEnvironmentNames) {
+        throw "Untrusted Lua environment variable is set: $name"
+    }
+}
+
+function Get-MaterializerTrustedNodeExecutable {
+    param([AllowNull()][string]$PathValue)
+
+    if ([string]::IsNullOrWhiteSpace($PathValue)) {
+        throw 'The original process PATH is empty; a trusted node.exe cannot be resolved.'
+    }
+
+    $seenPaths = New-Object 'Collections.Generic.HashSet[string]' ([StringComparer]::OrdinalIgnoreCase)
+    $rejections = New-Object 'Collections.Generic.List[string]'
+    foreach ($entry in $PathValue.Split([IO.Path]::PathSeparator)) {
+        $candidatePath = $null
+        $directory = [Environment]::ExpandEnvironmentVariables($entry.Trim().Trim([char]'"'))
+        if ([string]::IsNullOrWhiteSpace($directory)) { continue }
+
+        try {
+            $candidatePath = Join-Path $directory 'node.exe'
+            if (-not (Test-Path -LiteralPath $candidatePath -PathType Leaf)) { continue }
+
+            $nodePath = Get-MaterializerFinalFileSystemPath -Path $candidatePath
+            if (-not $seenPaths.Add($nodePath)) { continue }
+
+            $nodeItem = Get-Item -LiteralPath $nodePath -Force -ErrorAction Stop
+            if ($nodeItem.PSIsContainer -or
+                [IO.Path]::GetExtension($nodePath) -ine '.exe' -or
+                [IO.Path]::GetFileName($nodePath) -ine 'node.exe') {
+                throw "resolved to an unexpected physical file: $nodePath"
+            }
+
+            $sha256BeforeVerification = (Get-FileHash -Algorithm SHA256 -LiteralPath $nodePath).Hash
+            $nodeSignature = Get-AuthenticodeSignature -LiteralPath $nodePath
+            $nodeSignerSubject = if ($nodeSignature.SignerCertificate) { [string]$nodeSignature.SignerCertificate.Subject } else { '' }
+            if ($nodeSignature.Status -ne [Management.Automation.SignatureStatus]::Valid -or
+                $nodeSignerSubject -notmatch '(?i)(^|,\s*)(CN|O)=(OpenJS Foundation|Node\.js Foundation)(,|$)') {
+                throw 'does not have a valid OpenJS/Node.js Foundation signature'
+            }
+
+            $versionInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($nodePath)
+            if ($versionInfo.OriginalFilename -ine 'node.exe' -or
+                $versionInfo.ProductName -ine 'Node.js' -or
+                [string]$versionInfo.ProductVersion -cnotmatch '^\d+\.\d+\.\d+$' -or
+                $versionInfo.FileMajorPart -le 0) {
+                throw 'has invalid Node.js product or version metadata'
+            }
+            $metadataVersion = '{0}.{1}.{2}' -f $versionInfo.FileMajorPart, $versionInfo.FileMinorPart, $versionInfo.FileBuildPart
+            if ([string]$versionInfo.ProductVersion -cne $metadataVersion) {
+                throw "has inconsistent version metadata: product $($versionInfo.ProductVersion), file $metadataVersion"
+            }
+
+            $nodePathAfterVerification = Get-MaterializerFinalFileSystemPath -Path $candidatePath
+            $sha256AfterVerification = (Get-FileHash -Algorithm SHA256 -LiteralPath $nodePath).Hash
+            if ($nodePathAfterVerification -ine $nodePath -or
+                $sha256AfterVerification -cne $sha256BeforeVerification) {
+                throw 'changed during signature and metadata verification'
+            }
+
+            return [pscustomobject]@{
+                Path = $nodePath
+                Directory = Split-Path -Parent $nodePath
+                ProductVersion = [string]$versionInfo.ProductVersion
+                RuntimeVersion = 'v' + $metadataVersion
+                Sha256 = $sha256AfterVerification
+            }
+        }
+        catch {
+            if ($candidatePath) {
+                $rejections.Add("$candidatePath - $($_.Exception.Message)")
+            }
+        }
+    }
+
+    $details = if ($rejections.Count -gt 0) { ' Rejected candidates: ' + ($rejections -join '; ') } else { '' }
+    throw "No trusted, signed Node.js node.exe was found on the original process PATH.$details"
+}
+
+function Assert-MaterializerTrustedNodeIdentity {
+    param([Parameter(Mandatory = $true)]$TrustedNode)
+
+    $pathResolvedNode = Get-Command node.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $pathResolvedNode -or [string]::IsNullOrWhiteSpace($pathResolvedNode.Source)) {
+        throw 'Controlled PATH no longer resolves the verified Node.js executable.'
+    }
+    $pathResolvedNodePhysicalPath = Get-MaterializerFinalFileSystemPath -Path $pathResolvedNode.Source
+    if ($pathResolvedNodePhysicalPath -ine $TrustedNode.Path) {
+        throw "Controlled PATH resolved a different Node.js executable: $pathResolvedNodePhysicalPath"
+    }
+
+    $currentVersionInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($TrustedNode.Path)
+    $currentSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $TrustedNode.Path).Hash
+    if ([string]$currentVersionInfo.ProductVersion -cne $TrustedNode.ProductVersion -or
+        $currentSha256 -cne $TrustedNode.Sha256) {
+        throw "Verified Node.js executable identity changed during Lua projection: $($TrustedNode.Path)"
+    }
+}
+
+function Invoke-MaterializerTrustedNode {
+    param(
+        [Parameter(Mandatory = $true)]$TrustedNode,
+        [Parameter(Mandatory = $true)][string[]]$ArgumentList,
+        [AllowNull()][string]$StandardInput,
+        [switch]$PipeStandardInput
+    )
+
+    Assert-MaterializerExecutionEnvironmentClean
+    Assert-MaterializerTrustedNodeIdentity -TrustedNode $TrustedNode
+    if ($PipeStandardInput) {
+        $output = $StandardInput | & $TrustedNode.Path @ArgumentList 2>&1
+    }
+    else {
+        $output = & $TrustedNode.Path @ArgumentList 2>&1
+    }
+    return [pscustomobject]@{
+        Output = @($output)
+        ExitCode = $LASTEXITCODE
+    }
+}
+
+function Assert-MaterializerTrustedNodeRuntimeVersion {
+    param([Parameter(Mandatory = $true)]$TrustedNode)
+
+    $expectedRuntimeVersion = 'v' + [string]$TrustedNode.ProductVersion
+    if ([string]$TrustedNode.RuntimeVersion -cne $expectedRuntimeVersion) {
+        throw "Verified Node.js runtime version contract is inconsistent: product $($TrustedNode.ProductVersion), runtime $($TrustedNode.RuntimeVersion)"
+    }
+    $result = Invoke-MaterializerTrustedNode -TrustedNode $TrustedNode -ArgumentList @('--version')
+    $runtimeVersion = (($result.Output | ForEach-Object { [string]$_ }) -join '').Trim()
+    if ($result.ExitCode -ne 0 -or $runtimeVersion -cne $TrustedNode.RuntimeVersion) {
+        throw "Verified Node.js runtime version mismatch: expected $($TrustedNode.RuntimeVersion), found '$runtimeVersion'"
+    }
+}
+
+function Assert-MaterializerControlledNodeEnvironment {
+    param([Parameter(Mandatory = $true)]$TrustedNode)
+
+    $probe = @'
+const forbiddenEnvironmentNames = [
+    "NODE_OPTIONS", "NODE_PATH",
+    "LUA_INIT", "LUA_INIT_5_3", "LUA_PATH", "LUA_PATH_5_3", "LUA_CPATH", "LUA_CPATH_5_3"
+];
+if (forbiddenEnvironmentNames.some((name) => Object.prototype.hasOwnProperty.call(process.env, name)) ||
+    Object.keys(process.env).some((name) => name.toUpperCase().startsWith("LUA_"))) {
+    throw new Error("controlled Node environment retained a Node or Lua injection variable");
+}
+
+try {
+    require("huaguoshan-materializer-node-path-probe");
+    throw new Error("NODE_PATH changed controlled module resolution");
+} catch (error) {
+    if (!error || error.code !== "MODULE_NOT_FOUND") throw error;
+}
+'@
+    $result = Invoke-MaterializerTrustedNode -TrustedNode $TrustedNode -ArgumentList @('-') -StandardInput $probe -PipeStandardInput
+    $outputText = ($result.Output | ForEach-Object { [string]$_ }) -join [Environment]::NewLine
+    if ($result.ExitCode -ne 0 -or $result.Output.Count -ne 0) {
+        throw "Controlled Node environment probe failed: $outputText"
+    }
+}
+
+$materializerPinnedFengariVersion = '0.1.0'
+$materializerPinnedFengariSnapshot = '41ec8406e7a68140b8436c01df2bb294a02c6dc5111f463b8777f1ec3b7eef50'
+$materializerPinnedFengariClosureSha256 = 'E8E88EFDB5BEFFE0F140BA72EDDCEC5E1B52D7788062A9FCF0E09F6988745AF4'
+
+$materializerNodeModulesClosureHasher = @'
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+
+const root = path.resolve(process.argv[2]);
+const rootStat = fs.lstatSync(root);
+if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) {
+    throw new Error("closure root must be a physical directory: " + root);
+}
+
+const hash = crypto.createHash("sha256");
+const activeDirectories = new Set();
+const realpath = fs.realpathSync.native || fs.realpathSync;
+const writeRecord = (kind, logicalPath, payload) => {
+    hash.update(kind, "utf8");
+    hash.update("\0", "utf8");
+    hash.update(logicalPath, "utf8");
+    hash.update("\0", "utf8");
+    if (payload) hash.update(payload);
+    hash.update("\n", "utf8");
+};
+
+function walkDirectory(physicalPath, logicalPath) {
+    const resolvedDirectory = realpath(physicalPath);
+    const cycleKey = process.platform === "win32" ? resolvedDirectory.toLowerCase() : resolvedDirectory;
+    if (activeDirectories.has(cycleKey)) {
+        throw new Error("reparse cycle in dependency closure at " + logicalPath);
+    }
+    activeDirectories.add(cycleKey);
+    writeRecord("D", logicalPath);
+    const names = fs.readdirSync(resolvedDirectory).sort((left, right) =>
+        left < right ? -1 : left > right ? 1 : 0
+    );
+    for (const name of names) {
+        const childLogicalPath = logicalPath ? logicalPath + "/" + name : name;
+        walk(path.join(resolvedDirectory, name), childLogicalPath);
+    }
+    activeDirectories.delete(cycleKey);
+}
+
+function walk(physicalPath, logicalPath) {
+    const stat = fs.lstatSync(physicalPath);
+    if (stat.isSymbolicLink()) {
+        writeRecord("L", logicalPath);
+        const resolvedTarget = realpath(physicalPath);
+        const targetStat = fs.statSync(physicalPath);
+        if (targetStat.isDirectory()) {
+            walkDirectory(resolvedTarget, logicalPath);
+            return;
+        }
+        if (targetStat.isFile()) {
+            const content = fs.readFileSync(resolvedTarget);
+            writeRecord("F", logicalPath, Buffer.concat([Buffer.from(String(content.length) + "\0"), content]));
+            return;
+        }
+        throw new Error("unsupported reparse target in dependency closure: " + logicalPath);
+    }
+    if (stat.isDirectory()) {
+        walkDirectory(physicalPath, logicalPath);
+        return;
+    }
+    if (stat.isFile()) {
+        const content = fs.readFileSync(physicalPath);
+        writeRecord("F", logicalPath, Buffer.concat([Buffer.from(String(content.length) + "\0"), content]));
+        return;
+    }
+    throw new Error("unsupported filesystem entry in dependency closure: " + logicalPath);
+}
+
+walkDirectory(root, "");
+process.stdout.write(hash.digest("hex").toUpperCase());
+'@
+
+function Get-MaterializerNodeModulesClosureSha256 {
+    param(
+        [Parameter(Mandatory = $true)]$TrustedNode,
+        [Parameter(Mandatory = $true)][string]$NodeModulesRoot
+    )
+
+    $result = Invoke-MaterializerTrustedNode -TrustedNode $TrustedNode -ArgumentList @('-', $NodeModulesRoot) -StandardInput $materializerNodeModulesClosureHasher -PipeStandardInput
+    $hash = ($result.Output | ForEach-Object { [string]$_ }) -join ''
+    if ($result.ExitCode -ne 0 -or $hash -cnotmatch '^[0-9A-F]{64}$') {
+        throw ('Unable to hash the Fengari resolver closure at {0}: {1}' -f $NodeModulesRoot, $hash)
+    }
+    return $hash
+}
+
+function Resolve-MaterializerPinnedFengariCli {
+    param([Parameter(Mandatory = $true)]$TrustedNode)
+
+    if ([string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
+        throw 'LOCALAPPDATA is required to locate the pinned Fengari cache.'
+    }
+    $pnpmStore = Join-Path $env:LOCALAPPDATA 'pnpm\store'
+    $expectedSuffix = '[\\/]fengari-node-cli[\\/]' + [regex]::Escape($materializerPinnedFengariVersion) +
+        '[\\/]' + $materializerPinnedFengariSnapshot +
+        '[\\/]node_modules[\\/]fengari-node-cli[\\/]src[\\/]lua-cli\.js$'
+    $pinnedCandidates = @(
+        Get-ChildItem -LiteralPath $pnpmStore -Recurse -File -Filter 'lua-cli.js' -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -match $expectedSuffix } |
+            Sort-Object -Property FullName |
+            Select-Object -ExpandProperty FullName
+    )
+    if ($pinnedCandidates.Count -ne 1) {
+        throw "Expected exactly one pinned fengari-node-cli $materializerPinnedFengariVersion snapshot $materializerPinnedFengariSnapshot; found $($pinnedCandidates.Count)."
+    }
+
+    $cliPath = Get-MaterializerFinalFileSystemPath -Path $pinnedCandidates[0]
+    $packageRoot = Split-Path -Parent (Split-Path -Parent $cliPath)
+    $manifestPath = Join-Path $packageRoot 'package.json'
+    try {
+        $manifest = Get-Content -Raw -Encoding UTF8 -LiteralPath $manifestPath | ConvertFrom-Json
+    }
+    catch {
+        throw ('Unreadable fengari-node-cli manifest at {0}: {1}' -f $manifestPath, $_.Exception.Message)
+    }
+    if ([string]$manifest.name -cne 'fengari-node-cli' -or [string]$manifest.version -cne $materializerPinnedFengariVersion) {
+        throw "Unexpected Fengari package identity at $manifestPath"
+    }
+
+    $nodeModulesRoot = Split-Path -Parent $packageRoot
+    $closureSha256 = Get-MaterializerNodeModulesClosureSha256 -TrustedNode $TrustedNode -NodeModulesRoot $nodeModulesRoot
+    if ($closureSha256 -cne $materializerPinnedFengariClosureSha256) {
+        throw ('fengari-node-cli resolver closure integrity mismatch at {0}: expected {1}, found {2}' -f $nodeModulesRoot, $materializerPinnedFengariClosureSha256, $closureSha256)
+    }
+    return [pscustomobject]@{
+        CliPath = $cliPath
+        PackageRoot = $packageRoot
+        NodeModulesRoot = $nodeModulesRoot
+        CliSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $cliPath).Hash
+        ClosureSha256 = $closureSha256
+    }
+}
+
+function Assert-MaterializerPinnedFengariIdentity {
+    param(
+        [Parameter(Mandatory = $true)]$TrustedNode,
+        [Parameter(Mandatory = $true)]$Fengari
+    )
+
+    $currentCliPath = Get-MaterializerFinalFileSystemPath -Path $Fengari.CliPath
+    $currentCliSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $Fengari.CliPath).Hash
+    if ($currentCliPath -ine $Fengari.CliPath -or $currentCliSha256 -cne $Fengari.CliSha256) {
+        throw "Verified Fengari CLI identity changed during Lua projection: $($Fengari.CliPath)"
+    }
+    $currentClosureSha256 = Get-MaterializerNodeModulesClosureSha256 -TrustedNode $TrustedNode -NodeModulesRoot $Fengari.NodeModulesRoot
+    if ($currentClosureSha256 -cne $materializerPinnedFengariClosureSha256 -or
+        $currentClosureSha256 -cne $Fengari.ClosureSha256) {
+        throw "fengari-node-cli resolver closure identity changed during Lua projection: $($Fengari.NodeModulesRoot)"
+    }
+}
+
+function Invoke-MaterializerLuaProjection {
+    param(
+        [Parameter(Mandatory = $true)][string]$ProjectionScript,
+        [Parameter(Mandatory = $true)][string]$ConfigPath
+    )
+
+    $originalPath = [Environment]::GetEnvironmentVariable('PATH', 'Process')
+    $originalPathExt = [Environment]::GetEnvironmentVariable('PATHEXT', 'Process')
+    $originalNodeOptions = [Environment]::GetEnvironmentVariable('NODE_OPTIONS', 'Process')
+    $originalNodePath = [Environment]::GetEnvironmentVariable('NODE_PATH', 'Process')
+    $luaEnvironmentNames = @('LUA_INIT','LUA_INIT_5_3','LUA_PATH','LUA_PATH_5_3','LUA_CPATH','LUA_CPATH_5_3')
+    $originalLuaEnvironment = @{}
+    foreach ($name in $luaEnvironmentNames) {
+        $originalLuaEnvironment[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
+    }
+    try {
+        Assert-MaterializerExecutionEnvironmentClean
+        $trustedNode = Get-MaterializerTrustedNodeExecutable -PathValue $originalPath
+        [Environment]::SetEnvironmentVariable('PATH', $trustedNode.Directory, 'Process')
+        [Environment]::SetEnvironmentVariable('PATHEXT', '.EXE', 'Process')
+        [Environment]::SetEnvironmentVariable('NODE_OPTIONS', $null, 'Process')
+        [Environment]::SetEnvironmentVariable('NODE_PATH', $null, 'Process')
+        foreach ($name in $luaEnvironmentNames) {
+            [Environment]::SetEnvironmentVariable($name, $null, 'Process')
+        }
+
+        Assert-MaterializerTrustedNodeRuntimeVersion -TrustedNode $trustedNode
+        Assert-MaterializerControlledNodeEnvironment -TrustedNode $trustedNode
+        $fengari = Resolve-MaterializerPinnedFengariCli -TrustedNode $trustedNode
+        Assert-MaterializerPinnedFengariIdentity -TrustedNode $trustedNode -Fengari $fengari
+        return Invoke-MaterializerTrustedNode -TrustedNode $trustedNode -ArgumentList @($fengari.CliPath, '-E', $ProjectionScript, $ConfigPath)
+    }
+    finally {
+        [Environment]::SetEnvironmentVariable('PATH', $originalPath, 'Process')
+        [Environment]::SetEnvironmentVariable('PATHEXT', $originalPathExt, 'Process')
+        [Environment]::SetEnvironmentVariable('NODE_OPTIONS', $originalNodeOptions, 'Process')
+        [Environment]::SetEnvironmentVariable('NODE_PATH', $originalNodePath, 'Process')
+        foreach ($name in $originalLuaEnvironment.Keys) {
+            [Environment]::SetEnvironmentVariable($name, $originalLuaEnvironment[$name], 'Process')
+        }
+    }
+}
+
 function Read-LuaConfigProjection {
     param([string]$ConfigPath)
     $projectionScript = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\tests\export_config_binding_projection.lua'))
     if (-not (Test-Path -LiteralPath $projectionScript -PathType Leaf)) {
         throw 'Lua Config projection helper is unavailable'
     }
-    $nodeCommand = Get-Command node -ErrorAction SilentlyContinue
-    if ($null -eq $nodeCommand -or [string]::IsNullOrWhiteSpace($nodeCommand.Source)) {
-        throw 'Node is required to read the Lua Config projection'
-    }
-    $pnpmStore = Join-Path $env:LOCALAPPDATA 'pnpm\store'
-    $fengari = if (Test-Path -LiteralPath $pnpmStore -PathType Container) {
-        Get-ChildItem -LiteralPath $pnpmStore -Recurse -File -Filter 'lua-cli.js' -ErrorAction SilentlyContinue |
-            Where-Object { $_.FullName -match '[\\/]fengari-node-cli[\\/]src[\\/]lua-cli\.js$' } |
-            Select-Object -First 1 -ExpandProperty FullName
-    }
-    else { $null }
-    if ([string]::IsNullOrWhiteSpace($fengari)) {
-        throw 'cached fengari-node-cli is required to read the Lua Config projection'
-    }
-
-    $output = & $nodeCommand.Source $fengari $projectionScript $ConfigPath 2>&1
-    $exitCode = $LASTEXITCODE
-    $outputText = $output | Out-String
-    if ($exitCode -ne 0) {
+    $result = Invoke-MaterializerLuaProjection -ProjectionScript $projectionScript -ConfigPath $ConfigPath
+    $outputText = $result.Output | Out-String
+    if ($result.ExitCode -ne 0) {
         throw "Lua Config projection execution failed: $outputText"
     }
     try { $projection = ConvertFrom-StrictJson $outputText 'Lua Config projection' }

@@ -8,6 +8,7 @@ $tool = Join-Path $root 'tools\materialize-object-commands.ps1'
 $tempRoot = Join-Path ([IO.Path]::GetTempPath()) ('huaguoshan-materializer-' + [guid]::NewGuid().ToString('N'))
 $mapPath = Join-Path $tempRoot 'maps\EntryMap'
 $scriptRoot = Join-Path $mapPath 'script'
+$testPowerShellHost = [Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
 $officialEditor = Join-Path $env:USERPROFILE '.codex\skills\y3-terrain-layout\sources\y3-maker-config\skills\y3-obj-edit\scripts\y3_obj_edit.py'
 if (-not (Test-Path -LiteralPath $officialEditor -PathType Leaf)) {
     $officialEditor = Get-ChildItem -LiteralPath (Join-Path $env:USERPROFILE '.codex\skills') -Recurse -File -Filter 'y3_obj_edit.py' -ErrorAction SilentlyContinue |
@@ -248,6 +249,86 @@ function Assert-MaterializerRejects {
     if (Test-Path -LiteralPath $outputPath) { throw "materializer wrote output for rejected fixture: $Name" }
 }
 
+function Invoke-MaterializerChild {
+    param(
+        [Parameter(Mandatory = $true)][string]$ManifestPath,
+        [Parameter(Mandatory = $true)][string]$OutputPath,
+        [hashtable]$EnvironmentOverrides = @{}
+    )
+
+    $savedEnvironment = @{}
+    foreach ($name in $EnvironmentOverrides.Keys) {
+        $savedEnvironment[$name] = [Environment]::GetEnvironmentVariable([string]$name, 'Process')
+    }
+    try {
+        foreach ($name in $EnvironmentOverrides.Keys) {
+            [Environment]::SetEnvironmentVariable([string]$name, $EnvironmentOverrides[$name], 'Process')
+        }
+        $previousErrorActionPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            $output = & $testPowerShellHost -NoProfile -ExecutionPolicy Bypass -File $tool `
+                -ManifestPath $ManifestPath -OutputPath $OutputPath 2>&1
+            $exitCode = $LASTEXITCODE
+        }
+        finally {
+            $ErrorActionPreference = $previousErrorActionPreference
+        }
+        return [pscustomobject]@{
+            Output = @($output)
+            ExitCode = $exitCode
+        }
+    }
+    finally {
+        foreach ($name in $savedEnvironment.Keys) {
+            [Environment]::SetEnvironmentVariable([string]$name, $savedEnvironment[$name], 'Process')
+        }
+    }
+}
+
+function Assert-MaterializerChildRejects {
+    param(
+        [Parameter(Mandatory = $true)]$Paths,
+        [Parameter(Mandatory = $true)][string]$Name,
+        [Parameter(Mandatory = $true)][string[]]$ExpectedPattern,
+        [hashtable]$EnvironmentOverrides = @{},
+        [string[]]$AbsentPath = @()
+    )
+
+    $result = Invoke-MaterializerChild -ManifestPath $Paths.ManifestPath -OutputPath $Paths.OutputPath `
+        -EnvironmentOverrides $EnvironmentOverrides
+    $text = $result.Output | Out-String -Width 4096
+    if ($result.ExitCode -eq 0) { throw "materializer unexpectedly accepted child fixture: $Name" }
+    foreach ($pattern in $ExpectedPattern) {
+        if ($text -notmatch $pattern) { throw "materializer did not report $pattern for ${Name}: $text" }
+    }
+    if (Test-Path -LiteralPath $Paths.OutputPath) {
+        throw "materializer wrote output for rejected child fixture: $Name"
+    }
+    foreach ($path in $AbsentPath) {
+        if (Test-Path -LiteralPath $path) {
+            throw "materializer executed untrusted child fixture payload: $Name ($path)"
+        }
+    }
+}
+
+function New-FakeFengariCache {
+    param(
+        [Parameter(Mandatory = $true)][string]$LocalAppData,
+        [Parameter(Mandatory = $true)][string]$Version,
+        [Parameter(Mandatory = $true)][string]$Snapshot
+    )
+
+    $packageRoot = Join-Path $LocalAppData "pnpm\store\v11\links\@\fengari-node-cli\$Version\$Snapshot\node_modules\fengari-node-cli"
+    $cliPath = Join-Path $packageRoot 'src\lua-cli.js'
+    New-Item -ItemType Directory -Path (Split-Path -Parent $cliPath) -Force | Out-Null
+    @{ name = 'fengari-node-cli'; version = $Version } | ConvertTo-Json -Compress |
+        Set-Content -LiteralPath (Join-Path $packageRoot 'package.json') -Encoding UTF8
+    @'
+require("fs").writeFileSync(process.env.HG_MATERIALIZER_FAKE_FENGARI_MARKER, "executed");
+'@ | Set-Content -LiteralPath $cliPath -Encoding UTF8
+}
+
 function Assert-DuplicateRawAttackPhyRejected {
     param($Manifest, $Binding)
     $paths = Write-MaterializerFixture $Manifest $Binding 'duplicate-raw-attack-phy'
@@ -318,6 +399,102 @@ try {
         $generatedParseMessages = @($generatedParseErrors | ForEach-Object { $_.Message }) -join '; '
         throw "generated materializer script is not valid PowerShell: $generatedParseMessages"
     }
+
+    $nodeOptionsMarker = Join-Path $tempRoot 'node-options-preload-marker.txt'
+    $nodeOptionsPreload = Join-Path $tempRoot 'node-options-preload.js'
+    @'
+require("fs").writeFileSync(process.env.HG_MATERIALIZER_NODE_OPTIONS_MARKER, "executed");
+'@ | Set-Content -LiteralPath $nodeOptionsPreload -Encoding UTF8
+    $paths = Write-MaterializerFixture (Copy-JsonObject $resolvedManifest) (Copy-JsonObject $resolvedBinding) 'node-options-injection'
+    Assert-MaterializerChildRejects -Paths $paths -Name 'node-options-injection' `
+        -ExpectedPattern 'Untrusted Node environment variable is set: NODE_OPTIONS' `
+        -EnvironmentOverrides @{
+            NODE_OPTIONS = '--require=' + $nodeOptionsPreload
+            HG_MATERIALIZER_NODE_OPTIONS_MARKER = $nodeOptionsMarker
+        } -AbsentPath @($nodeOptionsMarker)
+
+    $nodePathMarker = Join-Path $tempRoot 'node-path-probe-marker.txt'
+    $nodePathRoot = Join-Path $tempRoot 'node-path-poison'
+    $nodePathPackage = Join-Path $nodePathRoot 'huaguoshan-materializer-node-path-probe'
+    New-Item -ItemType Directory -Path $nodePathPackage -Force | Out-Null
+    @'
+require("fs").writeFileSync(process.env.HG_MATERIALIZER_NODE_PATH_MARKER, "executed");
+'@ | Set-Content -LiteralPath (Join-Path $nodePathPackage 'index.js') -Encoding UTF8
+    $paths = Write-MaterializerFixture (Copy-JsonObject $resolvedManifest) (Copy-JsonObject $resolvedBinding) 'node-path-injection'
+    Assert-MaterializerChildRejects -Paths $paths -Name 'node-path-injection' `
+        -ExpectedPattern 'Untrusted Node environment variable is set: NODE_PATH' `
+        -EnvironmentOverrides @{
+            NODE_PATH = $nodePathRoot
+            HG_MATERIALIZER_NODE_PATH_MARKER = $nodePathMarker
+        } -AbsentPath @($nodePathMarker)
+
+    $luaInitMarker = Join-Path $tempRoot 'lua-init-marker.txt'
+    $luaInitPayload = 'local f=assert(io.open(os.getenv("HG_MATERIALIZER_LUA_INIT_MARKER"), "w")); f:write("executed"); f:close()'
+    $paths = Write-MaterializerFixture (Copy-JsonObject $resolvedManifest) (Copy-JsonObject $resolvedBinding) 'lua-init-injection'
+    Assert-MaterializerChildRejects -Paths $paths -Name 'lua-init-injection' `
+        -ExpectedPattern 'Untrusted Lua environment variable is set: LUA_INIT' `
+        -EnvironmentOverrides @{
+            LUA_INIT = $luaInitPayload
+            HG_MATERIALIZER_LUA_INIT_MARKER = $luaInitMarker
+        } -AbsentPath @($luaInitMarker)
+
+    $luaVersionedInitMarker = Join-Path $tempRoot 'lua-versioned-init-marker.txt'
+    $luaVersionedInitPayload = 'local f=assert(io.open(os.getenv("HG_MATERIALIZER_LUA_VERSIONED_INIT_MARKER"), "w")); f:write("executed"); f:close()'
+    $paths = Write-MaterializerFixture (Copy-JsonObject $resolvedManifest) (Copy-JsonObject $resolvedBinding) 'lua-versioned-init-injection'
+    Assert-MaterializerChildRejects -Paths $paths -Name 'lua-versioned-init-injection' `
+        -ExpectedPattern 'Untrusted Lua environment variable is set: LUA_INIT_5_3' `
+        -EnvironmentOverrides @{
+            LUA_INIT_5_3 = $luaVersionedInitPayload
+            HG_MATERIALIZER_LUA_VERSIONED_INIT_MARKER = $luaVersionedInitMarker
+        } -AbsentPath @($luaVersionedInitMarker)
+
+    $fakeNodeMarker = Join-Path $tempRoot 'fake-node-marker.txt'
+    $fakeNodeDirectory = Join-Path $tempRoot 'fake-node-path'
+    New-Item -ItemType Directory -Path $fakeNodeDirectory -Force | Out-Null
+    @'
+@echo off
+> "%HG_MATERIALIZER_FAKE_NODE_MARKER%" echo executed
+exit /b 0
+'@ | Set-Content -LiteralPath (Join-Path $fakeNodeDirectory 'node.cmd') -Encoding ASCII
+    $paths = Write-MaterializerFixture (Copy-JsonObject $resolvedManifest) (Copy-JsonObject $resolvedBinding) 'path-node-command-injection'
+    Assert-MaterializerChildRejects -Paths $paths -Name 'path-node-command-injection' `
+        -ExpectedPattern 'No trusted, signed Node\.js node\.exe was found on the original process PATH' `
+        -EnvironmentOverrides @{
+            PATH = $fakeNodeDirectory
+            PATHEXT = '.CMD;.EXE'
+            HG_MATERIALIZER_FAKE_NODE_MARKER = $fakeNodeMarker
+        } -AbsentPath @($fakeNodeMarker)
+
+    $fakeSignedNodeDirectory = Join-Path $tempRoot 'fake-signed-node-path'
+    New-Item -ItemType Directory -Path $fakeSignedNodeDirectory -Force | Out-Null
+    Copy-Item -LiteralPath $testPowerShellHost -Destination (Join-Path $fakeSignedNodeDirectory 'node.exe') -Force
+    $paths = Write-MaterializerFixture (Copy-JsonObject $resolvedManifest) (Copy-JsonObject $resolvedBinding) 'wrong-signer-node-executable'
+    Assert-MaterializerChildRejects -Paths $paths -Name 'wrong-signer-node-executable' `
+        -ExpectedPattern 'does not have a valid OpenJS/Node\.js Foundation signature' `
+        -EnvironmentOverrides @{ PATH = $fakeSignedNodeDirectory; PATHEXT = '.EXE' }
+
+    $pinnedFengariSnapshot = '41ec8406e7a68140b8436c01df2bb294a02c6dc5111f463b8777f1ec3b7eef50'
+    $fakeFengariVersionMarker = Join-Path $tempRoot 'fake-fengari-version-marker.txt'
+    $fakeFengariVersionLocalAppData = Join-Path $tempRoot 'fake-localappdata-version-drift'
+    New-FakeFengariCache -LocalAppData $fakeFengariVersionLocalAppData -Version '0.1.1' -Snapshot $pinnedFengariSnapshot
+    $paths = Write-MaterializerFixture (Copy-JsonObject $resolvedManifest) (Copy-JsonObject $resolvedBinding) 'fengari-version-drift'
+    Assert-MaterializerChildRejects -Paths $paths -Name 'fengari-version-drift' `
+        -ExpectedPattern 'Expected exactly one pinned fengari-node-cli 0\.1\.0 snapshot' `
+        -EnvironmentOverrides @{
+            LOCALAPPDATA = $fakeFengariVersionLocalAppData
+            HG_MATERIALIZER_FAKE_FENGARI_MARKER = $fakeFengariVersionMarker
+        } -AbsentPath @($fakeFengariVersionMarker)
+
+    $fakeFengariClosureMarker = Join-Path $tempRoot 'fake-fengari-closure-marker.txt'
+    $fakeFengariClosureLocalAppData = Join-Path $tempRoot 'fake-localappdata-closure-drift'
+    New-FakeFengariCache -LocalAppData $fakeFengariClosureLocalAppData -Version '0.1.0' -Snapshot $pinnedFengariSnapshot
+    $paths = Write-MaterializerFixture (Copy-JsonObject $resolvedManifest) (Copy-JsonObject $resolvedBinding) 'fengari-closure-drift'
+    Assert-MaterializerChildRejects -Paths $paths -Name 'fengari-closure-drift' `
+        -ExpectedPattern 'fengari-node-cli resolver closure integrity mismatch' `
+        -EnvironmentOverrides @{
+            LOCALAPPDATA = $fakeFengariClosureLocalAppData
+            HG_MATERIALIZER_FAKE_FENGARI_MARKER = $fakeFengariClosureMarker
+        } -AbsentPath @($fakeFengariClosureMarker)
 
     $fixture = Copy-JsonObject $resolvedManifest
     $fixture.units = @($fixture.units | Select-Object -Skip 1)

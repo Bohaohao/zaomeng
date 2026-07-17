@@ -102,6 +102,7 @@ OR
 
 - 重生：`12` 分钟；破韧阈值 `12`，窗口 `4` 秒。
 - `HG_A_JIAO_SUBMERGE` 固定 `3.0` 秒，BOSS 不可攻击，但必须保持同一 Unit ID 并上报 `trace_pause`；若实现替换单位，必须上报一对一 `trace_transition`。
+- `trace_pause` 必须携带按遭遇、Boss 实例、阶段、目标生命周期与 `marker_occurrence_id` 派生的稳定 `pause_id`；到期、换相与终结只允许用同一 `pause_id` 发出一次配对 `trace_resume`，重复、过期或重叠潜入不得延长冻结。
 - 潜入期开放 `drain_tide_eye`，`2` 秒读条、`8` 秒窗口。读条成功只影响本轮出水后首个水柱的范围，不删除 BOSS 伤害或贡献。
 - 潜入期可对当前有效参与者施加 `HG_BOSS_WATER_CHAIN`。它是遭遇侧显式机制键，不是泛化减速 Buff：持明的合法 `purge_mechanic` 可清除，其他职业可通过完成 `drain_tide_eye` 或在水压生效前离开潮线解除。每名角色每阶段最多登记一次有效处理，不能用重复净化刷公共贡献。
 

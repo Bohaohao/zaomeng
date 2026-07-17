@@ -147,6 +147,7 @@ function M.new(encounter_key, encounter, options)
         water_chain = {},
         break_meter = 0,
         trace_pause_until = nil,
+        trace_pause_id = nil,
         submerged = false,
         frenzy = false,
         seen_phase_marker_events = {},
@@ -1017,6 +1018,23 @@ local function phase_marker_origin(event)
     }, ':')
 end
 
+local trace_pause_identity_fields = {
+    'encounter_key', 'boss_instance_id', 'phase_id', 'boss_target_id',
+    'boss_target_lifecycle_id', 'marker', 'marker_occurrence_id',
+}
+
+local function trace_pause_id_for(encounter_key, event)
+    return 'trace_pause:' .. identity_origin({
+        encounter_key = encounter_key,
+        boss_instance_id = event.boss_instance_id,
+        phase_id = event.phase_id,
+        boss_target_id = event.boss_target_id,
+        boss_target_lifecycle_id = event.boss_target_lifecycle_id,
+        marker = event.marker,
+        marker_occurrence_id = event.marker_occurrence_id,
+    }, trace_pause_identity_fields)
+end
+
 function Boss:_validate_phase_marker(event)
     if self.ended then return false, 'boss-already-ended' end
     if type(event) ~= 'table' or event.kind ~= 'phase_marker' then return false, 'invalid-phase-marker-event' end
@@ -1098,6 +1116,15 @@ function Boss:phase_marker(event)
     if not proof then return false, proof_error end
     if type(proof.watermark_tick) ~= 'number' then return false, 'trusted-action-watermark-required' end
 
+    local submerge_end_tick = nil
+    if event.marker == 'submerge' then
+        submerge_end_tick = event.action_window.open_tick + self.encounter.phase.submerge_seconds
+        if proof.watermark_tick >= submerge_end_tick then return false, 'expired-trace-pause-marker' end
+        if self.trace_pause_until ~= nil or self.trace_pause_id ~= nil then
+            return false, 'trace-pause-already-active'
+        end
+    end
+
     local result = empty_result()
     if action_required then
         local opened, open_result = self:_open_action_window(event.action_window, proof.watermark_tick)
@@ -1119,14 +1146,16 @@ function Boss:phase_marker(event)
             inherit_private_marks = false,
         })
     elseif event.marker == 'submerge' then
-        local submerge_end_tick = event.action_window.open_tick + self.encounter.phase.submerge_seconds
+        local pause_id = trace_pause_id_for(self.encounter_key, event)
         self.submerged = true
         self.trace_pause_until = submerge_end_tick
+        self.trace_pause_id = pause_id
         add_command(result, {
             type = 'trace_pause',
             encounter_key = self.encounter_key,
             event_id = event.event_id,
             marker_occurrence_id = event.marker_occurrence_id,
+            pause_id = pause_id,
             boss_instance_id = self.boss_instance_id,
             phase_id = self.phase_id,
             target_id = self.target_id,
@@ -1147,6 +1176,26 @@ function Boss:phase_marker(event)
         })
     end
     return true, result
+end
+
+function Boss:_resume_trace_pause(result, reason)
+    if self.trace_pause_until == nil then return false end
+    assert(present(self.trace_pause_id), 'active trace pause requires pause_id')
+    local command = {
+        type = 'trace_resume',
+        encounter_key = self.encounter_key,
+        pause_id = self.trace_pause_id,
+        boss_instance_id = self.boss_instance_id,
+        phase_id = self.phase_id,
+        target_id = self.target_id,
+        target_lifecycle_id = self.target_lifecycle_id,
+    }
+    if reason ~= nil then command.reason = reason end
+    add_command(result, command)
+    self.trace_pause_until = nil
+    self.trace_pause_id = nil
+    self.submerged = false
+    return true
 end
 
 function Boss:tick(requested_tick)
@@ -1173,6 +1222,9 @@ function Boss:tick(requested_tick)
         return result
     end
 
+    if self.trace_pause_until and watermark_tick >= self.trace_pause_until then
+        self:_resume_trace_pause(result)
+    end
     self:_expire_action_reservations(watermark_tick, result)
     local window = self.action_windows[self.active_action_window_id]
     if window then
@@ -1189,18 +1241,6 @@ function Boss:tick(requested_tick)
                 return result
             end
         end
-    end
-    if self.trace_pause_until and watermark_tick >= self.trace_pause_until then
-        self.trace_pause_until = nil
-        self.submerged = false
-        add_command(result, {
-            type = 'trace_resume',
-            encounter_key = self.encounter_key,
-            boss_instance_id = self.boss_instance_id,
-            phase_id = self.phase_id,
-            target_id = self.target_id,
-            target_lifecycle_id = self.target_lifecycle_id,
-        })
     end
     return result
 end
@@ -1313,17 +1353,7 @@ function Boss:change_phase(event)
         local chain = self.water_chain[actor_id]
         if chain.active then self:_clear_water_chain(actor_id, chain.lifecycle_id, 'phase_changed', result) end
     end
-    if self.trace_pause_until then
-        add_command(result, {
-            type = 'trace_resume',
-            encounter_key = self.encounter_key,
-            boss_instance_id = self.boss_instance_id,
-            phase_id = self.phase_id,
-            target_id = self.target_id,
-            target_lifecycle_id = self.target_lifecycle_id,
-            reason = reason,
-        })
-    end
+    if self.trace_pause_until then self:_resume_trace_pause(result, reason) end
     self.seen_identity_events[event.event_id] = origin
     self.phase_history[event.to_phase] = true
     self.phase_id = event.to_phase
@@ -1332,6 +1362,7 @@ function Boss:change_phase(event)
     self.break_meter = 0
     self.mechanic_credit = {}
     self.trace_pause_until = nil
+    self.trace_pause_id = nil
     self.submerged = false
     self.frenzy = false
     return true, result
@@ -1364,6 +1395,7 @@ function Boss:finalize(event)
         local chain = self.water_chain[actor_id]
         if chain.active then self:_clear_water_chain(actor_id, chain.lifecycle_id, 'boss_ended', cleanup) end
     end
+    if self.trace_pause_until then self:_resume_trace_pause(cleanup, event.reason or 'boss_ended') end
     self.active_actions = {}
     self.seen_identity_events[event.event_id] = origin
     self.ended = true

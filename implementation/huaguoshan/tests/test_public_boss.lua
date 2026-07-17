@@ -89,6 +89,67 @@ local boss = PublicBoss.new('HG_E_JIAO_KING', encounter, {
     authority_provider = authority,
 })
 
+local function new_public_boss_fixture(suffix, fixture_authority)
+    local instance_id = 'jiao-' .. suffix
+    return PublicBoss.new('HG_E_JIAO_KING', encounter, {
+        boss_instance_id = instance_id,
+        target_id = instance_id .. '-unit',
+        target_lifecycle_id = instance_id .. '-life',
+        protection_threshold = 10,
+        skill_validator = skill_validator,
+        source_unit_is_current = source_is_current,
+        authority_provider = fixture_authority,
+    })
+end
+
+local function submerge_window_for(boss_fixture, suffix, open_tick)
+    open_tick = open_tick or 0
+    return {
+        window_id = boss_fixture.boss_instance_id .. ':' .. boss_fixture.phase_id .. ':' .. suffix .. ':drain_tide_eye',
+        mechanic_occurrence_id = suffix,
+        encounter_action_key = 'drain_tide_eye',
+        combat_scope = 'public',
+        boss_instance_id = boss_fixture.boss_instance_id,
+        phase_id = boss_fixture.phase_id,
+        boss_target_id = boss_fixture.target_id,
+        boss_target_lifecycle_id = boss_fixture.target_lifecycle_id,
+        interaction_unit_id = suffix .. '-tide-eye',
+        interaction_unit_lifecycle_id = suffix .. '-tide-eye-life',
+        open_tick = open_tick,
+        close_tick = open_tick + encounter.action.window_seconds,
+        reading_duration_ticks = encounter.action.read_seconds,
+        reservation_retention_ticks = 2,
+    }
+end
+
+local function submerge_marker_for(boss_fixture, suffix, action_window_fixture)
+    return {
+        kind = 'phase_marker',
+        event_id = 'marker:submerge:' .. suffix,
+        marker_occurrence_id = suffix,
+        marker = 'submerge',
+        combat_scope = 'public',
+        boss_instance_id = boss_fixture.boss_instance_id,
+        phase_id = boss_fixture.phase_id,
+        boss_target_id = boss_fixture.target_id,
+        boss_target_lifecycle_id = boss_fixture.target_lifecycle_id,
+        sync_tick = action_window_fixture.open_tick,
+        action_window = action_window_fixture,
+    }
+end
+
+local function new_submerged_boss_fixture(suffix)
+    local fixture_authority = FakeAuthority.new({ now = 0, watermark = 0 })
+    local fixture_boss = new_public_boss_fixture(suffix, fixture_authority)
+    local fixture_window = submerge_window_for(fixture_boss, suffix, 0)
+    local fixture_marker = submerge_marker_for(fixture_boss, suffix, fixture_window)
+    local marker_ok, marker_result = fixture_boss:phase_marker(fixture_marker)
+    truthy(marker_ok, 'fixture submerge starts for ' .. suffix)
+    local pause = find_command(marker_result.commands, 'trace_pause')
+    truthy(pause, 'fixture submerge emits trace pause for ' .. suffix)
+    return fixture_boss, fixture_authority, pause
+end
+
 local function combat_event(kind, actor_id, lifecycle_id, event_id, value, overrides)
     local skill_by_kind = {
         final_damage = 'DAMAGE',
@@ -312,6 +373,8 @@ local phase_marker = {
     action_window = action_window,
 }
 
+local active_trace_pause_id = nil
+
 do
     local forged_marker = copy_table(phase_marker)
     forged_marker.event_id = 'marker:submerge:forged'
@@ -344,18 +407,61 @@ do
     end
     local trace_pause = find_command(marker_result.commands, 'trace_pause')
     truthy(trace_pause, 'submerge emits an explicit trace pause command')
+    equal(trace_pause.pause_id,
+        'trace_pause:13:encounter_key=14:HG_E_JIAO_KING|16:boss_instance_id=6:jiao-1|8:phase_id=7:phase-1|14:boss_target_id=9:jiao-unit|24:boss_target_lifecycle_id=9:jiao-life|6:marker=8:submerge|20:marker_occurrence_id=6:dive-1',
+        'submerge trace pause derives a stable business pause_id')
+    active_trace_pause_id = trace_pause.pause_id
     equal(trace_pause.start_tick, action_window.open_tick,
         'the trace pause starts with the frozen submerge action window')
     equal(trace_pause.end_tick, action_window.open_tick + encounter.phase.submerge_seconds,
         'the trace pause ends after the fixed submerge duration instead of at action-window close')
     equal(trace_pause.duration_seconds, encounter.phase.submerge_seconds,
         'the trace pause command preserves the configured fixed submerge duration')
+    equal(boss.trace_pause_id, active_trace_pause_id,
+        'the active Boss state keeps the same trace pause identity')
     equal(boss.trace_pause_until, 3, 'the submerge pause uses its fixed three-second duration')
 
     local duplicate, duplicate_error = boss:phase_marker(phase_marker)
     equal(duplicate, false, 'an identical phase marker replay is idempotently rejected')
     equal(duplicate_error, 'duplicate-phase-marker', 'phase marker event_id is deduplicated')
+    equal(boss.trace_pause_id, active_trace_pause_id, 'a duplicate phase marker cannot replace trace pause identity')
     equal(boss.trace_pause_until, 3, 'a duplicate phase marker cannot extend trace pause')
+
+    local duplicate_occurrence = copy_table(phase_marker)
+    duplicate_occurrence.event_id = 'marker:submerge:duplicate-occurrence'
+    local occurrence_ok, occurrence_error = boss:phase_marker(duplicate_occurrence)
+    equal(occurrence_ok, false, 'the same phase marker occurrence is idempotently rejected across event_ids')
+    equal(occurrence_error, 'duplicate-phase-marker-occurrence',
+        'same marker occurrence has a stable rejection')
+    equal(boss.trace_pause_id, active_trace_pause_id,
+        'same-occurrence replay cannot replace the active pause identity')
+    equal(boss.trace_pause_until, 3, 'same-occurrence replay cannot extend trace pause')
+
+    local overlapping_window = copy_table(action_window)
+    overlapping_window.window_id = 'jiao-1:phase-1:dive-2:drain_tide_eye'
+    overlapping_window.mechanic_occurrence_id = 'dive-2'
+    local overlapping_marker = copy_table(phase_marker)
+    overlapping_marker.event_id = 'marker:submerge:overlap'
+    overlapping_marker.marker_occurrence_id = 'dive-2'
+    overlapping_marker.action_window = overlapping_window
+    local overlap_ok, overlap_error = boss:phase_marker(overlapping_marker)
+    equal(overlap_ok, false, 'a second trace pause cannot start while one is active')
+    equal(overlap_error, 'trace-pause-already-active', 'overlapping trace pause has a stable rejection')
+    equal(boss.trace_pause_id, active_trace_pause_id,
+        'overlapping trace pause cannot replace the active pause identity')
+    equal(boss.trace_pause_until, 3, 'overlapping trace pause cannot extend the active deadline')
+end
+
+do
+    local late_authority = FakeAuthority.new({ now = 0, watermark = 3 })
+    local late_boss = new_public_boss_fixture('late-pause', late_authority)
+    local late_window = submerge_window_for(late_boss, 'dive-late', 0)
+    local late_marker = submerge_marker_for(late_boss, 'dive-late', late_window)
+    local late_ok, late_error = late_boss:phase_marker(late_marker)
+    equal(late_ok, false, 'a phase marker cannot open a trace pause after its fixed pause window')
+    equal(late_error, 'expired-trace-pause-marker', 'expired trace pause marker has a stable rejection')
+    equal(late_boss.trace_pause_id, nil, 'expired trace pause marker does not create a pause identity')
+    equal(late_boss.trace_pause_until, nil, 'expired trace pause marker does not create a pause deadline')
 end
 
 do
@@ -402,10 +508,19 @@ do
     local resumed = boss:tick(3)
     equal(boss.submerged, false, 'submerge state restores at the fixed three-second deadline')
     equal(boss.trace_pause_until, nil, 'the expired trace-pause deadline is cleared on restore')
-    truthy(find_command(resumed.commands, 'trace_resume'),
+    equal(boss.trace_pause_id, nil, 'the expired trace-pause identity is cleared on restore')
+    local trace_resume = find_command(resumed.commands, 'trace_resume')
+    truthy(trace_resume,
         'trace restore emits an explicit trace resume command at the fixed deadline')
+    equal(trace_resume.pause_id, active_trace_pause_id,
+        'trace restore pairs with the original stable pause identity')
     truthy(boss.action_windows[action_window.window_id],
         'trace restoration does not prematurely close the longer encounter action window')
+
+    authority:set_watermark(4)
+    local repeated = boss:tick(4)
+    equal(find_command(repeated.commands, 'trace_resume'), nil,
+        'an already-restored trace pause is not resumed a second time')
 end
 
 local reservations = {}
@@ -554,6 +669,61 @@ do
     equal(settled.action_results[2].completion_mode, 'assist', 'the other completion is an assist')
     equal(boss.action_windows[action_window.window_id].primary_actor_id, 'f',
         'primary ownership is written exactly once to the window')
+end
+
+do
+    local paused_boss, paused_authority, pause = new_submerged_boss_fixture('phase-cleanup')
+    local pause_transition = {
+        kind = 'boss_phase_transition',
+        event_id = 'phase:jiao:pause-cleanup',
+        combat_scope = 'public',
+        boss_instance_id = paused_boss.boss_instance_id,
+        from_phase = paused_boss.phase_id,
+        boss_target_id = paused_boss.target_id,
+        boss_target_lifecycle_id = paused_boss.target_lifecycle_id,
+        to_phase = 'phase-2',
+        next_boss_target_id = paused_boss.boss_instance_id .. '-unit-2',
+        next_boss_target_lifecycle_id = paused_boss.boss_instance_id .. '-life-2',
+        reason = 'phase_changed',
+    }
+    local phase_ok, phase_result = paused_boss:change_phase(pause_transition)
+    truthy(phase_ok, 'phase transition succeeds while trace pause is active')
+    local trace_resume = find_command(phase_result.commands, 'trace_resume')
+    truthy(trace_resume, 'phase transition resumes active trace pause before mutating identity')
+    equal(trace_resume.pause_id, pause.pause_id, 'phase transition resumes the original pause identity')
+    equal(trace_resume.reason, 'phase_changed', 'phase transition records the resume reason')
+    equal(paused_boss.trace_pause_id, nil, 'phase transition clears trace pause identity')
+    equal(paused_boss.trace_pause_until, nil, 'phase transition clears trace pause deadline')
+    equal(paused_boss.submerged, false, 'phase transition clears submerged state')
+    paused_authority:set_watermark(3)
+    equal(find_command(paused_boss:tick(3).commands, 'trace_resume'), nil,
+        'phase transition trace cleanup is not repeated on the old deadline')
+end
+
+do
+    local final_boss, final_authority, pause = new_submerged_boss_fixture('final-cleanup')
+    local pause_finalization = {
+        kind = 'boss_finalization',
+        event_id = 'final:jiao:pause-cleanup',
+        combat_scope = 'public',
+        boss_instance_id = final_boss.boss_instance_id,
+        from_phase = final_boss.phase_id,
+        boss_target_id = final_boss.target_id,
+        boss_target_lifecycle_id = final_boss.target_lifecycle_id,
+        reason = 'timeout',
+    }
+    local summary = final_boss:finalize(pause_finalization)
+    truthy(summary, 'finalization succeeds while trace pause is active')
+    local trace_resume = find_command(summary.commands, 'trace_resume')
+    truthy(trace_resume, 'finalization resumes active trace pause before ending Boss')
+    equal(trace_resume.pause_id, pause.pause_id, 'finalization resumes the original pause identity')
+    equal(trace_resume.reason, 'timeout', 'finalization records the resume reason')
+    equal(final_boss.trace_pause_id, nil, 'finalization clears trace pause identity')
+    equal(final_boss.trace_pause_until, nil, 'finalization clears trace pause deadline')
+    equal(final_boss.submerged, false, 'finalization clears submerged state')
+    final_authority:set_watermark(3)
+    equal(find_command(final_boss:tick(3).commands, 'trace_resume'), nil,
+        'finalization trace cleanup is not repeated on the old deadline')
 end
 
 local phase_transition_event = {
