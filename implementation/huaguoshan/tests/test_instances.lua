@@ -265,19 +265,23 @@ end
 do
     local authority = new_authority({ now = 100 })
     local progress = {
-        locked_old = { level = 60, discovered = false, underworld_late = true },
+        locked_old = { level = 60, discovered = false, DF_PROGRESS_YANLUO_HALL_CLEARED = true },
         locked_route = {
             level = 60, discovered = true, profession_id = 'C01',
             route_completion = { C02_ROUTE_LV8_core = true },
         },
-        low_old = { level = 7, discovered = true, underworld_late = true },
-        locked_reverse = { level = 60, discovered = true, underworld_late = false },
+        low_old = { level = 7, discovered = true, DF_PROGRESS_YANLUO_HALL_CLEARED = true },
+        locked_reverse = { level = 60, discovered = true, DF_PROGRESS_YANLUO_HALL_CLEARED = false },
+        legacy_only_reverse = {
+            level = 60, discovered = true, difu_yanluo_hall_cleared = true,
+            DF_PROGRESS_YANLUO_HALL_CLEARED = false,
+        },
         a = {
-            level = 8, discovered = true, underworld_late = false, profession_id = 'C01',
+            level = 8, discovered = true, DF_PROGRESS_YANLUO_HALL_CLEARED = false, profession_id = 'C01',
             route_completion = { C01_ROUTE_LV8_core = true },
         },
         c04 = {
-            level = 8, discovered = true, underworld_late = false, profession_id = 'C04',
+            level = 8, discovered = true, DF_PROGRESS_YANLUO_HALL_CLEARED = false, profession_id = 'C04',
             selected_route_key = 'C04_ROUTE_LV8_wind',
             route_completion = { C04_ROUTE_LV8_hunt = true },
         },
@@ -330,10 +334,17 @@ do
     equal(error_code, 'untrusted-instance-authority-field:profession_id', 'caller profession rejection is explicit')
 
     opened, error_code = dragon:open(dragon_request('HG_E_DRAGON_REVERSE_TIDE', 'locked_reverse', 92))
-    equal(opened, false, 'trusted late-underworld rule rejects the reverse tide caller')
+    equal(opened, false, 'trusted Yanluo Hall completion rule rejects the reverse tide caller')
     equal(error_code, 'reverse-tide-progression-not-eligible', 'reverse tide rejection is explicit')
+
+    opened, error_code = dragon:open(dragon_request('HG_E_DRAGON_REVERSE_TIDE', 'legacy_only_reverse', 95))
+    equal(opened, false, 'legacy lowercase progress cannot satisfy Reverse Tide entry')
+    equal(error_code, 'reverse-tide-progression-not-eligible', 'reverse tide rejects an undeclared legacy progress key')
+
     equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.min_level, 8, 'old tide proof query preserves Lv8')
     equal(seen_requirements.HG_E_DRAGON_REVERSE_TIDE.min_level, 38, 'reverse tide proof query preserves Lv38')
+    equal(seen_requirements.HG_E_DRAGON_REVERSE_TIDE.progression_key, 'DF_PROGRESS_YANLUO_HALL_CLEARED',
+        'reverse tide consumes only the trusted Yanluo Hall completion key')
     equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.scope, 'actor_current_profession',
         'old tide route completion is actor-private and profession-resolved')
     equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.trial_seconds, 60,
@@ -518,6 +529,9 @@ do
     equal(#opened_result.session.members, 4, 'Ox copies four root-signed members')
     equal(opened_result.session.members[1].actor_id, 'a', 'Ox member identity comes from root snapshot')
     equal(opened_result.session.deadline_at, 1400, 'Ox deadline derives from provider time')
+    equal(opened_result.session.return_point, 'pt_hg_spawn', 'Ox session returns to the chapter initial spawn')
+    equal(opened_result.session.reentry_policy, 'deny_until_cleanup_ack',
+        'Ox session exposes the locked reentry policy')
     equal(opened_result.session.cleanup_token, nil, 'Ox public session snapshot omits cleanup capability')
     opened_result.session.members[1].status = 'left'
     opened_result.session.member_by_actor.a.status = 'left'
@@ -568,6 +582,16 @@ do
     truthy(invalidated_ok, 'authority-signed Ox actor invalidation records root status')
     equal(member_status(ox:get_active_session(), 'a'), 'dead', 'Ox keeps the authority-signed member status')
     assert_command_keys(invalidation, 'HG_E_OX_BATTLEFIELD', 'Ox member invalidation command')
+    equal(invalidation.commands[1].revive_and_teleport, true,
+        'authority-certified Ox death immediately revives and returns the member')
+    equal(invalidation.commands[1].point_key, 'pt_hg_spawn',
+        'authority-certified Ox death returns the member to the chapter initial spawn')
+    equal(invalidation.commands[1].reentry_policy, 'deny_until_cleanup_ack',
+        'authority-certified Ox death preserves the current raid reentry lock')
+    local reentered, reentry_error = ox:open(ox_request('raid:dead-member-reentry', 'a', 99))
+    equal(reentered, false, 'a dead Ox member cannot reenter the active raid')
+    equal(reentry_error, 'raid-member-reentry-locked',
+        'dead-member reentry remains locked until the matching cleanup acknowledgement')
 
     local forged_success = ox_event(ox:get_active_session())
     forged_success.success_verified = true
@@ -612,6 +636,8 @@ do
     local acknowledged_ok, released = ox:acknowledge_cleanup(ox_ack(ox:get_active_session()))
     truthy(acknowledged_ok, 'authority-signed Ox cleanup acknowledgement releases the raid')
     assert_command_keys(released, 'HG_E_OX_BATTLEFIELD', 'Ox release command')
+    equal(released.commands[1].release_reentry_lock, true,
+        'only the authority-backed cleanup acknowledgement releases the Ox reentry lock')
     equal(ox:get_active_session(), nil, 'Ox active lock releases only after proof-backed acknowledgement')
 end
 
@@ -633,6 +659,10 @@ do
         else
             truthy(invalidated, 'authority-signed Ox death invalidates a current member')
             assert_command_keys(item, 'HG_E_OX_BATTLEFIELD', 'Ox death invalidation command')
+            equal(item.commands[1].revive_and_teleport, true,
+                'each non-final authority-certified Ox death returns exactly that dead member')
+            equal(item.commands[1].point_key, 'pt_hg_spawn',
+                'each non-final authority-certified Ox death returns to the chapter initial spawn')
         end
     end
     equal(ox:get_active_session().state, 'active', 'missing terminal failure proof cannot start cleanup')
@@ -669,6 +699,12 @@ do
         'the successful retry commits cleanup in the same transition')
     equal(cleanup.rage_layers, 1, 'root-signed Ox failure adds one rage layer')
     assert_command_keys(cleanup, 'HG_E_OX_BATTLEFIELD', 'Ox failure cleanup command')
+    equal(cleanup.commands[1].revive_and_teleport, true,
+        'the final authority-certified Ox death returns the final dead member before cleanup')
+    equal(cleanup.commands[2].teleport_members, false,
+        'a full Ox wipe does not send already-dead members through a second return teleport')
+    equal(#cleanup.commands[2].teleport_member_ids, 0,
+        'a full Ox wipe has no active members left to return during cleanup')
     truthy(ox:acknowledge_cleanup(ox_ack(ox:get_active_session())),
         'root-signed Ox failure acknowledgement releases the raid')
 
@@ -701,7 +737,36 @@ do
     local timed = ox:tick()
     equal(#timed.commands, 1, 'authority-signed Ox timeout emits cleanup')
     assert_command_keys(timed, 'HG_E_OX_BATTLEFIELD', 'Ox timeout command')
+    equal(timed.commands[1].teleport_members, true, 'Ox timeout returns active members')
+    equal(timed.commands[1].point_key, 'pt_hg_spawn', 'Ox timeout returns active members to the chapter initial spawn')
+    equal(#timed.commands[1].teleport_member_ids, 4, 'Ox timeout returns every currently active member')
     equal(ox:get_active_session().state, 'cleanup_pending', 'Ox timeout waits for cleanup acknowledgement')
+end
+
+do
+    local authority = new_authority({
+        now = 700,
+        member_snapshot = {
+            { actor_id = 'timeout-dead', lifecycle_id = 1, team_id = 'team' },
+            { actor_id = 'timeout-active', lifecycle_id = 2, team_id = 'team' },
+        },
+    })
+    local ox = new_ox(authority)
+    local opened_ok, opened = ox:open(ox_request('raid:timeout-active-only', 'timeout-dead', 1))
+    truthy(opened_ok, 'Ox mixed-status timeout fixture opens')
+    authority:set_member_status('timeout-dead', 'dead')
+    local invalidated, death = ox:invalidate_actor('timeout-dead', 1)
+    truthy(invalidated, 'Ox mixed-status fixture accepts the authority-certified death')
+    equal(death.commands[1].point_key, 'pt_hg_spawn',
+        'Ox mixed-status fixture returns the dead member before timeout cleanup')
+    authority:set_now(opened.session.deadline_at)
+    local timed = ox:tick()
+    equal(#timed.commands, 1, 'Ox mixed-status timeout emits one cleanup command')
+    equal(timed.commands[1].teleport_members, true, 'Ox mixed-status timeout returns remaining active members')
+    equal(#timed.commands[1].teleport_member_ids, 1,
+        'Ox mixed-status timeout excludes the previously returned dead member')
+    equal(timed.commands[1].teleport_member_ids[1].actor_id, 'timeout-active',
+        'Ox mixed-status timeout returns only the active member')
 end
 
 do

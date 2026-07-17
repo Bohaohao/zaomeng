@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "table": "item-growth",
+  "package_status": "decision-draft",
+  "equipment": {
+    "accepted_structure": {
+      "decision_id": "ECO-BASE-002",
+      "decision_status": "accepted-baseline",
+      "registered_value_ref": "decision-register.json:ECO-BASE-002.effective_value",
+      "source_refs": [
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:15-22",
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:58-83"
+      ]
+    },
+    "numeric_policy": {
+      "decision_id": "ECO-ITEM-001",
+      "decision_status": "deferred",
+      "effective_value": null,
+      "required_numeric_fields": [
+        "equipment_slot",
+        "profession_limit",
+        "level_requirement",
+        "base_stat_profile",
+        "fixed_affixes",
+        "random_affix_pool",
+        "random_affix_count",
+        "strengthen_rule",
+        "advance_rule",
+        "set_key",
+        "set_bonus",
+        "material_throughput",
+        "duplicate_rule"
+      ],
+      "proposal_constraints": [
+        "Strengthen must be success-safe and must not destroy or downgrade an item without an adopted explicit rule.",
+        "Advance must preserve source_instance_id, previous strengthen state, consumed material receipts, and new instance lineage atomically.",
+        "Quality, rare-drop eligibility, pity, and item ownership must remain separate fields."
+      ]
+    }
+  },
+  "artifacts": {
+    "accepted_structure": {
+      "decision_id": "ECO-BASE-002",
+      "decision_status": "accepted-baseline",
+      "registered_value_ref": "decision-register.json:ECO-BASE-002.effective_value",
+      "source_refs": [
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:85-104"
+      ]
+    },
+    "numeric_policy": {
+      "decision_id": "ECO-ITEM-001",
+      "decision_status": "deferred",
+      "effective_value": null,
+      "required_numeric_fields": [
+        "artifact_slot",
+        "artifact_tier",
+        "active_ability_key",
+        "affix_count",
+        "affix_pool",
+        "recipe",
+        "refine_cost",
+        "append_cost",
+        "advance_cost",
+        "bind_rule"
+      ],
+      "legacy_direction_not_effective": {
+        "artifact_affix_count_suggestion": {
+          "low": "1-2",
+          "low_high": "2-3",
+          "medium": "3-4",
+          "high": "4-5"
+        }
+      }
+    }
+  },
+  "pets": {
+    "accepted_structure": {
+      "decision_id": "ECO-BASE-002",
+      "decision_status": "accepted-baseline",
+      "registered_value_ref": "decision-register.json:ECO-BASE-002.effective_value",
+      "source_refs": [
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:106-142"
+      ]
+    },
+    "numeric_policy": {
+      "decision_id": "ECO-ITEM-001",
+      "decision_status": "deferred",
+      "effective_value": null,
+      "required_numeric_fields": [
+        "pet_slot",
+        "affinity",
+        "growth_profile",
+        "skill_slots",
+        "hatch_recipe",
+        "bind_rule",
+        "storage_rule",
+        "duplicate_rule"
+      ]
+    }
+  },
+  "materials": {
+    "accepted_structure": {
+      "decision_id": "ECO-BASE-002",
+      "decision_status": "accepted-baseline",
+      "registered_value_ref": "decision-register.json:ECO-BASE-002.effective_value",
+      "source_refs": [
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:106-142"
+      ]
+    },
+    "numeric_policy": {
+      "decision_id": "ECO-ITEM-001",
+      "decision_status": "deferred",
+      "effective_value": null,
+      "required_numeric_fields": [
+        "material_key",
+        "stack_limit",
+        "bind_rule",
+        "acquisition_profiles",
+        "consumption_profiles",
+        "source_rate",
+        "sink_rate",
+        "duplicate_conversion"
+      ]
+    }
+  },
+  "non_production_rules": [
+    "No item, pet, material, recipe, affix, probability, or Y3 object ID is created by this table.",
+    "All proposed numeric content remains outside runtime_handoff until adoption and editor data validation."
+  ]
+}

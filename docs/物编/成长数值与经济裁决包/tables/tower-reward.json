@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "table": "tower-reward",
+  "package_status": "decision-draft",
+  "entry_gate": {
+    "decision_id": "ECO-BASE-001",
+    "decision_status": "accepted-baseline",
+    "effective_value": {
+      "tower_entry_level": 55,
+      "tower_member_check": "every solo player or team member must independently satisfy the level gate",
+      "tower_loadout_rest_every_floors": 5
+    }
+  },
+  "reward_policy": {
+    "decision_id": "ECO-TOWER-001",
+    "decision_status": "deferred",
+    "effective_value": null,
+    "known_reward_directions": [
+      "strengthen_stone",
+      "advance_stone",
+      "tower_token",
+      "title",
+      "cosmetic_fragment"
+    ],
+    "required_fields": [
+      "record_scope",
+      "solo_team_relation",
+      "floor_plan",
+      "affix_pool",
+      "first_clear_reward",
+      "repeat_reward",
+      "currency_amount",
+      "season_rule",
+      "final_floor",
+      "resource_table_version"
+    ]
+  },
+  "legacy_direction_not_effective": {
+    "floor_theme_suggestion": [
+      "1-10 花果山",
+      "11-20 地府",
+      "21-30 天庭",
+      "31-40 混合精英",
+      "41-50 首发毕业挑战"
+    ],
+    "boss_cadence_suggestion": {
+      "minor_boss_every_floors": 5,
+      "major_boss_every_floors": 10
+    }
+  },
+  "non_production_rules": [
+    "The Lv55 entry gate does not imply an adopted floor count, reward amount, affix, or season.",
+    "No tower reward may change the zero-free-play protection line or bypass character qualification."
+  ]
+}

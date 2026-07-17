@@ -83,7 +83,7 @@
     {"encounter_key":"HG_E_DRAGON_REVERSE_TIDE","resource_key":"pt_longgong_entry","source":"logic_resource","expected_type":"point","role":"entry_point"},
     {"encounter_key":"HG_E_DRAGON_REVERSE_TIDE","resource_key":"pt_hg_teleport_hub","source":"logic_resource","expected_type":"point","role":"failure_return"},
     {"encounter_key":"HG_E_OX_BATTLEFIELD","resource_key":"pt_fire_dungeon_entry","source":"logic_resource","expected_type":"point","role":"entry_point"},
-    {"encounter_key":"HG_E_OX_BATTLEFIELD","resource_key":"pt_hg_teleport_team","source":"logic_resource","expected_type":"point","role":"failure_return"}
+    {"encounter_key":"HG_E_OX_BATTLEFIELD","resource_key":"pt_hg_spawn","source":"logic_resource","expected_type":"point","role":"failure_return"}
   ],
   "instance_map_contracts": [
     {

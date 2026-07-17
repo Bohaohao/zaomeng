@@ -115,6 +115,31 @@ try {
         throw 'Manifest encounter resource keys/roles do not match map-logic-binding.json.'
     }
 
+    $oxManifestEncounter = @($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_OX_BATTLEFIELD' })
+    if ($oxManifestEncounter.Count -ne 1 -or
+        $oxManifestEncounter[0].runtime_fields.failure_return_point -ne 'pt_hg_spawn' -or
+        $oxManifestEncounter[0].runtime_fields.member_death_return_point -ne 'pt_hg_spawn' -or
+        $oxManifestEncounter[0].runtime_fields.timeout_return_point -ne 'pt_hg_spawn' -or
+        $oxManifestEncounter[0].runtime_fields.member_death_reentry_policy -ne 'deny_until_cleanup_ack') {
+        throw 'Ox Battlefield manifest must return failed members to pt_hg_spawn and lock re-entry until cleanup acknowledgment.'
+    }
+    $reverseTideManifestEncounter = @($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_DRAGON_REVERSE_TIDE' })
+    if ($reverseTideManifestEncounter.Count -ne 1 -or
+        $reverseTideManifestEncounter[0].runtime_fields.unlock_rule -ne 'level_at_least_38_and_difu_yanluo_hall_cleared' -or
+        $reverseTideManifestEncounter[0].runtime_fields.progression_key -ne 'DF_PROGRESS_YANLUO_HALL_CLEARED') {
+        throw 'Reverse Tide manifest must require the trusted Yanluo Hall completion progression key.'
+    }
+    $oxBindingFailureReturn = @($binding.encounter_resource_bindings | Where-Object {
+        $_.encounter_key -eq 'HG_E_OX_BATTLEFIELD' -and $_.role -eq 'failure_return'
+    })
+    $oxProjectedFailureReturn = @($actual.encounter_resource_bindings | Where-Object {
+        $_.encounter_key -eq 'HG_E_OX_BATTLEFIELD' -and $_.role -eq 'failure_return'
+    })
+    if ($oxBindingFailureReturn.Count -ne 1 -or $oxBindingFailureReturn[0].resource_key -ne 'pt_hg_spawn' -or
+        $oxProjectedFailureReturn.Count -ne 1 -or $oxProjectedFailureReturn[0].resource_key -ne 'pt_hg_spawn') {
+        throw 'Ox Battlefield Config projection and map binding must both expose pt_hg_spawn as failure_return.'
+    }
+
     $actualJson = Get-CanonicalJson $actual
     $expectedJson = Get-CanonicalJson ([pscustomobject]$expected)
     if ($actualJson -ne $expectedJson) {

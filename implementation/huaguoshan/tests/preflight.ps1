@@ -1905,7 +1905,28 @@ if ($encounterByKey['HG_E_JIAO_KING'].runtime_fields.trace_pause -ne $true -or $
 foreach ($key in @('HG_E_MACAQUE_KING','HG_E_SHARK_KING')) {
     if ($encounterByKey[$key].runtime_fields.trace_pause -ne $false) { Add-Error $errors "$key must not emit trace_pause" }
 }
-if ($encounterByKey['HG_E_OX_BATTLEFIELD'].runtime_fields.max_members -ne 4) { Add-Error $errors 'ox battlefield must cap membership at four' }
+$oxRuntime = $encounterByKey['HG_E_OX_BATTLEFIELD'].runtime_fields
+if ($oxRuntime.max_members -ne 4) { Add-Error $errors 'ox battlefield must cap membership at four' }
+if ($oxRuntime.failure_return_point -ne 'pt_hg_spawn') {
+    Add-Error $errors 'HG_E_OX_BATTLEFIELD failure_return_point must be pt_hg_spawn'
+}
+if ($oxRuntime.member_death_return_point -ne 'pt_hg_spawn') {
+    Add-Error $errors 'HG_E_OX_BATTLEFIELD member_death_return_point must be pt_hg_spawn'
+}
+if ($oxRuntime.member_death_reentry_policy -ne 'deny_until_cleanup_ack') {
+    Add-Error $errors 'HG_E_OX_BATTLEFIELD member_death_reentry_policy must be deny_until_cleanup_ack'
+}
+if ($oxRuntime.timeout_return_point -ne 'pt_hg_spawn') {
+    Add-Error $errors 'HG_E_OX_BATTLEFIELD timeout_return_point must be pt_hg_spawn'
+}
+
+$reverseTideRuntime = $encounterByKey['HG_E_DRAGON_REVERSE_TIDE'].runtime_fields
+if ($reverseTideRuntime.unlock_rule -ne 'level_at_least_38_and_difu_yanluo_hall_cleared') {
+    Add-Error $errors 'HG_E_DRAGON_REVERSE_TIDE unlock_rule must require Lv38 and Yanluo Hall completion'
+}
+if ($reverseTideRuntime.progression_key -ne 'DF_PROGRESS_YANLUO_HALL_CLEARED') {
+    Add-Error $errors 'HG_E_DRAGON_REVERSE_TIDE progression_key must be DF_PROGRESS_YANLUO_HALL_CLEARED'
+}
 
 $oldTideRuntime = $encounterByKey['HG_E_DRAGON_OLD_TIDE'].runtime_fields
 if ($oldTideRuntime.discovery_rule -ne 'longgong_discovered_and_level_at_least_8') {

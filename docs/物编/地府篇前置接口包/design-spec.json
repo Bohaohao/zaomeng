@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "project": {
+    "name": "造梦 ORPG：地府篇前置接口",
+    "genre": "最多四人同游的 Y3 2.5D 俯视角 ORPG",
+    "camera": "2.5D俯视角",
+    "sessionType": "多人地图内的副本与跨篇进度接口",
+    "targetPlayers": "1-4 人；本包不新定义人数或副本容量",
+    "targetDurationMinutes": 0,
+    "pitch": "在不创建地府内容的前提下，冻结阎罗殿完成、转轮殿团队本、团队死亡回传与龙宫逆潮的跨篇接口。"
+  },
+  "sourceMaterials": [
+    "docs/物编/地府篇前置接口包/cross-chapter-interface.json",
+    "docs/全局设计基线.md",
+    "docs/02-公共野外与副本规则.md",
+    "docs/04-v1.0首发内容范围.md",
+    "docs/物编/15-花果山遭遇与BOSS战斗契约.md",
+    "docs/物编/18-成长系统进度、掉落与长期目标契约.md"
+  ],
+  "worldview": {
+    "theme": "地府篇开始前的轮回、命册与跨篇回访接口准备",
+    "hardRules": [
+      "DF_E_ZHUANLUN_HALL 是 team_instance。",
+      "DF_E_YANLUO_HALL 是非团队地府常规最终副本。",
+      "DF_PROGRESS_YANLUO_HALL_CLEARED 仅由受信任阎罗殿完成事件按角色幂等写入。",
+      "HG_E_DRAGON_REVERSE_TIDE 只在 Lv38 且可信查询到该键时开放。",
+      "本包不生成 Y3 资产、地图、掉落或数值。"
+    ],
+    "factions": [
+      "幽冥十司（仅作为后续地府内容归属，不创建资产）",
+      "承命者角色存档（进度键所有者）"
+    ],
+    "tone": "可追溯、非生产、拒绝通过客户端或队伍状态越权。",
+    "visualKeywords": [
+      "本包不定义地府视觉资源"
+    ]
+  },
+  "playerExperience": {
+    "targetAudience": "需要稳定跨篇解锁与可审阅副本状态的首发 ORPG 玩家。",
+    "firstSessionGoal": "玩家不会因队友、客户端状态或旧泛化键误开龙宫逆潮。",
+    "primaryMotivation": "地府完成能够可靠解锁花果山返场挑战，同时不产生奖励或数值副作用。",
+    "frictionRisks": [
+      "阎罗殿和转轮殿历史命名混用会导致错误副本分类。",
+      "成员死亡、全灭和超时的重复回传会造成卡锁或重复传送。",
+      "将完成证据误作奖励资格会绕开成长数值与经济裁决门禁。"
+    ]
+  },
+  "coreLoop": {
+    "shortLoop": "权威完成事件 -> 角色级幂等进度键 -> 可信查询。",
+    "midLoop": "地府常规最终副本完成后，满足等级门槛的同一角色可回访龙宫逆潮。",
+    "longLoop": "后续地府内容、花果山返场和三篇成长系统共享同一受信任进度边界。",
+    "rewards": [
+      "仅解锁资格；不发放经验、货币、物品、掉落、概率或保底。"
+    ]
+  },
+  "sessionFlow": [
+    {
+      "phase": "接口前置",
+      "duration": "未定义；本包不设生产时长",
+      "playerGoal": "不适用：离线接口工件",
+      "systemsUsed": ["受信任进度"],
+      "successCriteria": "契约明确区分阎罗殿生产者与龙宫逆潮消费者。"
+    },
+    {
+      "phase": "阎罗殿成功证据",
+      "duration": "由未来地府篇定义",
+      "playerGoal": "以同一角色完成阎罗殿",
+      "systemsUsed": ["权威完成收据", "角色进度"],
+      "successCriteria": "只写入 DF_PROGRESS_YANLUO_HALL_CLEARED，不发放资源。"
+    },
+    {
+      "phase": "重复与越权拒绝",
+      "duration": "即时校验",
+      "playerGoal": "不适用：权威边界",
+      "systemsUsed": ["幂等收据", "来源校验"],
+      "successCriteria": "重复 completion event 重放同一结果，非阎罗殿来源被拒绝。"
+    },
+    {
+      "phase": "龙宫逆潮查询",
+      "duration": "进入前校验",
+      "playerGoal": "同一角色在 Lv38 后开启逆潮",
+      "systemsUsed": ["可信进度查询", "等级门槛"],
+      "successCriteria": "缺等级或缺完成键分别拒绝，旧 underworld_late 不可替代。"
+    },
+    {
+      "phase": "团队死亡清理",
+      "duration": "由未来地图回调决定",
+      "playerGoal": "成员死亡后不重入、不重复回传",
+      "systemsUsed": ["cleanup_ack", "章节 initial_spawn"],
+      "successCriteria": "死亡成员先复活回 initial_spawn 并保持 dead/重入锁；left 不复活不回传；全灭不回传已死亡成员；超时只回传 active 成员；只有同 raid_instance_id、session_epoch 与 cleanup_token 的 cleanup_ack 可解锁。"
+    }
+  ],
+  "systems": [
+    {
+      "name": "跨篇进度",
+      "designIntent": "阎罗殿完成键是角色级受信任状态；花果山只通过受信任查询直接消费稳定键 DF_PROGRESS_YANLUO_HALL_CLEARED，不写入或映射第二键。",
+      "requiredData": "actor_id、event_id、会话身份与 authority_proof_ref；event_id 沿用现有权威事件口径。",
+      "runtimeBehavior": "未来地图根负责写入和查询；本包不实现运行时。",
+      "owner": "后续地府篇与花果山运行时交接"
+    },
+    {
+      "name": "团队清理",
+      "designIntent": "成员死亡、全灭和超时都有唯一回传与 cleanup_ack 边界；left 不获得复活或回传。",
+      "requiredData": "成员状态、章节 initial_spawn、raid_instance_id、session_epoch、cleanup_token 与 cleanup_ack。",
+      "runtimeBehavior": "未来 team_instance 消费该策略；本包不绑定地图资源。",
+      "owner": "后续遭遇运行时交接"
+    },
+    {
+      "name": "非生产证据",
+      "designIntent": "完成收据只证明解锁资格，不可推导经济结算。",
+      "requiredData": "权威完成收据字段与幂等键。",
+      "runtimeBehavior": "不生成奖励、物品、货币、经验、概率或保底。",
+      "owner": "后续成长裁决与审阅"
+    }
+  ],
+  "content": {
+    "heroes": ["不新增英雄内容。"],
+    "abilities": ["不新增技能或效果。"],
+    "units": ["不新增地府单位记录。"],
+    "monsters": ["地府怪物生态留待完整地府篇规格。"],
+    "bosses": ["仅登记 DF_E_YANLUO_HALL 与 DF_E_ZHUANLUN_HALL 的接口分类；不定义 Boss 资产。"],
+    "items": ["不新增物品、材料、货币或掉落。"],
+    "waves": ["不定义波次或刷怪。"],
+    "maps": ["仅引用 chapter_initial_spawn 这一抽象角色；不定义地图资源。"],
+    "ui": ["未来 UI 只能显示权威查询结果；本包不生成 UI。"],
+    "economy": ["所有奖励、掉落、概率、保底、货币与物品值均为 deferred/null。"],
+    "progression": ["DF_PROGRESS_YANLUO_HALL_CLEARED：角色级、权威、completion event 幂等。"],
+    "monetization": ["不定义商业字段；不得绕过解锁条件。"]
+  },
+  "mvp": {
+    "mustHave": [
+      "固定阎罗殿、转轮殿与龙宫逆潮的键和角色。",
+      "完成收据、幂等写入、可信查询和拒绝旧键的接口协议。",
+      "团队死亡、全灭、超时与 cleanup_ack 的回传边界。",
+      "严格 JSON 校验与负例。"
+    ],
+    "shouldHave": [
+      "完整地府篇开始时对该接口做单独复审。",
+      "花果山离线包直接消费 DF_PROGRESS_YANLUO_HALL_CLEARED 的回归。"
+    ],
+    "later": [
+      "地府单位、地图、战斗、对象、Y3 资源和运行时。",
+      "经验、物品、货币、掉落、概率、保底和数值裁决。"
+    ]
+  },
+  "handoffs": {
+    "objectConfig": ["完整地府篇开始后再创建对象清单；本接口不提供任何对象或 Y3 ID。"],
+    "terrainLayout": ["完整地府篇必须将 chapter_initial_spawn 解析为经回读的地图资源，不能从本包猜测坐标。"],
+    "luaLogic": ["实现受信任 completion receipt 写入、角色级查询、cleanup_ack 与去重回传；不得由客户端或队伍布尔值代写。"],
+    "uiPipeline": ["UI 只显示权威门槛结果与清理状态，不直接开放或写入进度。"],
+    "reviewPanel": ["复审阎罗殿生产者唯一性、转轮殿 team_instance 分类、逆潮消费门槛与非生产经济边界。"]
+  },
+  "risks": [
+    "历史资料曾把阎罗殿与转轮殿并列为候选；当前基线已同步，后续新增地府工件仍须以本接口的唯一生产者/团队本分类为准。",
+    "花果山离线查询契约直接消费 DF_PROGRESS_YANLUO_HALL_CLEARED；真实地图绑定、持久化写入和实机回读仍待接入。",
+    "团队死亡策略会影响现有牛魔全灭清理路径，需在跨篇实施阶段单独回归。",
+    "本包不提供地府地图或 Y3 资源，chapter_initial_spawn 仍待真实地图回读。"
+  ],
+  "unresolved": [
+    "阎罗殿常规最终副本的完整地图、成员容量、战斗与失败流程。",
+    "转轮殿的单位、Boss、多阶段与地图合同。",
+    "地府全部单位、物品、掉落、经验、货币、概率与保底。",
+    "各章节 initial_spawn 的真实资源键、对象 ID 和地图回读。"
+  ],
+  "acceptanceCriteria": [
+    "cross-chapter-interface.json 严格固定 DF_E_ZHUANLUN_HALL、DF_E_YANLUO_HALL、DF_PROGRESS_YANLUO_HALL_CLEARED 与 HG_E_DRAGON_REVERSE_TIDE。",
+    "只有角色等级至少 38 且受信任查询命中完成键时，逆潮接口才可放行。",
+    "完成键按 actor_id 与 event_id 幂等，非阎罗殿、客户端、队友或世界状态不可写入。",
+    "成员死亡在 cleanup_ack 前不可重入；全灭不重复回传死者；超时只回传 active 成员。",
+    "所有生产值、候选值与地府资产/经济内容保持 null 或 deferred。",
+    "严格校验器、负例和规划规格校验均通过。"
+  ]
+}

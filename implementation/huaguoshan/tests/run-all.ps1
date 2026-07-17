@@ -487,8 +487,8 @@ Write-Output "Using pinned offline Lua runner: fengari-node-cli $pinnedFengariVe
 
 $luaTestContracts = [ordered]@{
     'implementation/huaguoshan/tests/test_map_binding.lua' = [pscustomobject]@{
-        PassLine = 'PASS: 192 map binding assertions'
-        SourceSha256 = '33887AAAD69C280F6F344D7F0C1B02E0C4B54B796FAB36C71725091A84E6392D'
+        PassLine = 'PASS: 196 map binding assertions'
+        SourceSha256 = '145033C95F9A28A9CE8D149C16848B57304916B5C91666BB3C148A1F7AAB256B'
     }
     'implementation/huaguoshan/tests/test_public_trace.lua' = [pscustomobject]@{
         PassLine = 'PASS: 60 public trace assertions'
@@ -499,20 +499,20 @@ $luaTestContracts = [ordered]@{
         SourceSha256 = '56466FD63A3D6D32F2FA4BAEF7D541A30A4518BE74250688ACF49A766D16EC99'
     }
     'implementation/huaguoshan/tests/test_instances.lua' = [pscustomobject]@{
-        PassLine = 'PASS: 297 instance assertions'
-        SourceSha256 = '83C6A2096FEB471484002A23E93B9CB257DC2C2C1A6750C98508945CF44E70DA'
+        PassLine = 'PASS: 327 instance assertions'
+        SourceSha256 = '2900245C3924DC3EA0A87ED7AE9979CDBC4A20659A58DF75754446816A155E8E'
     }
     'implementation/huaguoshan/tests/test_controller.lua' = [pscustomobject]@{
-        PassLine = 'PASS: 325 controller assertions'
-        SourceSha256 = '8803817399FA0F21F384F2E41E4524351C36BA439C2C6EFF76B32B6FA938AF86'
+        PassLine = 'PASS: 330 controller assertions'
+        SourceSha256 = '9CAB23720F7B70EEBDD856FF313C716E9461FBAD2A2DF2A610C606877D684853'
     }
     'implementation/huaguoshan/tests/test_controller_runtime_adapter.lua' = [pscustomobject]@{
         PassLine = 'PASS: 100 controller runtime adapter assertions'
         SourceSha256 = 'F993425877A78B39EC63FB60F6DF92A46A419477E5E52B56728A276851EAF3F6'
     }
     'implementation/huaguoshan/tests/test_runtime.lua' = [pscustomobject]@{
-        PassLine = 'PASS: 105 runtime assertions'
-        SourceSha256 = '9F0E5A7E2BCCCE7C4A0C221A5C89FBC2B09FD8C68D7DD038D694B131BB9D0E72'
+        PassLine = 'PASS: 113 runtime assertions'
+        SourceSha256 = '462180E16501DD6D5CBD84D63DF26324E43350B15E4A05CD034621B0EBC9A014'
     }
     'implementation/huaguoshan/tests/test_controller_runtime_adapter_integration.lua' = [pscustomobject]@{
         PassLine = 'PASS: 108 controller runtime adapter integration assertions'

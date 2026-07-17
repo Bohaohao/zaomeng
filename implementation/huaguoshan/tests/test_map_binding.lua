@@ -16,6 +16,16 @@ local function truthy(value, message)
     if not value then error(message or 'expected truthy value') end
 end
 
+equal(Config.encounters.HG_E_OX_BATTLEFIELD.return_point, 'pt_hg_spawn',
+    'Ox failure and timeout returns use the chapter initial spawn')
+equal(Config.encounters.HG_E_OX_BATTLEFIELD.reentry_policy, 'deny_until_cleanup_ack',
+    'Ox reentry stays locked until the matching cleanup acknowledgement')
+equal(Config.encounters.HG_E_DRAGON_REVERSE_TIDE.unlock_rule,
+    'level_at_least_38_and_difu_yanluo_hall_cleared',
+    'Reverse Tide names the Lv38 plus Yanluo Hall completion rule')
+equal(Config.encounters.HG_E_DRAGON_REVERSE_TIDE.progression_key, 'DF_PROGRESS_YANLUO_HALL_CLEARED',
+    'Reverse Tide consumes the trusted Yanluo Hall completion key')
+
 local function resolved_resource(key, source, expected_type, generation)
     return {
         logic_key = key,

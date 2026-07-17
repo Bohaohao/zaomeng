@@ -1588,6 +1588,44 @@ if ($null -ne $binding) {
         }
         else { $manifestEncounterByKey[[string]$encounter.record_key] = $encounter }
     }
+
+    $oxEncounter = $manifestEncounterByKey['HG_E_OX_BATTLEFIELD']
+    if ($null -eq $oxEncounter -or $oxEncounter.runtime_fields -isnot [pscustomobject]) {
+        $errors.Add('HG_E_OX_BATTLEFIELD runtime_fields must be an object')
+    }
+    else {
+        $oxRuntime = $oxEncounter.runtime_fields
+        if ($oxRuntime.max_members -ne 4) {
+            $errors.Add('HG_E_OX_BATTLEFIELD max_members must be 4')
+        }
+        if ($oxRuntime.failure_return_point -ne 'pt_hg_spawn') {
+            $errors.Add('HG_E_OX_BATTLEFIELD failure_return_point must be pt_hg_spawn')
+        }
+        if ($oxRuntime.member_death_return_point -ne 'pt_hg_spawn') {
+            $errors.Add('HG_E_OX_BATTLEFIELD member_death_return_point must be pt_hg_spawn')
+        }
+        if ($oxRuntime.member_death_reentry_policy -ne 'deny_until_cleanup_ack') {
+            $errors.Add('HG_E_OX_BATTLEFIELD member_death_reentry_policy must be deny_until_cleanup_ack')
+        }
+        if ($oxRuntime.timeout_return_point -ne 'pt_hg_spawn') {
+            $errors.Add('HG_E_OX_BATTLEFIELD timeout_return_point must be pt_hg_spawn')
+        }
+    }
+
+    $reverseTideEncounter = $manifestEncounterByKey['HG_E_DRAGON_REVERSE_TIDE']
+    if ($null -eq $reverseTideEncounter -or $reverseTideEncounter.runtime_fields -isnot [pscustomobject]) {
+        $errors.Add('HG_E_DRAGON_REVERSE_TIDE runtime_fields must be an object')
+    }
+    else {
+        $reverseTideRuntime = $reverseTideEncounter.runtime_fields
+        if ($reverseTideRuntime.unlock_rule -ne 'level_at_least_38_and_difu_yanluo_hall_cleared') {
+            $errors.Add('HG_E_DRAGON_REVERSE_TIDE unlock_rule must require Lv38 and Yanluo Hall completion')
+        }
+        if ($reverseTideRuntime.progression_key -ne 'DF_PROGRESS_YANLUO_HALL_CLEARED') {
+            $errors.Add('HG_E_DRAGON_REVERSE_TIDE progression_key must be DF_PROGRESS_YANLUO_HALL_CLEARED')
+        }
+    }
+
     $unitByKey = @{}
     foreach ($unit in @($manifest.units)) {
         if ($unit -is [pscustomobject] -and (Test-NonEmptyTrimmedString $unit.record_key)) {

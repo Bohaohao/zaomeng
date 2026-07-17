@@ -227,14 +227,15 @@ M.encounters = {
         resources = { 'pt_longgong_entry', 'pt_hg_teleport_hub' },
         deadline_seconds = 900, return_point = 'pt_hg_teleport_hub', boss_unit_key = 'HG_U_DRAGON_KING_P2',
         break_profile = { threshold = 18, window_seconds = 3.5 },
-        unlock_rule = 'level_at_least_38_and_underworld_late_progress',
+        unlock_rule = 'level_at_least_38_and_difu_yanluo_hall_cleared',
+        progression_key = 'DF_PROGRESS_YANLUO_HALL_CLEARED',
         instance_map_contract = 'pending',
         instance_map_contract_key = 'HG_I_DRAGON_FOUR_SEAS',
     },
     HG_E_OX_BATTLEFIELD = {
         encounter_type = 'team_boss', combat_scope = 'team_instance',
-        resources = { 'pt_fire_dungeon_entry', 'pt_hg_teleport_team' }, max_members = 4,
-        deadline_seconds = 1200, return_point = 'pt_hg_teleport_team',
+        resources = { 'pt_fire_dungeon_entry', 'pt_hg_spawn' }, max_members = 4,
+        deadline_seconds = 1200, return_point = 'pt_hg_spawn', reentry_policy = 'deny_until_cleanup_ack',
         phases = {
             { id = 'human', boss_unit_key = 'HG_U_OX_KING_HUMAN', break_profile = { threshold = 20, window_seconds = 4 } },
             { id = 'white_ox', boss_unit_key = 'HG_U_ARMORED_WHITE_OX', break_profile = { threshold = 24, window_seconds = 4 } },
@@ -321,7 +322,7 @@ M.encounter_resource_roles = {
     },
     HG_E_OX_BATTLEFIELD = {
         pt_fire_dungeon_entry = 'entry_point',
-        pt_hg_teleport_team = 'failure_return',
+        pt_hg_spawn = 'failure_return',
     },
 }
 

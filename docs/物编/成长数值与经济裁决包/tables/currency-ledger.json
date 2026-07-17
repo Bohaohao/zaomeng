@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "table": "currency-ledger",
+  "package_status": "decision-draft",
+  "currencies": [
+    {
+      "currency_key": "CUR_GOLD",
+      "display_name": "金币",
+      "decision_id": "ECO-LEDGER-001",
+      "decision_status": "proposal",
+      "effective_value": null,
+      "proposal_value": {
+        "owner_scope": "character",
+        "bind_rule": "character_bound",
+        "source_families": ["public", "solo_instance", "team_instance", "quest"],
+        "sink_families": ["strengthen", "advance", "service"],
+        "balance_cap": "pending"
+      },
+      "runtime_handoff": false
+    },
+    {
+      "currency_key": "CUR_TOWER_TOKEN",
+      "display_name": "塔币",
+      "decision_id": "ECO-LEDGER-001",
+      "decision_status": "proposal",
+      "effective_value": null,
+      "proposal_value": {
+        "owner_scope": "character",
+        "bind_rule": "character_bound",
+        "source_families": ["tower"],
+        "sink_families": ["tower_reward_exchange_pending"],
+        "balance_cap": "pending"
+      },
+      "runtime_handoff": false
+    },
+    {
+      "currency_key": "CUR_RAID_MARK",
+      "display_name": "团队本代币",
+      "decision_id": "ECO-LEDGER-001",
+      "decision_status": "proposal",
+      "effective_value": null,
+      "proposal_value": {
+        "owner_scope": "character",
+        "bind_rule": "character_bound",
+        "source_families": ["team_instance"],
+        "sink_families": ["raid_exchange_pending"],
+        "balance_cap": "pending"
+      },
+      "runtime_handoff": false
+    }
+  ],
+  "ledger_contract": {
+    "decision_id": "ECO-LEDGER-002",
+    "decision_status": "proposal",
+    "effective_value": null,
+    "proposal_value": {
+      "required_record_fields": [
+        "schema_version",
+        "resource_table_version",
+        "owner_scope",
+        "owner_id",
+        "event_id",
+        "event_type",
+        "source_profile",
+        "balance_delta",
+        "receipt_id"
+      ],
+      "dedupe_identity": [
+        "owner_scope",
+        "owner_id",
+        "event_id",
+        "source_profile",
+        "reward_slot_key",
+        "resource_table_version"
+      ],
+      "replay_rule": "return_original_receipt_without_second_mutation",
+      "migration_rule": "forward_only_with_auditable_isolation_for_unmapped_records",
+      "cleanup_rule": "no_cleanup_before_adopted_retention_policy"
+    },
+    "runtime_handoff": false
+  },
+  "owner_scope_boundaries": {
+    "decision_id": "ECO-LEDGER-001",
+    "decision_status": "proposal",
+    "effective_value": null,
+    "proposal_value": {
+      "character": "all combat-growth currencies, materials, pity, and reward receipts",
+      "team": "qualification and opening-member snapshots only, not a shared spendable balance",
+      "account": "not used for combat-growth balance in v1",
+      "season": "not used until a tower-season policy is adopted"
+    },
+    "runtime_handoff": false
+  },
+  "non_production_rules": [
+    "The keys are candidate stable keys only; no balance, exchange, UI, shop, or grant is enabled.",
+    "Materials remain item records and cannot bypass the ledger by pretending to be currency.",
+    "No currency may be sold, used to purchase rare eligibility, or used to change growth speed."
+  ]
+}

@@ -1,0 +1,466 @@
+{
+  "version": 1,
+  "artifact": "growth-economy-calibration-candidates",
+  "artifact_status": "candidate-only",
+  "calibration_status": "candidate",
+  "non_production": true,
+  "effective_value": null,
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "purpose": "将已采纳结构、白盒观测、未验证假设和待实测输出拆开，为经验、成长成本、资源吞吐和失败循环建立采样与审阅边界；本文件不包含生产经验、货币、材料、概率或保底数值。",
+  "source_catalog": [
+    {
+      "source_id": "SRC-BASE-LEVEL-001",
+      "source_kind": "accepted-baseline",
+      "decision_id": "ECO-BASE-001",
+      "decision_status": "accepted-baseline",
+      "source_refs": [
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:23-50",
+        "docs/物编/成长数值与经济裁决包/decision-register.json:8-37"
+      ],
+      "source_file_hashes": [
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "C4BCDD6190FE416672BF2E0020757CA52D4F47C15A293CD9AFF4E59A77CE428A"},
+        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "F7DEA4C82F84617644D5397D7A5BCA2A387C3502DFACBC20BB68C6FADB6B6E16"}
+      ],
+      "permitted_use": [
+        "Lv60 上限、三篇等级段和关键等级检查点的边界校验",
+        "通天塔 Lv55 逐人门槛的后续样本分层"
+      ],
+      "forbidden_use": [
+        "从等级段推出单级经验、经验曲线或资源价格",
+        "将通天塔门槛解释为奖励或赛季数值"
+      ]
+    },
+    {
+      "source_id": "SRC-XP-CONTRACT-001",
+      "source_kind": "deferred-contract",
+      "decision_id": "ECO-XP-001",
+      "decision_status": "deferred",
+      "source_refs": [
+        "docs/物编/成长数值与经济裁决包/tables/experience-progression.json:18-81",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:159-172,214-222"
+      ],
+      "source_file_hashes": [
+        {"path": "docs/物编/成长数值与经济裁决包/tables/experience-progression.json", "sha256": "E0141B3C1FCEFCD49C2BD11B20DB742E5D95CD04EFE1C19CF52675E8B1528330"},
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "C4BCDD6190FE416672BF2E0020757CA52D4F47C15A293CD9AFF4E59A77CE428A"}
+      ],
+      "permitted_use": [
+        "定义经验表必须拥有的字段、收据和可追溯性",
+        "约束组队、等级差、死亡与重连需要独立裁决"
+      ],
+      "forbidden_use": [
+        "将 deferred 经验字段填入运行时或物编",
+        "将花果山局部节奏外推为项目级目标会话时长"
+      ]
+    },
+    {
+      "source_id": "SRC-HG-WHITEBOX-001",
+      "source_kind": "whitebox-candidate",
+      "decision_id": "ECO-XP-WH-001",
+      "decision_status": "whitebox-candidate",
+      "source_refs": [
+        "implementation/huaguoshan/preconstruction-manifest.json:110-169,252-266",
+        "docs/物编/成长数值与经济裁决包/tables/experience-progression.json:81-105"
+      ],
+      "source_file_hashes": [
+        {"path": "implementation/huaguoshan/preconstruction-manifest.json", "sha256": "221384CF0D343FDF850C3CCC054859D31F7725AE11EDFA291FFE27C6BF6569C1"},
+        {"path": "docs/物编/成长数值与经济裁决包/tables/experience-progression.json", "sha256": "E0141B3C1FCEFCD49C2BD11B20DB742E5D95CD04EFE1C19CF52675E8B1528330"}
+      ],
+      "permitted_use": [
+        "比较不同遭遇类别的相对观测结构",
+        "定义后续实测应覆盖的等级带、刷新和遭遇类型"
+      ],
+      "forbidden_use": [
+        "把 reward_exp 直接写为正式经验",
+        "把 reward_official_res_1 解释为金币已配置或未配置",
+        "在地图绑定和实机战斗日志前从刷新字段推出吞吐"
+      ]
+    },
+    {
+      "source_id": "SRC-ITEM-CONTRACT-001",
+      "source_kind": "deferred-contract",
+      "decision_id": "ECO-ITEM-001",
+      "decision_status": "deferred",
+      "source_refs": [
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:15-22,58-142,170-176",
+        "docs/物编/成长数值与经济裁决包/tables/item-growth.json"
+      ],
+      "source_file_hashes": [
+        {"path": "docs/物编/19-装备、法宝、宠物与材料物编规格.md", "sha256": "78E50C3C036BE692855B0920C228DB520FA7C378FE10367158AF3E778028970A"},
+        {"path": "docs/物编/成长数值与经济裁决包/tables/item-growth.json", "sha256": "A8D0806BCE822482564723DB6F4B574B923D25614A6934778D997BBCB655B3FF"}
+      ],
+      "permitted_use": [
+        "区分装备、法宝、宠物和材料的结构性来源与消耗族",
+        "列出成长成本标定必须补齐的对象、配方与吞吐证据"
+      ],
+      "forbidden_use": [
+        "假设装备部位、物品键、配方、强化公式或材料数量",
+        "把五品质或 2/4 件套结构解释为数值强度"
+      ]
+    },
+    {
+      "source_id": "SRC-LEDGER-PROPOSAL-001",
+      "source_kind": "proposal",
+      "decision_id": "ECO-LEDGER-001",
+      "decision_status": "proposal",
+      "source_refs": [
+        "docs/物编/成长数值与经济裁决包/decision-register.json:129-158",
+        "docs/物编/成长数值与经济裁决包/tables/currency-ledger.json:1-98"
+      ],
+      "source_file_hashes": [
+        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "F7DEA4C82F84617644D5397D7A5BCA2A387C3502DFACBC20BB68C6FADB6B6E16"},
+        {"path": "docs/物编/成长数值与经济裁决包/tables/currency-ledger.json", "sha256": "62AB827A5545213412DE624E183A83A09AC9C0CBCC3D8E98315D2ED16A2C6A23"}
+      ],
+      "permitted_use": [
+        "核对候选货币所有者、收据和审计字段是否被采样合同覆盖",
+        "比较角色账本与资格快照边界的可行性"
+      ],
+      "forbidden_use": [
+        "把 CUR_GOLD、CUR_TOWER_TOKEN 或 CUR_RAID_MARK 激活为余额",
+        "创建兑换表、共享钱包或货币迁移"
+      ]
+    },
+    {
+      "source_id": "SRC-DROP-CONTRACT-001",
+      "source_kind": "deferred-contract",
+      "decision_id": "ECO-DROP-001",
+      "decision_status": "deferred",
+      "source_refs": [
+        "docs/物编/成长数值与经济裁决包/tables/drop-and-pity.json:1-143",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:125-140"
+      ],
+      "source_file_hashes": [
+        {"path": "docs/物编/成长数值与经济裁决包/tables/drop-and-pity.json", "sha256": "C2D0350D16C692E8E523AA81089C126F0C4585B1FED4435E2F9CFD5253429202"},
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "C4BCDD6190FE416672BF2E0020757CA52D4F47C15A293CD9AFF4E59A77CE428A"}
+      ],
+      "permitted_use": [
+        "保持荣誉、个人推进、参与箱、稀有资格、roll 和保底的分层采样",
+        "定义掉落、收据和保底审阅时需要的事件证据"
+      ],
+      "forbidden_use": [
+        "激活任一 HG_DROP profile",
+        "写入概率、保底阈值、材料数或重复转换规则"
+      ]
+    },
+    {
+      "source_id": "SRC-P1-CONFLICT-001",
+      "source_kind": "conflict",
+      "decision_id": "ECO-P1-001",
+      "decision_status": "conflict",
+      "source_refs": [
+        "implementation/huaguoshan/preconstruction-manifest.json:93-96",
+        "docs/08-花果山篇野外怪物与BOSS设计.md:311-320",
+        "docs/物编/成长数值与经济裁决包/decision-register.json:185-212"
+      ],
+      "source_file_hashes": [
+        {"path": "implementation/huaguoshan/preconstruction-manifest.json", "sha256": "221384CF0D343FDF850C3CCC054859D31F7725AE11EDFA291FFE27C6BF6569C1"},
+        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "978B54F0569AD22D8F08122E448726021FCD2EB49C8677045C53F940006EA11F"},
+        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "F7DEA4C82F84617644D5397D7A5BCA2A387C3502DFACBC20BB68C6FADB6B6E16"}
+      ],
+      "permitted_use": [
+        "建立资格证据采样字段",
+        "在裁决前阻止参与箱、稀有和保底的产出推导"
+      ],
+      "forbidden_use": [
+        "把有效参与、DPS 荣誉或 primary/assist 直接解释为奖励",
+        "生成公共 BOSS 的人均资源吞吐结论"
+      ]
+    },
+    {
+      "source_id": "SRC-HG-CADENCE-001",
+      "source_kind": "content-density-reference",
+      "source_refs": [
+        "docs/08-花果山篇野外怪物与BOSS设计.md:338-353",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:172,221"
+      ],
+      "source_file_hashes": [
+        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "978B54F0569AD22D8F08122E448726021FCD2EB49C8677045C53F940006EA11F"},
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "C4BCDD6190FE416672BF2E0020757CA52D4F47C15A293CD9AFF4E59A77CE428A"}
+      ],
+      "permitted_use": [
+        "将 Lv8 路线所在的 10-15 分钟内容密度窗口作为软性审阅锚点",
+        "将约 55 分钟进入重复循环作为花果山首日内容密度参考"
+      ],
+      "forbidden_use": [
+        "把花果山首日内容密度写成项目级会话时长",
+        "以时间窗代替实测路线、移动或战斗日志"
+      ]
+    },
+    {
+      "source_id": "SRC-OX-RETRY-001",
+      "source_kind": "documented-combat-reference",
+      "source_refs": [
+        "docs/07-花果山篇副本与掉落设计.md:195-223"
+      ],
+      "source_file_hashes": [
+        {"path": "docs/07-花果山篇副本与掉落设计.md", "sha256": "AC132E972DD344A81C6EABF676CC2460A467776FC9484CB72600ECA8924F0EBF"}
+      ],
+      "permitted_use": [
+        "观察失败循环的既有战斗压力和时间窗口",
+        "验证补偿设计是否错误地与难度压力混同"
+      ],
+      "forbidden_use": [
+        "从失败压力推导掉率、货币、保底或奖励补偿",
+        "将副本战斗参考升级为资源表"
+      ]
+    }
+  ],
+  "source_snapshots": [
+    {
+      "snapshot_id": "SNAP-HG-MANIFEST-20260717",
+      "source_id": "SRC-HG-WHITEBOX-001",
+      "source_path": "implementation/huaguoshan/preconstruction-manifest.json",
+      "sha256": "221384CF0D343FDF850C3CCC054859D31F7725AE11EDFA291FFE27C6BF6569C1",
+      "observation_only": true,
+      "observed_summary": {
+        "unit_count": 35,
+        "unique_drop_profile_count": 21,
+        "reward_exp_observed_range": [0, 430],
+        "zero_reward_exp_unit_count": 5,
+        "nonzero_reward_exp_unit_count": 30
+      },
+      "prohibited_promotions": [
+        "reward_exp -> formal experience curve",
+        "reward_official_res_1 -> gold decision",
+        "respawn interval -> resource throughput"
+      ]
+    }
+  ],
+  "assumption_catalog": [
+    {
+      "assumption_id": "ASM-XP-FIRST-SESSION-001",
+      "assumption_status": "unvalidated",
+      "statement": "把 Lv8 路线位于 10-15 分钟花果山内容密度窗口作为首轮经验模型的软性审阅锚点，而非项目级时长或强制线性路线。",
+      "basis_source_ids": ["SRC-BASE-LEVEL-001", "SRC-HG-CADENCE-001"],
+      "validation_method": "采集零付费新角色的实际活动时间、路线抵达时间、等级变化与失败重试；按单人和合格组队分别审阅。",
+      "limitation": "现有资料没有项目级目标会话时长，也没有实际移动、战斗或击杀速率。"
+    },
+    {
+      "assumption_id": "ASM-HG-COMBAT-SAMPLE-001",
+      "assumption_status": "unvalidated",
+      "statement": "白盒单位属性、等级带和刷新字段只能决定采样覆盖面；每分钟击杀、旅行、停顿和四人效率必须由实测日志提供。",
+      "basis_source_ids": ["SRC-HG-WHITEBOX-001", "SRC-HG-CADENCE-001"],
+      "validation_method": "记录同一地图、同一等级带、同一构筑的击杀、移动、死亡、重连和成员资格快照，并与白盒来源快照关联。",
+      "limitation": "地图分布、刷怪数量、真实尺度和实机战斗均未完成验证。"
+    },
+    {
+      "assumption_id": "ASM-ECON-SINK-001",
+      "assumption_status": "unvalidated",
+      "statement": "成长成本只能先比较来源族与消耗族的相对闭环，不能假设物品键、装备部位、材料数量、价格或余额上限。",
+      "basis_source_ids": ["SRC-ITEM-CONTRACT-001", "SRC-LEDGER-PROPOSAL-001"],
+      "validation_method": "在对象、配方、材料键和候选账本所有者获得设计裁决后，按每个成长动作采集来源收据和消耗收据。",
+      "limitation": "装备、法宝、宠物与材料数值仍处于 deferred；候选货币键尚未采纳。"
+    },
+    {
+      "assumption_id": "ASM-P1-SETTLEMENT-001",
+      "assumption_status": "unvalidated",
+      "statement": "公共 BOSS 可先采样资格证据，但在 P1 形成唯一 final_policy_id 前，不能计算参与箱、稀有资格、保底或人均资源吞吐。",
+      "basis_source_ids": ["SRC-DROP-CONTRACT-001", "SRC-P1-CONFLICT-001"],
+      "validation_method": "对同一 Boss 生命周期记录伤害、破韧、护守、完整行为、origin/window/event 三元组及重连重放；待裁决后再以唯一规则回放审阅。",
+      "limitation": "当前 manifest 与正文的参与箱口径互斥，且所有 HG_DROP profile 仍为 deferred。"
+    },
+    {
+      "assumption_id": "ASM-OX-RETRY-001",
+      "assumption_status": "unvalidated",
+      "statement": "牛魔团灭后的战斗压力可以单独测量；任何掉落、保底或货币补偿均需独立资源政策，不能由压力值反推。",
+      "basis_source_ids": ["SRC-OX-RETRY-001", "SRC-DROP-CONTRACT-001"],
+      "validation_method": "记录每次团灭、后续战斗时长、属性压力和最终挑战结果；奖励字段保持空值，直到资源表与参与资格被采纳。",
+      "limitation": "补偿数额、资格、掉率和保底机制均未定义。"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "CAL-XP-HG-LV1-20-001",
+      "decision_id": "ECO-XP-001",
+      "decision_status": "deferred",
+      "calibration_status": "candidate",
+      "non_production": true,
+      "effective_value": null,
+      "runtime_handoff": false,
+      "source_ids": ["SRC-BASE-LEVEL-001", "SRC-XP-CONTRACT-001", "SRC-HG-WHITEBOX-001", "SRC-HG-CADENCE-001"],
+      "source_snapshot_ids": ["SNAP-HG-MANIFEST-20260717"],
+      "assumption_ids": ["ASM-XP-FIRST-SESSION-001", "ASM-HG-COMBAT-SAMPLE-001"],
+      "scope": {
+        "level_band": [1, 20],
+        "chapter": "花果山",
+        "content_density_reference": "0-55 分钟首日内容密度；不是项目级会话时长"
+      },
+      "model_options": [
+        {
+          "option_id": "XP_PATH_QUEST_LED",
+          "classification": "candidate-shape",
+          "definition": "主线和路线完成承担主要等级推进；常规战斗用于理解和补足，不把重复刷怪设为首次关键门槛的唯一来源。"
+        },
+        {
+          "option_id": "XP_PATH_COMBAT_LED",
+          "classification": "candidate-shape",
+          "definition": "常规战斗承担更高的相对推进占比；必须用实测验证不会将首次关键门槛变成无提示重复刷取。"
+        }
+      ],
+      "candidate_value": {
+        "relative_xp_budget_index": null,
+        "relative_source_mix_index": null,
+        "cadence_fit": null,
+        "official_xp_table": null,
+        "party_distribution_policy": null,
+        "level_difference_rule": null,
+        "death_rule": null,
+        "reconnect_rule": null
+      },
+      "required_evidence": [
+        "按角色、职业、构筑、等级带和地图版本记录的活动时间与等级变化",
+        "按来源分类的经验收据候选、资格快照和重放结果",
+        "单人、合格组队、失败重试与重连样本"
+      ],
+      "promotion_gates": [
+        "requires-explicit-design-adoption",
+        "requires-project-cadence-decision",
+        "requires-live-combat-and-route-logs",
+        "requires-Lv1-Lv60-continuous-table-review"
+      ],
+      "exclusions": [
+        "不生成 xp_to_next、cumulative_xp 或 base_xp",
+        "不从 reward_exp 直接赋予经验",
+        "不将 Lv1-20 结果外推为 Lv21-60"
+      ]
+    },
+    {
+      "scenario_id": "CAL-THROUGHPUT-HG-PUBLIC-001",
+      "decision_id": "ECO-DROP-001",
+      "decision_status": "deferred",
+      "calibration_status": "candidate",
+      "non_production": true,
+      "effective_value": null,
+      "runtime_handoff": false,
+      "source_ids": ["SRC-HG-WHITEBOX-001", "SRC-DROP-CONTRACT-001", "SRC-P1-CONFLICT-001"],
+      "source_snapshot_ids": ["SNAP-HG-MANIFEST-20260717"],
+      "assumption_ids": ["ASM-HG-COMBAT-SAMPLE-001", "ASM-P1-SETTLEMENT-001"],
+      "scope": {
+        "encounter_scope": "花果山公共 BOSS",
+        "qualification_scope": "资格证据采样，不是奖励结算",
+        "profile_scope": "HG_DROP profile 仍保持 deferred"
+      },
+      "candidate_value": {
+        "qualification_policy_id": null,
+        "relative_throughput_index": null,
+        "currency_amount": null,
+        "material_amount": null,
+        "drop_probability": null,
+        "pity_threshold": null,
+        "pity_pool_key": null,
+        "grant_count": null
+      },
+      "required_evidence": [
+        "每位角色的伤害、破韧、护守和完整公共行为证据",
+        "完整 origin/window/event 身份、Boss 生命周期和阶段",
+        "资格判断、断线与重复请求的权威收据结果"
+      ],
+      "promotion_gates": [
+        "requires-explicit-design-adoption",
+        "requires-single-P1-final-policy",
+        "requires-adopted-resource-table-and-owner-scope",
+        "requires-receipt-and-pity-replay-review"
+      ],
+      "exclusions": [
+        "effective_participant_ids、DPS 荣誉或 primary/assist 不可直接发放参与箱、稀有或保底",
+        "不激活任一 HG_DROP profile",
+        "不计算公共 BOSS 人均资源吞吐"
+      ]
+    },
+    {
+      "scenario_id": "CAL-ECON-SINK-RELATIVE-001",
+      "decision_id": "ECO-ITEM-001",
+      "decision_status": "deferred",
+      "calibration_status": "candidate",
+      "non_production": true,
+      "effective_value": null,
+      "runtime_handoff": false,
+      "source_ids": ["SRC-BASE-LEVEL-001", "SRC-ITEM-CONTRACT-001", "SRC-LEDGER-PROPOSAL-001"],
+      "source_snapshot_ids": [],
+      "assumption_ids": ["ASM-ECON-SINK-001"],
+      "scope": {
+        "growth_actions": ["strengthen", "advance", "artifact", "pet"],
+        "comparison_mode": "来源族与消耗族的相对闭环，不包含单价、余额或配方",
+        "owner_scope": "候选角色账本；尚未采纳"
+      },
+      "candidate_value": {
+        "currency_candidate_key": null,
+        "source_family": null,
+        "sink_family": null,
+        "relative_sink_index": null,
+        "currency_amount": null,
+        "upgrade_cost": null,
+        "material_amount": null,
+        "material_key": null,
+        "max_balance": null
+      },
+      "required_evidence": [
+        "已裁决的装备/法宝/宠物对象、配方、材料键和绑定规则",
+        "每个来源和消耗动作的候选收据字段、所有者和版本",
+        "30/60/90 分钟零付费样本中的来源、消耗、失败和重连日志"
+      ],
+      "promotion_gates": [
+        "requires-explicit-design-adoption",
+        "requires-adopted-item-and-currency-keys",
+        "requires-adopted-owner-scope-and-ledger-migration",
+        "requires-zero-free-play-throughput-review"
+      ],
+      "exclusions": [
+        "不创建货币余额、兑换、交易或共享钱包",
+        "不把候选 CUR_* 键视为可发放资源",
+        "不定义商业化、售价或付费绕过路径"
+      ]
+    },
+    {
+      "scenario_id": "CAL-OX-RETRY-TIME-PRESSURE-001",
+      "decision_id": "ECO-DROP-001",
+      "decision_status": "deferred",
+      "calibration_status": "candidate",
+      "non_production": true,
+      "effective_value": null,
+      "runtime_handoff": false,
+      "source_ids": ["SRC-OX-RETRY-001", "SRC-DROP-CONTRACT-001"],
+      "source_snapshot_ids": [],
+      "assumption_ids": ["ASM-OX-RETRY-001"],
+      "scope": {
+        "encounter_scope": "牛魔旧战场团队本",
+        "measurement_scope": "失败循环造成的战斗压力与时间成本",
+        "reward_scope": "空；奖励补偿需独立资源政策"
+      },
+      "documented_combat_input": {
+        "per_wipe_attribute_increment_percent": 5,
+        "pressure_duration_minutes": 5,
+        "source_id": "SRC-OX-RETRY-001",
+        "interpretation": "仅为既有战斗压力参考，不是掉落、货币或保底补偿。"
+      },
+      "candidate_value": {
+        "relative_retry_pressure_index": null,
+        "compensation_drop_delta": null,
+        "currency_amount": null,
+        "drop_probability": null,
+        "pity_threshold": null
+      },
+      "required_evidence": [
+        "团灭、重开、战斗时长、成员快照和最终结果",
+        "独立记录的零付费失败重试样本",
+        "若未来提议补偿，必须具备单独的资源表、资格与收据设计"
+      ],
+      "promotion_gates": [
+        "requires-explicit-design-adoption",
+        "requires-adopted-team-reward-policy",
+        "requires-resource-table-and-receipt-policy",
+        "requires-failure-loop-fairness-review"
+      ],
+      "exclusions": [
+        "不从 +5% / 5 分钟压力推出奖励补偿",
+        "不修改团队本掉落、保底或货币",
+        "不替代 P1 参与资格裁决"
+      ]
+    }
+  ],
+  "global_forbidden_promotions": [
+    "任何候选不得写入 current baseline、18-20 或 implementation/growth",
+    "任何候选不得生成 Lua、Y3 物编、UI、货币余额、物品键或激活的资源表",
+    "任何候选不得以白盒字段、公共资格证据或内容密度参考替代采纳和实测"
+  ]
+}

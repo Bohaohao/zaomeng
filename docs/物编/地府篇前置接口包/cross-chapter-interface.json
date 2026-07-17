@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "package": "difu-preflight-interface",
+  "artifact_status": "non-production-interface-contract",
+  "status": "offline-interface-ready",
+  "production_gate": "closed",
+  "implementation_handoff": false,
+  "scope": {
+    "includes": [
+      "地府团队本与常规最终副本的稳定分类",
+      "阎罗殿完成键的角色级权威写入与幂等边界",
+      "龙宫逆潮的跨篇受信任查询门槛",
+      "团队成员死亡、全灭与超时的回传去重边界",
+      "非生产完成收据证据协议"
+    ],
+    "excludes": [
+      "地府单位、技能、效果、投射物和对象记录",
+      "地府地图、地形、坐标、资源键和 Y3 编辑器 ID",
+      "经验、掉落、概率、保底、货币、物品、奖励和资源数值",
+      "任何 implementation/difu 或 implementation/growth 施工输出"
+    ]
+  },
+  "source_refs": [
+    "docs/全局设计基线.md:88-88,107-110",
+    "docs/02-公共野外与副本规则.md:96-104,134-134",
+    "docs/04-v1.0首发内容范围.md:47-55",
+    "docs/07-花果山篇副本与掉落设计.md:76-92",
+    "docs/物编/15-花果山遭遇与BOSS战斗契约.md:63-66,140-153",
+    "docs/物编/18-成长系统进度、掉落与长期目标契约.md:23-58"
+  ],
+  "fixed_decisions": {
+    "difu_team_instance": {
+      "encounter_key": "DF_E_ZHUANLUN_HALL",
+      "encounter_type": "team_instance",
+      "status": "fixed-user-decision",
+      "production_value": null,
+      "candidate_value": null
+    },
+    "difu_normal_final": {
+      "encounter_key": "DF_E_YANLUO_HALL",
+      "encounter_type": "non_team_normal_final",
+      "status": "fixed-user-decision",
+      "production_value": null,
+      "candidate_value": null
+    },
+    "reverse_tide_unlock": {
+      "consumer_encounter_key": "HG_E_DRAGON_REVERSE_TIDE",
+      "minimum_level": 38,
+      "required_progression_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+      "trusted_query_required": true,
+      "rejected_legacy_progression_key": "underworld_late",
+      "status": "fixed-user-decision",
+      "production_value": null,
+      "candidate_value": null
+    }
+  },
+  "progression_contract": {
+    "record_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+    "owner_scope": "character",
+    "write_authority": "trusted_map_authority",
+    "write_event": "completion_success",
+    "producer_encounter_key": "DF_E_YANLUO_HALL",
+    "consumer_encounter_key": "HG_E_DRAGON_REVERSE_TIDE",
+    "required_receipt_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "event_id",
+      "producer_encounter_key",
+      "session_instance_id",
+      "session_epoch",
+      "completed_tick",
+      "authority_proof_ref"
+    ],
+    "idempotency_key_fields": [
+      "actor_id",
+      "event_id"
+    ],
+    "write_condition": "same_actor_completed_yanluo_hall_with_authoritative_success_receipt",
+    "non_writer_sources": [
+      "DF_E_ZHUANLUN_HALL",
+      "白骨秘境",
+      "客户端布尔值",
+      "队伍领队或队友进度",
+      "世界状态"
+    ],
+    "production_value": null,
+    "candidate_value": null
+  },
+  "recovery_contract": {
+    "policy_key": "TEAM_INSTANCE_RETURN_TO_CHAPTER_INITIAL_SPAWN_V1",
+    "applies_to": [
+      "team_instance"
+    ],
+    "initial_spawn_reference": "chapter_initial_spawn",
+    "cleanup_ack_required": true,
+    "cleanup_ack_identity_fields": [
+      "raid_instance_id",
+      "session_epoch",
+      "cleanup_token"
+    ],
+    "reentry_before_cleanup_ack": "denied",
+    "member_death": {
+      "return_target": "chapter_initial_spawn",
+      "member_status": "dead",
+      "revive_before_return": true,
+      "left_behavior": "no_revive_no_return",
+      "reentry_lock": "until_matching_cleanup_ack",
+      "already_dead_repeat_return": "forbidden"
+    },
+    "full_wipe": {
+      "return_target": "chapter_initial_spawn",
+      "already_dead_repeat_return": "forbidden",
+      "cleanup_ack_required": true
+    },
+    "timeout": {
+      "return_target": "chapter_initial_spawn",
+      "eligible_member_state": "active",
+      "already_dead_return": "forbidden",
+      "cleanup_ack_required": true
+    },
+    "production_value": null,
+    "candidate_value": null
+  },
+  "evidence_protocol": {
+    "artifact_status": "non-production",
+    "evidence_only": true,
+    "receipt_type": "authoritative_completion_receipt",
+    "required_completion_receipt_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "event_id",
+      "producer_encounter_key",
+      "session_instance_id",
+      "session_epoch",
+      "completed_tick",
+      "authority_proof_ref"
+    ],
+    "permitted_outcome": "write_or_replay_character_progression_key_only",
+    "forbidden_outcomes": [
+      "grant_reward",
+      "grant_currency",
+      "grant_item",
+      "grant_xp",
+      "set_probability",
+      "set_pity"
+    ],
+    "production_value": null,
+    "candidate_value": null
+  },
+  "deferred": {
+    "difu_unit_records": null,
+    "difu_map_contract": null,
+    "y3_object_ids": null,
+    "drop_tables": null,
+    "reward_values": null,
+    "xp_values": null,
+    "currency_values": null,
+    "item_values": null,
+    "probability_values": null,
+    "pity_values": null
+  },
+  "forbidden_field_names": [
+    "y3_id",
+    "y3_ids",
+    "reward_exp",
+    "reward_official_res_1",
+    "reward_value",
+    "reward_amount",
+    "drop_probability",
+    "probability",
+    "probability_value",
+    "currency_amount",
+    "currency_key",
+    "item_amount",
+    "item_key",
+    "pity_threshold",
+    "pity_value"
+  ],
+  "validation_contract": {
+    "validator": "validate-underworld-preflight.ps1",
+    "strict_schema": true,
+    "source_refs_must_resolve": true,
+    "negative_tests_required": true,
+    "production_value": null,
+    "candidate_value": null
+  }
+}

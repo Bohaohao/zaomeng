@@ -1203,6 +1203,15 @@ do
         return nil
     end
 
+    local function emitted_member_command(adapter, actor_id)
+        for _, command in ipairs(adapter.emitted) do
+            if command.type == 'mark_raid_member_unavailable' and command.actor_id == actor_id then
+                return command
+            end
+        end
+        return nil
+    end
+
     do
         local controller, adapter, authority = new_instance_controller({ hero = 'left' })
         local hero = start_ox_raid(controller, authority)
@@ -1227,6 +1236,11 @@ do
             'Controller accepts a team-member leave with authority proof')
         equal(emitted_member_status(adapter, 'hero'), 'left',
             'Controller dispatches the required team-member leave cleanup')
+        local leave_command = emitted_member_command(adapter, 'hero')
+        equal(leave_command.revive_and_teleport, nil,
+            'Controller does not revive or return a member who merely left the raid')
+        equal(leave_command.point_key, nil,
+            'Controller does not assign a return point to a member who merely left the raid')
         old_hook.callback()
         equal(hook_calls, 0, 'old leave lifecycle callbacks remain silent after retirement')
     end
@@ -1250,6 +1264,13 @@ do
             'successful death creates a replacement lifecycle only after instance invalidation')
         equal(emitted_member_status(adapter, 'hero'), 'dead',
             'Controller dispatches the required team-member death cleanup')
+        local death_command = emitted_member_command(adapter, 'hero')
+        equal(death_command.revive_and_teleport, true,
+            'Controller dispatches the authority-certified dead-member revival and return')
+        equal(death_command.point_key, 'pt_hg_spawn',
+            'Controller dispatches the chapter initial spawn for the dead member')
+        equal(death_command.reentry_policy, 'deny_until_cleanup_ack',
+            'Controller preserves the current raid reentry lock for the dead member')
         truthy(controller:invalidate_actor('ally', 'death', 8),
             'Controller accepts the final authority-certified team-member death')
         local cleanup_requested = false

@@ -393,8 +393,12 @@ do
         entry_request_id = 'death-entry', actor_id = 'death-a', lifecycle_id = 1,
     })
     truthy(opened_ok, 'authority opens an Ox raid for death cleanup coverage')
-    truthy(instance_runtime:invalidate_actor('death-a', 1),
-        'runtime accepts the first authority-certified team-member death')
+    local first_death, first_return = instance_runtime:invalidate_actor('death-a', 1)
+    truthy(first_death, 'runtime accepts the first authority-certified team-member death')
+    equal(first_return.commands[1].revive_and_teleport, true,
+        'runtime forwards the first dead-member return command')
+    equal(first_return.commands[1].point_key, 'pt_hg_spawn',
+        'runtime uses the chapter initial spawn for the first dead member')
     local final_death, wipe = instance_runtime:invalidate_actor('death-b', 1)
     truthy(final_death, 'runtime accepts the final authority-certified team-member death')
     local cleanup_requested = false
@@ -402,6 +406,14 @@ do
         if command.type == 'cleanup_ox_raid' and command.reason == 'all_members_dead' then cleanup_requested = true end
     end
     truthy(cleanup_requested, 'valid deaths trigger the required authority-certified Ox cleanup')
+    equal(wipe.commands[1].revive_and_teleport, true,
+        'runtime forwards the final dead-member return command before the wipe cleanup')
+    equal(wipe.commands[1].point_key, 'pt_hg_spawn',
+        'runtime forwards the chapter initial spawn for a dead raid member')
+    equal(wipe.commands[2].teleport_members, false,
+        'runtime does not replay the return teleport for an all-dead wipe')
+    equal(#wipe.commands[2].teleport_member_ids, 0,
+        'runtime carries no active member ids for an all-dead wipe cleanup')
 end
 
 do
@@ -429,6 +441,10 @@ do
     equal(cleanup.commands[1].type, 'mark_raid_member_unavailable',
         'retry commits the member invalidation before cleanup')
     equal(cleanup.commands[2].type, 'cleanup_ox_raid', 'retry emits the required Ox cleanup command')
+    equal(cleanup.commands[1].revive_and_teleport, true,
+        'retry preserves the dead-member return behavior')
+    equal(cleanup.commands[2].teleport_members, false,
+        'retry cleanup does not send the final dead member through a second return teleport')
 end
 
 do

@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "table": "drop-and-pity",
+  "package_status": "decision-draft",
+  "qualification_channels": [
+    {
+      "qualification_key": "kill_honor_credit",
+      "decision_id": "ECO-QUAL-001",
+      "decision_status": "accepted-baseline",
+      "purpose": ["honor", "announcement", "team_record"],
+      "must_not_derive": [
+        "progression_participation",
+        "participation_chest_eligibility",
+        "rare_drop_eligibility",
+        "pity_progress"
+      ]
+    },
+    {
+      "qualification_key": "progression_participation",
+      "decision_id": "ECO-QUAL-001",
+      "decision_status": "accepted-baseline",
+      "purpose": ["main_story", "chapter_entry", "guaranteed_collection", "character_first_clear"],
+      "current_evidence_rule": "damage_ratio_ge_0.03 OR one_valid_encounter_action OR valid_break OR valid_guard",
+      "must_not_derive": [
+        "rare_drop_eligibility",
+        "pity_progress"
+      ]
+    },
+    {
+      "qualification_key": "participation_chest_eligibility",
+      "decision_id": "ECO-P1-001",
+      "decision_status": "conflict",
+      "final_policy_id": null,
+      "candidate_policies": [
+        {
+          "candidate_id": "P1_MANIFEST_OR",
+          "rule": "damage_ratio_ge_0.03 OR one_valid_encounter_action",
+          "source_ref": "implementation/huaguoshan/preconstruction-manifest.json:93-96"
+        },
+        {
+          "candidate_id": "P1_TEXT_AND",
+          "rule": "one_valid_encounter_action AND damage_ratio_ge_0.03",
+          "source_ref": "docs/08-花果山篇野外怪物与BOSS设计.md:311-320"
+        },
+        {
+          "candidate_id": "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION",
+          "rule": "valid_public_action AND (damage_ratio_ge_0.03 OR valid_break OR valid_guard); when no qualifying public-action window opened in this Boss lifecycle, fall back to (damage_ratio_ge_0.03 OR valid_break OR valid_guard)",
+          "source_ref": "decision-register.json:ECO-P1-001",
+          "status": "third-conflict-candidate-not-recommended-or-effective"
+        }
+      ],
+      "must_not_derive": [
+        "rare_drop_eligibility",
+        "pity_progress",
+        "primary_assist_role"
+      ]
+    },
+    {
+      "qualification_key": "rare_drop_eligibility",
+      "decision_id": "ECO-DROP-001",
+      "decision_status": "deferred",
+      "purpose": ["independent_rare_roll"],
+      "must_not_derive": [
+        "kill_honor_credit",
+        "progression_participation",
+        "participation_chest_eligibility",
+        "primary_assist_role"
+      ]
+    }
+  ],
+  "drop_profiles": [
+    {"profile_key": "HG_DROP_MOUNTAIN_COMMON", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_MOUNTAIN_ELITE", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_MOUNTAIN_MAJOR", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_WATERFALL_COMMON", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_WATERFALL_ELITE", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_MACAQUE_PUBLIC", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_PEACH_COMMON", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_PEACH_MAJOR", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_CAVE_COMMON", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_CAVE_MAJOR", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_SEVENSTAR_COMMON", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_SEVENSTAR_ELITE", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_SEVENSTAR_MAJOR", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_PENG_OPTIONAL", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_EASTSEA_COMMON", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_EASTSEA_ELITE", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_JIAO_PUBLIC", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_SHARK_PUBLIC", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_DRAGON_OLD", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_DRAGON_REVERSE", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null},
+    {"profile_key": "HG_DROP_OX_RAID", "decision_id": "ECO-DROP-001", "decision_status": "deferred", "profile_status": "deferred", "effective_table": null}
+  ],
+  "pity_policy": {
+    "decision_id": "ECO-DROP-001",
+    "decision_status": "deferred",
+    "effective_value": null,
+    "required_fields_when_adopted": [
+      "pity_pool_key",
+      "owner_scope",
+      "owner_id",
+      "increment_event",
+      "guarantee_or_exchange_rule",
+      "reset_rule",
+      "resource_table_version",
+      "migration_rule",
+      "receipt_id"
+    ],
+    "proposal_constraints": [
+      "A pity increment is valid only after a qualified receipt settles and a rare roll misses.",
+      "Different source profiles and reward families may not silently share a pity pool.",
+      "A future duplicate conversion must remain within the same reward family unless explicitly adopted otherwise."
+    ]
+  },
+  "settlement_receipt": {
+    "decision_id": "ECO-LEDGER-002",
+    "decision_status": "proposal",
+    "effective_value": null,
+    "required_fields": [
+      "source_profile",
+      "encounter_instance_id",
+      "actor_id",
+      "qualification_snapshot_id",
+      "drop_roll_id",
+      "event_id",
+      "resource_table_version",
+      "schema_version",
+      "owner_scope",
+      "reward_slot_key",
+      "pity_pool_key",
+      "receipt_id"
+    ],
+    "required_behavior": [
+      "same receipt replays the original result without a second mutation",
+      "old resource-table receipts remain attached to their original version",
+      "disconnect at qualification, roll, or receipt commit cannot create two settlements"
+    ]
+  },
+  "non_production_rules": [
+    "All HG_DROP profiles remain deferred until a resource table, qualification policy, version, receipt policy, and adopted owner scope exist.",
+    "effective_participant_ids, primary, assist, and honor data are evidence only and cannot directly grant chest, rare, or pity outcomes.",
+    "No probability, pity count, material amount, or payment field exists in this draft."
+  ]
+}

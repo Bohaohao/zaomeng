@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "table": "experience-progression",
+  "package_status": "decision-draft",
+  "decision_id": "ECO-XP-001",
+  "decision_status": "deferred",
+  "effective_value": null,
+  "runtime_handoff": false,
+  "level_framework": {
+    "decision_id": "ECO-BASE-001",
+    "decision_status": "accepted-baseline",
+    "effective_value": {
+      "level_cap": 60,
+      "chapter_bands": [
+        {"chapter": "花果山", "min_level": 1, "max_level": 20},
+        {"chapter": "地府", "min_level": 21, "max_level": 40},
+        {"chapter": "天庭", "min_level": 41, "max_level": 60}
+      ],
+      "mandatory_checkpoints": [1, 3, 8, 10, 15, 20, 25, 30, 35, 38, 40, 55, 60]
+    }
+  },
+  "numeric_curve": {
+    "decision_id": "ECO-XP-001",
+    "decision_status": "deferred",
+    "effective_value": null,
+    "required_columns": [
+      "level",
+      "xp_to_next",
+      "cumulative_xp",
+      "expected_active_minutes",
+      "chapter",
+      "resource_table_version"
+    ],
+    "required_properties": [
+      "Lv1-Lv60 rows are continuous",
+      "xp_to_next is non-negative",
+      "cumulative_xp is strictly increasing before the cap",
+      "Lv60 has no next-level award",
+      "every value traces to an adopted cadence and source policy"
+    ],
+    "known_density_anchors_not_global_duration": [
+      "Lv8 core-route guidance appears in the 10-15 minute first-session density window",
+      "Lv20 belongs to the approximately 55 minute Huaguoshan density reference",
+      "the project-wide target session duration remains unknown"
+    ]
+  },
+  "source_policy": {
+    "decision_id": "ECO-XP-001",
+    "decision_status": "deferred",
+    "effective_value": null,
+    "source_rows_required": [
+      "main_quest",
+      "side_quest",
+      "public_normal",
+      "public_elite",
+      "public_boss",
+      "solo_instance",
+      "team_instance",
+      "tower",
+      "first_clear",
+      "repeat_clear"
+    ],
+    "required_columns": [
+      "source_key",
+      "base_xp",
+      "source_weight",
+      "eligible_level_band",
+      "party_qualification",
+      "party_distribution",
+      "level_difference_rule",
+      "death_rule",
+      "reconnect_rule",
+      "event_receipt_rule"
+    ],
+    "proposal_constraints": [
+      "A qualified party member must not lose baseline experience only because more qualified players are present.",
+      "Over-level farming may not increase efficiency; the concrete decline curve needs adoption.",
+      "Every award must preserve character level, source level band, qualification snapshot, rule version, and event receipt."
+    ]
+  },
+  "calibration_inputs": {
+    "decision_id": "ECO-XP-WH-001",
+    "decision_status": "whitebox-candidate",
+    "effective_value": null,
+    "runtime_handoff": false,
+    "non_production": true,
+    "source": "implementation/huaguoshan/preconstruction-manifest.json",
+    "extracts": [
+      "units[*].object_fields.reward_exp",
+      "units[*].object_fields.reward_official_res_1",
+      "units[*].runtime_fields.level_band",
+      "encounters[*].runtime_fields.respawn_seconds"
+    ],
+    "observed_reward_exp_range": [0, 430],
+    "notes": [
+      "reward_exp is a Huaguoshan whitebox candidate, not a formal experience curve.",
+      "reward_official_res_1 equals zero in the current package and does not prove a gold configuration.",
+      "instance Boss reward_exp equals zero in the current preconstruction package and cannot be interpreted as a final reward decision."
+    ]
+  },
+  "forbidden_promotions": [
+    "Do not derive a production XP curve from reward_exp.",
+    "Do not use reward_official_res_1 as currency evidence.",
+    "Do not infer throughput from whitebox respawn intervals before map binding and live combat validation."
+  ]
+}

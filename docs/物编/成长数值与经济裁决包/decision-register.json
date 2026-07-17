@@ -1,0 +1,332 @@
+{
+  "version": 1,
+  "package_status": "decision-draft",
+  "package_scope": "growth-numerics-and-economy",
+  "baseline_policy": "Only accepted-baseline items are inherited facts. Proposals, conflicts, deferred items, and whitebox candidates are not effective production data.",
+  "decisions": [
+    {
+      "decision_id": "ECO-BASE-001",
+      "domain": "progression-framework",
+      "title": "首发等级、篇章和通天塔门槛",
+      "decision_status": "accepted-baseline",
+      "claim": "首发等级上限 Lv60；花果山/地府/天庭分别覆盖 Lv1-20、Lv21-40、Lv41-60；通天塔逐人校验 Lv55。",
+      "effective_value": {
+        "level_cap": 60,
+        "chapter_bands": [
+          {"chapter": "花果山", "min_level": 1, "max_level": 20},
+          {"chapter": "地府", "min_level": 21, "max_level": 40},
+          {"chapter": "天庭", "min_level": 41, "max_level": 60}
+        ],
+        "mandatory_checkpoints": [1, 3, 8, 10, 15, 20, 25, 30, 35, 38, 40, 55, 60],
+        "tower_entry_level": 55,
+        "tower_member_check": "every solo player or team member must independently satisfy the level gate",
+        "tower_loadout_rest_every_floors": 5
+      },
+      "source_refs": [
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:23-31",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:38-58",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:71-79",
+        "docs/全局设计基线.md:93-94"
+      ],
+      "adoption_ref": "current-baseline",
+      "effective_scope": "design-contract",
+      "blocks": [
+        "ECO-XP-001",
+        "ECO-TOWER-001"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-BASE-002",
+      "domain": "long-term-growth",
+      "title": "装备、法宝、宠物和材料的已定结构边界",
+      "decision_status": "accepted-baseline",
+      "claim": "装备有五品质、金币加强化石强化、低阶装备加本城 Boss 材料进阶、2/4 件套和三城阶级；法宝、宠物和材料的资产分类已经分层，但具体数值未定。",
+      "effective_value": {
+        "equipment_qualities": ["common", "fine", "rare", "epic", "legendary"],
+        "equipment_strengthen_inputs": ["金币", "强化石"],
+        "equipment_advance_inputs": ["低阶装备", "本城 Boss 材料"],
+        "set_piece_thresholds": [2, 4],
+        "artifact_growth_actions": ["synthesis", "refine", "append", "advance"],
+        "pet_asset_shape": "unit_plus_ability",
+        "material_families": ["strengthen", "advance", "boss", "artifact", "pet", "quest"],
+        "currency_and_drop_shape": "authoritative_system_data"
+      },
+      "source_refs": [
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:15-22",
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:24-47"
+      ],
+      "adoption_ref": "current-baseline",
+      "effective_scope": "design-contract",
+      "blocks": [
+        "ECO-ITEM-001",
+        "ECO-DROP-001"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-QUAL-001",
+      "domain": "public-boss-qualification",
+      "title": "公共 BOSS 资格四分与证据幂等",
+      "decision_status": "accepted-baseline",
+      "claim": "DPS 荣誉、个人有效参与、参与箱、稀有资格、保底和 roll 必须分离；公共行为需要 origin/window 身份与双层去重。",
+      "effective_value": {
+        "qualification_channels": [
+          "kill_honor_credit",
+          "progression_participation",
+          "participation_chest_eligibility",
+          "rare_drop_eligibility"
+        ],
+        "required_event_identity": [
+          "event_id",
+          "actor_id",
+          "lifecycle_id",
+          "boss_instance_id",
+          "phase_id",
+          "mechanic_occurrence_id",
+          "encounter_action_key",
+          "window_id",
+          "combat_scope"
+        ],
+        "dedupe_rules": [
+          "event_id",
+          "actor_id+boss_instance_id+phase_id+mechanic_occurrence_id+encounter_action_key"
+        ]
+      },
+      "source_refs": [
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:125-140",
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:146-153"
+      ],
+      "adoption_ref": "current-baseline",
+      "effective_scope": "design-contract",
+      "blocks": [
+        "ECO-P1-001",
+        "ECO-DROP-001",
+        "ECO-LEDGER-002"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-LEDGER-001",
+      "domain": "currency",
+      "title": "候选货币稳定键与角色归属",
+      "decision_status": "proposal",
+      "claim": "建议 v1 以角色为成长货币所有者，团队只保存资格快照；候选稳定键为 CUR_GOLD、CUR_TOWER_TOKEN、CUR_RAID_MARK。",
+      "effective_value": null,
+      "proposal_value": {
+        "owner_scope": "character",
+        "candidate_currency_keys": [
+          "CUR_GOLD",
+          "CUR_TOWER_TOKEN",
+          "CUR_RAID_MARK"
+        ],
+        "team_wallet": "not-enabled-in-v1",
+        "material_policy": "强化石、进阶石和 Boss 材料保持为 item material，不伪装为货币。",
+        "trade_policy": "not-enabled-until-throughput-and-anti-abuse-policy-exists"
+      },
+      "source_refs": [
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:128-142",
+        "docs/11-商业字段边界与零付费验证门禁.md:19-26"
+      ],
+      "adoption_ref": null,
+      "effective_scope": "awaiting-design-decision",
+      "blocks": [
+        "currency ledger implementation",
+        "tower and raid exchange tables",
+        "currency migration"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-LEDGER-002",
+      "domain": "settlement-and-migration",
+      "title": "版本化收据、保底与迁移契约",
+      "decision_status": "proposal",
+      "claim": "建议每次奖励结算以角色、权威事件、资源表和奖励槽共同确定唯一收据；迁移只前进，不重放旧收据或静默删除未知数据。",
+      "effective_value": null,
+      "proposal_value": {
+        "receipt_identity": [
+          "owner_scope",
+          "owner_id",
+          "event_id",
+          "source_profile",
+          "reward_slot_key",
+          "resource_table_version"
+        ],
+        "required_settlement_fields": [
+          "schema_version",
+          "resource_table_version",
+          "owner_scope",
+          "owner_id",
+          "qualification_snapshot_id",
+          "encounter_instance_id",
+          "event_id",
+          "drop_roll_id",
+          "pity_pool_key",
+          "receipt_id"
+        ],
+        "replay_rule": "same receipt returns the original result and never applies a second balance, material, pity, or consumption change",
+        "migration_rule": "unknown or unmapped legacy records enter an auditable isolation queue; no automatic destructive cleanup before a retention policy is adopted"
+      },
+      "source_refs": [
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:108-123",
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:146-153"
+      ],
+      "adoption_ref": null,
+      "effective_scope": "awaiting-design-decision",
+      "blocks": [
+        "currency ledger implementation",
+        "drop receipt implementation",
+        "pity migration"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-P1-001",
+      "domain": "participation-chest",
+      "title": "公共 BOSS 参与箱 P1 统一口径",
+      "decision_status": "conflict",
+      "claim": "当前 manifest 使用伤害至少 3%或一次有效行为；花果山正文使用行为已记录且伤害至少 3%。本包仅并列登记第三个待审候选，必须产生唯一 final_policy_id 后才能启用参与箱。",
+      "effective_value": null,
+      "proposal_value": {
+        "candidate_classification": "third-conflict-candidate-not-recommended-or-effective",
+        "third_candidate_policy_id": "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION",
+        "progression_participation": "damage_ratio_ge_0.03 OR valid_break OR valid_guard OR one_valid_public_action",
+        "participation_chest_eligibility": "valid_public_action AND (damage_ratio_ge_0.03 OR valid_break OR valid_guard); if no qualifying public-action window opened in the Boss lifecycle, fall back to (damage_ratio_ge_0.03 OR valid_break OR valid_guard)",
+        "non_rare_boundary": "a chest is a non-rare personal settlement only; it never grants rare eligibility or pity progress by implication",
+        "role_boundary": "primary and assist do not change chest, rare, pity, or probability"
+      },
+      "source_refs": [
+        "implementation/huaguoshan/preconstruction-manifest.json:93-96",
+        "docs/08-花果山篇野外怪物与BOSS设计.md:311-320",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:125-140",
+        "docs/物编/20-成长系统离线施工与Y3接入状态.md:25-35"
+      ],
+      "adoption_ref": null,
+      "effective_scope": "requires-single-policy-adoption",
+      "blocks": [
+        "participation chest resource tables",
+        "Huaguoshan manifest normalization",
+        "runtime qualification implementation"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-XP-WH-001",
+      "domain": "experience-calibration-input",
+      "title": "花果山白盒经验与资源字段输入",
+      "decision_status": "whitebox-candidate",
+      "claim": "Huaguoshan manifest 的 reward_exp、reward_official_res_1、等级带和刷新字段仅供后续经验与资源吞吐校准，不能反推生产数据。",
+      "effective_value": null,
+      "source_refs": [
+        "implementation/huaguoshan/preconstruction-manifest.json:110-169",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:159-172",
+        "docs/物编/20-成长系统离线施工与Y3接入状态.md:18-23"
+      ],
+      "adoption_ref": null,
+      "effective_scope": "non-production-calibration-only",
+      "blocks": [
+        "automatic reward table generation"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-XP-001",
+      "domain": "experience",
+      "title": "Lv1-60 经验曲线与来源分配",
+      "decision_status": "deferred",
+      "claim": "经验阈值、来源权重、组队分配、等级差、任务/副本/Boss 经验、死亡和重连规则尚无已采纳数据。",
+      "effective_value": null,
+      "source_refs": [
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:159-172",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:214-222"
+      ],
+      "adoption_ref": null,
+      "effective_scope": "blocked-by-target-cadence-and-battle-data",
+      "blocks": [
+        "level-up implementation",
+        "reward table activation",
+        "zero-free-play pacing validation"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-ITEM-001",
+      "domain": "item-growth",
+      "title": "装备、法宝、宠物和材料数值",
+      "decision_status": "deferred",
+      "claim": "装备部位、职业限制、属性、词条、强化/进阶/套装，及法宝/宠物槽位、配方、成长、孵化、绑定和材料吞吐均未定。",
+      "effective_value": null,
+      "source_refs": [
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:58-142",
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:170-176"
+      ],
+      "adoption_ref": null,
+      "effective_scope": "blocked-by-battle-budget-and-resource-throughput",
+      "blocks": [
+        "item asset data",
+        "object config",
+        "strengthen and advance transactions"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-DROP-001",
+      "domain": "drop-and-pity",
+      "title": "掉率、保底、重复收益和团队分配",
+      "decision_status": "deferred",
+      "claim": "所有 HG_DROP 内容、概率、保底次数、重复转化、个人/团队分配、资源吞吐和稀有资格均未定。",
+      "effective_value": null,
+      "source_refs": [
+        "docs/物编/19-装备、法宝、宠物与材料物编规格.md:144-153",
+        "implementation/huaguoshan/preconstruction-manifest.json:110-131"
+      ],
+      "adoption_ref": null,
+      "effective_scope": "blocked-by-resource-table",
+      "blocks": [
+        "drop profile activation",
+        "pity counter activation",
+        "reward receipt issuance"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-TOWER-001",
+      "domain": "tower",
+      "title": "通天塔记录、词缀、奖励和赛季",
+      "decision_status": "deferred",
+      "claim": "除逐人 Lv55 门槛外，单人/团队记录、楼层、词缀、奖励表、最终层数和赛季规则尚未定。",
+      "effective_value": null,
+      "source_refs": [
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:156-157",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:218-221"
+      ],
+      "adoption_ref": null,
+      "effective_scope": "blocked-by-tower-data",
+      "blocks": [
+        "tower reward implementation",
+        "tower currency sinks",
+        "season record migration"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-REALM-001",
+      "domain": "global-progression",
+      "title": "独立全角色境界系统",
+      "decision_status": "deferred",
+      "claim": "现有成长规格没有定义独立全角色境界系统，不能在本包默认创建或否定。",
+      "effective_value": null,
+      "source_refs": [
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:17-19",
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:220-221"
+      ],
+      "adoption_ref": null,
+      "effective_scope": "outside-current-economy-package",
+      "blocks": [
+        "additional progression layer"
+      ],
+      "runtime_handoff": false
+    }
+  ]
+}

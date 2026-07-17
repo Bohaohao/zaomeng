@@ -1,0 +1,137 @@
+﻿{
+    "version":  1,
+    "targetSkill":  "y3-terrain-layout",
+    "project":  {
+                    "name":  "造梦 ORPG 成长数值与经济裁决包",
+                    "genre":  "最多 4 人同游的存档制西游题材 ORPG",
+                    "camera":  "Y3 2.5D 俯视角",
+                    "sessionType":  "公共地图中的存档制游玩会话；野外、副本与通天塔为可重复的权威子会话",
+                    "targetPlayers":  "1-4 人",
+                    "targetDurationMinutes":  0,
+                    "pitch":  "为 Lv1-Lv60 的长期成长建立可追溯的经验、经济、奖励资格、掉落收据与数值标定边界；先固定审计和公平契约，再由采纳后的数据表驱动 Y3 子会话结算。"
+                },
+    "worldview":  {
+                      "theme":  "承命者在三篇主城、公共野外、副本和通天塔中持续成长；奖励应让长期目标可追逐而不把角色强度出售给付费。",
+                      "hardRules":  [
+                                        "首发等级上限 Lv60；花果山、地府、天庭对应 Lv1-20、Lv21-40、Lv41-60。",
+                                        "通天塔逐人校验 Lv55，不能用队伍平均等级绕过。",
+                                        "公共奖励由权威逻辑结算；客户端或 UI 不可直接修改经验、货币、物品、保底或资格。",
+                                        "技能、装备强化、法宝、宠物、数值材料、掉率、保底、公共资格和通天塔门槛禁止商业化。",
+                                        "HG_DROP 与 reward_exp 当前是来源或白盒候选，不是生产经济数据。"
+                                    ],
+                      "factions":  [
+                                       "承命者",
+                                       "花果山与东海前缘",
+                                       "地府",
+                                       "天庭"
+                                   ],
+                      "tone":  "以清晰的战斗贡献、可见的长期进度和可审计的奖励结算支撑西游奇幻 ORPG 的反复游玩。",
+                      "visualKeywords":  [
+                                             "2.5D 俯视角",
+                                             "公共野外",
+                                             "单人本",
+                                             "团队本",
+                                             "通天塔",
+                                             "结算收据"
+                                         ]
+                  },
+    "maps":  [
+                 "花果山公共野外、龙宫、牛魔旧战场",
+                 "地府和天庭成长区域",
+                 "通天塔"
+             ],
+    "waves":  "通天塔波次、楼层和词缀需要独立资源表",
+    "monsters":  [
+                     "花果山怪物和 Boss 等级带",
+                     "后续地府与天庭来源表"
+                 ],
+    "bosses":  [
+                   "猕猴王、蛟魔王、鲨魔王",
+                   "龙王旧潮与逆潮",
+                   "牛魔旧战场",
+                   "通天塔 Boss"
+               ],
+    "sessionFlow":  [
+                        {
+                            "phase":  "角色读取与版本确认",
+                            "duration":  "0-2 分钟",
+                            "playerGoal":  "读取角色等级、构筑、长期物品与资源表版本。",
+                            "systemsUsed":  [
+                                                "character state",
+                                                "resource table version",
+                                                "receipt ledger"
+                                            ],
+                            "successCriteria":  "重连或重复初始化不复制长期属性、货币、材料、保底或奖励。"
+                        },
+                        {
+                            "phase":  "花果山基础战斗",
+                            "duration":  "0-5 分钟",
+                            "playerGoal":  "完成普通怪和精英战斗，获得可见但尚待校准的经验与掉落反馈。",
+                            "systemsUsed":  [
+                                                "experience source policy",
+                                                "HG_DROP profile",
+                                                "qualification evidence"
+                                            ],
+                            "successCriteria":  "白盒 reward_exp 不能被当作生产经验，所有奖励来源可追溯。"
+                        },
+                        {
+                            "phase":  "职业路线与升级锚点",
+                            "duration":  "5-15 分钟",
+                            "playerGoal":  "推进 Lv8 核心路线、理解技能点和龙宫入口提示。",
+                            "systemsUsed":  [
+                                                "level progression",
+                                                "skill budget",
+                                                "private route completion"
+                                            ],
+                            "successCriteria":  "经验表在采纳前不实现；已采纳的 Lv8 门槛不被经济数据绕过。"
+                        },
+                        {
+                            "phase":  "公共 Boss 贡献与个人结算",
+                            "duration":  "15-40 分钟",
+                            "playerGoal":  "通过伤害、破韧、护守或公共行为获得个人推进，并理解参与箱与稀有资格分离。",
+                            "systemsUsed":  [
+                                                "public qualification",
+                                                "encounter origin/window",
+                                                "settlement receipt"
+                                            ],
+                            "successCriteria":  "DPS 荣誉、个人推进、参与箱、稀有资格和保底不可互相隐式推导。"
+                        },
+                        {
+                            "phase":  "副本、强化与长期资源",
+                            "duration":  "花果山后段至 Lv60",
+                            "playerGoal":  "从单人本、团队本和主城循环中取得装备、材料、法宝进度并安全强化或进阶。",
+                            "systemsUsed":  [
+                                                "item growth",
+                                                "currency ledger",
+                                                "drop and pity"
+                                            ],
+                            "successCriteria":  "没有已采纳数值、版本和收据前，任何掉落 profile 继续保持 deferred。"
+                        },
+                        {
+                            "phase":  "通天塔验证",
+                            "duration":  "Lv55 后",
+                            "playerGoal":  "使用已合法取得的长期成长挑战更高层。",
+                            "systemsUsed":  [
+                                                "tower gate",
+                                                "tower reward policy",
+                                                "loadout lock"
+                                            ],
+                            "successCriteria":  "任何成员低于 Lv55 被拒绝；塔奖励、词缀与赛季在采纳前不伪装为已实现。"
+                        }
+                    ],
+    "handoffNotes":  [
+                         "为三篇等级引导、公共 Boss 行为窗、龙宫与塔入口保留可读的奖励来源提示。",
+                         "地形不裁决经验、概率、保底、货币或参与箱资格。"
+                     ],
+    "unresolved":  [
+                       "项目级目标游玩会话时长。",
+                       "Lv1-Lv60 经验阈值、来源权重、组队分配、级差、死亡和重连规则。",
+                       "装备部位、职业限制、词条、强化/进阶/套装、材料吞吐和重复转化。",
+                       "法宝/宠物槽位、配方、孵化、绑定、成长与数值。",
+                       "参与箱 P1 的唯一 final_policy_id。",
+                       "货币最终稳定键、余额上限、来源、消耗、兑换、保留期和迁移期限。",
+                       "掉率、稀有资格、保底阈值、重复收益和团队分配。",
+                       "通天塔记录、楼层、词缀、奖励、最终层数和赛季。",
+                       "独立全角色境界系统是否存在。"
+                   ]
+}

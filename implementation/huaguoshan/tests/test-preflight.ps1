@@ -401,6 +401,30 @@ try {
     foreach ($encounter in @($manifest.encounters | Where-Object { $_.combat_scope -in @('solo_instance','team_instance') })) { $encounter.runtime_fields.map_binding_state = 'verified' }
     Assert-PreflightRejects $manifest 'verified-instance-contracts-claim-unverified' 'instance_map_contract_verified must be true when all instance map contracts are verified' $binding
 
+    $manifest = Read-Manifest
+    (@($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_OX_BATTLEFIELD' })[0]).runtime_fields.failure_return_point = 'pt_hg_teleport_team'
+    Assert-PreflightRejects $manifest 'ox-failure-return-point-drift' 'HG_E_OX_BATTLEFIELD failure_return_point must be pt_hg_spawn'
+
+    $manifest = Read-Manifest
+    (@($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_OX_BATTLEFIELD' })[0]).runtime_fields.member_death_return_point = 'pt_hg_teleport_team'
+    Assert-PreflightRejects $manifest 'ox-member-death-return-point-drift' 'HG_E_OX_BATTLEFIELD member_death_return_point must be pt_hg_spawn'
+
+    $manifest = Read-Manifest
+    (@($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_OX_BATTLEFIELD' })[0]).runtime_fields.member_death_reentry_policy = 'allow_until_cleanup_ack'
+    Assert-PreflightRejects $manifest 'ox-member-death-reentry-policy-drift' 'HG_E_OX_BATTLEFIELD member_death_reentry_policy must be deny_until_cleanup_ack'
+
+    $manifest = Read-Manifest
+    (@($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_OX_BATTLEFIELD' })[0]).runtime_fields.timeout_return_point = 'pt_hg_teleport_team'
+    Assert-PreflightRejects $manifest 'ox-timeout-return-point-drift' 'HG_E_OX_BATTLEFIELD timeout_return_point must be pt_hg_spawn'
+
+    $manifest = Read-Manifest
+    (@($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_DRAGON_REVERSE_TIDE' })[0]).runtime_fields.unlock_rule = 'underworld_late_progress'
+    Assert-PreflightRejects $manifest 'reverse-tide-unlock-rule-drift' 'HG_E_DRAGON_REVERSE_TIDE unlock_rule must require Lv38 and Yanluo Hall completion'
+
+    $manifest = Read-Manifest
+    (@($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_DRAGON_REVERSE_TIDE' })[0]).runtime_fields.progression_key = 'difu_yanluo_hall_cleared'
+    Assert-PreflightRejects $manifest 'reverse-tide-progression-key-drift' 'HG_E_DRAGON_REVERSE_TIDE progression_key must be DF_PROGRESS_YANLUO_HALL_CLEARED'
+
     $binding = Read-Binding
     $manifest = Read-Manifest
     $verifiedContracts = @($binding.instance_map_contracts | Select-Object -First 2)

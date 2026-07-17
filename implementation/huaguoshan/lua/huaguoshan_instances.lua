@@ -13,7 +13,7 @@ local DRAGON_PROGRESS_RULES = {
     },
     HG_E_DRAGON_REVERSE_TIDE = {
         min_level = 38,
-        progression_key = 'underworld_late',
+        progression_key = Config.encounters.HG_E_DRAGON_REVERSE_TIDE.progression_key,
         rejection = 'reverse-tide-progression-not-eligible',
     },
 }
@@ -71,6 +71,16 @@ local function copy_members(members)
     return copy
 end
 
+local function copy_active_member_ids(members)
+    local copy = {}
+    for _, member in ipairs(members or {}) do
+        if member.status == 'active' then
+            append(copy, { actor_id = member.actor_id, lifecycle_id = member.lifecycle_id })
+        end
+    end
+    return copy
+end
+
 -- Public instance reads must never alias authoritative session state.  The
 -- map root receives cleanup capabilities only through delivered commands.
 local function dragon_session_snapshot(session)
@@ -113,6 +123,7 @@ local function ox_session_snapshot(session)
         opened_at = session.opened_at,
         deadline_at = session.deadline_at,
         return_point = session.return_point,
+        reentry_policy = session.reentry_policy,
         rage_layers = session.rage_layers,
         rage_bonus = session.rage_bonus,
         end_reason = session.end_reason,
@@ -858,7 +869,12 @@ end
 
 function OxBattlefield:open(request, ...)
     if select('#', ...) > 0 then return false, 'caller-instance-time-forbidden' end
-    if self.active then return false, 'ox-battlefield-already-active' end
+    if self.active then
+        if type(request) == 'table' and request.actor_id ~= nil and self:member_is_occupying(request.actor_id) then
+            return false, 'raid-member-reentry-locked'
+        end
+        return false, 'ox-battlefield-already-active'
+    end
     if type(request) ~= 'table' then return false, 'raid-entry-request-required' end
     local trusted, trusted_error = reject_untrusted_authority_fields(request)
     if not trusted then return false, trusted_error end
@@ -902,6 +918,7 @@ function OxBattlefield:open(request, ...)
     if not consumed then return false, consume_error end
 
     self.next_epoch = session_epoch
+    local encounter = Config.encounters[OX_ENCOUNTER_KEY]
     local session = {
         encounter_key = OX_ENCOUNTER_KEY,
         combat_scope = 'team_instance',
@@ -918,8 +935,9 @@ function OxBattlefield:open(request, ...)
         member_by_actor = member_by_actor,
         phase_id = 'human',
         opened_at = now,
-        deadline_at = now + 1200,
-        return_point = 'pt_hg_teleport_team',
+        deadline_at = now + encounter.deadline_seconds,
+        return_point = encounter.return_point,
+        reentry_policy = encounter.reentry_policy,
         rage_layers = self.rage.layers,
         rage_bonus = self.rage.layers * self.rage_per_layer,
     }
@@ -943,6 +961,7 @@ function OxBattlefield:open(request, ...)
                 phase_id = session.phase_id,
                 cleanup_token = session.cleanup_token,
                 member_ids = copy_members(members),
+                reentry_policy = session.reentry_policy,
             },
             {
                 type = 'enter_team_instance',
@@ -1107,6 +1126,9 @@ function OxBattlefield:commit_invalidation(plan)
             session_epoch = session.session_epoch,
             boss_instance_id = session.boss_instance_id,
             phase_id = session.phase_id,
+            reentry_policy = session.reentry_policy,
+            revive_and_teleport = member.status == 'dead' or nil,
+            point_key = member.status == 'dead' and session.return_point or nil,
         },
     }
 
@@ -1224,6 +1246,13 @@ function OxBattlefield:_commit_cleanup(session, authorization)
         self:_clear_rage_token_scope()
     end
 
+    local teleport_member_ids = {}
+    if failed then teleport_member_ids = copy_active_member_ids(session.members) end
+    local cleanup_order = { 'invalidate_instance_lifecycle' }
+    if #teleport_member_ids > 0 then append(cleanup_order, 'teleport_raid_members') end
+    append(cleanup_order, 'clear_instance_entities')
+    append(cleanup_order, 'clear_instance_timers_and_hooks')
+
     return {
         rage_layers = self.rage.layers,
         rage_bonus = self.rage.layers * self.rage_per_layer,
@@ -1240,18 +1269,11 @@ function OxBattlefield:_commit_cleanup(session, authorization)
                 member_ids = copy_members(session.members),
                 reason = reason,
                 failed = failed,
-                teleport_members = failed,
+                teleport_members = #teleport_member_ids > 0,
+                teleport_member_ids = teleport_member_ids,
                 point_key = session.return_point,
-                cleanup_order = failed and {
-                    'invalidate_instance_lifecycle',
-                    'teleport_raid_members',
-                    'clear_instance_entities',
-                    'clear_instance_timers_and_hooks',
-                } or {
-                    'invalidate_instance_lifecycle',
-                    'clear_instance_entities',
-                    'clear_instance_timers_and_hooks',
-                },
+                reentry_policy = session.reentry_policy,
+                cleanup_order = cleanup_order,
             },
         },
     }
@@ -1329,9 +1351,10 @@ function OxBattlefield:acknowledge_cleanup(acknowledgement, ...)
             session_epoch = session.session_epoch,
             boss_instance_id = session.boss_instance_id,
             phase_id = session.phase_id,
-            cleanup_token = session.cleanup_token,
-            member_ids = copy_members(session.members),
-        },
+                cleanup_token = session.cleanup_token,
+                member_ids = copy_members(session.members),
+                release_reentry_lock = true,
+            },
     })
 end
 
