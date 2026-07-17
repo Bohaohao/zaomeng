@@ -311,6 +311,65 @@ try {
     if ([regex]::Matches($generated, '-common_atk_range').Count -ne 35 -or $generated -cmatch '-Common_atk_range') {
         throw 'generated unit edits did not use the exact canonical common_atk_range key'
     }
+    $generatedTokens = $null
+    $generatedParseErrors = $null
+    [void][System.Management.Automation.Language.Parser]::ParseFile($resolvedPaths.OutputPath, [ref]$generatedTokens, [ref]$generatedParseErrors)
+    if ($generatedParseErrors.Count -gt 0) {
+        $generatedParseMessages = @($generatedParseErrors | ForEach-Object { $_.Message }) -join '; '
+        throw "generated materializer script is not valid PowerShell: $generatedParseMessages"
+    }
+
+    $fixture = Copy-JsonObject $resolvedManifest
+    $fixture.units = @($fixture.units | Select-Object -Skip 1)
+    Assert-MaterializerRejects $fixture 'missing-canonical-unit' @(
+        'units must contain exactly 35 objects; got 34',
+        'missing canonical unit record_key: HG_U_MOUNTAIN_MONKEY'
+    ) (Copy-JsonObject $resolvedBinding)
+
+    $fixture = Copy-JsonObject $resolvedManifest
+    $fixture.modifiers[0].record_key = 'HG_M_INTRUDER'
+    Assert-MaterializerRejects $fixture 'unexpected-canonical-modifier' @(
+        'missing canonical modifier record_key: HG_M_STONE_SUNDER',
+        'unexpected modifier record_key: HG_M_INTRUDER'
+    ) (Copy-JsonObject $resolvedBinding)
+
+    $fixture = Copy-JsonObject $resolvedManifest
+    $fixture.abilities[1].record_key = $fixture.abilities[0].record_key
+    Assert-MaterializerRejects $fixture 'duplicate-stable-ability-record-key' @(
+        'duplicate abilities record_key: HG_A_PACK_LEAP',
+        'missing canonical ability record_key: HG_A_STONE_SMASH'
+    ) (Copy-JsonObject $resolvedBinding)
+
+    $recordKeyInjectionMarker = Join-Path $tempRoot 'record-key-injection-marker.txt'
+    $fixture = Copy-JsonObject $resolvedManifest
+    $fixture.abilities[0].record_key = "HG_A_PACK_LEAP'; Set-Content -LiteralPath '$recordKeyInjectionMarker' -Value 'injected'; #"
+    Assert-MaterializerRejects $fixture 'illegal-record-key-injection' `
+        'abilities contains invalid stable ability record_key' (Copy-JsonObject $resolvedBinding)
+    if (Test-Path -LiteralPath $recordKeyInjectionMarker) {
+        throw 'an illegal record_key was able to inject a command into generated PowerShell'
+    }
+
+    $fixture = Copy-JsonObject $resolvedManifest
+    $fixture.abilities[0].dependency_keys = @('HG_P_UNKNOWN')
+    Assert-MaterializerRejects $fixture 'unknown-ability-dependency' `
+        'HG_A_PACK_LEAP: unknown dependency HG_P_UNKNOWN' (Copy-JsonObject $resolvedBinding)
+
+    $fixture = Copy-JsonObject $resolvedManifest
+    $fixture.units[3].common_ability_keys = @('HG_A_PACK_LEAP')
+    Assert-MaterializerRejects $fixture 'missing-owner-reciprocal-ability-binding' `
+        'HG_A_PACK_CALL: owner HG_U_MONKEY_PACK_LEADER does not bind this ability' (Copy-JsonObject $resolvedBinding)
+
+    $fixture = Copy-JsonObject $resolvedManifest
+    $nonOwnerUnit = @($fixture.units | Where-Object { $_.record_key -eq 'HG_U_STONEHIDE_BEAST' })[0]
+    $nonOwnerUnit.common_ability_keys = @($nonOwnerUnit.common_ability_keys) + @('HG_A_PACK_LEAP')
+    Assert-MaterializerRejects $fixture 'undeclared-unit-ability-owner-binding' `
+        'HG_U_STONEHIDE_BEAST: ability HG_A_PACK_LEAP does not list unit as owner' (Copy-JsonObject $resolvedBinding)
+
+    $fixture = Copy-JsonObject $resolvedManifest
+    $unitRecord = @($fixture.units)[0]
+    $unitRecord.PSObject.Properties.Remove('unresolved_fields')
+    Assert-MaterializerRejects $fixture 'missing-unit-record-unresolved-fields' `
+        'HG_U_MOUNTAIN_MONKEY: unresolved_fields missing' (Copy-JsonObject $resolvedBinding)
 
     $unresolvedFieldKinds = @(
         [pscustomobject]@{ DefaultName = 'ability'; CollectionName = 'abilities' },

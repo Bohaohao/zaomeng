@@ -152,6 +152,8 @@ function Get-TrustedNodeExecutable {
                 throw "resolved to an unexpected physical file: $nodePath"
             }
 
+            $sha256BeforeVerification = (Get-FileHash -Algorithm SHA256 -LiteralPath $nodePath).Hash
+
             $nodeSignature = Get-AuthenticodeSignature -LiteralPath $nodePath
             $nodeSignerSubject = if ($nodeSignature.SignerCertificate) { [string]$nodeSignature.SignerCertificate.Subject } else { '' }
             if ($nodeSignature.Status -ne [Management.Automation.SignatureStatus]::Valid -or
@@ -172,19 +174,19 @@ function Get-TrustedNodeExecutable {
                 throw "has inconsistent version metadata: product $($versionInfo.ProductVersion), file $metadataVersion"
             }
 
-            $runtimeOutput = & $nodePath --version 2>&1
-            $runtimeExitCode = $LASTEXITCODE
-            $runtimeVersion = (($runtimeOutput | ForEach-Object { [string]$_ }) -join '').Trim()
-            $expectedRuntimeVersion = 'v' + $metadataVersion
-            if ($runtimeExitCode -ne 0 -or $runtimeVersion -cne $expectedRuntimeVersion) {
-                throw "reports runtime version '$runtimeVersion', expected '$expectedRuntimeVersion'"
+            $nodePathAfterVerification = Get-FinalFileSystemPath -Path $candidatePath
+            $sha256AfterVerification = (Get-FileHash -Algorithm SHA256 -LiteralPath $nodePath).Hash
+            if ($nodePathAfterVerification -ine $nodePath -or
+                $sha256AfterVerification -cne $sha256BeforeVerification) {
+                throw 'changed during signature and metadata verification'
             }
 
             return [pscustomobject]@{
                 Path = $nodePath
                 Directory = Split-Path -Parent $nodePath
-                Version = $runtimeVersion
-                Sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $nodePath).Hash
+                ProductVersion = [string]$versionInfo.ProductVersion
+                RuntimeVersion = 'v' + $metadataVersion
+                Sha256 = $sha256AfterVerification
             }
         }
         catch {
@@ -196,6 +198,27 @@ function Get-TrustedNodeExecutable {
 
     $details = if ($rejections.Count -gt 0) { ' Rejected candidates: ' + ($rejections -join '; ') } else { '' }
     throw "No trusted, signed Node.js node.exe was found on the original process PATH.$details"
+}
+
+function Assert-TrustedNodeIdentity {
+    param([Parameter(Mandatory = $true)]$TrustedNode)
+
+    $pathResolvedNode = Get-Command node.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $pathResolvedNode -or [string]::IsNullOrWhiteSpace($pathResolvedNode.Source)) {
+        throw 'Controlled PATH no longer resolves the verified Node.js executable.'
+    }
+
+    $pathResolvedNodePhysicalPath = Get-FinalFileSystemPath -Path $pathResolvedNode.Source
+    if ($pathResolvedNodePhysicalPath -ine $TrustedNode.Path) {
+        throw "Controlled PATH resolved a different Node.js executable: $pathResolvedNodePhysicalPath"
+    }
+
+    $currentVersionInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($TrustedNode.Path)
+    $currentSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $TrustedNode.Path).Hash
+    if ([string]$currentVersionInfo.ProductVersion -cne $TrustedNode.ProductVersion -or
+        $currentSha256 -cne $TrustedNode.Sha256) {
+        throw "Verified Node.js executable identity changed during the runner: $($TrustedNode.Path)"
+    }
 }
 
 function Get-ControlledPathValue {
@@ -223,17 +246,18 @@ function Get-ControlledPathValue {
 
 function Invoke-TrustedNode {
     param(
-        [Parameter(Mandatory = $true)][string]$NodePath,
+        [Parameter(Mandatory = $true)]$TrustedNode,
         [Parameter(Mandatory = $true)][string[]]$ArgumentList,
         [AllowNull()][string]$StandardInput,
         [switch]$PipeStandardInput
     )
 
+    Assert-TrustedNodeIdentity -TrustedNode $TrustedNode
     if ($PipeStandardInput) {
-        $output = $StandardInput | & $NodePath @ArgumentList 2>&1
+        $output = $StandardInput | & $TrustedNode.Path @ArgumentList 2>&1
     }
     else {
-        $output = & $NodePath @ArgumentList 2>&1
+        $output = & $TrustedNode.Path @ArgumentList 2>&1
     }
     $exitCode = $LASTEXITCODE
     return [pscustomobject]@{
@@ -242,8 +266,23 @@ function Invoke-TrustedNode {
     }
 }
 
+function Assert-TrustedNodeRuntimeVersion {
+    param([Parameter(Mandatory = $true)]$TrustedNode)
+
+    $expectedRuntimeVersion = 'v' + [string]$TrustedNode.ProductVersion
+    if ([string]$TrustedNode.RuntimeVersion -cne $expectedRuntimeVersion) {
+        throw "Verified Node.js runtime version contract is inconsistent: product $($TrustedNode.ProductVersion), runtime $($TrustedNode.RuntimeVersion)"
+    }
+
+    $result = Invoke-TrustedNode -TrustedNode $TrustedNode -ArgumentList @('--version')
+    $runtimeVersion = (($result.Output | ForEach-Object { [string]$_ }) -join '').Trim()
+    if ($result.ExitCode -ne 0 -or $runtimeVersion -cne $TrustedNode.RuntimeVersion) {
+        throw "Verified Node.js runtime version mismatch: expected $($TrustedNode.RuntimeVersion), found '$runtimeVersion'"
+    }
+}
+
 function Assert-ControlledNodeEnvironment {
-    param([Parameter(Mandatory = $true)][string]$NodePath)
+    param([Parameter(Mandatory = $true)]$TrustedNode)
 
     $probe = @'
 if (Object.prototype.hasOwnProperty.call(process.env, "NODE_OPTIONS") ||
@@ -259,7 +298,7 @@ try {
 }
 '@
     $result = Invoke-TrustedNode `
-        -NodePath $NodePath `
+        -TrustedNode $TrustedNode `
         -ArgumentList @('-') `
         -StandardInput $probe `
         -PipeStandardInput
@@ -352,12 +391,12 @@ process.stdout.write(hash.digest("hex").toUpperCase());
 
 function Get-NodeModulesClosureSha256 {
     param(
-        [Parameter(Mandatory = $true)][string]$NodePath,
+        [Parameter(Mandatory = $true)]$TrustedNode,
         [Parameter(Mandatory = $true)][string]$NodeModulesRoot
     )
 
     $result = Invoke-TrustedNode `
-        -NodePath $NodePath `
+        -TrustedNode $TrustedNode `
         -ArgumentList @('-', $NodeModulesRoot) `
         -StandardInput $nodeModulesClosureHasher `
         -PipeStandardInput
@@ -369,7 +408,7 @@ function Get-NodeModulesClosureSha256 {
 }
 
 function Resolve-PinnedFengariCli {
-    param([Parameter(Mandatory = $true)][string]$NodePath)
+    param([Parameter(Mandatory = $true)]$TrustedNode)
 
     if ([string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
         throw 'LOCALAPPDATA is required to locate the pinned offline Lua runner cache.'
@@ -403,7 +442,7 @@ function Resolve-PinnedFengariCli {
     }
 
     $nodeModulesRoot = Split-Path -Parent $packageRoot
-    $closureSha256 = Get-NodeModulesClosureSha256 -NodePath $NodePath -NodeModulesRoot $nodeModulesRoot
+    $closureSha256 = Get-NodeModulesClosureSha256 -TrustedNode $TrustedNode -NodeModulesRoot $nodeModulesRoot
     if ($closureSha256 -cne $pinnedFengariClosureSha256) {
         throw "fengari-node-cli resolver closure integrity mismatch at $nodeModulesRoot`: expected $pinnedFengariClosureSha256, found $closureSha256"
     }
@@ -436,7 +475,8 @@ try {
         -OriginalPath $originalPath
     [Environment]::SetEnvironmentVariable('PATH', $controlledPath, 'Process')
     [Environment]::SetEnvironmentVariable('PATHEXT', '.EXE', 'Process')
-    Assert-ControlledNodeEnvironment -NodePath $trustedNode.Path
+    Assert-TrustedNodeRuntimeVersion -TrustedNode $trustedNode
+    Assert-ControlledNodeEnvironment -TrustedNode $trustedNode
 
     Push-Location $root
     try {
@@ -458,8 +498,8 @@ try {
                 throw "Profession common Lua source integrity mismatch at $commonTestPath`: expected $expectedCommonSourceSha256, found $actualCommonSourceSha256"
             }
 
-            $fengariCli = Resolve-PinnedFengariCli -NodePath $trustedNode.Path
-            $result = Invoke-TrustedNode -NodePath $trustedNode.Path -ArgumentList @($fengariCli, $commonTestPath)
+            $fengariCli = Resolve-PinnedFengariCli -TrustedNode $trustedNode
+            $result = Invoke-TrustedNode -TrustedNode $trustedNode -ArgumentList @($fengariCli, $commonTestPath)
             $result.Output | Write-Output
             if ($result.ExitCode -ne 0) {
                 $childExitCode = $result.ExitCode

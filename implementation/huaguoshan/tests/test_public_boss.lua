@@ -37,6 +37,13 @@ local function has_mechanic_target(commands, target_id)
     return false
 end
 
+local function find_command(commands, expected_type)
+    for _, command in ipairs(commands) do
+        if command.type == expected_type then return command end
+    end
+    return nil
+end
+
 local encounter = {
     encounter_type = 'public_boss',
     break_profile = { threshold = 12, window_seconds = 4 },
@@ -335,12 +342,70 @@ do
         equal(command.encounter_key, 'HG_E_JIAO_KING',
             'every public Boss phase command carries its encounter key for live dispatch')
     end
-    equal(boss.trace_pause_until, 10, 'the submerge pause uses the frozen window close tick')
+    local trace_pause = find_command(marker_result.commands, 'trace_pause')
+    truthy(trace_pause, 'submerge emits an explicit trace pause command')
+    equal(trace_pause.start_tick, action_window.open_tick,
+        'the trace pause starts with the frozen submerge action window')
+    equal(trace_pause.end_tick, action_window.open_tick + encounter.phase.submerge_seconds,
+        'the trace pause ends after the fixed submerge duration instead of at action-window close')
+    equal(trace_pause.duration_seconds, encounter.phase.submerge_seconds,
+        'the trace pause command preserves the configured fixed submerge duration')
+    equal(boss.trace_pause_until, 3, 'the submerge pause uses its fixed three-second duration')
 
     local duplicate, duplicate_error = boss:phase_marker(phase_marker)
     equal(duplicate, false, 'an identical phase marker replay is idempotently rejected')
     equal(duplicate_error, 'duplicate-phase-marker', 'phase marker event_id is deduplicated')
-    equal(boss.trace_pause_until, 10, 'a duplicate phase marker cannot extend trace pause')
+    equal(boss.trace_pause_until, 3, 'a duplicate phase marker cannot extend trace pause')
+end
+
+do
+    local missing_callback, missing_callback_error = boss:apply_water_chain()
+    equal(missing_callback, false, 'water-chain application requires current lifecycle authority')
+    equal(missing_callback_error, 'current-lifecycle-required', 'missing lifecycle authority is explicit')
+
+    current.b = 2
+    local applied, applied_result = boss:apply_water_chain(actor_is_current)
+    truthy(applied, 'an active submerge applies water chain to current participants')
+    truthy(has_mechanic_target(applied_result.commands, 'a'), 'a current participant receives water chain')
+    equal(applied_result.commands[1].encounter_key, 'HG_E_JIAO_KING',
+        'water-chain application carries the encounter key')
+    equal(has_mechanic_target(applied_result.commands, 'b'), false,
+        'historical contribution does not reapply water chain to a stale lifecycle')
+    local first_ok, first_result = boss:resolve_water_chain(
+        combat_event('mechanic_resolved', 'a', 2, 'water:a:1', nil), actor_is_current)
+    truthy(first_ok, 'the first verified water-chain resolution clears the field')
+    equal(first_result.commands[1].type, 'remove_mechanic', 'the first resolution emits field cleanup')
+    equal(first_result.commands[1].encounter_key, 'HG_E_JIAO_KING',
+        'water-chain cleanup carries the encounter key')
+    equal(first_result.contribution_counted, true, 'the first mechanism resolution counts contribution')
+
+    local reapplied, reapplied_result = boss:apply_water_chain(actor_is_current)
+    truthy(reapplied, 'a later occurrence can apply water chain again for current lifecycles')
+    equal(has_mechanic_target(reapplied_result.commands, 'b'), false,
+        'a stale lifecycle remains excluded on later water-chain occurrences')
+    local second_ok, second_result = boss:resolve_water_chain(
+        combat_event('mechanic_resolved', 'a', 2, 'water:a:2', nil), actor_is_current)
+    truthy(second_ok, 'the second verified resolution still clears the new field occurrence')
+    equal(second_result.commands[1].type, 'remove_mechanic', 'the second occurrence emits field cleanup again')
+    equal(second_result.contribution_counted, false, 'mechanism contribution is credited only once per phase')
+end
+
+do
+    authority:set_watermark(2)
+    local before_resume = boss:tick(2)
+    equal(boss.submerged, true, 'submerge remains active before its fixed duration expires')
+    equal(boss.trace_pause_until, 3, 'submerge keeps the fixed trace-pause deadline before expiry')
+    equal(find_command(before_resume.commands, 'trace_resume'), nil,
+        'a trace resume is not emitted before the fixed submerge duration expires')
+
+    authority:set_watermark(3)
+    local resumed = boss:tick(3)
+    equal(boss.submerged, false, 'submerge state restores at the fixed three-second deadline')
+    equal(boss.trace_pause_until, nil, 'the expired trace-pause deadline is cleared on restore')
+    truthy(find_command(resumed.commands, 'trace_resume'),
+        'trace restore emits an explicit trace resume command at the fixed deadline')
+    truthy(boss.action_windows[action_window.window_id],
+        'trace restoration does not prematurely close the longer encounter action window')
 end
 
 local reservations = {}
@@ -489,38 +554,6 @@ do
     equal(settled.action_results[2].completion_mode, 'assist', 'the other completion is an assist')
     equal(boss.action_windows[action_window.window_id].primary_actor_id, 'f',
         'primary ownership is written exactly once to the window')
-end
-
-do
-    local missing_callback, missing_callback_error = boss:apply_water_chain()
-    equal(missing_callback, false, 'water-chain application requires current lifecycle authority')
-    equal(missing_callback_error, 'current-lifecycle-required', 'missing lifecycle authority is explicit')
-
-    current.b = 2
-    local applied, applied_result = boss:apply_water_chain(actor_is_current)
-    truthy(applied, 'an active submerge applies water chain to current participants')
-    truthy(has_mechanic_target(applied_result.commands, 'a'), 'a current participant receives water chain')
-    equal(applied_result.commands[1].encounter_key, 'HG_E_JIAO_KING',
-        'water-chain application carries the encounter key')
-    equal(has_mechanic_target(applied_result.commands, 'b'), false,
-        'historical contribution does not reapply water chain to a stale lifecycle')
-    local first_ok, first_result = boss:resolve_water_chain(
-        combat_event('mechanic_resolved', 'a', 2, 'water:a:1', nil), actor_is_current)
-    truthy(first_ok, 'the first verified water-chain resolution clears the field')
-    equal(first_result.commands[1].type, 'remove_mechanic', 'the first resolution emits field cleanup')
-    equal(first_result.commands[1].encounter_key, 'HG_E_JIAO_KING',
-        'water-chain cleanup carries the encounter key')
-    equal(first_result.contribution_counted, true, 'the first mechanism resolution counts contribution')
-
-    local reapplied, reapplied_result = boss:apply_water_chain(actor_is_current)
-    truthy(reapplied, 'a later occurrence can apply water chain again for current lifecycles')
-    equal(has_mechanic_target(reapplied_result.commands, 'b'), false,
-        'a stale lifecycle remains excluded on later water-chain occurrences')
-    local second_ok, second_result = boss:resolve_water_chain(
-        combat_event('mechanic_resolved', 'a', 2, 'water:a:2', nil), actor_is_current)
-    truthy(second_ok, 'the second verified resolution still clears the new field occurrence')
-    equal(second_result.commands[1].type, 'remove_mechanic', 'the second occurrence emits field cleanup again')
-    equal(second_result.contribution_counted, false, 'mechanism contribution is credited only once per phase')
 end
 
 local phase_transition_event = {

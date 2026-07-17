@@ -168,7 +168,7 @@ function Add-FieldTokens {
 function Add-Command {
     param([System.Collections.Generic.List[string]]$Lines, [System.Collections.Generic.List[string]]$Tokens, [string]$RecordKey)
     $Lines.Add(($Tokens -join ' '))
-    $Lines.Add("if (`$LASTEXITCODE -ne 0) { throw 'Failed to create $RecordKey' }")
+    $Lines.Add("if (`$LASTEXITCODE -ne 0) { throw $(Quote-PowerShell ("Failed to create $RecordKey")) }")
     $Lines.Add('')
 }
 
@@ -208,10 +208,202 @@ function Test-NonEmptyTrimmedString {
     return $Value -is [string] -and -not [string]::IsNullOrWhiteSpace($Value) -and $Value -eq $Value.Trim()
 }
 
+function Test-StableRecordKey {
+    param([AllowNull()][object]$Value, [string]$Prefix)
+    if (-not (Test-NonEmptyTrimmedString $Value)) { return $false }
+    return [regex]::IsMatch(
+        [string]$Value,
+        ('^' + [regex]::Escape($Prefix) + '[A-Z0-9]+(?:_[A-Z0-9]+)*$'),
+        [Text.RegularExpressions.RegexOptions]::CultureInvariant
+    )
+}
+
+function Test-StableObjectRecordKey {
+    param([AllowNull()][object]$Value)
+    if (-not (Test-NonEmptyTrimmedString $Value)) { return $false }
+    return [regex]::IsMatch(
+        [string]$Value,
+        '^HG_[UAMP]_[A-Z0-9]+(?:_[A-Z0-9]+)*$',
+        [Text.RegularExpressions.RegexOptions]::CultureInvariant
+    )
+}
+
 function Test-JsonArray {
     param([AllowNull()][object]$Value)
     return $null -ne $Value -and $Value -isnot [string] -and $Value -isnot [pscustomobject] -and
         $Value -is [System.Collections.IEnumerable]
+}
+
+function Assert-CanonicalObjectCollection {
+    param(
+        [AllowNull()][object]$Records,
+        [string]$CollectionName,
+        [string]$ObjectType,
+        [string]$RecordKeyPrefix,
+        [string[]]$ExpectedKeys,
+        [System.Collections.Generic.Dictionary[string,string]]$GlobalRecordKeyOwners,
+        [System.Collections.Generic.List[string]]$Errors
+    )
+
+    $recordsByKey = [System.Collections.Generic.Dictionary[string,object]]::new([StringComparer]::Ordinal)
+    if (-not (Test-JsonArray $Records)) {
+        $Errors.Add("$CollectionName must be an array")
+        return ,$recordsByKey
+    }
+
+    $recordList = @($Records)
+    if ($recordList.Count -ne $ExpectedKeys.Count) {
+        $Errors.Add("$CollectionName must contain exactly $($ExpectedKeys.Count) objects; got $($recordList.Count)")
+    }
+
+    $expectedKeySet = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($expectedKey in $ExpectedKeys) { [void]$expectedKeySet.Add($expectedKey) }
+
+    foreach ($record in $recordList) {
+        if ($record -isnot [pscustomobject]) {
+            $Errors.Add("$CollectionName contains a non-object record")
+            continue
+        }
+        $recordKeyProperty = Get-ExactJsonProperty $record 'record_key'
+        if ($null -eq $recordKeyProperty) {
+            $Errors.Add("$CollectionName record_key is required")
+            continue
+        }
+        if (-not (Test-StableRecordKey $recordKeyProperty.Value $RecordKeyPrefix)) {
+            $Errors.Add("$CollectionName contains invalid stable $ObjectType record_key: $([string]$recordKeyProperty.Value)")
+            continue
+        }
+
+        $recordKey = [string]$recordKeyProperty.Value
+        if ($recordsByKey.ContainsKey($recordKey)) {
+            $Errors.Add("duplicate $CollectionName record_key: $recordKey")
+            continue
+        }
+        $recordsByKey.Add($recordKey, $record)
+        if ($GlobalRecordKeyOwners.ContainsKey($recordKey)) {
+            $Errors.Add("duplicate global record_key ${recordKey}: $CollectionName and $($GlobalRecordKeyOwners[$recordKey])")
+        }
+        else {
+            $GlobalRecordKeyOwners.Add($recordKey, $CollectionName)
+        }
+    }
+
+    foreach ($expectedKey in $ExpectedKeys) {
+        if (-not $recordsByKey.ContainsKey($expectedKey)) {
+            $Errors.Add("missing canonical $ObjectType record_key: $expectedKey")
+        }
+    }
+    foreach ($recordKey in $recordsByKey.Keys) {
+        if (-not $expectedKeySet.Contains($recordKey)) {
+            $Errors.Add("unexpected $ObjectType record_key: $recordKey")
+        }
+    }
+    return ,$recordsByKey
+}
+
+function Get-ReferenceKeyList {
+    param(
+        [AllowNull()][object]$Record,
+        [string]$RecordKey,
+        [string]$PropertyName,
+        [System.Collections.Generic.List[string]]$Errors
+    )
+
+    $values = [System.Collections.Generic.List[object]]::new()
+    $property = Get-ExactJsonProperty $Record $PropertyName
+    if ($null -eq $property) {
+        $Errors.Add("${RecordKey}: $PropertyName is required")
+        return ,$values
+    }
+    if ($property.Value -is [string]) {
+        $values.Add($property.Value)
+    }
+    elseif (Test-JsonArray $property.Value) {
+        foreach ($value in @($property.Value)) { $values.Add($value) }
+    }
+    else {
+        $Errors.Add("${RecordKey}: $PropertyName must be an array of record_key values")
+    }
+    return ,$values
+}
+
+function Add-ObjectDependencyClosureErrors {
+    param(
+        [object[]]$Units,
+        [object[]]$Abilities,
+        [object]$ObjectByKey,
+        [object]$UnitByKey,
+        [object]$AbilityByKey,
+        [System.Collections.Generic.List[string]]$Errors
+    )
+
+    $boundAbilitiesByUnit = [System.Collections.Generic.Dictionary[string,object]]::new([StringComparer]::Ordinal)
+    foreach ($unit in @($Units)) {
+        if ($unit -isnot [pscustomobject] -or -not (Test-StableRecordKey $unit.record_key 'HG_U_')) { continue }
+        $unitKey = [string]$unit.record_key
+        $boundAbilityKeys = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+        $boundAbilitiesByUnit[$unitKey] = $boundAbilityKeys
+        $abilityKeys = Get-ReferenceKeyList $unit $unitKey 'common_ability_keys' $Errors
+        foreach ($abilityKeyValue in $abilityKeys) {
+            if (-not (Test-StableRecordKey $abilityKeyValue 'HG_A_')) {
+                $Errors.Add("${unitKey}: common_ability_keys contains invalid ability record_key: $([string]$abilityKeyValue)")
+                continue
+            }
+            $abilityKey = [string]$abilityKeyValue
+            if (-not $boundAbilityKeys.Add($abilityKey)) {
+                $Errors.Add("${unitKey}: common_ability_keys contains duplicate ability $abilityKey")
+                continue
+            }
+            if (-not $AbilityByKey.ContainsKey($abilityKey)) {
+                $Errors.Add("${unitKey}: unknown common ability $abilityKey")
+            }
+            elseif (@($AbilityByKey[$abilityKey].owner_keys) -notcontains $unitKey) {
+                $Errors.Add("${unitKey}: ability $abilityKey does not list unit as owner")
+            }
+        }
+    }
+
+    foreach ($ability in @($Abilities)) {
+        if ($ability -isnot [pscustomobject] -or -not (Test-StableRecordKey $ability.record_key 'HG_A_')) { continue }
+        $abilityKey = [string]$ability.record_key
+        $ownerKeys = Get-ReferenceKeyList $ability $abilityKey 'owner_keys' $Errors
+        if ($ownerKeys.Count -eq 0) { $Errors.Add("${abilityKey}: owner_keys must not be empty") }
+        $seenOwners = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+        foreach ($ownerKeyValue in $ownerKeys) {
+            if (-not (Test-StableRecordKey $ownerKeyValue 'HG_U_')) {
+                $Errors.Add("${abilityKey}: owner_keys contains invalid unit record_key: $([string]$ownerKeyValue)")
+                continue
+            }
+            $ownerKey = [string]$ownerKeyValue
+            if (-not $seenOwners.Add($ownerKey)) {
+                $Errors.Add("${abilityKey}: owner_keys contains duplicate unit $ownerKey")
+                continue
+            }
+            if (-not $UnitByKey.ContainsKey($ownerKey)) {
+                $Errors.Add("${abilityKey}: unknown owner $ownerKey")
+            }
+            elseif (-not $boundAbilitiesByUnit.ContainsKey($ownerKey) -or -not $boundAbilitiesByUnit[$ownerKey].Contains($abilityKey)) {
+                $Errors.Add("${abilityKey}: owner $ownerKey does not bind this ability")
+            }
+        }
+
+        $dependencyKeys = Get-ReferenceKeyList $ability $abilityKey 'dependency_keys' $Errors
+        $seenDependencies = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+        foreach ($dependencyKeyValue in $dependencyKeys) {
+            if (-not (Test-StableObjectRecordKey $dependencyKeyValue)) {
+                $Errors.Add("${abilityKey}: dependency_keys contains invalid object record_key: $([string]$dependencyKeyValue)")
+                continue
+            }
+            $dependencyKey = [string]$dependencyKeyValue
+            if (-not $seenDependencies.Add($dependencyKey)) {
+                $Errors.Add("${abilityKey}: dependency_keys contains duplicate object $dependencyKey")
+                continue
+            }
+            if (-not $ObjectByKey.ContainsKey($dependencyKey)) {
+                $Errors.Add("${abilityKey}: unknown dependency $dependencyKey")
+            }
+        }
+    }
 }
 
 function Add-UnresolvedFieldsContractErrors {
@@ -353,6 +545,45 @@ $requiredAbilityFields = @(
 )
 $requiredModifierFields = @('modifier_type','modifier_effect','layer_max','disappear_when_dead','show_on_ui')
 $requiredProjectileFields = @('max_duration','move_channel','move_limitation','sfx_loop')
+
+$canonicalObjectKeys = [ordered]@{
+    units = @(
+        'HG_U_MOUNTAIN_MONKEY','HG_U_STONEHIDE_BEAST','HG_U_VINE_IMP','HG_U_MONKEY_PACK_LEADER',
+        'HG_U_GREAT_APE','HG_U_WATERFALL_IMP','HG_U_SPRING_SPIRIT','HG_U_FISH_SENTINEL',
+        'HG_U_WATERFALL_GUARD','HG_U_TIDE_TRACE_GUARD','HG_U_MACAQUE_KING','HG_U_PEACH_SPIRIT',
+        'HG_U_MIST_MONKEY','HG_U_CAVE_BAT','HG_U_CAVE_IMP','HG_U_YURONG_KING','HG_U_BAT_STATUE',
+        'HG_U_SEVENSTAR_DEMON','HG_U_SHANXIAO_CASTER','HG_U_WINGED_DEMON','HG_U_BULL_SCOUT',
+        'HG_U_LION_CAMEL_KING','HG_U_PENG_KING','HG_U_FISH_PATROLLER','HG_U_TURTLE_GUARD',
+        'HG_U_WATER_MAGE','HG_U_VORTEX_SOLDIER','HG_U_RIPTIDE_NODE_SOLDIER','HG_U_JIAO_KING_P1',
+        'HG_U_SHARK_KING_P1','HG_U_TURTLE_MINISTER','HG_U_DRAGON_KING_P1','HG_U_DRAGON_KING_P2',
+        'HG_U_OX_KING_HUMAN','HG_U_ARMORED_WHITE_OX'
+    )
+    abilities = @(
+        'HG_A_PACK_LEAP','HG_A_STONE_SMASH','HG_A_VINE_DART','HG_A_PACK_CALL','HG_A_APE_QUAKE',
+        'HG_A_APE_THROW','HG_A_WATER_DASH','HG_A_SPRING_BLESS','HG_A_FISH_BOLT','HG_A_WATER_GUARD_WAVE',
+        'HG_A_TRACE_OVERFLOW','HG_A_MACAQUE_CLONE','HG_A_MACAQUE_SPIN','HG_A_MACAQUE_WIND_EYE',
+        'HG_A_PEACH_POLLEN','HG_A_MIST_STEP','HG_A_BAT_DIVE','HG_A_WING_DIVE','HG_A_YURONG_FOG',
+        'HG_A_YURONG_PHANTOM','HG_A_BAT_SONIC','HG_A_BAT_CALL','HG_A_SEVENSTAR_REND',
+        'HG_A_SHANXIAO_SPIKE','HG_A_BULL_CHARGE','HG_A_BULL_FLAME_SLASH','HG_A_LION_CHARGE',
+        'HG_A_LION_ROAR','HG_A_PENG_DIVE','HG_A_PENG_WIND_BLADE','HG_A_PENG_WIND_EYE',
+        'HG_A_FISH_PATROL_DASH','HG_A_TURTLE_SHELL','HG_A_WATER_MAGE_POOL','HG_A_VORTEX_PULL',
+        'HG_A_RIPTIDE_ANCHOR','HG_A_JIAO_COLUMN','HG_A_JIAO_TAIL','HG_A_JIAO_SUBMERGE',
+        'HG_A_JIAO_TIDE_EYE','HG_A_SHARK_BITE','HG_A_SHARK_VORTEX','HG_A_SHARK_FRENZY',
+        'HG_A_SHARK_ANCHOR','HG_A_TURTLE_MINISTER_SHELL','HG_A_DRAGON_WATER_LANCE',
+        'HG_A_DRAGON_TIDE_FIELD','HG_A_DRAGON_SEA_EYE','HG_A_DRAGON_REVERSE_TIDE',
+        'HG_A_DRAGON_FALL','HG_A_OX_CLEAVE','HG_A_OX_EARTH_CRACK','HG_A_OX_WHITE_CHARGE',
+        'HG_A_OX_HUMAN_ECHO','HG_A_OX_MAGMA_RING'
+    )
+    modifiers = @(
+        'HG_M_STONE_SUNDER','HG_M_SPRING_BLESS','HG_M_TURTLE_SHELL','HG_M_PEACH_POLLEN',
+        'HG_M_MIST_FOG','HG_M_TIDE_TRACE_EXPOSED','HG_M_RIPTIDE_EXPOSED','HG_M_VORTEX_PULL',
+        'HG_M_BOSS_FRENZY','HG_M_DRAGON_TIDE','HG_M_OX_RAGE','HG_M_OX_ARROGANCE'
+    )
+    projectiles = @(
+        'HG_P_VINE_DART','HG_P_FISH_BOLT','HG_P_PEACH_POLLEN','HG_P_APE_STONE',
+        'HG_P_WIND_BLADE','HG_P_WATER_LANCE','HG_P_FLAME_ARC'
+    )
+}
 
 $canonicalPublicBossByEncounter = [System.Collections.Generic.Dictionary[string,object]]::new([StringComparer]::Ordinal)
 $canonicalPublicBossByEncounter.Add('HG_E_MACAQUE_KING', [pscustomobject]@{
@@ -1750,6 +1981,29 @@ catch {
     $errors.Add($_.Exception.Message)
 }
 
+$objectCollectionSpecs = @(
+    [pscustomobject]@{ CollectionName = 'units'; ObjectType = 'unit'; RecordKeyPrefix = 'HG_U_' },
+    [pscustomobject]@{ CollectionName = 'abilities'; ObjectType = 'ability'; RecordKeyPrefix = 'HG_A_' },
+    [pscustomobject]@{ CollectionName = 'modifiers'; ObjectType = 'modifier'; RecordKeyPrefix = 'HG_M_' },
+    [pscustomobject]@{ CollectionName = 'projectiles'; ObjectType = 'projectile'; RecordKeyPrefix = 'HG_P_' }
+)
+$objectRecords = [ordered]@{}
+$objectRecordsByKey = [ordered]@{}
+$globalRecordKeyOwners = [System.Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
+foreach ($spec in $objectCollectionSpecs) {
+    $property = Get-ExactJsonProperty $manifest $spec.CollectionName
+    $records = if ($null -eq $property) { $null } else { $property.Value }
+    $objectRecords[$spec.CollectionName] = $records
+    $objectRecordsByKey[$spec.CollectionName] = Assert-CanonicalObjectCollection `
+        -Records $records -CollectionName $spec.CollectionName -ObjectType $spec.ObjectType `
+        -RecordKeyPrefix $spec.RecordKeyPrefix -ExpectedKeys $canonicalObjectKeys[$spec.CollectionName] `
+        -GlobalRecordKeyOwners $globalRecordKeyOwners -Errors $errors
+}
+$units = @($objectRecords['units'] | Where-Object { $_ -is [pscustomobject] })
+$rawAbilities = @($objectRecords['abilities'] | Where-Object { $_ -is [pscustomobject] })
+$rawModifiers = @($objectRecords['modifiers'] | Where-Object { $_ -is [pscustomobject] })
+$rawProjectiles = @($objectRecords['projectiles'] | Where-Object { $_ -is [pscustomobject] })
+
 $abilityDefaultsFields = Get-ExactJsonProperty $manifest.object_defaults.ability 'object_fields'
 $modifierDefaultsFields = Get-ExactJsonProperty $manifest.object_defaults.modifier 'object_fields'
 $projectileDefaultsFields = Get-ExactJsonProperty $manifest.object_defaults.projectile 'object_fields'
@@ -1759,30 +2013,30 @@ Add-UnresolvedFieldsContractErrors $manifest.object_defaults.projectile 'object_
 Add-ObjectFieldErrors $(if ($null -eq $abilityDefaultsFields) { $null } else { $abilityDefaultsFields.Value }) $abilityFieldSchema 'object_defaults.ability' $errors
 Add-ObjectFieldErrors $(if ($null -eq $modifierDefaultsFields) { $null } else { $modifierDefaultsFields.Value }) $modifierFieldSchema 'object_defaults.modifier' $errors
 Add-ObjectFieldErrors $(if ($null -eq $projectileDefaultsFields) { $null } else { $projectileDefaultsFields.Value }) $projectileFieldSchema 'object_defaults.projectile' $errors
-foreach ($unit in @($manifest.units)) {
+foreach ($unit in $units) {
+    Add-UnresolvedFieldsContractErrors $unit ([string]$unit.record_key) $errors
     $property = Get-ExactJsonProperty $unit 'object_fields'
     Add-ObjectFieldErrors $(if ($null -eq $property) { $null } else { $property.Value }) $unitFieldSchema ([string]$unit.record_key) $errors
 }
-foreach ($ability in @($manifest.abilities)) {
+foreach ($ability in $rawAbilities) {
     Add-UnresolvedFieldsContractErrors $ability ([string]$ability.record_key) $errors
     $property = Get-ExactJsonProperty $ability 'object_fields'
     Add-ObjectFieldErrors $(if ($null -eq $property) { $null } else { $property.Value }) $abilityFieldSchema ([string]$ability.record_key) $errors
 }
-foreach ($modifier in @($manifest.modifiers)) {
+foreach ($modifier in $rawModifiers) {
     Add-UnresolvedFieldsContractErrors $modifier ([string]$modifier.record_key) $errors
     $property = Get-ExactJsonProperty $modifier 'object_fields'
     Add-ObjectFieldErrors $(if ($null -eq $property) { $null } else { $property.Value }) $modifierFieldSchema ([string]$modifier.record_key) $errors
 }
-foreach ($projectile in @($manifest.projectiles)) {
+foreach ($projectile in $rawProjectiles) {
     Add-UnresolvedFieldsContractErrors $projectile ([string]$projectile.record_key) $errors
     $property = Get-ExactJsonProperty $projectile 'object_fields'
     Add-ObjectFieldErrors $(if ($null -eq $property) { $null } else { $property.Value }) $projectileFieldSchema ([string]$projectile.record_key) $errors
 }
 
-$modifiers = @($manifest.modifiers | ForEach-Object { Resolve-Record $manifest.object_defaults.modifier $_ })
-$projectiles = @($manifest.projectiles | ForEach-Object { Resolve-Record $manifest.object_defaults.projectile $_ })
-$abilities = @($manifest.abilities | ForEach-Object { Resolve-Record $manifest.object_defaults.ability $_ })
-$units = @($manifest.units)
+$modifiers = @($rawModifiers | ForEach-Object { Resolve-Record $manifest.object_defaults.modifier $_ })
+$projectiles = @($rawProjectiles | ForEach-Object { Resolve-Record $manifest.object_defaults.projectile $_ })
+$abilities = @($rawAbilities | ForEach-Object { Resolve-Record $manifest.object_defaults.ability $_ })
 foreach ($unit in $units) {
     Add-ObjectFieldErrors $unit.object_fields $unitFieldSchema ([string]$unit.record_key) $errors
     Add-RequiredObjectFieldErrors $unit.object_fields $requiredUnitFields 'unit' ([string]$unit.record_key) $errors
@@ -1830,6 +2084,17 @@ foreach ($unit in $units) {
 foreach ($ability in $abilities) { if ($ability.object_type -ne 'ability') { $errors.Add("$($ability.record_key): object_type must be ability") } }
 foreach ($modifier in $modifiers) { if ($modifier.object_type -ne 'modifier') { $errors.Add("$($modifier.record_key): object_type must be modifier") } }
 foreach ($projectile in $projectiles) { if ($projectile.object_type -ne 'projectile') { $errors.Add("$($projectile.record_key): object_type must be projectile") } }
+
+$objectByKey = [System.Collections.Generic.Dictionary[string,object]]::new([StringComparer]::Ordinal)
+foreach ($collectionName in @('units','abilities','modifiers','projectiles')) {
+    foreach ($recordKey in $objectRecordsByKey[$collectionName].Keys) {
+        if (-not $objectByKey.ContainsKey($recordKey)) {
+            $objectByKey.Add($recordKey, $objectRecordsByKey[$collectionName][$recordKey])
+        }
+    }
+}
+Add-ObjectDependencyClosureErrors -Units $units -Abilities $abilities -ObjectByKey $objectByKey `
+    -UnitByKey $objectRecordsByKey['units'] -AbilityByKey $objectRecordsByKey['abilities'] -Errors $errors
 
 if ($errors.Count -gt 0) {
     Write-Output 'Huaguoshan object command materialization refused:'

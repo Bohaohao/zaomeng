@@ -27,6 +27,11 @@ finally {
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($trustedNodeIdentityPath)) {
     throw 'Unable to determine the physical identity of the trusted node.exe.'
 }
+$trustedNodeProductVersion = [string]([Diagnostics.FileVersionInfo]::GetVersionInfo($trustedNodePath).ProductVersion)
+if ($trustedNodeProductVersion -cnotmatch '^\d+\.\d+\.\d+$') {
+    throw "Unable to determine a supported Node.js product version for the discovery tamper fixture: $trustedNodeProductVersion"
+}
+$trustedNodeRuntimeVersion = 'v' + $trustedNodeProductVersion
 
 $fixtureRoot = Join-Path ([IO.Path]::GetTempPath()) ('run-all-preconstruction-integrity-' + [guid]::NewGuid().ToString('N'))
 $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
@@ -43,6 +48,9 @@ $coreEditionWrapperPath = Join-Path $fixtureRoot 'invoke-with-core-edition.ps1'
 $professionFixtureRoot = Join-Path $fixtureRoot 'profession-runner'
 $professionFixtureRunnerPath = Join-Path $professionFixtureRoot 'implementation\run-all-professions.ps1'
 $professionRestorationWrapperPath = Join-Path $professionFixtureRoot 'invoke-and-assert-restoration.ps1'
+$trustedNodeFixtureDirectory = Join-Path $fixtureRoot 'trusted-node'
+$trustedNodeFixturePath = Join-Path $trustedNodeFixtureDirectory 'node.exe'
+$discoveryTamperReplacementPath = Join-Path $fixtureRoot 'discovery-tamper-replacement-node.exe'
 $nodeInjectionRoot = Join-Path $fixtureRoot 'node-injection'
 $nodeOptionsPreloadPath = Join-Path $nodeInjectionRoot 'preload.js'
 $nodePathRoot = Join-Path $nodeInjectionRoot 'node-path'
@@ -68,6 +76,13 @@ $environmentVariableNames = @(
     'RUN_ALL_PROFESSIONS_NESTED_MARKER',
     'RUN_ALL_PROFESSIONS_EXPECTED_PNPM',
     'RUN_ALL_PROFESSIONS_FAIL_PACKAGE',
+    'RUN_ALL_PROFESSIONS_TAMPER_NODE_PATH',
+    'RUN_ALL_PROFESSIONS_TAMPER_NODE_MARKER',
+    'RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_NODE_PATH',
+    'RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_REPLACEMENT_PATH',
+    'RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_MARKER',
+    'RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_EXECUTED_MARKER',
+    'RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_RUNTIME_VERSION',
     'RUNNER_NODE_OPTIONS_MARKER',
     'RUNNER_NODE_PATH_MARKER'
 )
@@ -136,6 +151,38 @@ function Assert-NoNodeInjection {
     if (Test-Path -LiteralPath $Markers.NodePath) {
         throw "NODE_PATH changed module resolution during $Description."
     }
+}
+
+function Set-DiscoveryTamperFixtureRunner {
+    param(
+        [Parameter(Mandatory = $true)][string]$SourcePath,
+        [Parameter(Mandatory = $true)][string]$DestinationPath
+    )
+
+    $source = Get-Content -Raw -LiteralPath $SourcePath
+    $anchor = '            $nodePathAfterVerification = Get-FinalFileSystemPath -Path $candidatePath'
+    if ([regex]::Matches($source, [regex]::Escape($anchor)).Count -ne 1) {
+        throw 'The discovery tamper fixture could not locate the post-verification Node.js identity check.'
+    }
+
+    $injection = @'
+            $discoveryTamperTarget = [Environment]::GetEnvironmentVariable('RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_NODE_PATH', 'Process')
+            if (-not [string]::IsNullOrWhiteSpace($discoveryTamperTarget)) {
+                $discoveryTamperReplacement = [Environment]::GetEnvironmentVariable('RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_REPLACEMENT_PATH', 'Process')
+                $discoveryTamperMarker = [Environment]::GetEnvironmentVariable('RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_MARKER', 'Process')
+                if ([string]::IsNullOrWhiteSpace($discoveryTamperReplacement) -or [string]::IsNullOrWhiteSpace($discoveryTamperMarker)) {
+                    throw 'The discovery tamper fixture is missing its replacement executable or marker path.'
+                }
+
+                $discoveryTamperTargetPhysicalPath = Get-FinalFileSystemPath -Path $discoveryTamperTarget
+                if ($nodePath -ieq $discoveryTamperTargetPhysicalPath) {
+                    Copy-Item -LiteralPath $discoveryTamperReplacement -Destination $discoveryTamperTargetPhysicalPath -Force
+                    Set-Content -LiteralPath $discoveryTamperMarker -Encoding ASCII -Value $nodePath
+                }
+            }
+
+'@
+    Set-Content -LiteralPath $DestinationPath -Encoding UTF8 -Value $source.Replace($anchor, $injection + $anchor)
 }
 
 function Invoke-CapturedPowerShell {
@@ -243,6 +290,8 @@ function Invoke-ProfessionFixtureScenario {
         [Parameter(Mandatory = $true)][string]$Name,
         [AllowEmptyString()][string]$FailPackage,
         [ValidateSet('Pinned', 'Unpinned')][string]$Cache = 'Pinned',
+        [switch]$TamperTrustedNodeDuringDiscovery,
+        [switch]$TamperTrustedNodeAfterInitialProbe,
         [switch]$AssertRestoration
     )
 
@@ -255,11 +304,30 @@ function Invoke-ProfessionFixtureScenario {
         Node = Join-Path $scenarioRoot 'node.marker'
         Nested = Join-Path $scenarioRoot 'nested.marker'
         Restoration = Join-Path $scenarioRoot 'restoration.marker'
+        TamperedNode = Join-Path $scenarioRoot 'tampered-node.marker'
+        DiscoveryTamperedNode = Join-Path $scenarioRoot 'discovery-tampered-node.marker'
+        DiscoveryReplacementExecuted = Join-Path $scenarioRoot 'discovery-replacement-executed.marker'
         NodeOptions = Join-Path $scenarioRoot 'node-options.marker'
         NodePath = Join-Path $scenarioRoot 'node-path.marker'
     }
     $pnpmSentinel = Join-Path $scenarioRoot 'pnpm sentinel.cmd'
+    $scenarioPath = if ($TamperTrustedNodeDuringDiscovery) {
+        $trustedNodeFixtureDirectory
+    }
+    elseif ($TamperTrustedNodeAfterInitialProbe) {
+        $trustedNodeFixtureDirectory + [IO.Path]::PathSeparator + $poisonedPath
+    }
+    else {
+        $poisonedPath
+    }
+    $tamperNodePath = if ($TamperTrustedNodeAfterInitialProbe) { $trustedNodeFixturePath } else { $null }
+    $discoveryTamperNodePath = if ($TamperTrustedNodeDuringDiscovery) { $trustedNodeFixturePath } else { $null }
+    $discoveryTamperReplacement = if ($TamperTrustedNodeDuringDiscovery) { $discoveryTamperReplacementPath } else { $null }
+    $discoveryTamperMarker = if ($TamperTrustedNodeDuringDiscovery) { $markers.DiscoveryTamperedNode } else { $null }
+    $discoveryTamperExecutedMarker = if ($TamperTrustedNodeDuringDiscovery) { $markers.DiscoveryReplacementExecuted } else { $null }
+    $discoveryTamperRuntimeVersion = if ($TamperTrustedNodeDuringDiscovery) { $trustedNodeRuntimeVersion } else { $null }
 
+    [Environment]::SetEnvironmentVariable('PATH', $scenarioPath, 'Process')
     [Environment]::SetEnvironmentVariable('RUN_ALL_PRECONSTRUCTION_FAKE_POWERSHELL_MARKER', $markers.FakePowerShell, 'Process')
     [Environment]::SetEnvironmentVariable('RUN_ALL_PRECONSTRUCTION_FAKE_NODE_MARKER', $markers.FakeNode, 'Process')
     [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_PACKAGE_MARKER', $markers.Packages, 'Process')
@@ -267,6 +335,13 @@ function Invoke-ProfessionFixtureScenario {
     [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_NESTED_MARKER', $markers.Nested, 'Process')
     [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_EXPECTED_PNPM', $pnpmSentinel, 'Process')
     [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_FAIL_PACKAGE', $FailPackage, 'Process')
+    [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_TAMPER_NODE_PATH', $tamperNodePath, 'Process')
+    [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_TAMPER_NODE_MARKER', $(if ($TamperTrustedNodeAfterInitialProbe) { $markers.TamperedNode } else { $null }), 'Process')
+    [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_NODE_PATH', $discoveryTamperNodePath, 'Process')
+    [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_REPLACEMENT_PATH', $discoveryTamperReplacement, 'Process')
+    [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_MARKER', $discoveryTamperMarker, 'Process')
+    [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_EXECUTED_MARKER', $discoveryTamperExecutedMarker, 'Process')
+    [Environment]::SetEnvironmentVariable('RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_RUNTIME_VERSION', $discoveryTamperRuntimeVersion, 'Process')
     [Environment]::SetEnvironmentVariable('RUNNER_NODE_OPTIONS_MARKER', $markers.NodeOptions, 'Process')
     [Environment]::SetEnvironmentVariable('RUNNER_NODE_PATH_MARKER', $markers.NodePath, 'Process')
     $localAppData = if ($Cache -ceq 'Pinned') {
@@ -289,21 +364,36 @@ function Invoke-ProfessionFixtureScenario {
     else {
         $argumentList += @($professionFixtureRunnerPath, '-PnpmPath', $pnpmSentinel)
     }
-    $invocation = Invoke-CapturedPowerShell -FilePath $trustedHostPath -ArgumentList $argumentList
-    $output = $invocation.Output
-    $exitCode = $invocation.ExitCode
-    if ([Environment]::GetEnvironmentVariable('PATH', 'Process') -cne $poisonedPath -or
-        [Environment]::GetEnvironmentVariable('PATHEXT', 'Process') -cne $poisonedPathExt -or
-        [Environment]::GetEnvironmentVariable('NODE_OPTIONS', 'Process') -cne $injectedNodeOptions -or
-        [Environment]::GetEnvironmentVariable('NODE_PATH', 'Process') -cne $nodePathRoot) {
-        throw "The profession integrity harness environment changed after scenario '$Name'."
-    }
+    $fixtureRunnerPatched = $false
+    try {
+        if ($TamperTrustedNodeDuringDiscovery) {
+            Set-DiscoveryTamperFixtureRunner -SourcePath $professionRunnerPath -DestinationPath $professionFixtureRunnerPath
+            $fixtureRunnerPatched = $true
+        }
 
-    return [pscustomobject]@{
-        ExitCode = $exitCode
-        Output = @($output | ForEach-Object { [string]$_ })
-        Markers = $markers
-        PnpmPath = $pnpmSentinel
+        $invocation = Invoke-CapturedPowerShell -FilePath $trustedHostPath -ArgumentList $argumentList
+        $output = $invocation.Output
+        $exitCode = $invocation.ExitCode
+        if ([Environment]::GetEnvironmentVariable('PATH', 'Process') -cne $scenarioPath -or
+            [Environment]::GetEnvironmentVariable('PATHEXT', 'Process') -cne $poisonedPathExt -or
+            [Environment]::GetEnvironmentVariable('NODE_OPTIONS', 'Process') -cne $injectedNodeOptions -or
+            [Environment]::GetEnvironmentVariable('NODE_PATH', 'Process') -cne $nodePathRoot) {
+            throw "The profession integrity harness environment changed after scenario '$Name'."
+        }
+
+        $result = [pscustomobject]@{
+            ExitCode = $exitCode
+            Output = @($output | ForEach-Object { [string]$_ })
+            Markers = $markers
+            PnpmPath = $pnpmSentinel
+        }
+        [Environment]::SetEnvironmentVariable('PATH', $poisonedPath, 'Process')
+        return $result
+    }
+    finally {
+        if ($fixtureRunnerPatched) {
+            Copy-Item -LiteralPath $professionRunnerPath -Destination $professionFixtureRunnerPath -Force
+        }
     }
 }
 
@@ -340,10 +430,13 @@ try {
     New-Item -ItemType Directory -Path (Join-Path $topFixtureRoot 'huaguoshan\tests') -Force | Out-Null
     New-Item -ItemType Directory -Path $fakeCommandDirectory -Force | Out-Null
     New-Item -ItemType Directory -Path (Split-Path -Parent $professionFixtureRunnerPath) -Force | Out-Null
+    New-Item -ItemType Directory -Path $trustedNodeFixtureDirectory -Force | Out-Null
     New-Item -ItemType Directory -Path $nodeInjectionRoot -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $nodePathRoot 'profession-runner-node-path-probe') -Force | Out-Null
     Copy-Item -LiteralPath $runnerPath -Destination $topFixtureRunnerPath
     Copy-Item -LiteralPath $professionRunnerPath -Destination $professionFixtureRunnerPath
+    Copy-Item -LiteralPath $trustedNodePath -Destination $trustedNodeFixturePath
+    $trustedNodeFixtureSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $trustedNodeFixturePath).Hash
 
     Set-Content -LiteralPath (Join-Path $topFixtureRoot 'test-run-all-preconstruction-integrity.ps1') -Encoding ASCII -Value @'
 $ErrorActionPreference = 'Stop'
@@ -478,6 +571,30 @@ public static class FakePowerShell
     }
 }
 '@
+    Add-Type -Language CSharp -OutputType ConsoleApplication -OutputAssembly $discoveryTamperReplacementPath -TypeDefinition @'
+using System;
+using System.IO;
+
+public static class DiscoveryTamperReplacementNode
+{
+    public static int Main(string[] args)
+    {
+        string markerPath = Environment.GetEnvironmentVariable("RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_EXECUTED_MARKER");
+        if (!String.IsNullOrWhiteSpace(markerPath))
+        {
+            File.AppendAllText(markerPath, "executed" + Environment.NewLine);
+        }
+
+        string runtimeVersion = Environment.GetEnvironmentVariable("RUN_ALL_PROFESSIONS_DISCOVERY_TAMPER_RUNTIME_VERSION");
+        if (String.IsNullOrWhiteSpace(runtimeVersion))
+        {
+            return 97;
+        }
+        Console.WriteLine(runtimeVersion);
+        return 0;
+    }
+}
+'@
     Set-Content -LiteralPath (Join-Path $fakeCommandDirectory 'node.cmd') -Encoding ASCII -Value @'
 @echo off
 if not "%RUN_ALL_PRECONSTRUCTION_FAKE_NODE_MARKER%"=="" echo invoked>>"%RUN_ALL_PRECONSTRUCTION_FAKE_NODE_MARKER%"
@@ -511,6 +628,14 @@ $hostPath = [Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
 Add-Content -LiteralPath $env:RUN_ALL_PROFESSIONS_PACKAGE_MARKER -Encoding ASCII -Value ($packageName + '|' + $hostPath + '|' + $PnpmPath)
 if ($PnpmPath -cne $env:RUN_ALL_PROFESSIONS_EXPECTED_PNPM) { exit 48 }
 if ($env:RUN_ALL_PROFESSIONS_FAIL_PACKAGE -ceq $packageName) { exit 47 }
+if ($packageName -ceq 'Powang' -and -not [string]::IsNullOrWhiteSpace($env:RUN_ALL_PROFESSIONS_TAMPER_NODE_PATH)) {
+    $nodeBytes = [IO.File]::ReadAllBytes($env:RUN_ALL_PROFESSIONS_TAMPER_NODE_PATH)
+    if ($nodeBytes.Length -eq 0) { throw 'The trusted Node.exe tamper fixture is empty.' }
+    $lastByteIndex = $nodeBytes.Length - 1
+    $nodeBytes[$lastByteIndex] = [byte]($nodeBytes[$lastByteIndex] -bxor 0x01)
+    [IO.File]::WriteAllBytes($env:RUN_ALL_PROFESSIONS_TAMPER_NODE_PATH, $nodeBytes)
+    Set-Content -LiteralPath $env:RUN_ALL_PROFESSIONS_TAMPER_NODE_MARKER -Encoding ASCII -Value (Resolve-Path -LiteralPath $env:RUN_ALL_PROFESSIONS_TAMPER_NODE_PATH).Path
+}
 if ($packageName -ceq 'Powang') {
     & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'nested-powershell.ps1')
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -749,6 +874,74 @@ process.stdout.write('PASS: 27 common assertions\n');
     Assert-TrustedHostMarker -Path $unpinnedCache.Markers.Nested -Description 'Nested bare PowerShell invocation before unpinned-cache rejection'
     Assert-NoForgedCommand -Markers $unpinnedCache.Markers -Description 'the unpinned-cache rejection fixture'
     Assert-NoNodeInjection -Markers $unpinnedCache.Markers -Description 'the unpinned-cache rejection fixture'
+
+    $discoveryTamperedNode = Invoke-ProfessionFixtureScenario `
+        -Name 'profession-node-replaced-before-discovery-sha-finalization' `
+        -FailPackage '' `
+        -TamperTrustedNodeDuringDiscovery `
+        -AssertRestoration
+    if ($discoveryTamperedNode.ExitCode -eq 0 -or
+        ($discoveryTamperedNode.Output -join [Environment]::NewLine) -notmatch 'changed during signature and metadata verification') {
+        throw "The profession runner accepted a Node.exe replacement before discovery SHA finalization: $($discoveryTamperedNode.Output -join [Environment]::NewLine)"
+    }
+    if (-not (Test-Path -LiteralPath $discoveryTamperedNode.Markers.DiscoveryTamperedNode -PathType Leaf)) {
+        throw 'The discovery Node identity tamper fixture did not replace the candidate before SHA finalization.'
+    }
+    $discoveryTamperedNodePath = (Get-Content -Raw -LiteralPath $discoveryTamperedNode.Markers.DiscoveryTamperedNode).Trim()
+    if ((Resolve-Path -LiteralPath $discoveryTamperedNodePath).Path -ine (Resolve-Path -LiteralPath $trustedNodeFixturePath).Path) {
+        throw "The discovery Node identity tamper fixture changed an unexpected executable: $discoveryTamperedNodePath"
+    }
+    $discoveryReplacementSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $discoveryTamperReplacementPath).Hash
+    if ((Get-FileHash -Algorithm SHA256 -LiteralPath $trustedNodeFixturePath).Hash -cne $discoveryReplacementSha256) {
+        throw 'The discovery Node identity tamper fixture did not replace the candidate executable bytes.'
+    }
+    if (Test-Path -LiteralPath $discoveryTamperedNode.Markers.DiscoveryReplacementExecuted) {
+        throw 'The profession runner executed the replacement Node.exe during initial candidate discovery.'
+    }
+    foreach ($path in @($discoveryTamperedNode.Markers.Packages, $discoveryTamperedNode.Markers.Nested, $discoveryTamperedNode.Markers.Node)) {
+        if (Test-Path -LiteralPath $path) {
+            throw 'The profession runner continued past the initial candidate discovery identity failure.'
+        }
+    }
+    if (-not (Test-Path -LiteralPath $discoveryTamperedNode.Markers.Restoration -PathType Leaf)) {
+        throw 'The profession runner did not restore its caller environment after an initial Node discovery identity change.'
+    }
+    Assert-NoForgedCommand -Markers $discoveryTamperedNode.Markers -Description 'the initial Node discovery identity tamper fixture'
+    Assert-NoNodeInjection -Markers $discoveryTamperedNode.Markers -Description 'the initial Node discovery identity tamper fixture'
+    Copy-Item -LiteralPath $trustedNodePath -Destination $trustedNodeFixturePath -Force
+    if ((Get-FileHash -Algorithm SHA256 -LiteralPath $trustedNodeFixturePath).Hash -cne $trustedNodeFixtureSha256) {
+        throw 'The discovery Node identity tamper fixture did not restore the trusted candidate executable.'
+    }
+
+    $tamperedNode = Invoke-ProfessionFixtureScenario `
+        -Name 'profession-node-identity-tampered-after-initial-probe' `
+        -FailPackage '' `
+        -TamperTrustedNodeAfterInitialProbe `
+        -AssertRestoration
+    if ($tamperedNode.ExitCode -eq 0 -or
+        ($tamperedNode.Output -join [Environment]::NewLine) -notmatch 'Verified Node\.js executable identity changed during the runner') {
+        throw "The profession runner accepted a trusted Node.exe replacement after its initial probe: $($tamperedNode.Output -join [Environment]::NewLine)"
+    }
+    if (-not (Test-Path -LiteralPath $tamperedNode.Markers.TamperedNode -PathType Leaf)) {
+        throw 'The Node identity tamper fixture did not replace the trusted Node.exe after the initial probe.'
+    }
+    $tamperedNodePath = (Get-Content -Raw -LiteralPath $tamperedNode.Markers.TamperedNode).Trim()
+    if ((Resolve-Path -LiteralPath $tamperedNodePath).Path -ine (Resolve-Path -LiteralPath $trustedNodeFixturePath).Path) {
+        throw "The Node identity tamper fixture changed an unexpected executable: $tamperedNodePath"
+    }
+    if ((Get-FileHash -Algorithm SHA256 -LiteralPath $trustedNodeFixturePath).Hash -ceq $trustedNodeFixtureSha256) {
+        throw 'The Node identity tamper fixture did not change the trusted Node.exe SHA-256.'
+    }
+    if (Test-Path -LiteralPath $tamperedNode.Markers.Node) {
+        throw 'The profession runner executed Node.js after its verified executable changed.'
+    }
+    if (-not (Test-Path -LiteralPath $tamperedNode.Markers.Restoration -PathType Leaf)) {
+        throw 'The profession runner did not restore its caller environment after a Node identity change.'
+    }
+    Assert-ProfessionPackageMarkers -Result $tamperedNode -ExpectedPackages @('Powang', 'Zhenjie', 'Chiming', 'Xunlie') -Description 'Node identity tamper fixture'
+    Assert-TrustedHostMarker -Path $tamperedNode.Markers.Nested -Description 'Nested bare PowerShell invocation before Node identity rejection'
+    Assert-NoForgedCommand -Markers $tamperedNode.Markers -Description 'the Node identity tamper fixture'
+    Assert-NoNodeInjection -Markers $tamperedNode.Markers -Description 'the Node identity tamper fixture'
 }
 finally {
     foreach ($name in $environmentVariableNames) {

@@ -495,8 +495,8 @@ $luaTestContracts = [ordered]@{
         SourceSha256 = 'D9F5292C78112EA4C01AE95A8CF5F1675681C7F4B5FC94557007906D8FF4215E'
     }
     'implementation/huaguoshan/tests/test_public_boss.lua' = [pscustomobject]@{
-        PassLine = 'PASS: 165 public boss assertions'
-        SourceSha256 = 'AC46C81E2FB46C60C759D366A9707BDBB8729B79F851D51ED0484E7F1E4C195E'
+        PassLine = 'PASS: 176 public boss assertions'
+        SourceSha256 = '6F193F72AA61FC151FF7AF789C66A1AFA1190C7F5A2C8F352FB7ADCCD055F91F'
     }
     'implementation/huaguoshan/tests/test_instances.lua' = [pscustomobject]@{
         PassLine = 'PASS: 282 instance assertions'

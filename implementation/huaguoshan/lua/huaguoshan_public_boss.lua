@@ -1119,8 +1119,9 @@ function Boss:phase_marker(event)
             inherit_private_marks = false,
         })
     elseif event.marker == 'submerge' then
+        local submerge_end_tick = event.action_window.open_tick + self.encounter.phase.submerge_seconds
         self.submerged = true
-        self.trace_pause_until = event.action_window.close_tick
+        self.trace_pause_until = submerge_end_tick
         add_command(result, {
             type = 'trace_pause',
             encounter_key = self.encounter_key,
@@ -1131,7 +1132,7 @@ function Boss:phase_marker(event)
             target_id = self.target_id,
             target_lifecycle_id = self.target_lifecycle_id,
             start_tick = event.action_window.open_tick,
-            end_tick = event.action_window.close_tick,
+            end_tick = submerge_end_tick,
             duration_seconds = self.encounter.phase.submerge_seconds,
         })
     elseif event.marker == 'frenzy' then

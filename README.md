@@ -49,11 +49,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\run-all-pre
 - 仍由施工门禁明确阻止编辑器落地：生产 ID、地图路径、脚本根、真实命中与品级解析、保护/净化/Boss 事件契约、图标模型和多人实机验证均未完成。
 - 已检查本仓库全部本地 Markdown 链接；布局预览 JSON 也已作为离线交付物保留。
 
-### 后续复审归档（2026-07-16）
+### 后续复审归档（2026-07-17）
 
-- [花果山离线复审修订归档](docs/归档/物编施工/01-花果山离线复审修订归档.md) 已记录运行时、物编门禁与离线入口信任链的 P1 修订。
-- 已修复职业汇总入口的 Node 环境探针在 Windows PowerShell 下传递多行 `node -e` 脚本时的引号损坏；探针现通过标准输入执行，仍保留受控环境与退出码校验。
-- 已修复花果山物化负例测试对长错误记录的 80 列折行误判。`test-run-all-preconstruction-integrity.ps1`、花果山物化测试、花果山总入口及 `implementation/run-all-preconstruction.ps1` 已在本机重新通过。
+- [花果山离线复审修订归档](docs/归档/物编施工/01-花果山离线复审修订归档.md) 已补记蛟魔王 3 秒潜入、物化器完整性与职业入口 Node 信任链的 P1 闭环。
+- 物化器已拒绝对象集/依赖/owner 关系漂移、非法 `record_key` 与单位未决字段；职业入口覆盖 Node 发现期和执行前的替换对抗夹具。
+- `implementation/test-run-all-preconstruction-integrity.ps1`、`implementation/run-all-professions.ps1`、花果山总入口及 `implementation/run-all-preconstruction.ps1` 已在本机重新通过；代码终审为 `APPROVE`，架构终审为非阻断 `WATCH`。
 - 全量离线验收结论仅覆盖离线契约；生产 ID、编辑器地图、真实脚本根和多人实机门禁仍保持关闭。
 
 ## 版本管理范围
