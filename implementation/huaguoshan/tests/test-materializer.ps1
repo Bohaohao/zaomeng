@@ -240,7 +240,7 @@ function Assert-MaterializerRejects {
     $outputPath = [IO.Path]::ChangeExtension($paths.OutputPath, $OutputExtension)
     $result = & powershell -NoProfile -ExecutionPolicy Bypass -File $tool -ManifestPath $paths.ManifestPath -OutputPath $outputPath 2>&1
     $exitCode = $LASTEXITCODE
-    $text = $result | Out-String
+    $text = $result | Out-String -Width 4096
     if ($exitCode -eq 0) { throw "materializer unexpectedly accepted fixture: $Name" }
     foreach ($pattern in $ExpectedPattern) {
         if ($text -notmatch $pattern) { throw "materializer did not report $pattern for ${Name}: $text" }
@@ -270,7 +270,7 @@ function Assert-DuplicateRawAttackPhyRejected {
         $exitCode = $LASTEXITCODE
     }
     finally { $ErrorActionPreference = $previousErrorActionPreference }
-    $text = $result | Out-String
+    $text = $result | Out-String -Width 4096
     if ($exitCode -eq 0) { throw 'materializer unexpectedly accepted a duplicate raw attack_phy property' }
     if ($text -notmatch 'duplicate JSON property "attack_phy" at \$\.units\[0\]\.object_fields') {
         throw "materializer did not diagnose the duplicate raw attack_phy property: $text"

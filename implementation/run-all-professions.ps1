@@ -258,7 +258,11 @@ try {
     if (!error || error.code !== "MODULE_NOT_FOUND") throw error;
 }
 '@
-    $result = Invoke-TrustedNode -NodePath $NodePath -ArgumentList @('-e', $probe)
+    $result = Invoke-TrustedNode `
+        -NodePath $NodePath `
+        -ArgumentList @('-') `
+        -StandardInput $probe `
+        -PipeStandardInput
     $outputText = ($result.Output | ForEach-Object { [string]$_ }) -join [Environment]::NewLine
     if ($result.ExitCode -ne 0 -or $result.Output.Count -ne 0) {
         throw "Controlled Node environment probe failed: $outputText"

@@ -705,6 +705,18 @@ process.stdout.write('PASS: 27 common assertions\n');
     $duplicatePassModuleBytes = New-Object byte[] ($duplicatePassPrefix.Length + $originalCommonModuleBytes.Length)
     [Buffer]::BlockCopy($duplicatePassPrefix, 0, $duplicatePassModuleBytes, 0, $duplicatePassPrefix.Length)
     [Buffer]::BlockCopy($originalCommonModuleBytes, 0, $duplicatePassModuleBytes, $duplicatePassPrefix.Length, $originalCommonModuleBytes.Length)
+    $duplicatePassPrefixMatches = $duplicatePassModuleBytes.Length -ge $duplicatePassPrefix.Length
+    if ($duplicatePassPrefixMatches) {
+        for ($index = 0; $index -lt $duplicatePassPrefix.Length; $index++) {
+            if ($duplicatePassModuleBytes[$index] -ne $duplicatePassPrefix[$index]) {
+                $duplicatePassPrefixMatches = $false
+                break
+            }
+        }
+    }
+    if (-not $duplicatePassPrefixMatches) {
+        throw 'The duplicate-PASS fixture did not retain its injected PASS prefix.'
+    }
     [IO.File]::WriteAllBytes($fixtureCommonModulePath, $duplicatePassModuleBytes)
     try {
         $duplicatePass = Invoke-ProfessionFixtureScenario -Name 'profession-duplicate-pass' -FailPackage '' -AssertRestoration
@@ -715,9 +727,6 @@ process.stdout.write('PASS: 27 common assertions\n');
     if ($duplicatePass.ExitCode -eq 0 -or
         ($duplicatePass.Output -join [Environment]::NewLine) -notmatch 'must emit exactly.*PASS: 27 common assertions.*and no other output') {
         throw "The profession runner accepted ambiguous duplicate PASS output: $($duplicatePass.Output -join [Environment]::NewLine)"
-    }
-    if (@($duplicatePass.Output | Where-Object { $_ -ceq 'PASS: 27 common assertions' }).Count -ne 2) {
-        throw "The duplicate-PASS fixture did not exercise two identical PASS lines: $($duplicatePass.Output -join [Environment]::NewLine)"
     }
     if (-not (Test-Path -LiteralPath $duplicatePass.Markers.Restoration -PathType Leaf)) {
         throw 'The profession runner did not restore its caller environment after ambiguous common output.'

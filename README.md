@@ -51,7 +51,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\run-all-pre
 
 ### 后续复审归档（2026-07-16）
 
-- [花果山离线复审修订归档](docs/归档/物编施工/01-花果山离线复审修订归档.md) 已记录运行时、物编门禁与离线入口信任链的 P1 修订。新的入口对抗性夹具仍有一项待闭环 Node 环境失败，因此此处不更新全量离线验收结论。
+- [花果山离线复审修订归档](docs/归档/物编施工/01-花果山离线复审修订归档.md) 已记录运行时、物编门禁与离线入口信任链的 P1 修订。
+- 已修复职业汇总入口的 Node 环境探针在 Windows PowerShell 下传递多行 `node -e` 脚本时的引号损坏；探针现通过标准输入执行，仍保留受控环境与退出码校验。
+- 已修复花果山物化负例测试对长错误记录的 80 列折行误判。`test-run-all-preconstruction-integrity.ps1`、花果山物化测试、花果山总入口及 `implementation/run-all-preconstruction.ps1` 已在本机重新通过。
+- 全量离线验收结论仅覆盖离线契约；生产 ID、编辑器地图、真实脚本根和多人实机门禁仍保持关闭。
 
 ## 版本管理范围
 
