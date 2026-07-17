@@ -266,9 +266,21 @@ do
     local authority = new_authority({ now = 100 })
     local progress = {
         locked_old = { level = 60, discovered = false, underworld_late = true },
+        locked_route = {
+            level = 60, discovered = true, profession_id = 'C01',
+            route_completion = { C02_ROUTE_LV8_core = true },
+        },
         low_old = { level = 7, discovered = true, underworld_late = true },
         locked_reverse = { level = 60, discovered = true, underworld_late = false },
-        a = { level = 8, discovered = true, underworld_late = false },
+        a = {
+            level = 8, discovered = true, underworld_late = false, profession_id = 'C01',
+            route_completion = { C01_ROUTE_LV8_core = true },
+        },
+        c04 = {
+            level = 8, discovered = true, underworld_late = false, profession_id = 'C04',
+            selected_route_key = 'C04_ROUTE_LV8_wind',
+            route_completion = { C04_ROUTE_LV8_hunt = true },
+        },
     }
     local seen_requirements = {}
     local dragon = new_dragon(authority, function(query)
@@ -277,6 +289,18 @@ do
         if not state or state.level < query.requirements.min_level then return false end
         if query.requirements.discovery_key and not state.discovered then return false end
         if query.requirements.progression_key and not state[query.requirements.progression_key] then return false end
+        local route = query.requirements.route_completion
+        if route then
+            local candidate_keys = route.completion_keys_by_profession[state.profession_id]
+            if type(candidate_keys) ~= 'table' then return false end
+            local selected_key = state.selected_route_key
+            if #candidate_keys == 1 then selected_key = candidate_keys[1] end
+            local selected_is_allowed = false
+            for _, candidate_key in ipairs(candidate_keys) do
+                if candidate_key == selected_key then selected_is_allowed = true end
+            end
+            if not selected_is_allowed or state.route_completion[selected_key] ~= true then return false end
+        end
         return true
     end)
 
@@ -290,11 +314,42 @@ do
     equal(opened, false, 'trusted Lv8 rule rejects a low-level caller')
     equal(error_code, 'old-tide-progression-not-eligible', 'low-level Dragon rejection is explicit')
 
+    opened, error_code = dragon:open(dragon_request('HG_E_DRAGON_OLD_TIDE', 'locked_route', 93))
+    equal(opened, false, 'old tide rejects a discovered high-level actor without the persisted route completion')
+    equal(error_code, 'old-tide-progression-not-eligible', 'missing old-tide route completion is explicit')
+
+    opened, error_code = dragon:open(dragon_request('HG_E_DRAGON_OLD_TIDE', 'c04', 94))
+    equal(opened, false, 'C04 cannot use a completed route different from the actor selected route')
+    equal(error_code, 'old-tide-progression-not-eligible', 'C04 selected-route mismatch is explicit')
+    progress.c04.route_completion.C04_ROUTE_LV8_wind = true
+
+    local forged_route = dragon_request('HG_E_DRAGON_OLD_TIDE', 'a', 1)
+    forged_route.profession_id = 'C04'
+    opened, error_code = dragon:open(forged_route)
+    equal(opened, false, 'caller profession cannot replace authoritative progression identity')
+    equal(error_code, 'untrusted-instance-authority-field:profession_id', 'caller profession rejection is explicit')
+
     opened, error_code = dragon:open(dragon_request('HG_E_DRAGON_REVERSE_TIDE', 'locked_reverse', 92))
     equal(opened, false, 'trusted late-underworld rule rejects the reverse tide caller')
     equal(error_code, 'reverse-tide-progression-not-eligible', 'reverse tide rejection is explicit')
     equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.min_level, 8, 'old tide proof query preserves Lv8')
     equal(seen_requirements.HG_E_DRAGON_REVERSE_TIDE.min_level, 38, 'reverse tide proof query preserves Lv38')
+    equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.scope, 'actor_current_profession',
+        'old tide route completion is actor-private and profession-resolved')
+    equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.trial_seconds, 60,
+        'old tide route completion preserves the 60-second trial contract')
+    equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.completion_keys_by_profession.C01[1],
+        'C01_ROUTE_LV8_core', 'old tide proof query preserves the C01 route key')
+    equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.completion_keys_by_profession.C02[1],
+        'C02_ROUTE_LV8_core', 'old tide proof query preserves the C02 route key')
+    equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.completion_keys_by_profession.C03[1],
+        'C03_ROUTE_LV8_core', 'old tide proof query preserves the C03 route key')
+    equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.completion_keys_by_profession.C04[1],
+        'C04_ROUTE_LV8_hunt', 'old tide proof query preserves the C04 hunt route option')
+    equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.completion_keys_by_profession.C04[2],
+        'C04_ROUTE_LV8_wind', 'old tide proof query preserves the C04 route options')
+    equal(seen_requirements.HG_E_DRAGON_OLD_TIDE.route_completion.completion_keys_by_profession.C04[3],
+        'C04_ROUTE_LV8_bind', 'old tide proof query preserves the C04 bind route option')
 
     authority:reject('dragon_entry')
     opened, error_code = dragon:open(dragon_request('HG_E_DRAGON_OLD_TIDE', 'a', 1))
@@ -304,6 +359,8 @@ do
 
     local opened_ok, opened_result = dragon:open(dragon_request('HG_E_DRAGON_OLD_TIDE', 'a', 1))
     truthy(opened_ok, 'authority-signed Dragon entry opens a slot')
+    local c04_opened = dragon:open(dragon_request('HG_E_DRAGON_OLD_TIDE', 'c04', 2))
+    truthy(c04_opened, 'authority resolves the C04 selected route from actor progress rather than caller input')
     equal(opened_result.session.opened_at, 100, 'Dragon stores only provider time')
     equal(opened_result.session.deadline_at, 820, 'Dragon deadline derives from provider time')
     equal(opened_result.session.cleanup_token, nil, 'Dragon public session snapshot omits cleanup capability')

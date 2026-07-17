@@ -1907,6 +1907,48 @@ foreach ($key in @('HG_E_MACAQUE_KING','HG_E_SHARK_KING')) {
 }
 if ($encounterByKey['HG_E_OX_BATTLEFIELD'].runtime_fields.max_members -ne 4) { Add-Error $errors 'ox battlefield must cap membership at four' }
 
+$oldTideRuntime = $encounterByKey['HG_E_DRAGON_OLD_TIDE'].runtime_fields
+if ($oldTideRuntime.discovery_rule -ne 'longgong_discovered_and_level_at_least_8') {
+    Add-Error $errors 'HG_E_DRAGON_OLD_TIDE discovery_rule must preserve discovered-and-Lv8 guidance'
+}
+if ($oldTideRuntime.unlock_rule -ne 'longgong_discovered_and_level_at_least_8_and_actor_current_profession_lv8_route_completed') {
+    Add-Error $errors 'HG_E_DRAGON_OLD_TIDE unlock_rule must require the actor current-profession Lv8 route completion'
+}
+$oldTideRouteCompletion = $oldTideRuntime.route_completion
+if ($oldTideRouteCompletion -isnot [pscustomobject]) {
+    Add-Error $errors 'HG_E_DRAGON_OLD_TIDE route_completion must be an object'
+}
+else {
+    if ($oldTideRouteCompletion.scope -ne 'actor_current_profession') {
+        Add-Error $errors 'HG_E_DRAGON_OLD_TIDE route completion scope must be actor_current_profession'
+    }
+    if ($oldTideRouteCompletion.trial_seconds -ne 60) {
+        Add-Error $errors 'HG_E_DRAGON_OLD_TIDE route completion trial_seconds must be 60'
+    }
+    $completionKeys = $oldTideRouteCompletion.completion_keys_by_profession
+    if ($completionKeys -isnot [pscustomobject]) {
+        Add-Error $errors 'HG_E_DRAGON_OLD_TIDE route completion keys must be an object'
+    }
+    else {
+        $expectedRouteKeys = [ordered]@{
+            C01 = @('C01_ROUTE_LV8_core')
+            C02 = @('C02_ROUTE_LV8_core')
+            C03 = @('C03_ROUTE_LV8_core')
+            C04 = @('C04_ROUTE_LV8_hunt','C04_ROUTE_LV8_wind','C04_ROUTE_LV8_bind')
+        }
+        foreach ($professionId in $expectedRouteKeys.Keys) {
+            $actualProperty = $completionKeys.PSObject.Properties[$professionId]
+            if ($null -eq $actualProperty -or -not (Test-JsonArray $actualProperty.Value)) {
+                Add-Error $errors "HG_E_DRAGON_OLD_TIDE route completion keys missing array for $professionId"
+                continue
+            }
+            if ((@($actualProperty.Value) -join '|') -ne (@($expectedRouteKeys[$professionId]) -join '|')) {
+                Add-Error $errors "HG_E_DRAGON_OLD_TIDE route completion keys differ for $professionId"
+            }
+        }
+    }
+}
+
 foreach ($name in $executionGateNames) {
     $property = $executionGates.PSObject.Properties[$name]
     if ($null -eq $property -or $null -eq $property.Value -or ($property.Value -is [bool] -and -not $property.Value)) {

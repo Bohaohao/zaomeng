@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "targetSkill": "y3-object-config",
+  "systemOwner": "y3-lua-api",
+  "project": "造梦 ORPG 成长系统",
+  "goal": "在真实 Y3 工程接入后，规范化装备、法宝、材料和龙蛋等 item 资产，以及宠物的 unit + ability 资产；货币账本和掉落 profile 由同步系统数据承接，不生成物编对象。本交接不授权分配真实 ID。",
+  "knownAssetFamilies": [
+    "五品质装备：普通、精良、稀有、史诗、传说",
+    "强化石、进阶石、主城 BOSS 材料、法宝材料、宠物相性材料",
+    "龙王一阶/二阶法宝与牛魔号角",
+    "龙蛋等孵化材料 item 资产",
+    "成长型宠物龙与白牛的 unit + ability 资产方向"
+  ],
+  "requiredRecordFields": {
+    "itemAsset": ["record_key", "object_type=item", "status", "chapter", "design_role", "source_doc", "dependencies", "y3_fields", "runtime_fields", "acceptance"],
+    "petUnit": ["record_key", "object_type=unit", "status", "chapter", "design_role", "source_doc", "dependencies", "y3_fields", "runtime_fields", "acceptance"],
+    "petAbility": ["record_key", "object_type=ability", "status", "source_doc", "dependencies", "y3_fields", "runtime_fields", "acceptance"],
+    "systemData": ["record_type=currency_ledger|drop_policy", "stable_key", "schema_version", "owner_scope", "resource_table_version", "source_or_sink_or_qualification", "event_ledger", "audit_fields"]
+  },
+  "runtimeFields": {
+    "itemAsset": ["item_category", "equipment_slot", "quality", "profession_limit", "level_requirement", "fixed_affixes", "random_affix_pool", "strengthen_rule", "advance_rule", "synthesis_recipe", "drop_profile_ref", "bind_rule", "storage_rule"],
+    "petUnit": ["pet_key", "affinity", "growth_profile", "hatch_recipe", "pet_ability_keys", "storage_rule"],
+    "systemData": ["currency_key", "balance_cap", "sources", "sinks", "drop_profile_key", "qualification_policy", "pity_policy", "pity_progress", "drop_receipt_ledger", "owner_scope"]
+  },
+  "blockingDecisions": [
+    "装备部位、词条、强化/进阶/套装数值",
+    "法宝与宠物槽位、配方、成长与绑定",
+    "货币稳定键与账本",
+    "掉率、保底、分配和参与箱资格",
+    "真实 Y3 ID、模板、图标、模型和字段枚举"
+  ],
+  "safety": [
+    "HG_DROP_* 当前全部 deferred，只能作为系统 drop_policy 来源键，不能生成掉落物品或概率。",
+    "货币账本和掉落 profile 不得伪装成 object_type=item；宠物本体不得伪装成物品。",
+    "不得用有效参与或 DPS 荣誉自动授予稀有资格。",
+    "不得将数值成长、技能点、装备/法宝/宠物强度引入商业化字段。"
+  ]
+}

@@ -225,6 +225,16 @@ try {
     $manifest.projectiles[0].object_fields | Add-Member -NotePropertyName move_channel -NotePropertyValue 9 -Force
     Assert-PreflightRejects $manifest 'invalid-projectile-enum' 'object_fields move_channel must be one of:'
 
+    $manifest = Read-Manifest
+    $oldTide = @($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_DRAGON_OLD_TIDE' })[0]
+    $oldTide.runtime_fields.route_completion.trial_seconds = 59
+    Assert-PreflightRejects $manifest 'old-tide-route-duration' 'HG_E_DRAGON_OLD_TIDE route completion trial_seconds must be 60'
+
+    $manifest = Read-Manifest
+    $oldTide = @($manifest.encounters | Where-Object { $_.record_key -eq 'HG_E_DRAGON_OLD_TIDE' })[0]
+    $oldTide.runtime_fields.route_completion.completion_keys_by_profession.C04 = @('C04_ROUTE_LV8_hunt','C04_ROUTE_LV8_wind')
+    Assert-PreflightRejects $manifest 'old-tide-route-c04-key-drift' 'HG_E_DRAGON_OLD_TIDE route completion keys differ for C04'
+
     $publicBossAnchors = @(
         [pscustomobject]@{ Encounter = 'HG_E_MOUNTAIN_PATH'; Resource = 'arena_gorilla'; Role = 'major_elite_anchor' },
         [pscustomobject]@{ Encounter = 'HG_E_PEACH_GROVE'; Resource = 'arena_yurongwang'; Role = 'major_elite_anchor' },

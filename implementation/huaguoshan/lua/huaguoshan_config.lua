@@ -209,7 +209,16 @@ M.encounters = {
         resources = { 'pt_longgong_entry', 'pt_hg_teleport_hub' },
         deadline_seconds = 720, return_point = 'pt_hg_teleport_hub', boss_unit_key = 'HG_U_DRAGON_KING_P1',
         break_profile = { threshold = 11, window_seconds = 4 },
-        unlock_rule = 'longgong_discovered_and_level_at_least_8',
+        discovery_rule = 'longgong_discovered_and_level_at_least_8',
+        unlock_rule = 'longgong_discovered_and_level_at_least_8_and_actor_current_profession_lv8_route_completed',
+        route_completion = {
+            scope = 'actor_current_profession', trial_seconds = 60,
+            completion_keys_by_profession = {
+                C01 = { 'C01_ROUTE_LV8_core' }, C02 = { 'C02_ROUTE_LV8_core' },
+                C03 = { 'C03_ROUTE_LV8_core' },
+                C04 = { 'C04_ROUTE_LV8_hunt', 'C04_ROUTE_LV8_wind', 'C04_ROUTE_LV8_bind' },
+            },
+        },
         instance_map_contract = 'pending',
         instance_map_contract_key = 'HG_I_DRAGON_FOUR_SEAS',
     },

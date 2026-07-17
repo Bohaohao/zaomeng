@@ -1,5 +1,6 @@
 -- Slot allocation and lifecycle cleanup for Dragon Palace and Ox Battlefield.
 local M = {}
+local Config = require 'huaguoshan_config'
 
 local OX_ENCOUNTER_KEY = 'HG_E_OX_BATTLEFIELD'
 
@@ -7,6 +8,7 @@ local DRAGON_PROGRESS_RULES = {
     HG_E_DRAGON_OLD_TIDE = {
         min_level = 8,
         discovery_key = 'dragon_palace_entrance',
+        route_completion = Config.encounters.HG_E_DRAGON_OLD_TIDE.route_completion,
         rejection = 'old-tide-progression-not-eligible',
     },
     HG_E_DRAGON_REVERSE_TIDE = {
@@ -40,6 +42,11 @@ local untrusted_authority_fields = {
     'cleanup_token',
     'completed_tick',
     'reason',
+    'profession_id',
+    'route_completion',
+    'route_key',
+    'route_attempt_id',
+    'route_completed',
 }
 
 local function append(list, value)
@@ -217,6 +224,7 @@ local function progression_query(request, rule)
             min_level = rule.min_level,
             discovery_key = rule.discovery_key,
             progression_key = rule.progression_key,
+            route_completion = copy_value(rule.route_completion),
         },
     }
 end

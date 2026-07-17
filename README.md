@@ -56,6 +56,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\run-all-pre
 - `implementation/test-run-all-preconstruction-integrity.ps1`、`implementation/run-all-professions.ps1`、花果山总入口及 `implementation/run-all-preconstruction.ps1` 已在本机重新通过；代码终审为 `APPROVE`，架构终审为非阻断 `WATCH`。
 - 全量离线验收结论仅覆盖离线契约；生产 ID、编辑器地图、真实脚本根和多人实机门禁仍保持关闭。
 
+### 成长系统规格归档（2026-07-17）
+
+- [成长系统规格整包归档](docs/归档/物编施工/02-成长系统规格整包归档.md) 已冻结等级/技能点、四职业属性、Lv8 路线、公共资格、长期状态与资产类型边界，并保留机器可读交接包。
+- 规格结构验证通过、完整性评分为 `100/100 (ready)`；经验、经济、装备/法宝/宠物数值、参与箱政策和目标会话时长仍明确待决。
+- 此归档不代表已实现完整成长 Lua、物编对象、存档、UI、编辑器接入或多人实机验证；既有花果山旧潮仅离线验证了向受信任进度端传递职业路线门槛，相关生产门禁保持关闭。
+
 ## 版本管理范围
 
 仓库保留正式策划文档、离线 Lua、测试、预施工规格及布局预览交付物；`.omx/`、`.omc/`、`.subagent-runs/`、本地缓存、日志和环境文件由 [`.gitignore`](.gitignore) 排除。
