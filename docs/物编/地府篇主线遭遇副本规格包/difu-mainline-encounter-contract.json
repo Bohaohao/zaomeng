@@ -1,0 +1,466 @@
+{
+  "schema_version": 1,
+  "package": "difu-mainline-encounter-spec",
+  "artifact_status": "offline-design-spec",
+  "status": "review-ready",
+  "production_gate": "closed",
+  "implementation_handoff": false,
+  "scope": {
+    "includes": [
+      "地府 Lv21-40 的章节主线、逻辑节点、遭遇主题与副本职责",
+      "阎罗殿与转轮殿的既有跨篇、团队清理合同引用",
+      "不含坐标的逻辑拓扑与未来地图回读清单",
+      "不含对象、Lua 或 UI 实现的下游交接边界"
+    ],
+    "excludes": [
+      "新的运行时 encounter、地图、对象、单位、技能、效果或投射物键",
+      "Y3 ID、地图根、资源键、坐标、尺寸、地形和编辑器操作",
+      "经验、货币、物品、掉落、概率、保底、波次、刷怪和奖励数值",
+      "implementation/difu、implementation/growth、Lua、物编脚本、UI JSON 与实机验收"
+    ]
+  },
+  "source_refs": [
+    "docs/04-v1.0首发内容范围.md:39-55",
+    "docs/05-后续扩展与待定问题.md:64-67",
+    "docs/06-造梦1-3参考核对与整合建议.md:84-101,124-147",
+    "docs/10-项目统一世界观总纲.md:81-89,125-129,204-212",
+    "docs/02-公共野外与副本规则.md:77-104,106-134",
+    "docs/全局设计基线.md:71-72,107-113",
+    "docs/物编/18-成长系统进度、掉落与长期目标契约.md:23-58,162-167,220-225",
+    "docs/物编/地府篇前置接口包/cross-chapter-interface.json:32-177"
+  ],
+  "contract_sync": {
+    "preflight_contract_path": "docs/物编/地府篇前置接口包/cross-chapter-interface.json",
+    "required_values": {
+      "yanluo": {
+        "encounter_key": "DF_E_YANLUO_HALL",
+        "encounter_type": "non_team_normal_final",
+        "progression_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+        "writes_progression": true
+      },
+      "zhuanlun": {
+        "encounter_key": "DF_E_ZHUANLUN_HALL",
+        "encounter_type": "team_instance",
+        "writes_yanluo_progression": false,
+        "recovery_policy_key": "TEAM_INSTANCE_RETURN_TO_CHAPTER_INITIAL_SPAWN_V1"
+      },
+      "reverse_tide": {
+        "consumer_encounter_key": "HG_E_DRAGON_REVERSE_TIDE",
+        "minimum_level": 38,
+        "required_progression_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+        "trusted_query_required": true
+      }
+    }
+  },
+  "semantic_key_policy": {
+    "new_runtime_keys": [],
+    "internal_progression_consumers": [],
+    "node_identifiers_are_spec_local_only": true,
+    "side_instance_identifiers_are_spec_local_only": true,
+    "permitted_existing_encounter_keys": [
+      "DF_E_YANLUO_HALL",
+      "DF_E_ZHUANLUN_HALL"
+    ]
+  },
+  "chapter": {
+    "spec_chapter_id": "DF_CHAPTER_SPEC",
+    "spec_chapter_id_is_spec_local_only": true,
+    "level_band": {
+      "minimum": 21,
+      "maximum": 40
+    },
+    "central_question": "当轮回秩序被权力与煞气同时扭曲时，承命者应如何恢复流转而不把亡魂再度变成可被重置的工具？",
+    "narrative_resolution": "常规主线在阎罗殿确认并修复关键命册秩序；转轮殿保留为团队层面对轮回重置企图的挑战，不替代常规完成结果。",
+    "initial_spawn": {
+      "logical_role": "chapter_initial_spawn",
+      "real_resource_binding": null,
+      "binding_status": "deferred_real_map_readback"
+    }
+  },
+  "route_graph": {
+    "representation": "reference_sequence_and_nonphysical_paths",
+    "reference_sequence": [
+      "DF_NODE_GHOST_CITY",
+      "DF_NODE_WUCHANG_ALLEY",
+      "DF_NODE_GHOST_GATE",
+      "DF_NODE_GUIDING_COURT",
+      "DF_NODE_JUDGE_HALL",
+      "DF_NODE_YANLUO_HALL",
+      "DF_NODE_FORGET_RIVER",
+      "DF_NODE_NAIHE_BRIDGE",
+      "DF_NODE_WANGXIANG_TERRACE",
+      "DF_NODE_ZHUANLUN_HALL"
+    ],
+    "chapter_completion_path": [
+      "DF_NODE_GHOST_CITY",
+      "DF_NODE_WUCHANG_ALLEY",
+      "DF_NODE_GHOST_GATE",
+      "DF_NODE_GUIDING_COURT",
+      "DF_NODE_JUDGE_HALL",
+      "DF_NODE_YANLUO_HALL"
+    ],
+    "team_content_path": {
+      "endpoint_status": "fixed",
+      "fixed_endpoint": "DF_NODE_ZHUANLUN_HALL",
+      "deferred_route_nodes": [
+        "DF_NODE_FORGET_RIVER",
+        "DF_NODE_NAIHE_BRIDGE",
+        "DF_NODE_WANGXIANG_TERRACE"
+      ],
+      "reason": "转轮殿的团队副本终点职责已固定；忘川河、奈何桥、望乡台与通向该终点的物理连接、入口条件和地府内部前置仍不得从参考顺序推导。"
+    }
+  },
+  "content_nodes": [
+    {
+      "spec_id": "DF_NODE_GHOST_CITY",
+      "display_name": "鬼城",
+      "track": "chapter_completion",
+      "content_kind": "hub_safe_zone_and_public_route_origin",
+      "design_role": "以鬼城、轮回司、传送与法宝功能叙事建立地府的文明锚点和章节入口。",
+      "encounter_theme_tags": [
+        "守夜人",
+        "鬼灯",
+        "尸怪",
+        "秩序失灵"
+      ],
+      "decision_status": "offline_design",
+      "source_refs": [
+        "docs/04-v1.0首发内容范围.md:47-53",
+        "docs/06-造梦1-3参考核对与整合建议.md:84-90",
+        "docs/10-项目统一世界观总纲.md:204-212"
+      ],
+      "contract_dependency": "none",
+      "unresolved": [
+        "真实初始出生点、NPC 位置、传送落点与公共路线边界必须由地图工程回读。"
+      ]
+    },
+    {
+      "spec_id": "DF_NODE_WUCHANG_ALLEY",
+      "display_name": "无常巷",
+      "track": "chapter_completion",
+      "content_kind": "public_route_or_elite_encounter",
+      "design_role": "以黑白无常的双目标和协同压力，把入口教学提升为可读的多人遭遇主题。",
+      "encounter_theme_tags": [
+        "双目标",
+        "协同压力",
+        "失控鬼差"
+      ],
+      "decision_status": "offline_design",
+      "source_refs": [
+        "docs/06-造梦1-3参考核对与整合建议.md:91,124-125,133",
+        "docs/归档/地图设计/11-世界篇章与地图扩展蓝图.md:100-103"
+      ],
+      "contract_dependency": "must_not_become_team_instance_without_new_decision",
+      "unresolved": [
+        "首发落位是公共精英、常规路线还是其他内容形态尚未裁决。"
+      ]
+    },
+    {
+      "spec_id": "DF_NODE_GHOST_GATE",
+      "display_name": "鬼门关",
+      "track": "chapter_completion",
+      "content_kind": "public_route_gate_conflict",
+      "design_role": "以关隘守卫、牛头马面和门关压力把玩家从鬼城带入审判主线。",
+      "encounter_theme_tags": [
+        "关隘",
+        "冲锋拉扯",
+        "守卫"
+      ],
+      "decision_status": "offline_design",
+      "source_refs": [
+        "docs/06-造梦1-3参考核对与整合建议.md:92,125"
+      ],
+      "contract_dependency": "none",
+      "unresolved": [
+        "公共 BOSS、普通路线与任务节点的最终拆分待地图和遭遇评审。"
+      ]
+    },
+    {
+      "spec_id": "DF_NODE_GUIDING_COURT",
+      "display_name": "接引院",
+      "track": "chapter_completion",
+      "content_kind": "story_checkpoint",
+      "design_role": "将失序亡魂的去向从单纯通关目标转为需要玩家理解和介入的官署冲突。",
+      "encounter_theme_tags": [
+        "接引",
+        "第一殿节点",
+        "叙事转折"
+      ],
+      "decision_status": "offline_design",
+      "source_refs": [
+        "docs/06-造梦1-3参考核对与整合建议.md:93"
+      ],
+      "contract_dependency": "none",
+      "unresolved": [
+        "该节点的公共区或实例归属尚未定义。"
+      ]
+    },
+    {
+      "spec_id": "DF_NODE_JUDGE_HALL",
+      "display_name": "判官殿",
+      "track": "chapter_completion",
+      "content_kind": "story_checkpoint_and_encounter_theme",
+      "design_role": "用审判、负面状态和判定主题完成中段升级，使玩家面对秩序本身也可能伤人的矛盾。",
+      "encounter_theme_tags": [
+        "审判",
+        "负面状态",
+        "判定",
+        "控制"
+      ],
+      "decision_status": "offline_design",
+      "source_refs": [
+        "docs/06-造梦1-3参考核对与整合建议.md:94,125,134"
+      ],
+      "contract_dependency": "none",
+      "unresolved": [
+        "审判规则只保留主题；状态对象、阈值、时长与净化规则尚未进入本包。"
+      ]
+    },
+    {
+      "spec_id": "DF_NODE_YANLUO_HALL",
+      "display_name": "阎罗殿",
+      "track": "chapter_completion",
+      "content_kind": "non_team_normal_final",
+      "design_role": "作为地府常规篇章的叙事高潮和唯一跨篇完成生产者，确认命册失序的关键事实。",
+      "encounter_theme_tags": [
+        "常规最终",
+        "命册",
+        "审判高潮"
+      ],
+      "decision_status": "fixed",
+      "source_refs": [
+        "docs/04-v1.0首发内容范围.md:52-55",
+        "docs/06-造梦1-3参考核对与整合建议.md:95,101,145",
+        "docs/物编/地府篇前置接口包/cross-chapter-interface.json:39-44,57-85"
+      ],
+      "contract_dependency": "DF_E_YANLUO_HALL_is_the_only_writer_of_DF_PROGRESS_YANLUO_HALL_CLEARED",
+      "unresolved": [
+        "入口、实例容量、失败流程、地图合同、Boss 对象和战斗参数尚未定义。"
+      ]
+    },
+    {
+      "spec_id": "DF_NODE_FORGET_RIVER",
+      "display_name": "忘川河",
+      "track": "team_content_reference",
+      "content_kind": "environmental_route_theme",
+      "design_role": "保留魂河、污染与环境路线压力的内容主题，作为团队内容或后续落位的参考素材。",
+      "encounter_theme_tags": [
+        "魂河",
+        "环境压力",
+        "减速或污染主题"
+      ],
+      "decision_status": "deferred",
+      "source_refs": [
+        "docs/06-造梦1-3参考核对与整合建议.md:96,127",
+        "docs/归档/地图设计/11-世界篇章与地图扩展蓝图.md:100,104"
+      ],
+      "contract_dependency": "must_not_consume_or_write_DF_PROGRESS_YANLUO_HALL_CLEARED_without_new_decision",
+      "unresolved": [
+        "是否属于转轮殿前导、公共路线或后续内容尚未裁决。"
+      ]
+    },
+    {
+      "spec_id": "DF_NODE_NAIHE_BRIDGE",
+      "display_name": "奈何桥",
+      "track": "team_content_reference",
+      "content_kind": "public_route_or_team_prelude_theme",
+      "design_role": "保留狭窄空间、击退和冲锋带来的站位压力，避免将原横版桥面直接照搬为地图施工。",
+      "encounter_theme_tags": [
+        "狭窄空间",
+        "击退",
+        "冲锋",
+        "桥面压力"
+      ],
+      "decision_status": "deferred",
+      "source_refs": [
+        "docs/04-v1.0首发内容范围.md:49-51",
+        "docs/06-造梦1-3参考核对与整合建议.md:97,127,143"
+      ],
+      "contract_dependency": "must_not_become_a_physical_map_or_internal_progression_gate_in_this_package",
+      "unresolved": [
+        "公共野外外缘与团队前导的关系、实际空间尺度和机制参数尚未定义。"
+      ]
+    },
+    {
+      "spec_id": "DF_NODE_WANGXIANG_TERRACE",
+      "display_name": "望乡台",
+      "track": "team_content_reference",
+      "content_kind": "deferred_challenge_theme",
+      "design_role": "保留控制、遗忘和梦境主题，作为可选挑战的叙事张力来源而非已冻结副本分类。",
+      "encounter_theme_tags": [
+        "控制",
+        "遗忘",
+        "梦境"
+      ],
+      "decision_status": "deferred",
+      "source_refs": [
+        "docs/06-造梦1-3参考核对与整合建议.md:98,134",
+        "docs/归档/地图设计/11-世界篇章与地图扩展蓝图.md:100"
+      ],
+      "contract_dependency": "must_not_become_a_non_team_or_team_instance_without_new_decision",
+      "unresolved": [
+        "单人、小队或其他内容形态尚未决定。"
+      ]
+    },
+    {
+      "spec_id": "DF_NODE_ZHUANLUN_HALL",
+      "display_name": "转轮殿",
+      "track": "team_content",
+      "content_kind": "team_instance",
+      "design_role": "作为地府唯一首发团队本，以多阶段轮回重置企图构成团队终局，但不改变常规主线已由阎罗殿完成的事实。",
+      "encounter_theme_tags": [
+        "团队终局",
+        "多阶段",
+        "轮回重置"
+      ],
+      "decision_status": "fixed",
+      "source_refs": [
+        "docs/04-v1.0首发内容范围.md:52-55",
+        "docs/06-造梦1-3参考核对与整合建议.md:99,101,146",
+        "docs/物编/地府篇前置接口包/cross-chapter-interface.json:32-37,79-85,89-122"
+      ],
+      "contract_dependency": "DF_E_ZHUANLUN_HALL_uses_team_cleanup_contract_and_never_writes_DF_PROGRESS_YANLUO_HALL_CLEARED",
+      "unresolved": [
+        "入口前置、地图合同、Boss 对象、阶段参数和实机协作节奏尚未定义。"
+      ]
+    }
+  ],
+  "side_instance_roles": [
+    {
+      "spec_id": "DF_SIDE_BAIGU_SECRET_REALM",
+      "spec_id_is_spec_local_only": true,
+      "display_name": "白骨秘境",
+      "content_kind": "solo_instance",
+      "design_role": "地府首发独立单人副本，承载白骨与多形态挑战主题，但不替代阎罗殿的常规最终职责。",
+      "decision_status": "fixed",
+      "source_refs": [
+        "docs/04-v1.0首发内容范围.md:52-52",
+        "docs/06-造梦1-3参考核对与整合建议.md:107-107,144-144",
+        "docs/10-项目统一世界观总纲.md:209-209"
+      ],
+      "cross_chapter_progression": {
+        "writes_yanluo_progression": false,
+        "consumes_yanluo_progression": false
+      },
+      "economic_boundary": {
+        "production_reward_output": false,
+        "numeric_reward_definition": false
+      },
+      "unresolved": [
+        "隐藏或非隐藏入口的可见性、实际入口、时长、阶段、对象、奖励资格与数值均未裁决。"
+      ]
+    }
+  ],
+  "encounter_theme_catalog": [
+    {
+      "spec_id": "DF_THEME_ENTRY_ORDER_FAILURE",
+      "applies_to": [
+        "DF_NODE_GHOST_CITY",
+        "DF_NODE_WUCHANG_ALLEY"
+      ],
+      "design_only": true,
+      "intent": "从鬼灯、尸怪与失控鬼差建立轮回行政失灵的可读压力。"
+    },
+    {
+      "spec_id": "DF_THEME_DUAL_TARGET",
+      "applies_to": [
+        "DF_NODE_WUCHANG_ALLEY"
+      ],
+      "design_only": true,
+      "intent": "以双目标或协同主题迫使玩家处理优先级，而非把其直接定义为团队副本。"
+    },
+    {
+      "spec_id": "DF_THEME_GATE_PRESSURE",
+      "applies_to": [
+        "DF_NODE_GHOST_GATE"
+      ],
+      "design_only": true,
+      "intent": "以关隘和守卫体现进入审判体系的阻力。"
+    },
+    {
+      "spec_id": "DF_THEME_JUDGMENT",
+      "applies_to": [
+        "DF_NODE_GUIDING_COURT",
+        "DF_NODE_JUDGE_HALL",
+        "DF_NODE_YANLUO_HALL"
+      ],
+      "design_only": true,
+      "intent": "以接引、判定和命册冲突形成因果递进，不生成状态对象或数值。"
+    },
+    {
+      "spec_id": "DF_THEME_RIVER_AND_BRIDGE",
+      "applies_to": [
+        "DF_NODE_FORGET_RIVER",
+        "DF_NODE_NAIHE_BRIDGE"
+      ],
+      "design_only": true,
+      "intent": "保留环境路线、站位与移动压力，等待真实空间和同步边界确认。"
+    },
+    {
+      "spec_id": "DF_THEME_MEMORY_AND_REBIRTH",
+      "applies_to": [
+        "DF_NODE_WANGXIANG_TERRACE",
+        "DF_NODE_ZHUANLUN_HALL"
+      ],
+      "design_only": true,
+      "intent": "将遗忘、梦境和轮回重置作为团队内容的叙事张力，而非未批准的内部解锁条件。"
+    }
+  ],
+  "economic_boundary": {
+    "reward_source_categories": [
+      "章节里程碑",
+      "公共遭遇",
+      "单人副本完成",
+      "常规最终完成",
+      "团队本完成"
+    ],
+    "production_economy_output": false,
+    "decision_source": "docs/物编/成长数值与经济裁决包/README.md",
+    "rule": "本包只描述来源类别；资格、物品、货币、经验、掉落、概率、保底、数量与资源吞吐全部保持 deferred。"
+  },
+  "deferred": {
+    "real_map_root": null,
+    "chapter_initial_spawn_resource": null,
+    "physical_topology": null,
+    "object_records": null,
+    "boss_phase_parameters": null,
+    "instance_entry_prerequisites": null,
+    "reward_tables": null,
+    "persistence_implementation": null,
+    "runtime_implementation": null,
+    "ui_implementation": null,
+    "multiplayer_playtest": null
+  },
+  "forbidden_field_names": [
+    "y3_id",
+    "y3_ids",
+    "map_resource_key",
+    "map_path",
+    "coordinate",
+    "coordinates",
+    "terrain_cell",
+    "unit_id",
+    "ability_id",
+    "effect_id",
+    "projectile_id",
+    "item_id",
+    "reward_exp",
+    "reward_amount",
+    "currency_amount",
+    "currency_key",
+    "item_key",
+    "item_amount",
+    "drop_probability",
+    "pity_threshold",
+    "wave_count",
+    "spawn_count",
+    "deadline_seconds"
+  ],
+  "validation_contract": {
+    "validator": "validate-difu-mainline-spec.ps1",
+    "strict_schema": true,
+    "source_refs_must_resolve": true,
+    "negative_tests_required": true,
+    "cross_contract_check": "docs/物编/地府篇前置接口包/validate-difu-huaguoshan-contract.ps1"
+  }
+}

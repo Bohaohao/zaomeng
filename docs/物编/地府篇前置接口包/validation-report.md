@@ -2,18 +2,20 @@
 
 ## 结果
 
-验证日期：`2026-07-17`
+验证日期：`2026-07-20`
 
 | 检查 | 结果 | 证据 |
 |---|---|---|
 | JSON 解析 | 通过 | `cross-chapter-interface.json`、`design-spec.json` 均可由 PowerShell `ConvertFrom-Json` 解析。 |
-| 严格接口校验 | 通过 | `validate-underworld-preflight.ps1` 返回 `ok=true`、`0` errors。 |
+| 严格接口校验 | 通过 | `validate-underworld-preflight.ps1` 返回 `ok=true`、`0` errors，并通过 `7/7` 负例。 |
 | 负例：非空生产值 | 通过 | 向 `production_value` 注入 `1`，被 `non_null_nonproduction_value` 拒绝。 |
 | 负例：伪造 Y3 ID | 通过 | 注入 `y3_id`，被 `forbidden_production_field` 拒绝。 |
 | 负例：工作区外来源 | 通过 | 注入绝对来源， 被 `non_relative_source_ref` 拒绝。 |
 | 负例：非规范进度键 | 通过 | 把逆潮完成键改为 `underworld_late`，被 `fixed_value_mismatch` 拒绝。 |
 | 负例：离场复活/回传 | 通过 | 把 `left_behavior` 改为复活回传，被 `fixed_value_mismatch` 拒绝。 |
 | 负例：清理确认身份顺序 | 通过 | 改写 `raid_instance_id + session_epoch + cleanup_token` 身份字段顺序，被 `fixed_array_mismatch` 拒绝。 |
+| 负例：非写入者集合漂移 | 通过 | 将白骨秘境替换为 `DF_E_YANLUO_HALL`，被 `fixed_array_mismatch` 拒绝，保持阎罗殿的唯一写入者语义。 |
+| 地府—花果山静态镜像校验 | 通过 | `validate-difu-huaguoshan-contract.ps1` 只读比对接口、花果山 manifest、地图绑定与 Lua 文本；`0` errors、`20/20` 镜像与固定合同负例均通过。 |
 | Normalizer 校验 | 通过 | `0` errors；保留 `missing_duration` 警告，因为本前置接口包不定义生产会话时长。 |
 | Normalizer 完整度 | `100/100 ready` | 仅表示规划结构可交接；不表示地府内容、Y3 接入或生产门禁已开放。 |
 

@@ -29,12 +29,14 @@
 | [cross-chapter-interface.json](cross-chapter-interface.json) | 唯一机器可读接口契约与非生产证据协议 |
 | [design-spec.json](design-spec.json) | Y3 规划层交接视图；不替代接口契约 |
 | [validate-underworld-preflight.ps1](validate-underworld-preflight.ps1) | 严格验证固定决策、非生产边界、来源与负例 |
+| [validate-difu-huaguoshan-contract.ps1](validate-difu-huaguoshan-contract.ps1) | 只读静态比对地府接口与花果山 manifest、绑定和 Lua 配置镜像；不执行 Lua，不替代行为回归 |
 | [validation-report.md](validation-report.md) | 本包最新离线验证记录 |
 
 执行：
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\地府篇前置接口包\validate-underworld-preflight.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\地府篇前置接口包\validate-difu-huaguoshan-contract.ps1
 ```
 
 随后使用 `y3-design-spec-normalizer` 的 `validate-design-spec.ps1` 与 `score-spec-completeness.ps1` 检查规划视图。其完整度分数只说明结构可交接，不解除任何生产门禁。

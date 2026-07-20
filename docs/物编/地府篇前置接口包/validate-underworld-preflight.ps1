@@ -60,6 +60,11 @@ function Assert-ExactStringArray {
     }
 }
 
+function ConvertFrom-UnicodeCodePoints {
+    param([int[]]$Points)
+    return -join @($Points | ForEach-Object { [char]$_ })
+}
+
 function Read-JsonFile {
     param([string]$Path, [System.Collections.Generic.List[object]]$Errors, [string]$IssuePath)
     if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { Add-Issue $Errors 'file_not_found' $IssuePath "File not found: $Path"; return $null }
@@ -163,8 +168,14 @@ function Test-InterfaceContract {
     Assert-ExactStringArray $Contract.progression_contract.required_receipt_fields $Receipt 'contract.progression_contract.required_receipt_fields' $Errors
     Assert-ExactStringArray $Contract.progression_contract.idempotency_key_fields @('actor_id','event_id') 'contract.progression_contract.idempotency_key_fields' $Errors
     Assert-ExactString $Contract.progression_contract.write_condition 'same_actor_completed_yanluo_hall_with_authoritative_success_receipt' 'contract.progression_contract.write_condition' $Errors
-    $NonWriters = ConvertTo-StringArray $Contract.progression_contract.non_writer_sources
-    if ($NonWriters.Count -ne 5 -or $NonWriters -notcontains 'DF_E_ZHUANLUN_HALL' -or @($NonWriters | Where-Object { [string]::IsNullOrWhiteSpace($_) }).Count -gt 0) { Add-Issue $Errors 'invalid_non_writer_sources' 'contract.progression_contract.non_writer_sources' 'Expected five non-writer sources including DF_E_ZHUANLUN_HALL.' }
+    $ExpectedNonWriterSources = @(
+        'DF_E_ZHUANLUN_HALL',
+        (ConvertFrom-UnicodeCodePoints @(0x767D,0x9AA8,0x79D8,0x5883)),
+        (ConvertFrom-UnicodeCodePoints @(0x5BA2,0x6237,0x7AEF,0x5E03,0x5C14,0x503C)),
+        (ConvertFrom-UnicodeCodePoints @(0x961F,0x4F0D,0x9886,0x961F,0x6216,0x961F,0x53CB,0x8FDB,0x5EA6)),
+        (ConvertFrom-UnicodeCodePoints @(0x4E16,0x754C,0x72B6,0x6001))
+    )
+    Assert-ExactStringArray $Contract.progression_contract.non_writer_sources $ExpectedNonWriterSources 'contract.progression_contract.non_writer_sources' $Errors
     Assert-Null $Contract.progression_contract.production_value 'contract.progression_contract.production_value' $Errors
     Assert-Null $Contract.progression_contract.candidate_value 'contract.progression_contract.candidate_value' $Errors
 
@@ -245,7 +256,8 @@ function Invoke-NegativeTests {
         [pscustomobject]@{ name = 'invalid_source_ref'; expected_code = 'non_relative_source_ref'; mutate = { param($Copy) $Copy.source_refs[0] = '/outside.md:1' } },
         [pscustomobject]@{ name = 'wrong_progression_key'; expected_code = 'fixed_value_mismatch'; mutate = { param($Copy) $Copy.fixed_decisions.reverse_tide_unlock.required_progression_key = 'underworld_late' } },
         [pscustomobject]@{ name = 'wrong_left_behavior'; expected_code = 'fixed_value_mismatch'; mutate = { param($Copy) $Copy.recovery_contract.member_death.left_behavior = 'revive_and_return' } },
-        [pscustomobject]@{ name = 'wrong_cleanup_ack_identity'; expected_code = 'fixed_array_mismatch'; mutate = { param($Copy) $Copy.recovery_contract.cleanup_ack_identity_fields = @('session_epoch','raid_instance_id','cleanup_token') } }
+        [pscustomobject]@{ name = 'wrong_cleanup_ack_identity'; expected_code = 'fixed_array_mismatch'; mutate = { param($Copy) $Copy.recovery_contract.cleanup_ack_identity_fields = @('session_epoch','raid_instance_id','cleanup_token') } },
+        [pscustomobject]@{ name = 'non_writer_source_drift'; expected_code = 'fixed_array_mismatch'; mutate = { param($Copy) $Copy.progression_contract.non_writer_sources[1] = 'DF_E_YANLUO_HALL' } }
     )
     foreach ($Case in $Cases) {
         $Copy = Copy-JsonObject $Contract; & $Case.mutate $Copy; $CaseErrors = New-IssueList; Test-InterfaceContract $Copy $ProjectRoot $CaseErrors
