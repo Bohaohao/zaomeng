@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "offline_api_isolation_only",
+  "compatibility_baseline_available": false,
+  "real_map_script_root_integrated": false,
+  "repository": "https://github.com/y3-editor/y3-lualib.git",
+  "branch": "main",
+  "commit": "fe2fb0e55a76f73490cdcbef8cbfe7a61d124d63",
+  "refreshed_on": "2026-07-21",
+  "scope": "Offline growth simulation only. No real Y3 map script root or Y3 API compatibility records are integrated.",
+  "modules": {},
+  "events": []
+}

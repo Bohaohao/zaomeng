@@ -1,4 +1,4 @@
-﻿{
+{
     "version":  1,
     "targetSkill":  "y3-object-config",
     "project":  {
@@ -44,15 +44,15 @@
                                         "宠物材料"
                                     ],
                           "economy":  [
-                                          "候选 CUR_GOLD、CUR_TOWER_TOKEN、CUR_RAID_MARK",
-                                          "版本化 currency ledger、drop receipt、pity progress",
-                                          "HG_DROP 来源键全部 deferred",
-                                          "公共 Boss 参与箱 P1 的两条现存口径与第三候选均待唯一政策采纳"
+                                          "已冻结 CUR_GOLD、CUR_TOWER_TOKEN、CUR_RAID_MARK 的角色归属、余额上限、无交易与无团队钱包边界",
+                                          "economy-v2 版本化 currency ledger、终态 receipt、drop receipt、pity progress、周额度计数与前进迁移契约",
+                                          "21 个花果山 HG_DROP profile、两条角色保底池和重复转化由 economy-v2 唯一提供设计数值",
+                                          "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION 是唯一公共参与箱政策，且是三个公共 profile 的唯一基础包路径；团队稀有资格使用独立 TEAM_RAID_RARE_ELIGIBILITY_V1"
                                       ],
                           "progression":  [
                                               "Lv1-Lv60 三篇成长",
                                               "装备、法宝、宠物、收集与塔层长期目标",
-                                              "经验表、装备数值和塔奖励尚待数值裁决"
+                                              "economy-v2 已冻结 Lv1-Lv60 曲线、来源预算和通天塔首轮奖励；装备、法宝、宠物、塔楼层/词缀/赛季仍待数值或内容裁决"
                                           ]
                       },
     "handoffNotes":  [
@@ -61,13 +61,11 @@
                      ],
     "unresolved":  [
                        "项目级目标游玩会话时长。",
-                       "Lv1-Lv60 经验阈值、来源权重、组队分配、级差、死亡和重连规则。",
                        "装备部位、职业限制、词条、强化/进阶/套装、材料吞吐和重复转化。",
                        "法宝/宠物槽位、配方、孵化、绑定、成长与数值。",
-                       "参与箱 P1 的唯一 final_policy_id。",
-                       "货币最终稳定键、余额上限、来源、消耗、兑换、保留期和迁移期限。",
-                       "掉率、稀有资格、保底阈值、重复收益和团队分配。",
-                       "通天塔记录、楼层、词缀、奖励、最终层数和赛季。",
+                       "地府与天庭按 economy-v2 来源预算分配到具体 source_profile、次数和舍入汇总的表。",
+                       "货币的兑换目录、服务消耗和法定数据删除保留期。",
+                       "通天塔楼层、词缀、兑换目录、最终层数和赛季。",
                        "独立全角色境界系统是否存在。"
                    ]
 }

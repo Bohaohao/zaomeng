@@ -7,6 +7,13 @@
   "effective_value": null,
   "runtime_handoff": false,
   "production_gate": "closed",
+  "historical_evidence_status": "superseded-calibration-inputs-retained",
+  "current_baseline_reference": {
+    "resource_table_version": "economy-v2",
+    "table_path": "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json",
+    "decision_register_path": "docs/物编/成长数值与经济裁决包/decision-register.json",
+    "boundary": "This candidate-only artifact preserves pre-adoption evidence and must not override, compile, or issue rewards from the current economy-v2 design baseline."
+  },
   "purpose": "将已采纳结构、白盒观测、未验证假设和待实测输出拆开，为经验、成长成本、资源吞吐和失败循环建立采样与审阅边界；本文件不包含生产经验、货币、材料、概率或保底数值。",
   "source_catalog": [
     {
@@ -19,8 +26,8 @@
         "docs/物编/成长数值与经济裁决包/decision-register.json:8-37"
       ],
       "source_file_hashes": [
-        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "C4BCDD6190FE416672BF2E0020757CA52D4F47C15A293CD9AFF4E59A77CE428A"},
-        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "F7DEA4C82F84617644D5397D7A5BCA2A387C3502DFACBC20BB68C6FADB6B6E16"}
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "561397F9DC846A18B14AF54048127CEEEDF90154D6C700ECCAF43687C3049592"},
+        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "4A065268B609445EC92583B8C8B1DCB066AB5BF7F3B976FFAF5BC8A397AECBDE"}
       ],
       "permitted_use": [
         "Lv60 上限、三篇等级段和关键等级检查点的边界校验",
@@ -42,7 +49,7 @@
       ],
       "source_file_hashes": [
         {"path": "docs/物编/成长数值与经济裁决包/tables/experience-progression.json", "sha256": "E0141B3C1FCEFCD49C2BD11B20DB742E5D95CD04EFE1C19CF52675E8B1528330"},
-        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "C4BCDD6190FE416672BF2E0020757CA52D4F47C15A293CD9AFF4E59A77CE428A"}
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "561397F9DC846A18B14AF54048127CEEEDF90154D6C700ECCAF43687C3049592"}
       ],
       "permitted_use": [
         "定义经验表必须拥有的字段、收据和可追溯性",
@@ -108,7 +115,7 @@
         "docs/物编/成长数值与经济裁决包/tables/currency-ledger.json:1-98"
       ],
       "source_file_hashes": [
-        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "F7DEA4C82F84617644D5397D7A5BCA2A387C3502DFACBC20BB68C6FADB6B6E16"},
+        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "4A065268B609445EC92583B8C8B1DCB066AB5BF7F3B976FFAF5BC8A397AECBDE"},
         {"path": "docs/物编/成长数值与经济裁决包/tables/currency-ledger.json", "sha256": "62AB827A5545213412DE624E183A83A09AC9C0CBCC3D8E98315D2ED16A2C6A23"}
       ],
       "permitted_use": [
@@ -131,7 +138,7 @@
       ],
       "source_file_hashes": [
         {"path": "docs/物编/成长数值与经济裁决包/tables/drop-and-pity.json", "sha256": "C2D0350D16C692E8E523AA81089C126F0C4585B1FED4435E2F9CFD5253429202"},
-        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "C4BCDD6190FE416672BF2E0020757CA52D4F47C15A293CD9AFF4E59A77CE428A"}
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "561397F9DC846A18B14AF54048127CEEEDF90154D6C700ECCAF43687C3049592"}
       ],
       "permitted_use": [
         "保持荣誉、个人推进、参与箱、稀有资格、roll 和保底的分层采样",
@@ -154,8 +161,8 @@
       ],
       "source_file_hashes": [
         {"path": "implementation/huaguoshan/preconstruction-manifest.json", "sha256": "221384CF0D343FDF850C3CCC054859D31F7725AE11EDFA291FFE27C6BF6569C1"},
-        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "978B54F0569AD22D8F08122E448726021FCD2EB49C8677045C53F940006EA11F"},
-        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "F7DEA4C82F84617644D5397D7A5BCA2A387C3502DFACBC20BB68C6FADB6B6E16"}
+        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "5BF3723E50A21E3D12D81A946D038ABB626B925800100BF75B5B080C77564C76"},
+        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "4A065268B609445EC92583B8C8B1DCB066AB5BF7F3B976FFAF5BC8A397AECBDE"}
       ],
       "permitted_use": [
         "建立资格证据采样字段",
@@ -174,8 +181,8 @@
         "docs/物编/18-成长系统进度、掉落与长期目标契约.md:172,221"
       ],
       "source_file_hashes": [
-        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "978B54F0569AD22D8F08122E448726021FCD2EB49C8677045C53F940006EA11F"},
-        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "C4BCDD6190FE416672BF2E0020757CA52D4F47C15A293CD9AFF4E59A77CE428A"}
+        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "5BF3723E50A21E3D12D81A946D038ABB626B925800100BF75B5B080C77564C76"},
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "561397F9DC846A18B14AF54048127CEEEDF90154D6C700ECCAF43687C3049592"}
       ],
       "permitted_use": [
         "将 Lv8 路线所在的 10-15 分钟内容密度窗口作为软性审阅锚点",
@@ -246,25 +253,25 @@
     {
       "assumption_id": "ASM-ECON-SINK-001",
       "assumption_status": "unvalidated",
-      "statement": "成长成本只能先比较来源族与消耗族的相对闭环，不能假设物品键、装备部位、材料数量、价格或余额上限。",
+      "statement": "成长成本只能比较来源族与消耗族的相对闭环；即使 economy-v2 已冻结角色货币/材料键和上限，也不能据此假设装备部位、配方、材料数量或价格。",
       "basis_source_ids": ["SRC-ITEM-CONTRACT-001", "SRC-LEDGER-PROPOSAL-001"],
       "validation_method": "在对象、配方、材料键和候选账本所有者获得设计裁决后，按每个成长动作采集来源收据和消耗收据。",
-      "limitation": "装备、法宝、宠物与材料数值仍处于 deferred；候选货币键尚未采纳。"
+      "limitation": "装备、法宝、宠物与材料消耗数值仍处于 deferred；已冻结货币键不等于已冻结装备消耗或运行时余额。"
     },
     {
       "assumption_id": "ASM-P1-SETTLEMENT-001",
       "assumption_status": "unvalidated",
-      "statement": "公共 BOSS 可先采样资格证据，但在 P1 形成唯一 final_policy_id 前，不能计算参与箱、稀有资格、保底或人均资源吞吐。",
+      "statement": "公共 BOSS 的历史资格证据仍可采样，但采样不能覆盖 economy-v2 已冻结的唯一 P1；候选输出不得计算或改写参与箱、稀有资格、保底或人均资源吞吐。",
       "basis_source_ids": ["SRC-DROP-CONTRACT-001", "SRC-P1-CONFLICT-001"],
       "validation_method": "对同一 Boss 生命周期记录伤害、破韧、护守、完整行为、origin/window/event 三元组及重连重放；待裁决后再以唯一规则回放审阅。",
-      "limitation": "当前 manifest 与正文的参与箱口径互斥，且所有 HG_DROP profile 仍为 deferred。"
+      "limitation": "旧 manifest 与正文的历史口径仍可能互斥；它们只可作为证据，21 个 HG_DROP profile 的当前设计值以 economy-v2 为准且运行时仍关闭。"
     },
     {
       "assumption_id": "ASM-OX-RETRY-001",
       "assumption_status": "unvalidated",
       "statement": "牛魔团灭后的战斗压力可以单独测量；任何掉落、保底或货币补偿均需独立资源政策，不能由压力值反推。",
       "basis_source_ids": ["SRC-OX-RETRY-001", "SRC-DROP-CONTRACT-001"],
-      "validation_method": "记录每次团灭、后续战斗时长、属性压力和最终挑战结果；奖励字段保持空值，直到资源表与参与资格被采纳。",
+      "validation_method": "记录每次团灭、后续战斗时长、属性压力和最终挑战结果；候选奖励字段保持空值，不得以失败压力改写已冻结资源表或资格合同。",
       "limitation": "补偿数额、资格、掉率和保底机制均未定义。"
     }
   ],
@@ -337,8 +344,8 @@
       "assumption_ids": ["ASM-HG-COMBAT-SAMPLE-001", "ASM-P1-SETTLEMENT-001"],
       "scope": {
         "encounter_scope": "花果山公共 BOSS",
-        "qualification_scope": "资格证据采样，不是奖励结算",
-        "profile_scope": "HG_DROP profile 仍保持 deferred"
+        "qualification_scope": "历史资格证据采样，不是奖励结算",
+        "profile_scope": "HG_DROP profile 的当前设计值由 economy-v2 冻结；本场景不生成或改写结算"
       },
       "candidate_value": {
         "qualification_policy_id": null,
@@ -363,7 +370,7 @@
       ],
       "exclusions": [
         "effective_participant_ids、DPS 荣誉或 primary/assist 不可直接发放参与箱、稀有或保底",
-        "不激活任一 HG_DROP profile",
+        "不在候选场景内激活、发行或改写任一 HG_DROP profile",
         "不计算公共 BOSS 人均资源吞吐"
       ]
     },
@@ -381,7 +388,7 @@
       "scope": {
         "growth_actions": ["strengthen", "advance", "artifact", "pet"],
         "comparison_mode": "来源族与消耗族的相对闭环，不包含单价、余额或配方",
-        "owner_scope": "候选角色账本；尚未采纳"
+        "owner_scope": "economy-v2 已冻结角色账本边界；装备消耗与运行时账本仍未采纳"
       },
       "candidate_value": {
         "currency_candidate_key": null,
@@ -459,8 +466,8 @@
     }
   ],
   "global_forbidden_promotions": [
-    "任何候选不得写入 current baseline、18-20 或 implementation/growth",
-    "任何候选不得生成 Lua、Y3 物编、UI、货币余额、物品键或激活的资源表",
+    "任何候选不得写入或覆盖 economy-v2、18-20 或 implementation/growth/ 的生产/已采纳资源表",
+    "任何候选不得生成 Y3 Lua、Y3 物编、UI、生产货币余额、生产物品键或激活的资源表；独立纯 Lua 候选模拟只能停留在受信任离线测试边界",
     "任何候选不得以白盒字段、公共资格证据或内容密度参考替代采纳和实测"
   ]
 }

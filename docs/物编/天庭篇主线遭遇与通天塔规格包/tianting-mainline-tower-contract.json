@@ -1,0 +1,285 @@
+{
+  "version": 1,
+  "package_status": "offline-design-spec",
+  "production_gate": "closed",
+  "source_policy": {
+    "primary_baselines": [
+      "docs/全局设计基线.md",
+      "docs/物编/18-成长系统进度、掉落与长期目标契约.md",
+      "docs/物编/19-装备、法宝、宠物与材料物编规格.md",
+      "docs/物编/20-成长系统离线施工与Y3接入状态.md"
+    ],
+    "world_and_scope_sources": [
+      "docs/04-v1.0首发内容范围.md",
+      "docs/10-项目统一世界观总纲.md",
+      "docs/02-公共野外与副本规则.md"
+    ],
+    "economic_dependency_source": "docs/物编/成长数值与经济裁决包/decision-register.json",
+    "rule": "Only accepted or fixed facts are effective constraints. Proposal, deferred, conflict and whitebox-candidate values remain non-production."
+  },
+  "hard_constraints": {
+    "level_band": {
+      "decision_status": "accepted-baseline",
+      "min_level": 41,
+      "max_level": 60
+    },
+    "tower_entry": {
+      "decision_status": "accepted-baseline",
+      "minimum_level": 55,
+      "member_check": "every_solo_player_or_team_member_independently",
+      "loadout_rest_every_floors": 5
+    },
+    "tower_identity": {
+      "decision_status": "fixed",
+      "rule": "linglong_theme_within_global_tongtian_tower",
+      "must_not_create": "a_second_long_term_tower_system"
+    },
+    "multiplayer_boundary": {
+      "decision_status": "fixed",
+      "max_players": 4,
+      "shared_state_rule": "authoritative_gameplay_only",
+      "instance_rule": "future_solo_and_team_content_reuses_existing_session_lock_failure_cleanup_contracts"
+    },
+    "cross_chapter_boundary": {
+      "protected_existing_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+      "current_allowed_consumer": "HG_E_DRAGON_REVERSE_TIDE",
+      "tianting_rule": "must_not_consume_or_write_protected_existing_key_without_new_explicit_decision",
+      "entry_contract": {
+        "status": "deferred",
+        "required_progression_key": null,
+        "writer": null,
+        "trusted_consumers": [],
+        "runtime_key": null
+      }
+    },
+    "economy_boundary": {
+      "future_resource_table_root": "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json",
+      "required_state": "accepted-design-baseline-runtime-not-integrated",
+      "current_artifact_status": "accepted-design-baseline-runtime-not-integrated",
+      "candidate_consumption_rule": "implementation/growth/ remains an offline candidate and must_not_be_used_as_tianting_resource_table",
+      "resource_table_version": "economy-v2",
+      "runtime_consumption_rule": "design reference is allowed; runtime reward issuance remains prohibited until a separately reviewed authoritative compiler, persistent receipt store, and proof-to-owner resolver exist",
+      "required_receipt_semantics": [
+        "owner_id",
+        "encounter_instance_id",
+        "qualification_snapshot_id",
+        "event_id",
+        "source_profile",
+        "reward_slot_key",
+        "resource_table_version",
+        "schema_version",
+        "owner_scope",
+        "receipt_id",
+        "award_plan_hash",
+        "authority_proof_ref",
+        "tower_run_id",
+        "tower_cycle_id",
+        "tower_week_bucket",
+        "tower_mode",
+        "tower_weekly_token_before",
+        "tower_weekly_token_after",
+        "tower_award_class",
+        "award_outcome"
+      ],
+      "reference_role": "accepted_design_reference_runtime_not_integrated",
+      "must_not_create": [
+        "reward_amount",
+        "drop_probability",
+        "pity_threshold",
+        "currency_balance",
+        "season_value"
+      ]
+    }
+  },
+  "worldview_anchors": [
+    {
+      "spec_id": "TT_SPEC_WORLD_THIRD_CALAMITY",
+      "decision_status": "offline_design",
+      "content_role": "third_calamity_world_anchor",
+      "summary": "天门倾覆、神将受控、玉帝被囚，以及天律与封印体系更深裂缝的高层方向。",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_WORLD_CITY_ANCHOR",
+      "decision_status": "offline_design",
+      "content_role": "temporary_heaven_city_anchor",
+      "summary": "南天门后方的临时天庭主城承担文明、功能和叙事锚点。",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_WORLD_TOWER_ANCHOR",
+      "decision_status": "fixed",
+      "content_role": "global_tower_heaven_theme",
+      "summary": "玲珑塔主题只能表达为全局通天塔中的天庭主题，不另建塔系统。",
+      "runtime_key": null
+    }
+  ],
+  "chapter_roles": [
+    {
+      "spec_id": "TT_SPEC_CITY_HUB",
+      "decision_status": "offline_design",
+      "content_role": "safe_hub",
+      "source_direction": "天庭 NPC、装备进阶 NPC 与传送职责",
+      "runtime_key": null,
+      "map_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_PUBLIC_ROUTE",
+      "decision_status": "offline_design",
+      "content_role": "public_route_group",
+      "source_direction": "天宫道、南天门、天王殿外缘",
+      "runtime_key": null,
+      "map_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_SOLO_CANDIDATE",
+      "decision_status": "deferred",
+      "content_role": "single_player_instance_choice",
+      "candidate_options": [
+        "蟠桃园",
+        "御马监"
+      ],
+      "selected_option": null,
+      "runtime_key": null,
+      "reward_profile": null
+    },
+    {
+      "spec_id": "TT_SPEC_TEAM_CANDIDATE",
+      "decision_status": "deferred",
+      "content_role": "team_instance_direction",
+      "source_direction": "凌霄宝殿与杨戬线的范围方向",
+      "chapter_completion_relation": null,
+      "runtime_key": null,
+      "reward_profile": null
+    },
+    {
+      "spec_id": "TT_SPEC_CHAPTER_COMPLETION",
+      "decision_status": "deferred",
+      "content_role": "regular_chapter_completion",
+      "writer_of_new_progression_key": null,
+      "runtime_key": null
+    }
+  ],
+  "tracks": {
+    "chapter_mainline": {
+      "decision_status": "offline_design",
+      "world_direction": "临时天庭锚点、天宫公共压力、神将失控与天律裂缝的调查方向",
+      "entry_relation": "deferred",
+      "ordered_nodes": [],
+      "completion_relation": "deferred"
+    },
+    "solo_content": {
+      "decision_status": "deferred",
+      "selected_option": null,
+      "entry_rule": null,
+      "failure_rule": "must_reuse_existing_solo_instance_contract_when_adopted",
+      "reward_relation": "future_resource_table_only"
+    },
+    "team_content": {
+      "decision_status": "deferred",
+      "direction": "凌霄宝殿",
+      "entry_rule": null,
+      "chapter_completion_relation": null,
+      "failure_rule": "must_reuse_existing_team_instance_cleanup_contract_when_adopted",
+      "reward_relation": "future_resource_table_only"
+    },
+    "tower_first_cycle": {
+      "decision_status": "offline_design",
+      "entry_rule": "level_at_least_55_for_every_participant",
+      "rest_rule": "loadout_rest_every_5_floors",
+      "linglong_relation": "theme_within_global_tower_only",
+      "first_cycle_state_timing_contract": {
+        "status": "offline_design",
+        "artifact": "tower-first-cycle-state-contract.json",
+        "scope": "entry_gate_to_five_abstract_beats_to_fifth_rest_and_terminal_boundaries_only",
+        "authority_rule": "future_authoritative_gameplay_logic_only",
+        "idempotency_rule": "future_semantic_envelope_returns_existing_authoritative_outcome_for_duplicates",
+        "runtime_key": null
+      },
+      "run_model": {
+        "status": "deferred",
+        "record_scope": null,
+        "solo_team_relation": null,
+        "failure_exit": null,
+        "resume_rule": null
+      },
+      "floor_plan": {
+        "status": "deferred",
+        "effective_value": null
+      },
+      "affix_policy": {
+        "status": "deferred",
+        "effective_value": null
+      },
+      "reward_policy": {
+        "status": "accepted_design_reference_runtime_not_integrated",
+        "resource_table_status": "accepted-design-baseline-runtime-not-integrated",
+        "reference_role": "accepted_design_reference_runtime_not_integrated",
+        "effective_value": null,
+        "resource_table_dependency": "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json",
+        "resource_table_version": "economy-v2",
+        "tower_qualification_policy_dependency": "TOWER_FIRST_CYCLE_QUALIFICATION_V1",
+        "qualification_snapshot_required": true
+      },
+      "season_policy": {
+        "status": "deferred",
+        "effective_value": null
+      }
+    }
+  },
+  "required_future_contracts": [
+    {
+      "contract": "chapter_entry_and_progression",
+      "blocking_decision": "TT-DEFER-001",
+      "required_fields": [
+        "new_progression_key",
+        "writer",
+        "trusted_consumer",
+        "event_id",
+        "actor_id",
+        "lifecycle_and_reconnect_behavior"
+      ]
+    },
+    {
+      "contract": "mainline_and_instance_roles",
+      "blocking_decision": "TT-DEFER-003_and_TT-DEFER-004",
+      "required_fields": [
+        "public_route_order",
+        "solo_selection",
+        "normal_completion_role",
+        "team_relation",
+        "entry_and_failure_rules"
+      ]
+    },
+    {
+      "contract": "tower_run_and_rewards",
+      "blocking_decision": "TT-DEFER-005_and_TT-DEFER-006",
+      "required_fields": [
+        "record_scope",
+        "floor_plan",
+        "affix_pool",
+        "idempotency_envelope",
+        "clear_and_failure_receipt",
+        "reward_slots",
+        "resource_table_version",
+        "season_rule"
+      ]
+    }
+  ],
+  "non_production_boundaries": [
+    "No new Y3 object, map, encounter, item, ability, progression or resource key is created.",
+    "No DF_PROGRESS_YANLUO_HALL_CLEARED consumer is added.",
+    "No floor count, tower theme schedule, Boss cadence, embedded reward amount, probability, pity threshold or season is adopted; economy-v2 is referenced externally as a runtime-closed design baseline.",
+    "No proposal, conflict, deferred or whitebox-candidate value is promoted to an effective runtime value.",
+    "implementation/growth/ remains an offline candidate; economy-v2 does not imply an authoritative runtime resource table, ledger, proof resolver or reward issuer."
+  ],
+  "acceptance_invariants": [
+    "天庭章节带必须精确为 Lv41-60。",
+    "通天塔必须精确为 Lv55 逐人校验与每 5 层休整。",
+    "玲珑塔不可与全局通天塔并列为两个长期系统。",
+    "天庭入章合同在新决策前不得消费或写入 DF_PROGRESS_YANLUO_HALL_CLEARED。",
+    "塔首轮奖励只能外部引用 runtime-closed 的 economy-v2；楼层、词缀、兑换目录和赛季保持 deferred，implementation/growth/ 继续禁止消费。",
+    "所有规格局部内容角色必须使用 TT_SPEC_ 前缀且 runtime_key 为 null。",
+    "首轮五节拍合同只定义准入、顺序、第五节拍休整、结算/失败/退出/交接与幂等边界，不定义总层数或任何运行时内容。"
+  ]
+}

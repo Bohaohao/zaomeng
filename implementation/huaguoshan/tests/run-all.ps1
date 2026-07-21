@@ -1,6 +1,10 @@
 param(
     [string]$PnpmPath,
-    [switch]$NodeIntegritySelfTestOnly
+    [switch]$NodeIntegritySelfTestOnly,
+    [string]$ExternalLuaTestPath,
+    [string]$ExternalLuaTestSha256,
+    [string]$ExternalLuaPassLine,
+    [string]$ExternalPackageRoot
 )
 
 $ErrorActionPreference = 'Stop'
@@ -66,6 +70,7 @@ namespace Huaguoshan.Runner
         private const uint FileShareWrite = 0x00000002;
         private const uint FileShareDelete = 0x00000004;
         private const uint OpenExisting = 3;
+        private const uint FileFlagBackupSemantics = 0x02000000;
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern SafeFileHandle CreateFileW(
@@ -92,7 +97,7 @@ namespace Huaguoshan.Runner
                 FileShareRead | FileShareWrite | FileShareDelete,
                 IntPtr.Zero,
                 OpenExisting,
-                0,
+                FileFlagBackupSemantics,
                 IntPtr.Zero))
             {
                 if (handle.IsInvalid)
@@ -491,8 +496,8 @@ $luaTestContracts = [ordered]@{
         SourceSha256 = '145033C95F9A28A9CE8D149C16848B57304916B5C91666BB3C148A1F7AAB256B'
     }
     'implementation/huaguoshan/tests/test_public_trace.lua' = [pscustomobject]@{
-        PassLine = 'PASS: 60 public trace assertions'
-        SourceSha256 = 'D9F5292C78112EA4C01AE95A8CF5F1675681C7F4B5FC94557007906D8FF4215E'
+        PassLine = 'PASS: 77 public trace assertions'
+        SourceSha256 = 'C11478C9A06BCD3DD3C1A32605F790EBDC238BAD720618674D003F232E2D0515'
     }
     'implementation/huaguoshan/tests/test_public_boss.lua' = [pscustomobject]@{
         PassLine = 'PASS: 214 public boss assertions'
@@ -552,7 +557,8 @@ function Invoke-LuaTest {
     $exitCode = $nodeResult.ExitCode
     $output | Write-Output
     if ($exitCode -ne 0 -or -not (Test-LuaPassOutput -Output @($output) -ExpectedPassLine $Contract.PassLine) -or $output -match 'stack traceback') {
-        throw "Lua test failed for $Path with exit code $exitCode; expected exactly one verified result line: $($Contract.PassLine)"
+        $actualOutput = (@($output) | ForEach-Object { [string]$_ }) -join [Environment]::NewLine
+        throw "Lua test failed for $Path with exit code $exitCode; expected exactly one verified result line: $($Contract.PassLine). Actual output: $actualOutput"
     }
 }
 
@@ -595,6 +601,55 @@ return ordinary_text
         if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
     }
 }
+
+$script:ExternalLuaTestInvoked = $false
+
+function Invoke-TrustedExternalLuaTest {
+    $provided = @(
+        $ExternalLuaTestPath,
+        $ExternalLuaTestSha256,
+        $ExternalLuaPassLine,
+        $ExternalPackageRoot
+    ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+    if ($provided.Count -eq 0) { return }
+    if ($provided.Count -ne 4) {
+        throw 'External Lua execution requires -ExternalLuaTestPath, -ExternalLuaTestSha256, -ExternalLuaPassLine, and -ExternalPackageRoot together.'
+    }
+    if ($ExternalLuaTestSha256 -cnotmatch '^[0-9A-Fa-f]{64}$') {
+        throw 'External Lua test SHA-256 must be exactly 64 hexadecimal characters.'
+    }
+    if ($ExternalLuaPassLine -match "[\r\n]" -or [string]::IsNullOrWhiteSpace($ExternalLuaPassLine)) {
+        throw 'External Lua PASS line must be one non-empty line.'
+    }
+
+    $projectRootPhysical = Get-FinalFileSystemPath -Path $projectRoot
+    $testPathPhysical = Get-FinalFileSystemPath -Path $ExternalLuaTestPath
+    $packageRootPhysical = Get-FinalFileSystemPath -Path $ExternalPackageRoot
+    $projectPrefix = $projectRootPhysical.TrimEnd('\') + '\'
+    if (-not $testPathPhysical.StartsWith($projectPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+        -not $packageRootPhysical.StartsWith($projectPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'External Lua test and package root must resolve inside the repository root.'
+    }
+    if ([IO.Path]::GetExtension($testPathPhysical) -ine '.lua') {
+        throw 'External Lua test path must resolve to a .lua file.'
+    }
+    $packageLuaRoot = Join-Path $packageRootPhysical 'lua'
+    if (-not (Test-Path -LiteralPath $packageLuaRoot -PathType Container)) {
+        throw 'External package root must contain a lua directory.'
+    }
+
+    $contract = [pscustomobject]@{
+        PassLine = $ExternalLuaPassLine
+        SourceSha256 = $ExternalLuaTestSha256.ToUpperInvariant()
+    }
+    $script:ExternalLuaTestInvoked = $true
+    Invoke-LuaTest -Path $testPathPhysical -Contract $contract
+    Invoke-OfflineApiIsolationGate -PackageRoot $packageRootPhysical
+    Write-Output 'PASS: trusted external offline Lua test.'
+}
+
+Invoke-TrustedExternalLuaTest
+if ($script:ExternalLuaTestInvoked) { return }
 
 Push-Location $projectRoot
 try {

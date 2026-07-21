@@ -1,8 +1,74 @@
 {
   "version": 1,
-  "package_status": "decision-draft",
+  "package_status": "mixed-decision-draft-and-accepted-design-baseline",
   "package_scope": "growth-numerics-and-economy",
-  "baseline_policy": "Only accepted-baseline items are inherited facts. Proposals, conflicts, deferred items, and whitebox candidates are not effective production data.",
+  "current_accepted_resource_table_version": "economy-v2",
+  "baseline_policy": "Only accepted-baseline items belonging to current_accepted_resource_table_version are inherited design facts. Superseded accepted tables remain immutable historical evidence only. Proposals, conflicts, deferred items, and whitebox candidates are not effective data. Current accepted design data remains non-production until its independent runtime gate is opened.",
+  "adopted_resource_tables": [
+    {
+      "resource_table_version": "economy-v1",
+      "path": "tables/economy-v1-resource-table.json",
+      "content_hash_sha256": "41C80BB5B1B648F666E4AC4498B943E92643F960DC6AC6D638CF2018D63D2CCD",
+      "decision_status": "accepted-baseline",
+      "package_status": "accepted-design-baseline-runtime-not-integrated",
+      "current": false,
+      "lifecycle_status": "superseded-historical",
+      "successor_resource_table_version": "economy-v2",
+      "decision_ids": [
+        "ECO-XP-V1-001",
+        "ECO-MAT-V1-001",
+        "ECO-LEDGER-V1-001",
+        "ECO-P1-V1-001",
+        "ECO-DROP-V1-001",
+        "ECO-TOWER-V1-001"
+      ],
+      "runtime_handoff": false,
+      "production_gate": "closed"
+    },
+    {
+      "resource_table_version": "economy-v2",
+      "path": "tables/economy-v2-resource-table.json",
+      "content_hash_sha256": "3288BD9CD1BFBB516DB4808EF002C45FECCF5F1C7F4C80499DB81E31B2F84EAE",
+      "decision_status": "accepted-baseline",
+      "package_status": "accepted-design-baseline-runtime-not-integrated",
+      "current": true,
+      "lifecycle_status": "current",
+      "supersedes_resource_table_version": "economy-v1",
+      "decision_ids": [
+        "ECO-XP-V2-001",
+        "ECO-MAT-V2-001",
+        "ECO-LEDGER-V2-001",
+        "ECO-P1-V2-001",
+        "ECO-DROP-V2-001",
+        "ECO-TOWER-V2-001"
+      ],
+      "runtime_handoff": false,
+      "production_gate": "closed"
+    }
+  ],
+  "offline_simulation_boundary": {
+    "artifact_root": "implementation/growth/",
+    "artifact_status": "offline_candidate_simulation_not_adopted",
+    "runtime_handoff": false,
+    "allowed_execution_boundary": "trusted_node_fengari_offline_test_only",
+    "prohibited_consumers": [
+      "Y3 runtime",
+      "object editor",
+      "production ledger",
+      "production economy baseline",
+      "TianTing resource table"
+    ],
+    "source_decision_ids": [
+      "ECO-XP-001",
+      "ECO-ITEM-001",
+      "ECO-LEDGER-001",
+      "ECO-LEDGER-002",
+      "ECO-P1-001",
+      "ECO-DROP-001",
+      "ECO-TOWER-001"
+    ],
+    "promotion_gate": "Every listed implementation-critical decision requires explicit accepted-baseline adoption, a versioned resource table, owner scope, receipt policy, and evidence review before any production handoff."
+  },
   "decisions": [
     {
       "decision_id": "ECO-BASE-001",
@@ -130,6 +196,8 @@
       ],
       "adoption_ref": null,
       "effective_scope": "awaiting-design-decision",
+      "successor_decision_id": "ECO-LEDGER-V2-001",
+      "historical_status": "retained-proposal-for-calibration-only",
       "blocks": [
         "currency ledger implementation",
         "tower and raid exchange tables",
@@ -174,6 +242,8 @@
       ],
       "adoption_ref": null,
       "effective_scope": "awaiting-design-decision",
+      "successor_decision_id": "ECO-LEDGER-V2-001",
+      "historical_status": "retained-proposal-for-calibration-only",
       "blocks": [
         "currency ledger implementation",
         "drop receipt implementation",
@@ -204,6 +274,8 @@
       ],
       "adoption_ref": null,
       "effective_scope": "requires-single-policy-adoption",
+      "successor_decision_id": "ECO-P1-V2-001",
+      "historical_status": "retained-conflict-for-calibration-only",
       "blocks": [
         "participation chest resource tables",
         "Huaguoshan manifest normalization",
@@ -243,6 +315,8 @@
       ],
       "adoption_ref": null,
       "effective_scope": "blocked-by-target-cadence-and-battle-data",
+      "successor_decision_id": "ECO-XP-V2-001",
+      "historical_status": "retained-deferred-record-for-calibration-only",
       "blocks": [
         "level-up implementation",
         "reward table activation",
@@ -283,6 +357,8 @@
       ],
       "adoption_ref": null,
       "effective_scope": "blocked-by-resource-table",
+      "successor_decision_id": "ECO-DROP-V2-001",
+      "historical_status": "retained-deferred-record-for-calibration-only",
       "blocks": [
         "drop profile activation",
         "pity counter activation",
@@ -303,6 +379,8 @@
       ],
       "adoption_ref": null,
       "effective_scope": "blocked-by-tower-data",
+      "successor_decision_id": "ECO-TOWER-V2-001",
+      "historical_status": "retained-deferred-record-for-calibration-only",
       "blocks": [
         "tower reward implementation",
         "tower currency sinks",
@@ -326,6 +404,253 @@
       "blocks": [
         "additional progression layer"
       ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-XP-V1-001",
+      "domain": "experience",
+      "title": "economy-v1 Lv1-Lv60 经验曲线、来源预算和组队规则",
+      "decision_status": "accepted-baseline",
+      "claim": "冻结花果山 Lv1-Lv20 显式经验行、Lv20-Lv59 公式曲线、Lv60 封顶、来源预算、等级差、组队、死亡、重连和重复结算规则；仅作为 economy-v1 设计基线。",
+      "effective_value": {
+        "resource_table_version": "economy-v1",
+        "table_path": "tables/economy-v1-resource-table.json",
+        "level_cap": 60,
+        "owner_scope": "character"
+      },
+      "source_refs": [
+        "docs/物编/成长数值与经济裁决包/adoption-record.md:7-22",
+        "docs/物编/成长数值与经济裁决包/tables/economy-v1-resource-table.json#/progression"
+      ],
+      "adoption_ref": "ECO-ADOPTION-20260721",
+      "effective_scope": "superseded-historical-design-baseline-runtime-not-integrated",
+      "current": false,
+      "superseded_by": "ECO-XP-V2-001",
+      "blocks": [
+        "authoritative progression compiler",
+        "live cadence validation"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-MAT-V1-001",
+      "domain": "materials",
+      "title": "economy-v1 材料稳定键、角色归属和库存上限",
+      "decision_status": "accepted-baseline",
+      "claim": "冻结强化碎片、花果山进阶材料和法宝粉尘三个角色绑定材料键及其库存上限；它们仍是物品材料，不是第二套货币账本。",
+      "effective_value": {
+        "resource_table_version": "economy-v1",
+        "table_path": "tables/economy-v1-resource-table.json",
+        "owner_scope": "character",
+        "material_key_count": 3
+      },
+      "source_refs": [
+        "docs/物编/成长数值与经济裁决包/adoption-record.md:7-22",
+        "docs/物编/成长数值与经济裁决包/tables/economy-v1-resource-table.json#/currencies_and_materials"
+      ],
+      "adoption_ref": "ECO-ADOPTION-20260721",
+      "effective_scope": "superseded-historical-design-baseline-runtime-not-integrated",
+      "current": false,
+      "superseded_by": "ECO-MAT-V2-001",
+      "blocks": [
+        "authoritative material inventory",
+        "item origin and migration implementation"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-LEDGER-V1-001",
+      "domain": "currency-and-persistent-receipt",
+      "title": "economy-v1 角色货币账本与持久化收据",
+      "decision_status": "accepted-baseline",
+      "claim": "冻结三个角色归属、不可交易、无团队钱包的货币键，以及按来源身份、指纹、版本冲突、原子提交和前进迁移处理的持久化收据契约。",
+      "effective_value": {
+        "resource_table_version": "economy-v1",
+        "table_path": "tables/economy-v1-resource-table.json",
+        "owner_scope": "character",
+        "currency_key_count": 3,
+        "persistent_receipt_schema_version": 1
+      },
+      "source_refs": [
+        "docs/物编/成长数值与经济裁决包/adoption-record.md:7-22",
+        "docs/物编/成长数值与经济裁决包/tables/economy-v1-resource-table.json#/persistent_receipt_contract"
+      ],
+      "adoption_ref": "ECO-ADOPTION-20260721",
+      "effective_scope": "superseded-historical-design-baseline-runtime-not-integrated",
+      "current": false,
+      "superseded_by": "ECO-LEDGER-V2-001",
+      "blocks": [
+        "authoritative persistent ledger store",
+        "proof resolver and restart reconciliation"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-P1-V1-001",
+      "domain": "public-boss-qualification",
+      "title": "economy-v1 公共 BOSS 参与箱 P1 与团队稀有资格",
+      "decision_status": "accepted-baseline",
+      "claim": "冻结 P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION：参与、参与箱、稀有和保底分别判定；稀有必须有权威证明且关联同事件已提交的参与箱收据。",
+      "effective_value": {
+        "resource_table_version": "economy-v1",
+        "table_path": "tables/economy-v1-resource-table.json",
+        "final_policy_id": "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION",
+        "team_raid_policy_id": "TEAM_RAID_RARE_ELIGIBILITY_V1"
+      },
+      "source_refs": [
+        "docs/物编/成长数值与经济裁决包/adoption-record.md:7-22",
+        "docs/物编/成长数值与经济裁决包/tables/economy-v1-resource-table.json#/qualification"
+      ],
+      "adoption_ref": "ECO-ADOPTION-20260721",
+      "effective_scope": "superseded-historical-design-baseline-runtime-not-integrated",
+      "current": false,
+      "superseded_by": "ECO-P1-V2-001",
+      "blocks": [
+        "authoritative public qualification adapter",
+        "cross-receipt eligibility proof implementation"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-DROP-V1-001",
+      "domain": "drop-and-pity",
+      "title": "economy-v1 花果山掉落、重复转化和保底池",
+      "decision_status": "accepted-baseline",
+      "claim": "冻结 21 个 HG_DROP profile、基础奖励包、首次通关、重复转化、两条角色保底池与稀有概率；非稀有 profile 不得隐式新增概率或保底。",
+      "effective_value": {
+        "resource_table_version": "economy-v1",
+        "table_path": "tables/economy-v1-resource-table.json",
+        "profile_count": 21,
+        "pity_pool_count": 2
+      },
+      "source_refs": [
+        "docs/物编/成长数值与经济裁决包/adoption-record.md:7-22",
+        "docs/物编/成长数值与经济裁决包/tables/economy-v1-resource-table.json#/drops_and_pity"
+      ],
+      "adoption_ref": "ECO-ADOPTION-20260721",
+      "effective_scope": "superseded-historical-design-baseline-runtime-not-integrated",
+      "current": false,
+      "superseded_by": "ECO-DROP-V2-001",
+      "blocks": [
+        "authoritative drop roll and pity store",
+        "first-clear origin enforcement"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-TOWER-V1-001",
+      "domain": "tower-reward",
+      "title": "economy-v1 通天塔首轮循环奖励和塔币周上限",
+      "decision_status": "accepted-baseline",
+      "claim": "冻结逐人 Lv55 门槛、每个权威确认五拍循环的首通/重复奖励、每周 15 枚塔币全有或全无封顶规则，以及不发经验、不产生保底的边界。",
+      "effective_value": {
+        "resource_table_version": "economy-v1",
+        "table_path": "tables/economy-v1-resource-table.json",
+        "entry_level": 55,
+        "weekly_tower_token_cap": 15
+      },
+      "source_refs": [
+        "docs/物编/成长数值与经济裁决包/adoption-record.md:7-22",
+        "docs/物编/成长数值与经济裁决包/tables/economy-v1-resource-table.json#/tower_rewards"
+      ],
+      "adoption_ref": "ECO-ADOPTION-20260721",
+      "effective_scope": "superseded-historical-design-baseline-runtime-not-integrated",
+      "current": false,
+      "superseded_by": "ECO-TOWER-V2-001",
+      "blocks": [
+        "authoritative tower run and weekly-cap store",
+        "tower exchange catalog and live validation"
+      ],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-XP-V2-001",
+      "domain": "experience",
+      "title": "economy-v2 Lv1-Lv60 经验曲线与收据来源绑定",
+      "decision_status": "accepted-baseline",
+      "claim": "继承 economy-v1 的全部经验数值，并冻结 xp_source_key 到来源行、等级差倍率、base_clear/repeat_clear、会话配额与公式输出的可验证收据投影。",
+      "effective_value": {"resource_table_version": "economy-v2", "table_path": "tables/economy-v2-resource-table.json", "level_cap": 60, "owner_scope": "character"},
+      "source_refs": ["docs/物编/成长数值与经济裁决包/adoption-record.md#economy-v2", "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json#/progression"],
+      "adoption_ref": "ECO-ADOPTION-20260721-R1",
+      "effective_scope": "economy-v2-design-baseline-runtime-not-integrated",
+      "current": true,
+      "supersedes_decision_id": "ECO-XP-V1-001",
+      "blocks": ["authoritative progression compiler", "live cadence validation"],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-MAT-V2-001",
+      "domain": "materials",
+      "title": "economy-v2 材料稳定键、角色归属和库存上限",
+      "decision_status": "accepted-baseline",
+      "claim": "继承 economy-v1 的三个角色绑定材料键和库存上限，并将其纳入精确奖励计划投影与零奖励状态矩阵。",
+      "effective_value": {"resource_table_version": "economy-v2", "table_path": "tables/economy-v2-resource-table.json", "owner_scope": "character", "material_key_count": 3},
+      "source_refs": ["docs/物编/成长数值与经济裁决包/adoption-record.md#economy-v2", "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json#/currencies_and_materials"],
+      "adoption_ref": "ECO-ADOPTION-20260721-R1",
+      "effective_scope": "economy-v2-design-baseline-runtime-not-integrated",
+      "current": true,
+      "supersedes_decision_id": "ECO-MAT-V1-001",
+      "blocks": ["authoritative material inventory", "item origin and migration implementation"],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-LEDGER-V2-001",
+      "domain": "currency-and-persistent-receipt",
+      "title": "economy-v2 角色货币账本与可验证持久化收据",
+      "decision_status": "accepted-baseline",
+      "claim": "继承 economy-v1 货币数值，并补齐全局非空信封、角色所有者解析、终态状态矩阵、奖励计划投影、保底 roll 证明、实例身份与不可持久化 prepared 约束。",
+      "effective_value": {"resource_table_version": "economy-v2", "table_path": "tables/economy-v2-resource-table.json", "owner_scope": "character", "currency_key_count": 3, "persistent_receipt_schema_version": 1},
+      "source_refs": ["docs/物编/成长数值与经济裁决包/adoption-record.md#economy-v2", "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json#/persistent_receipt_contract"],
+      "adoption_ref": "ECO-ADOPTION-20260721-R1",
+      "effective_scope": "economy-v2-design-baseline-runtime-not-integrated",
+      "current": true,
+      "supersedes_decision_id": "ECO-LEDGER-V1-001",
+      "blocks": ["authoritative persistent ledger store", "proof resolver and restart reconciliation"],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-P1-V2-001",
+      "domain": "public-boss-qualification",
+      "title": "economy-v2 公共 BOSS P1 与团队资格收据绑定",
+      "decision_status": "accepted-baseline",
+      "claim": "继承 P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION 与 TEAM_RAID_RARE_ELIGIBILITY_V1，并将公共首通/稀有参与箱绑定和牛魔基础/首通/稀有团队快照绑定变为机器可验证规则。",
+      "effective_value": {"resource_table_version": "economy-v2", "table_path": "tables/economy-v2-resource-table.json", "final_policy_id": "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION", "team_raid_policy_id": "TEAM_RAID_RARE_ELIGIBILITY_V1"},
+      "source_refs": ["docs/物编/成长数值与经济裁决包/adoption-record.md#economy-v2", "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json#/qualification", "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json#/persistent_receipt_contract/receipt_profile_binding_rules"],
+      "adoption_ref": "ECO-ADOPTION-20260721-R1",
+      "effective_scope": "economy-v2-design-baseline-runtime-not-integrated",
+      "current": true,
+      "supersedes_decision_id": "ECO-P1-V1-001",
+      "blocks": ["authoritative public qualification adapter", "cross-receipt eligibility proof implementation"],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-DROP-V2-001",
+      "domain": "drop-and-pity",
+      "title": "economy-v2 花果山掉落、保底与奖励计划投影",
+      "decision_status": "accepted-baseline",
+      "claim": "继承 21 个 profile、全部基础包、概率、阈值和重复转化，并冻结保底初值、分支顺序、roll 证明、状态迁移和表到收据的精确投影。",
+      "effective_value": {"resource_table_version": "economy-v2", "table_path": "tables/economy-v2-resource-table.json", "profile_count": 21, "pity_pool_count": 2},
+      "source_refs": ["docs/物编/成长数值与经济裁决包/adoption-record.md#economy-v2", "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json#/drops_and_pity", "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json#/persistent_receipt_contract/award_plan_derivation_contract"],
+      "adoption_ref": "ECO-ADOPTION-20260721-R1",
+      "effective_scope": "economy-v2-design-baseline-runtime-not-integrated",
+      "current": true,
+      "supersedes_decision_id": "ECO-DROP-V1-001",
+      "blocks": ["authoritative drop roll and pity store", "first-clear origin enforcement"],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-TOWER-V2-001",
+      "domain": "tower-reward",
+      "title": "economy-v2 通天塔首轮奖励、实例与投影约束",
+      "decision_status": "accepted-baseline",
+      "claim": "继承 Lv55、首通/重复奖励和每周 15 枚塔币上限，并冻结 tower_run 到 encounter_instance、资格快照、奖励类别和表到收据的精确投影。",
+      "effective_value": {"resource_table_version": "economy-v2", "table_path": "tables/economy-v2-resource-table.json", "entry_level": 55, "weekly_tower_token_cap": 15},
+      "source_refs": ["docs/物编/成长数值与经济裁决包/adoption-record.md#economy-v2", "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json#/tower_rewards", "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json#/persistent_receipt_contract/award_plan_derivation_contract"],
+      "adoption_ref": "ECO-ADOPTION-20260721-R1",
+      "effective_scope": "economy-v2-design-baseline-runtime-not-integrated",
+      "current": true,
+      "supersedes_decision_id": "ECO-TOWER-V1-001",
+      "blocks": ["authoritative tower run and weekly-cap store", "tower exchange catalog and live validation"],
       "runtime_handoff": false
     }
   ]

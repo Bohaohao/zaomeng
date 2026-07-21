@@ -1,0 +1,356 @@
+{
+  "schema_version": 1,
+  "package": "huaguoshan-first-six-hours-vertical-slice",
+  "contract_version": "huaguoshan-tide-trace-first-six-hours-v1",
+  "status": "offline-bridge-validated",
+  "purpose": "Offline, non-production vertical slice from the existing HG_E_TIDE_TRACE authority completion to the injected first-six-hours growth settlement runtime. It proves a versioned evidence-to-receipt boundary and never claims a real Y3 map, live economy, or persistent ledger.",
+  "scope": {
+    "encounter_key": "HG_E_TIDE_TRACE",
+    "encounter_type": "public_trace",
+    "combat_scope": "public",
+    "delivery_layer": "offline-contract-runtime-and-acceptance",
+    "first_six_hours_semantics": "The vertical slice validates one existing Tide Trace completion against the f6h-v1 offline simulation. It does not define six-hour duration, leveling targets, or production progression throughput.",
+    "actual_y3_map_playable": false,
+    "new_y3_object_creation": false,
+    "materializer_invocation": false,
+    "economic_values_defined": false
+  },
+  "source_contracts": {
+    "huaguoshan_runtime_contract_id": "huaguoshan-96x72-runtime-v1",
+    "map_binding_status": "offline-declared-public-map-contract-complete-instance-map-contract-pending",
+    "offline_growth_bridge": {
+      "status": "offline-integrated-nonproduction",
+      "module": "lua/vertical_slice_bridge.lua",
+      "test": "tests/test_tide_trace_growth_bridge.lua",
+      "growth_runtime": "../../growth/lua/growth_runtime.lua",
+      "resource_table_version": "f6h-v1",
+      "source_profile": "HG_DROP_WATERFALL_ELITE",
+      "reward_slot_key": "trace_completion",
+      "package_status": "offline_candidate_simulation_not_adopted",
+      "resource_table_status": "offline_candidate_not_adopted",
+      "runtime_handoff": false,
+      "production_gate": "closed"
+    },
+    "source_files": [
+      {
+        "path": "../lua/huaguoshan_config.lua",
+        "purpose": "Existing Tide Trace encounter, carrier, and action declaration."
+      },
+      {
+        "path": "../map-logic-binding.json",
+        "purpose": "Existing public-map resource, spawn, and action-binding contract."
+      },
+      {
+        "path": "../lua/huaguoshan_public_trace.lua",
+        "purpose": "Existing authority proof, lifecycle, duplicate-event, and postlude state machine."
+      },
+      {
+        "path": "../tests/test_public_trace.lua",
+        "purpose": "Existing authority interaction regression evidence."
+      }
+    ]
+  },
+  "entry_and_map_resource_contract": {
+    "entry_identity_fields": [
+      "encounter_instance_id",
+      "target_id",
+      "target_lifecycle_id"
+    ],
+    "required_resources": [
+      {
+        "resource_key": "spawn_trace_tide_guard",
+        "expected_type": "point",
+        "role": "trace_carrier_anchor"
+      },
+      {
+        "resource_key": "pt_hg_tide_trace_stone",
+        "expected_type": "point",
+        "role": "interaction_anchor"
+      },
+      {
+        "resource_key": "area_hg_tide_trace_interact",
+        "expected_type": "circleArea",
+        "role": "interaction_area"
+      }
+    ],
+    "existing_spawn_contract": {
+      "anchor_key": "spawn_trace_tide_guard",
+      "unit_key": "HG_U_TIDE_TRACE_GUARD",
+      "meaning": "References the existing carrier contract only; this package creates no unit, ability, area, or other Y3 object."
+    },
+    "binding_invariants": [
+      "The offline resolver returns a stable reference with the declared expected type for every resource.",
+      "Encounter instance, carrier target, and target lifecycle identity remain within the same public encounter lifecycle.",
+      "An offline resolver is test evidence only and must never be described as a real Y3 map binding."
+    ]
+  },
+  "authoritative_interaction": {
+    "action_key": "stabilize_tide_trace",
+    "max_concurrent": 4,
+    "read_seconds": 2,
+    "postlude_seconds": 30,
+    "authority_provider_required": true,
+    "begin_proof_fields": [
+      "encounter_key",
+      "encounter_instance_id",
+      "target_id",
+      "target_lifecycle_id",
+      "encounter_action_key",
+      "actor_id",
+      "lifecycle_id",
+      "actor_alive",
+      "within_interaction_area",
+      "target_current",
+      "observed_tick"
+    ],
+    "completion_proof_fields": [
+      "event_id",
+      "actor_id",
+      "lifecycle_id",
+      "combat_scope",
+      "encounter_instance_id",
+      "target_id",
+      "target_lifecycle_id",
+      "encounter_action_key",
+      "action_token",
+      "actor_alive",
+      "within_interaction_area",
+      "target_current",
+      "completed_reading",
+      "reading_continuous",
+      "completed_tick"
+    ],
+    "caller_asserted_authority_fields_rejected": [
+      "authority_verified",
+      "actor_alive",
+      "within_interaction_area",
+      "completed_reading",
+      "reading_continuous",
+      "target_current",
+      "sync_tick",
+      "completed_tick",
+      "authority_proof_ref"
+    ],
+    "completion_invariants": [
+      "Completion must use public combat scope and must not carry an instance session identity.",
+      "Actor lifecycle, target identity, action, and action token must match the authority reservation.",
+      "Only the trusted authority provider may prove a continuous read, completion time, and non-empty proof reference.",
+      "The real trace_action_completed command is the canonical evidence projection; the bridge verifier must not reconstruct its fields from caller input.",
+      "A replay of the same event identity cannot produce a second encounter completion."
+    ]
+  },
+  "public_eligibility_evidence": {
+    "contract_id": "growth-public-eligibility-evidence-v1",
+    "schema_version": 1,
+    "integration_status": "offline-integrated-nonproduction",
+    "producer": "Canonical trace_action_completed command from authoritative completion of HG_E_TIDE_TRACE",
+    "consumer": "implementation/growth offline simulation through vertical_slice_bridge",
+    "required_fields": [
+      "event_id",
+      "actor_id",
+      "lifecycle_id",
+      "encounter_key",
+      "encounter_instance_id",
+      "target_id",
+      "target_lifecycle_id",
+      "encounter_action_key",
+      "action_token",
+      "combat_scope",
+      "completed_tick",
+      "authority_proof_ref",
+      "source_identity_fingerprint"
+    ],
+    "fixed_context": {
+      "encounter_key": "HG_E_TIDE_TRACE",
+      "combat_scope": "public",
+      "completion_command": "trace_action_completed",
+      "canonical_projection": "completion command payload is consumed directly after trusted verification",
+      "personal_progress_credit_evidence": true,
+      "rare_eligibility": "none"
+    },
+    "non_reward_semantics": [
+      "Evidence proves an authoritative public interaction completion; it is not an award selection or an inline award payload.",
+      "Personal progression evidence, participation chest, rare eligibility, and pity progression cannot be inferred from each other.",
+      "Only the injected implementation/growth f6h-v1 offline candidate simulation may consume this evidence inside the trusted boundary; production adoption remains closed."
+    ]
+  },
+  "versioned_reward_settlement_request": {
+    "contract_id": "growth-reward-settlement-request-v1",
+    "schema_version": 1,
+    "direction": "implementation/growth offline simulation -> first-six-hours slice settlement boundary",
+    "implementation_status": "offline-integrated-nonproduction",
+    "producer": "implementation/growth offline simulation through vertical_slice_bridge",
+    "consumer": "Injected growth settlement executor at the vertical-slice boundary",
+    "activation_gate": [
+      "Only the implementation/growth f6h-v1 offline simulation may call vertical_slice_bridge.",
+      "Production adoption requires an accepted ECO-LEDGER-002 receipt and idempotency decision.",
+      "Production adoption requires an accepted ECO-DROP-001 resource-table, eligibility, and version decision.",
+      "Real persistence receipts, map-event adaptation, and multiplayer synchronization must pass independent production gates."
+    ],
+    "required_fields": [
+      "schema_version",
+      "settlement_contract_version",
+      "request_id",
+      "idempotency_key",
+      "owner_scope",
+      "owner_id",
+      "event_id",
+      "encounter_instance_id",
+      "qualification_snapshot_id",
+      "source_profile",
+      "reward_slot_key",
+      "resource_table_version",
+      "eligibility_evidence_contract_id",
+      "eligibility_evidence_schema_version",
+      "eligibility_evidence_ref",
+      "reward_grant_ref"
+    ],
+    "opaque_versioned_fields": {
+      "source_profile": "Resolved by the injected growth resource table; this contract names only the stable profile key.",
+      "reward_slot_key": "Resolved by the injected growth settlement; this contract names only the stable reward slot.",
+      "reward_grant_ref": "A versioned settlement reference, never an embedded item or numeric award.",
+      "qualification_snapshot_id": "Must deterministically bind owner and authoritative source identity fingerprint.",
+      "owner_id": "Must exactly equal the authoritative evidence actor_id; a caller cannot redirect a valid trace completion to another character."
+    },
+    "prohibited_inline_reward_fields": [
+      "xp_amount",
+      "experience_amount",
+      "currency_amount",
+      "material_amount",
+      "item_quantity",
+      "drop_rate",
+      "drop_probability",
+      "pity_increment",
+      "pity_threshold"
+    ]
+  },
+  "settlement_receipt": {
+    "contract_id": "growth-reward-settlement-receipt-v1",
+    "schema_version": 1,
+    "producer": "Injected implementation/growth offline settlement executor",
+    "consumers": [
+      "implementation/growth offline simulation",
+      "Tide Trace audit and reconciliation observer"
+    ],
+    "implementation_status": "offline-integrated-nonproduction",
+    "required_fields": [
+      "schema_version",
+      "settlement_contract_version",
+      "receipt_id",
+      "request_id",
+      "idempotency_key",
+      "owner_scope",
+      "owner_id",
+      "event_id",
+      "encounter_instance_id",
+      "qualification_snapshot_id",
+      "resource_table_version",
+      "source_profile",
+      "reward_slot_key",
+      "settlement_status",
+      "settlement_ledger_ref"
+    ],
+    "terminal_statuses": [
+      "settled",
+      "duplicate_replayed",
+      "terminal_rejection"
+    ],
+    "retryable_status": "retryable_failure",
+    "receipt_rules": [
+      "The same idempotency identity returns its existing receipt or an explicit duplicate_replayed receipt and never changes state twice.",
+      "The resource-table version recorded on the offline candidate receipt remains on that receipt; a historical receipt is never silently recalculated.",
+      "Evidence, transport, or persistence interruption cannot create two settlement state changes."
+    ]
+  },
+  "failure_retry_and_duplicate_contract": {
+    "source_event_identity": [
+      "event_id",
+      "actor_id",
+      "lifecycle_id",
+      "encounter_instance_id",
+      "target_id",
+      "target_lifecycle_id",
+      "encounter_action_key",
+      "action_token",
+      "completed_tick"
+    ],
+    "settlement_dedupe_identity": [
+      "owner_scope",
+      "owner_id",
+      "event_id",
+      "source_profile",
+      "reward_slot_key",
+      "resource_table_version"
+    ],
+    "same_event_retry": "Must reuse source_identity_fingerprint, request_id, and idempotency_key; it cannot create a second eligibility or reward state change.",
+    "same_id_different_fingerprint": "Terminal identity conflict; it cannot create a new settlement.",
+    "retryable_failures": [
+      "future_growth_unavailable",
+      "settlement_transport_timeout",
+      "receipt_persistence_unconfirmed"
+    ],
+    "terminal_rejections": [
+      "missing_or_untrusted_eligibility_evidence",
+      "unsupported_settlement_contract_version",
+      "qualification_snapshot_mismatch",
+      "resource_table_version_unavailable",
+      "growth-runtime-not-offline-candidate",
+      "owner-evidence-actor-mismatch",
+      "invalid-evidence-completed-tick",
+      "duplicate_request_identity_conflict"
+    ],
+    "retry_invariants": [
+      "A retry keeps the source event, owner, qualification snapshot, and resource-table version unchanged.",
+      "Terminal rejection never silently degrades into success or a different reward.",
+      "Caller-provided reward amounts, drop probabilities, and pity values are terminally rejected."
+    ]
+  },
+  "acceptance_requirements": [
+    {
+      "id": "VS-001",
+      "assertion": "The contract uses only HG_E_TIDE_TRACE, three existing map resources, the existing carrier, and the existing public action."
+    },
+    {
+      "id": "VS-002",
+      "assertion": "Offline entry validates map resources and encounter/target identity before it permits authoritative interaction."
+    },
+    {
+      "id": "VS-003",
+      "assertion": "Trusted authority proves both begin and completion; caller-provided proof or time is rejected."
+    },
+    {
+      "id": "VS-004",
+      "assertion": "Completion first produces public eligibility evidence, not a direct award."
+    },
+    {
+      "id": "VS-005",
+      "assertion": "A settlement request references eligibility evidence, a qualification snapshot, and a resource-table version."
+    },
+    {
+      "id": "VS-006",
+      "assertion": "Receipt and replay rules prevent a second state mutation for one settlement identity."
+    },
+    {
+      "id": "VS-007",
+      "assertion": "Missing evidence, unsupported version, identity conflict, and persistence uncertainty retain terminal or retryable behavior."
+    },
+    {
+      "id": "VS-008",
+      "assertion": "The package claims no real Y3 map, no new Y3 objects, and no inline XP, drop, or reward values."
+    },
+    {
+      "id": "VS-009",
+      "assertion": "vertical_slice_bridge consumes the canonical Tide Trace completion evidence and validates the injected growth runtime remains an offline candidate with production gate closed, request/evidence versions, owner_id equals evidence.actor_id, instance identity, qualification snapshot, and resource-table version before it calls growth settlement."
+    },
+    {
+      "id": "VS-010",
+      "assertion": "One Tide Trace source identity has one settlement idempotency identity; replay returns duplicate_replayed, while conflict identity and inline reward fields cannot mutate the ledger."
+    }
+  ],
+  "unresolved_and_out_of_scope": [
+    "The slice injects implementation/growth f6h-v1 only inside the trusted Node/Fengari offline boundary; it is not a Y3 runtime binding, production service, or persistent ledger.",
+    "f6h-v1 experience, drops, pity, currency, and resource table remain an offline_candidate_simulation_not_adopted and are not a global production baseline.",
+    "A real Y3 map, production object IDs, map-root scripts, event adapter, persistent receipt storage, and multiplayer synchronization remain outside this package.",
+    "Six-hour duration, chapter coverage, leveling targets, reward throughput, payment, and retention conclusions require independent production decisions."
+  ]
+}

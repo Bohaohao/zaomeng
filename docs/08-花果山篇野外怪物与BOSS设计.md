@@ -279,7 +279,7 @@
 | 蛟魔王 | 短暂潜入固定 `3.0` 秒，不可攻击；出水后恢复同一战斗节奏 | 同 Unit ID 时发显式 `trace_pause`，上限 `3.0` 秒；若实现替换 Unit ID，必须给一对一 `trace_transition`，否则职业侧清除旧追迹 | `drain_tide_eye`：潜入期间处理潮眼 | 成功一次可作为非稀有参与行为；潜入不因职业不同延长或缩短 |
 | 鲨魔王 | 涡流压迫与直线撕咬期间本体保持可攻击；涡流预警与安全线独立呈现 | 不发 `trace_pause` 或 `trace_transition` | `stabilize_vortex_anchor`：在涡流锚点完成场地稳定 | 成功一次可作为非稀有参与行为；不改变伤害贡献、击杀或稀有资格 |
 
-每个公共行为必须由遭遇侧上报带 `kind/event_id/actor_id/lifecycle_id/boss_instance_id/phase_id/boss_target_id/boss_target_lifecycle_id/interaction_unit_id/interaction_unit_lifecycle_id/encounter_action_key` 的事件；公共事件强制 `combat_scope=public` 且 `session_instance_id/session_epoch=nil`。职业只能消费结果，不能自行推断、补记或越权发奖。
+每个公共行为必须由遭遇侧上报带 `kind/event_id/actor_id/lifecycle_id/authority_proof_ref/boss_instance_id/phase_id/boss_target_id/boss_target_lifecycle_id/interaction_unit_id/interaction_unit_lifecycle_id/encounter_action_key` 的事件；公共事件强制 `combat_scope=public` 且 `session_instance_id/session_epoch=nil`。任何进入经济收据的事件只能以该权威证明解析稳定角色所有者，不能把裸 `actor_id` 或 `lifecycle_id` 当作 owner。职业只能消费结果，不能自行推断、补记或越权发奖。
 
 ### 公共行为执行矩阵
 
@@ -297,7 +297,7 @@
 kind = encounter_action_success
 window_id = <boss_instance_id>:<phase_id>:<mechanic_occurrence_id>:<encounter_action_key>
 event_id = <window_id>:<actor_id>
-actor_id / lifecycle_id / boss_instance_id / phase_id
+actor_id / lifecycle_id / authority_proof_ref / boss_instance_id / phase_id
 boss_target_id / boss_target_lifecycle_id = 窗口开启时冻结的 Boss 本体
 interaction_unit_id / interaction_unit_lifecycle_id = 本次场地交互物
 encounter_action_key / mechanic_occurrence_id / completed_tick
@@ -306,9 +306,9 @@ combat_scope = public
 session_instance_id / session_epoch = nil
 ```
 
-窗口开启时，遭遇权威端建立 `encounter_event_origin_index[window_id]={boss_instance_id,phase_id,boss_target_id,boss_target_lifecycle_id,interaction_unit_id,interaction_unit_lifecycle_id,open_tick,close_tick}`。同一公共窗口的 `primary/assist` 只能由该权威端原子仲裁：它先校验完成事件仍匹配原窗口、Boss 本体生命周期、当前阶段与交互物生命周期，再按 `(boss_instance_id, phase_id, mechanic_occurrence_id, encounter_action_key, completed_tick)` 聚合同 tick 完成者，以 `completed_tick -> actor_id` 稳定排序。首个成功写入唯一 `resolved_primary_actor_id` 并得到 `primary`，其余合法完成者一律得到 `assist`。该写入和场地改变必须是同一权威事务；客户端、本地读条结束顺序或 UI 回调均不得自行决定 primary。跨 tick 的后来完成者只能为 assist，已解析窗口不会因断线重放改变 primary。Boss 死亡、换相、本体/交互物重建或 origin 不匹配时，窗口不写任何成功记录。
+窗口开启时，遭遇权威端建立 `encounter_event_origin_index[window_id]={boss_instance_id,phase_id,boss_target_id,boss_target_lifecycle_id,interaction_unit_id,interaction_unit_lifecycle_id,open_tick,close_tick}`。同一公共窗口的 `primary/assist` 只能由该权威端原子仲裁：它先校验完成事件仍匹配原窗口、Boss 本体生命周期、当前阶段与交互物生命周期，再按 `(boss_instance_id, phase_id, mechanic_occurrence_id, encounter_action_key, completed_tick)` 聚合同 tick 完成者，以 `completed_tick -> actor_id` 稳定排序。首个成功写入唯一 `resolved_primary_actor_id` 并得到 `primary`，其余合法完成者一律得到 `assist`。该写入和场地改变必须是同一权威事务；客户端、本地读条结束顺序或 UI 回调均不得自行决定 primary。跨 tick 的后来完成者只能为 assist，已解析窗口不会因断线重放改变 primary。任何后续经济收据都必须用 `authority_proof_ref` 复核同一 actor/lifecycle 到稳定 owner 的映射。Boss 死亡、换相、本体/交互物重建或 origin 不匹配时，窗口不写任何成功记录。
 
-遭遇侧按 `event_id` 去重，并按 `(actor_id, boss_instance_id, phase_id, mechanic_occurrence_id, encounter_action_key)` 限制**每个机制 occurrence 一次**成功。`assist` 只写个人参与记录，不重复改变公共场地；每名玩家在同一 phase 的首个合格行为事件才可写入项目级“行为已参与”资格，之后 occurrence 的记录只用于本次行为与反馈，不重复增加参与箱、首通、保底或奖励进度。未完成读条、超时、旧生命周期、Boss 死亡或阶段失效都不写入贡献账本。有效遭遇参与箱仍额外校验该玩家对该 BOSS 的有效伤害占比 `>=3%`，行为本身不能替代伤害、同步击杀或稀有掉落资格。
+遭遇侧按 `event_id` 去重，并按 `(actor_id, boss_instance_id, phase_id, mechanic_occurrence_id, encounter_action_key)` 限制**每个机制 occurrence 一次**成功。`assist` 只写个人参与记录，不重复改变公共场地；每名玩家在同一 phase 的首个合格行为事件才可写入项目级“行为已参与”资格，之后 occurrence 的记录只用于本次行为与反馈，不重复增加参与箱、首通、保底或奖励进度。未完成读条、超时、旧生命周期、Boss 死亡或阶段失效都不写入贡献账本。正式参与箱遵循 [economy-v2](物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json) 的 P1：本场开启过合格行为窗口时需“有效行为且（有效伤害占比 `>=3%` 或合格破韧或实际护守）”；未开启窗口时需“有效伤害占比 `>=3%` 或合格破韧或实际护守”。行为本身不替代伤害/破韧/护守，亦不替代同步击杀或稀有掉落资格。
 
 ### 公共行为玩家反馈契约
 
@@ -317,7 +317,7 @@ session_instance_id / session_epoch = nil
 | 窗口开启 | 行为名、剩余时间、交互半径与当前已响应人数 `0-4`；`world_state_scope=encounter_local_18` | `残风眼/潮眼/涡流锚点：剩余 X.X 秒，已响应 N/4` | 18 cell 内只看中性场地预警；只告知公共行为，不承诺击杀、掉落或稀有资格 |
 | 读条完成 | 遭遇权威返回 `primary` 或 `assist`、本次 `event_id` 与个人行为记录；`primary_personal_text_scope=initiator_only`、`assist_personal_text_scope=initiator_only`、`local_neutral_world_cue_scope=encounter_local_18` | `主导稳定：行为已记录` 或 `协同确认：行为已记录`；附近玩家只见“残风/潮眼/涡流趋稳” | `primary/assist` 只描述本次场地行为角色；二者均只得到一条本 occurrence 行为记录，不额外提高稀有掉落、保底、首通或个人奖励概率 |
 | 读条未完成 | 中断原因：离开范围、死亡、失去操作权、窗口关闭或阶段失效 | `交互中断：<原因>` | 不写入行为记录，不影响正常伤害贡献 |
-| Boss 死亡或本阶段结算 | 遭遇权威的个人 `行为已记录/未记录` 与有效伤害占比 | `行为记录：已/未；有效伤害 X.X% / 需 3%` | 只有“行为已记录且有效伤害达到 3%”才具备项目级参与箱判定资格；资格、掉落、保底和同队击杀仍由后续资源吞吐表决定 |
+| Boss 死亡或本阶段结算 | 遭遇权威的个人 `行为已记录/未记录`、有效伤害占比、合格破韧/护守与是否曾开行为窗 | `行为记录：已/未；伤害 X.X%；破韧/护守：已/未` | 参与箱按 economy-v2 P1 判定；公共稀有还需权威证明和同事件参与箱收据绑定，资格、掉落、保底与同队击杀不得互相推导 |
 
 所有结果均由遭遇权威端推送；不得依赖本地读条、动画或玩家间观察推断。该反馈不实际制作 UI，但后续 UI/遭遇 Hook 必须逐项提供。
 
@@ -330,7 +330,7 @@ session_instance_id / session_epoch = nil
 
 资源吞吐阶段边界：
 
-- 每个区域的怪群数量、刷新周期、材料产量、四人同时刷取效率、高等级收益衰减和公共 BOSS 掉落表，在花果山地图分布定稿后统一制作资源吞吐设计表。
+- 每个区域的怪群数量、刷新周期、四人同时刷取效率和高等级收益衰减，在花果山地图分布定稿后统一制作资源吞吐设计表；21 个花果山 profile 的奖励/保底设计值已由 `economy-v2` 冻结，实际结算仍须独立运行时接入。
 - 地图分布定稿前只确定怪物类型、区域职责、战斗口袋和 BOSS 位置，不提前锁死具体资源数值。
 
 不建议野外 BOSS 掉落极低概率毕业道具。野外 BOSS 应该驱动公共野外活跃，而不是让玩家长期蹲点抢怪。

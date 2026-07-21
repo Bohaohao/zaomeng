@@ -1,10 +1,17 @@
 param(
-    [Parameter(Mandatory = $true)][string]$ManifestPath,
-    [Parameter(Mandatory = $true)][string]$OutputPath,
-    [switch]$Force
+    [string]$ManifestPath,
+    [string]$OutputPath,
+    [switch]$Force,
+    [switch]$ExportCrossChapterLuaContract,
+    [switch]$ExportCrossChapterLuaFixtureContract,
+    [string]$LuaFixturePath
 )
 
 $ErrorActionPreference = 'Stop'
+
+if ($args.Count -gt 0) {
+    throw "Unexpected script arguments are not permitted: $($args -join ' ')"
+}
 
 Add-Type -AssemblyName System.Runtime.Serialization
 
@@ -1342,6 +1349,109 @@ function Read-LuaConfigProjection {
         throw 'Lua Config projection must return a JSON object'
     }
     return $projection
+}
+
+function Test-MaterializerPathIsRegularFile {
+    param([Parameter(Mandatory = $true)][string]$Path, [Parameter(Mandatory = $true)][string]$Description)
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw "$Description is unavailable: $Path"
+    }
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+    $linkTypeProperty = $item.PSObject.Properties['LinkType']
+    if ($null -ne $linkTypeProperty -and -not [string]::IsNullOrWhiteSpace([string]$linkTypeProperty.Value)) {
+        throw "$Description must not be a filesystem link: $Path"
+    }
+}
+
+function Resolve-MaterializerCrossChapterCanonicalConfigPath {
+    $packageRoot = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..') -ErrorAction Stop).Path)
+    $candidate = [IO.Path]::GetFullPath((Join-Path $packageRoot 'lua\huaguoshan_config.lua'))
+    $rootPrefix = $packageRoot.TrimEnd('\', '/') + '\'
+    if (-not $candidate.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+        [IO.Path]::GetFileName($candidate) -cne 'huaguoshan_config.lua') {
+        throw 'Canonical cross-chapter Lua Config path is invalid.'
+    }
+    Test-MaterializerPathIsRegularFile -Path $candidate -Description 'Canonical cross-chapter Lua Config'
+    $resolvedCandidate = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $candidate -ErrorAction Stop).Path)
+    if (-not [string]::Equals($resolvedCandidate, $candidate, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Canonical cross-chapter Lua Config did not resolve to the expected repository file.'
+    }
+    return $candidate
+}
+
+function Get-MaterializerCrossChapterFixtureRoot {
+    return [IO.Path]::GetFullPath((Join-Path ([IO.Path]::GetTempPath()) 'huaguoshan-cross-chapter-fixtures'))
+}
+
+function Resolve-MaterializerCrossChapterFixturePath {
+    param([Parameter(Mandatory = $true)][string]$FixturePath)
+
+    $fixtureRoot = Get-MaterializerCrossChapterFixtureRoot
+    if (-not (Test-Path -LiteralPath $fixtureRoot -PathType Container)) {
+        throw "Cross-chapter Lua fixture root is unavailable: $fixtureRoot"
+    }
+    $fixtureRootItem = Get-Item -LiteralPath $fixtureRoot -Force -ErrorAction Stop
+    $fixtureRootLinkType = $fixtureRootItem.PSObject.Properties['LinkType']
+    if ($null -ne $fixtureRootLinkType -and -not [string]::IsNullOrWhiteSpace([string]$fixtureRootLinkType.Value)) {
+        throw "Cross-chapter Lua fixture root must not be a filesystem link: $fixtureRoot"
+    }
+
+    $candidate = [IO.Path]::GetFullPath($FixturePath)
+    $rootPrefix = $fixtureRoot.TrimEnd('\', '/') + '\'
+    if (-not $candidate.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+        [IO.Path]::GetFileName($candidate) -cne 'huaguoshan_config.lua') {
+        throw 'Cross-chapter Lua fixture must be a huaguoshan_config.lua file inside the dedicated fixture root.'
+    }
+    Test-MaterializerPathIsRegularFile -Path $candidate -Description 'Cross-chapter Lua fixture'
+    $resolvedCandidate = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $candidate -ErrorAction Stop).Path)
+    if (-not [string]::Equals($resolvedCandidate, $candidate, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Cross-chapter Lua fixture did not resolve to the dedicated fixture file.'
+    }
+    return $candidate
+}
+
+function Read-LuaCrossChapterContractProjection {
+    param([Parameter(Mandatory = $true)][string]$ConfigPath)
+
+    $projectionScript = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\tests\export_cross_chapter_contract_projection.lua'))
+    Test-MaterializerPathIsRegularFile -Path $projectionScript -Description 'Cross-chapter Lua contract projection helper'
+
+    $result = Invoke-MaterializerLuaProjection -ProjectionScript $projectionScript -ConfigPath $ConfigPath
+    $outputText = $result.Output | Out-String
+    if ($result.ExitCode -ne 0) {
+        throw "Cross-chapter Lua contract projection execution failed: $outputText"
+    }
+    try { $projection = ConvertFrom-StrictJson $outputText 'Cross-chapter Lua contract projection' }
+    catch { throw "Cross-chapter Lua contract projection did not return valid JSON: $($_.Exception.Message)" }
+    if ($null -eq $projection -or $projection -isnot [pscustomobject]) {
+        throw 'Cross-chapter Lua contract projection must return a JSON object'
+    }
+    return $projection
+}
+
+if ($ExportCrossChapterLuaContract -and $ExportCrossChapterLuaFixtureContract) {
+    throw 'Only one cross-chapter Lua export mode may be selected.'
+}
+if ($ExportCrossChapterLuaContract) {
+    if (-not [string]::IsNullOrWhiteSpace($LuaFixturePath)) {
+        throw '-LuaFixturePath is only valid with -ExportCrossChapterLuaFixtureContract'
+    }
+    $canonicalConfigPath = Resolve-MaterializerCrossChapterCanonicalConfigPath
+    Read-LuaCrossChapterContractProjection -ConfigPath $canonicalConfigPath | ConvertTo-Json -Depth 12
+    return
+}
+if ($ExportCrossChapterLuaFixtureContract) {
+    if ([string]::IsNullOrWhiteSpace($LuaFixturePath)) {
+        throw '-LuaFixturePath is required with -ExportCrossChapterLuaFixtureContract'
+    }
+    $fixtureConfigPath = Resolve-MaterializerCrossChapterFixturePath -FixturePath $LuaFixturePath
+    Read-LuaCrossChapterContractProjection -ConfigPath $fixtureConfigPath | ConvertTo-Json -Depth 12
+    return
+}
+
+if ([string]::IsNullOrWhiteSpace($ManifestPath) -or [string]::IsNullOrWhiteSpace($OutputPath)) {
+    throw '-ManifestPath and -OutputPath are required unless a cross-chapter Lua export mode is used'
 }
 
 function Test-Y3ObjectEditorScriptShape {

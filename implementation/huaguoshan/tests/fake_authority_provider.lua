@@ -94,6 +94,7 @@ function M.new(options)
             proof.completed_reading = true
             proof.reading_continuous = true
             proof.target_current = true
+            proof.authority_proof_ref = 'fixture:public_trace_action_complete:' .. tostring(context.event_id)
         elseif operation == 'public_trace_finish' then
             proof.observed_tick = self.now
         elseif operation == 'public_trace_watermark' then

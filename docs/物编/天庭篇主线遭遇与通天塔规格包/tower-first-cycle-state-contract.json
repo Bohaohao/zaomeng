@@ -1,0 +1,509 @@
+{
+  "version": 1,
+  "artifact_status": "offline_design",
+  "production_gate": "closed",
+  "identity": {
+    "spec_id": "TT_SPEC_TOWER_FIRST_CYCLE",
+    "name": "通天塔首轮五节拍状态与时序合同",
+    "scope": "一个由五个抽象楼层节拍组成的首轮子循环；它不是总层数、主题表或实际关卡计划。",
+    "runtime_key": null
+  },
+  "inherited_constraints": {
+    "minimum_level_per_participant": 55,
+    "member_check": "every_solo_player_or_team_member_independently",
+    "rest_after_abstract_beat": 5,
+    "linglong_relation": "theme_within_global_tongtian_tower_only",
+    "protected_cross_chapter_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+    "protected_key_rule": "must_not_read_or_write_as_tianting_default_input_without_new_explicit_decision",
+    "future_economy_dependency": "economy-v2 exists_as_accepted-design-baseline-runtime-not-integrated; implementation/growth/ remains_an_offline_candidate_simulation_and_must_not_be_consumed"
+  },
+  "non_goals": [
+    "不声明通天塔总层数、后续循环数量、层主题、词缀、怪物、Boss、难度或地图。",
+    "不内嵌任何经验、物品、货币、掉率、保底、奖励数值或赛季；首轮奖励只能外部引用 runtime-closed 的 economy-v2。",
+    "不创建 Y3 对象、Lua、UI、地图、进度键、事件键、持久化键或运行时状态键。",
+    "不读取、写入或间接以 DF_PROGRESS_YANLUO_HALL_CLEARED 作为天庭或塔的默认准入条件。"
+  ],
+  "entry_contract": {
+    "spec_id": "TT_SPEC_TOWER_ENTRY_GATE",
+    "decision_status": "offline_design",
+    "runtime_key": null,
+    "preconditions": [
+      "每一位单人或团队参与者均达到 Lv55。",
+      "准入结论由未来权威游戏逻辑做出；本地 UI 只能提交请求或展示结论。",
+      "DF_PROGRESS_YANLUO_HALL_CLEARED 不参与读取、写入、资格替代或默认解锁。"
+    ],
+    "accepted_target_state": "TT_SPEC_TOWER_STATE_BEAT_01_ACTIVE",
+    "rejected_target_state": "TT_SPEC_TOWER_STATE_ENTRY_DENIED",
+    "rejection_effect": "只返回权威拒绝结论；不进入节拍、不生成结算、不产生奖励或记录。",
+    "unresolved": [
+      "未来 run 范围、队伍快照、断线重连和持久化语义。",
+      "入口请求在全局通天塔中的实际传送、会话创建和资源绑定。"
+    ]
+  },
+  "state_model": {
+    "authority": "所有状态迁移由未来权威游戏逻辑裁决；本合同只定义离线语义。",
+    "states": [
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_ENTRY_CHECKING",
+        "kind": "entry",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "接收首轮子循环请求并执行逐人 Lv55 校验。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_ENTRY_DENIED",
+        "kind": "entry_terminal",
+        "cycle_terminal": true,
+        "runtime_key": null,
+        "purpose": "准入被拒绝；不创建或推进任何节拍。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_BEAT_01_ACTIVE",
+        "kind": "abstract_floor_beat",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "第一个抽象楼层节拍。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_BEAT_02_ACTIVE",
+        "kind": "abstract_floor_beat",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "第二个抽象楼层节拍。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_BEAT_03_ACTIVE",
+        "kind": "abstract_floor_beat",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "第三个抽象楼层节拍。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_BEAT_04_ACTIVE",
+        "kind": "abstract_floor_beat",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "第四个抽象楼层节拍。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_BEAT_05_ACTIVE",
+        "kind": "abstract_floor_beat",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "第五个抽象楼层节拍；仅在其权威完成后开放休整。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_REST_05_OPEN",
+        "kind": "rest_boundary",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "第五节拍后唯一的构筑休整窗口；不隐含第六节拍或后续层数。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_SETTLEMENT_PENDING",
+        "kind": "settlement",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "关闭本首轮子循环的权威结算意图；不在此处计算或发放奖励。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_SETTLED",
+        "kind": "settlement_terminal",
+        "cycle_terminal": true,
+        "runtime_key": null,
+        "purpose": "首轮子循环已被权威关闭；任何经济效果只能外部引用 runtime-closed economy-v2，仍受未来运行时收据合同限制。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_FAILURE_PENDING",
+        "kind": "failure",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "任一活动节拍报告失败后的权威收束入口。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_FAILED",
+        "kind": "failure_terminal",
+        "cycle_terminal": true,
+        "runtime_key": null,
+        "purpose": "首轮子循环以失败收束；恢复、记录和资源效果不在本合同定义。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_EXIT_PENDING",
+        "kind": "exit",
+        "cycle_terminal": false,
+        "runtime_key": null,
+        "purpose": "活动节拍或第五节拍休整期收到自愿退出请求后的权威收束入口。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_EXITED",
+        "kind": "exit_terminal",
+        "cycle_terminal": true,
+        "runtime_key": null,
+        "purpose": "首轮子循环以自愿退出收束；不隐含失败或奖励。"
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_STATE_NEXT_CYCLE_HANDOFF",
+        "kind": "external_handoff_terminal",
+        "cycle_terminal": true,
+        "runtime_key": null,
+        "purpose": "第五节拍休整后选择继续时的边界交接；本合同不创建第六节拍或任何后续层。"
+      }
+    ],
+    "terminal_outcome_exclusivity": [
+      "同一抽象节拍只能先由权威确定为完成、失败或退出之一；重复请求返回既有权威结果，不能产生第二个结果。",
+      "第五节拍休整窗口只能先关闭为结算、退出或下一循环交接之一；三者不能并存。",
+      "ENTRY_DENIED、SETTLED、FAILED、EXITED、NEXT_CYCLE_HANDOFF 均为本首轮子循环的终态，不能直接返回活动节拍。"
+    ]
+  },
+  "abstract_floor_beats": [
+    {
+      "spec_id": "TT_SPEC_TOWER_BEAT_01",
+      "beat_index": 1,
+      "active_state": "TT_SPEC_TOWER_STATE_BEAT_01_ACTIVE",
+      "clear_target_state": "TT_SPEC_TOWER_STATE_BEAT_02_ACTIVE",
+      "failure_target_state": "TT_SPEC_TOWER_STATE_FAILURE_PENDING",
+      "exit_target_state": "TT_SPEC_TOWER_STATE_EXIT_PENDING",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_BEAT_02",
+      "beat_index": 2,
+      "active_state": "TT_SPEC_TOWER_STATE_BEAT_02_ACTIVE",
+      "clear_target_state": "TT_SPEC_TOWER_STATE_BEAT_03_ACTIVE",
+      "failure_target_state": "TT_SPEC_TOWER_STATE_FAILURE_PENDING",
+      "exit_target_state": "TT_SPEC_TOWER_STATE_EXIT_PENDING",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_BEAT_03",
+      "beat_index": 3,
+      "active_state": "TT_SPEC_TOWER_STATE_BEAT_03_ACTIVE",
+      "clear_target_state": "TT_SPEC_TOWER_STATE_BEAT_04_ACTIVE",
+      "failure_target_state": "TT_SPEC_TOWER_STATE_FAILURE_PENDING",
+      "exit_target_state": "TT_SPEC_TOWER_STATE_EXIT_PENDING",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_BEAT_04",
+      "beat_index": 4,
+      "active_state": "TT_SPEC_TOWER_STATE_BEAT_04_ACTIVE",
+      "clear_target_state": "TT_SPEC_TOWER_STATE_BEAT_05_ACTIVE",
+      "failure_target_state": "TT_SPEC_TOWER_STATE_FAILURE_PENDING",
+      "exit_target_state": "TT_SPEC_TOWER_STATE_EXIT_PENDING",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_BEAT_05",
+      "beat_index": 5,
+      "active_state": "TT_SPEC_TOWER_STATE_BEAT_05_ACTIVE",
+      "clear_target_state": "TT_SPEC_TOWER_STATE_REST_05_OPEN",
+      "failure_target_state": "TT_SPEC_TOWER_STATE_FAILURE_PENDING",
+      "exit_target_state": "TT_SPEC_TOWER_STATE_EXIT_PENDING",
+      "runtime_key": null
+    }
+  ],
+  "transition_contract": [
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_ENTRY_ACCEPT",
+      "from": "TT_SPEC_TOWER_STATE_ENTRY_CHECKING",
+      "to": "TT_SPEC_TOWER_STATE_BEAT_01_ACTIVE",
+      "trigger": "TT_SPEC_TOWER_COMMAND_ENTRY_REQUEST",
+      "preconditions": [
+        "逐人 Lv55 校验通过。",
+        "未读取或写入受保护地府键。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_ENTRY_DENY",
+      "from": "TT_SPEC_TOWER_STATE_ENTRY_CHECKING",
+      "to": "TT_SPEC_TOWER_STATE_ENTRY_DENIED",
+      "trigger": "TT_SPEC_TOWER_COMMAND_ENTRY_REQUEST",
+      "preconditions": [
+        "至少一名参与者未满足权威准入条件。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_BEAT_01_CLEAR",
+      "from": "TT_SPEC_TOWER_STATE_BEAT_01_ACTIVE",
+      "to": "TT_SPEC_TOWER_STATE_BEAT_02_ACTIVE",
+      "trigger": "TT_SPEC_TOWER_COMMAND_BEAT_CLEAR",
+      "preconditions": [
+        "第一个抽象节拍尚未有权威终局结果。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_BEAT_02_CLEAR",
+      "from": "TT_SPEC_TOWER_STATE_BEAT_02_ACTIVE",
+      "to": "TT_SPEC_TOWER_STATE_BEAT_03_ACTIVE",
+      "trigger": "TT_SPEC_TOWER_COMMAND_BEAT_CLEAR",
+      "preconditions": [
+        "第二个抽象节拍尚未有权威终局结果。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_BEAT_03_CLEAR",
+      "from": "TT_SPEC_TOWER_STATE_BEAT_03_ACTIVE",
+      "to": "TT_SPEC_TOWER_STATE_BEAT_04_ACTIVE",
+      "trigger": "TT_SPEC_TOWER_COMMAND_BEAT_CLEAR",
+      "preconditions": [
+        "第三个抽象节拍尚未有权威终局结果。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_BEAT_04_CLEAR",
+      "from": "TT_SPEC_TOWER_STATE_BEAT_04_ACTIVE",
+      "to": "TT_SPEC_TOWER_STATE_BEAT_05_ACTIVE",
+      "trigger": "TT_SPEC_TOWER_COMMAND_BEAT_CLEAR",
+      "preconditions": [
+        "第四个抽象节拍尚未有权威终局结果。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_BEAT_05_CLEAR_TO_REST",
+      "from": "TT_SPEC_TOWER_STATE_BEAT_05_ACTIVE",
+      "to": "TT_SPEC_TOWER_STATE_REST_05_OPEN",
+      "trigger": "TT_SPEC_TOWER_COMMAND_BEAT_CLEAR",
+      "preconditions": [
+        "第五个抽象节拍尚未有权威终局结果。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_ACTIVE_BEAT_FAILURE",
+      "from": [
+        "TT_SPEC_TOWER_STATE_BEAT_01_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_02_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_03_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_04_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_05_ACTIVE"
+      ],
+      "to": "TT_SPEC_TOWER_STATE_FAILURE_PENDING",
+      "trigger": "TT_SPEC_TOWER_COMMAND_BEAT_FAILURE",
+      "preconditions": [
+        "对应活动节拍尚未有权威终局结果。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_ACTIVE_OR_REST_EXIT",
+      "from": [
+        "TT_SPEC_TOWER_STATE_BEAT_01_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_02_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_03_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_04_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_05_ACTIVE",
+        "TT_SPEC_TOWER_STATE_REST_05_OPEN"
+      ],
+      "to": "TT_SPEC_TOWER_STATE_EXIT_PENDING",
+      "trigger": "TT_SPEC_TOWER_COMMAND_EXIT_REQUEST",
+      "preconditions": [
+        "来源状态尚未被其他终局迁移占用。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_REST_BUILD_SWITCH",
+      "from": "TT_SPEC_TOWER_STATE_REST_05_OPEN",
+      "to": "TT_SPEC_TOWER_STATE_REST_05_OPEN",
+      "trigger": "TT_SPEC_TOWER_COMMAND_REST_BUILD_SWITCH_REQUEST",
+      "preconditions": [
+        "仅限第五节拍权威完成后。",
+        "仅能引用既有已保存构筑；本合同不定义构筑内容。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_REST_TO_SETTLEMENT",
+      "from": "TT_SPEC_TOWER_STATE_REST_05_OPEN",
+      "to": "TT_SPEC_TOWER_STATE_SETTLEMENT_PENDING",
+      "trigger": "TT_SPEC_TOWER_COMMAND_CYCLE_CLOSE_REQUEST",
+      "preconditions": [
+        "第五节拍已权威完成。",
+        "未被退出或下一循环交接占用。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_SETTLEMENT_FINALIZE",
+      "from": "TT_SPEC_TOWER_STATE_SETTLEMENT_PENDING",
+      "to": "TT_SPEC_TOWER_STATE_SETTLED",
+      "trigger": "TT_SPEC_TOWER_COMMAND_SETTLEMENT_FINALIZE",
+      "preconditions": [
+        "本首轮子循环的关闭意图已被权威接受。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_REST_TO_NEXT_CYCLE_HANDOFF",
+      "from": "TT_SPEC_TOWER_STATE_REST_05_OPEN",
+      "to": "TT_SPEC_TOWER_STATE_NEXT_CYCLE_HANDOFF",
+      "trigger": "TT_SPEC_TOWER_COMMAND_NEXT_CYCLE_HANDOFF_REQUEST",
+      "preconditions": [
+        "第五节拍已权威完成。",
+        "后续循环由独立全局塔运行合同处理；本合同不产生第六节拍。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_FAILURE_FINALIZE",
+      "from": "TT_SPEC_TOWER_STATE_FAILURE_PENDING",
+      "to": "TT_SPEC_TOWER_STATE_FAILED",
+      "trigger": "TT_SPEC_TOWER_COMMAND_FAILURE_FINALIZE",
+      "preconditions": [
+        "失败来源节拍已被权威确定。"
+      ],
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_TRANSITION_EXIT_FINALIZE",
+      "from": "TT_SPEC_TOWER_STATE_EXIT_PENDING",
+      "to": "TT_SPEC_TOWER_STATE_EXITED",
+      "trigger": "TT_SPEC_TOWER_COMMAND_EXIT_FINALIZE",
+      "preconditions": [
+        "退出来源状态已被权威确定。"
+      ],
+      "runtime_key": null
+    }
+  ],
+  "idempotency_contract": {
+    "spec_id": "TT_SPEC_TOWER_FIRST_CYCLE_IDEMPOTENCY",
+    "decision_status": "offline_design",
+    "runtime_key": null,
+    "semantic_envelope": {
+      "status": "deferred",
+      "runtime_key": null,
+      "required_field_names": [
+        "future_run_scope",
+        "operation_id",
+        "request_kind",
+        "expected_source_state",
+        "actor_scope",
+        "qualification_snapshot_id",
+        "event_id",
+        "schema_version"
+      ],
+      "assigned_values": null
+    },
+    "rules": [
+      {
+        "spec_id": "TT_SPEC_TOWER_IDEMPOTENCY_ENTRY",
+        "scope": "同一未来准入语义包络",
+        "duplicate_behavior": "返回首次权威接受或拒绝结果；不得重复开启节拍、创建记录或发放任何价值。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_IDEMPOTENCY_BEAT_TERMINAL",
+        "scope": "同一未来 run 范围内的同一抽象节拍",
+        "duplicate_behavior": "完成、失败或退出中首次被权威确定的终局结果胜出；重复或竞争请求只返回该结果。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_IDEMPOTENCY_REST_SWITCH",
+        "scope": "第五节拍休整窗口内的同一构筑切换请求",
+        "duplicate_behavior": "重复请求不得造成第二次状态变化、奖励、消费或额外休整窗口。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_TOWER_IDEMPOTENCY_CYCLE_CLOSE",
+        "scope": "同一未来首轮子循环关闭语义包络",
+        "duplicate_behavior": "结算、失败、退出或下一循环交接的首个权威终局胜出；重复调用只返回已确定的终局。",
+        "runtime_key": null
+      }
+    ]
+  },
+  "settlement_boundary": {
+    "spec_id": "TT_SPEC_TOWER_SETTLEMENT_BOUNDARY",
+    "decision_status": "offline_design",
+    "runtime_key": null,
+    "allowed_source_state": "TT_SPEC_TOWER_STATE_REST_05_OPEN",
+    "required_intermediate_state": "TT_SPEC_TOWER_STATE_SETTLEMENT_PENDING",
+    "terminal_state": "TT_SPEC_TOWER_STATE_SETTLED",
+    "economy_effect": {
+      "status": "accepted_design_reference_runtime_not_integrated",
+      "resource_table_status": "accepted-design-baseline-runtime-not-integrated",
+      "reference_role": "accepted_design_reference_runtime_not_integrated",
+      "resource_table_dependency": "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json",
+      "resource_table_version": "economy-v2",
+      "receipt_semantics_required": true,
+      "assigned_reward_values": null,
+      "required_receipt_fields": [
+        "owner_scope",
+        "owner_id",
+        "qualification_snapshot_id",
+        "encounter_instance_id",
+        "event_id",
+        "source_profile",
+        "reward_slot_key",
+        "resource_table_version",
+        "tower_run_id",
+        "tower_cycle_id",
+        "tower_week_bucket",
+        "tower_mode",
+        "tower_weekly_token_before",
+        "tower_weekly_token_after",
+        "award_plan_hash",
+        "authority_proof_ref",
+        "receipt_id",
+        "award_outcome"
+      ],
+      "prohibited": [
+        "reward_amount",
+        "drop_probability",
+        "currency_balance",
+        "pity_threshold",
+        "season_value"
+      ]
+    },
+    "rule": "结算状态只关闭首轮子循环；它可以引用 economy-v2 的设计奖励，但没有精确编译、持久化幂等收据、周桶封顶和证明解析时不得发放任何经济效果。"
+  },
+  "failure_and_exit_boundary": {
+    "spec_id": "TT_SPEC_TOWER_FAILURE_EXIT_BOUNDARY",
+    "decision_status": "offline_design",
+    "runtime_key": null,
+    "failure": {
+      "source_states": [
+        "TT_SPEC_TOWER_STATE_BEAT_01_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_02_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_03_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_04_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_05_ACTIVE"
+      ],
+      "pending_state": "TT_SPEC_TOWER_STATE_FAILURE_PENDING",
+      "terminal_state": "TT_SPEC_TOWER_STATE_FAILED"
+    },
+    "exit": {
+      "source_states": [
+        "TT_SPEC_TOWER_STATE_BEAT_01_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_02_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_03_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_04_ACTIVE",
+        "TT_SPEC_TOWER_STATE_BEAT_05_ACTIVE",
+        "TT_SPEC_TOWER_STATE_REST_05_OPEN"
+      ],
+      "pending_state": "TT_SPEC_TOWER_STATE_EXIT_PENDING",
+      "terminal_state": "TT_SPEC_TOWER_STATE_EXITED"
+    },
+    "rule": "失败与退出均需经过权威 pending 到 terminal 的两段收束，且不能与结算或下一循环交接并发成立。"
+  },
+  "unresolved": [
+    "未来 run 记录范围、单人/团队关系、持久化、断线重连与恢复语义。",
+    "每个抽象节拍的地图、遭遇、怪物、Boss、词缀、时长和难度。",
+    "下一循环的真实入口、实际节拍与总层数。",
+    "结算的天庭奖励槽位、资格快照、economy-v2 运行时编译、收据存储、证明解析和任何实际经济结果。"
+  ],
+  "acceptance_invariants": [
+    "准入只可从 ENTRY_CHECKING 到 ENTRY_DENIED 或 BEAT_01_ACTIVE，且严格逐人 Lv55 校验。",
+    "五个抽象节拍必须依次完成；第五节拍完成只可打开 REST_05_OPEN。",
+    "REST_05_OPEN 不暗示第六节拍、总层数、后续循环数量或资源结算值。",
+    "SETTLEMENT_PENDING、FAILURE_PENDING 和 EXIT_PENDING 必须分别权威收束到互斥终态。",
+    "所有重复调用必须在其语义包络内返回既有权威结论，不得产生第二次状态推进或经济效果。",
+    "本合同任何字段都不得读取、写入或替代 DF_PROGRESS_YANLUO_HALL_CLEARED。",
+    "本合同所有局部标识均为 TT_SPEC_，所有 runtime_key 均为 null。"
+  ]
+}

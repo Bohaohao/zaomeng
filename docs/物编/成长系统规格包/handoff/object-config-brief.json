@@ -15,7 +15,7 @@
     "itemAsset": ["record_key", "object_type=item", "status", "chapter", "design_role", "source_doc", "dependencies", "y3_fields", "runtime_fields", "acceptance"],
     "petUnit": ["record_key", "object_type=unit", "status", "chapter", "design_role", "source_doc", "dependencies", "y3_fields", "runtime_fields", "acceptance"],
     "petAbility": ["record_key", "object_type=ability", "status", "source_doc", "dependencies", "y3_fields", "runtime_fields", "acceptance"],
-    "systemData": ["record_type=currency_ledger|drop_policy", "stable_key", "schema_version", "owner_scope", "resource_table_version", "source_or_sink_or_qualification", "event_ledger", "audit_fields"]
+    "systemData": ["record_type=currency_ledger|drop_policy", "stable_key", "schema_version", "owner_scope", "resource_table_version", "authority_proof_ref", "source_or_sink_or_qualification", "event_ledger", "audit_fields"]
   },
   "runtimeFields": {
     "itemAsset": ["item_category", "equipment_slot", "quality", "profession_limit", "level_requirement", "fixed_affixes", "random_affix_pool", "strengthen_rule", "advance_rule", "synthesis_recipe", "drop_profile_ref", "bind_rule", "storage_rule"],
@@ -25,12 +25,13 @@
   "blockingDecisions": [
     "装备部位、词条、强化/进阶/套装数值",
     "法宝与宠物槽位、配方、成长与绑定",
-    "货币稳定键与账本",
-    "掉率、保底、分配和参与箱资格",
+    "装备/法宝/宠物消耗与兑换目录",
+    "地府/天庭 source_profile、后续掉率/保底扩展和塔赛季",
     "真实 Y3 ID、模板、图标、模型和字段枚举"
   ],
   "safety": [
-    "HG_DROP_* 当前全部 deferred，只能作为系统 drop_policy 来源键，不能生成掉落物品或概率。",
+    "花果山 HG_DROP_* 当前设计值只能精确引用 economy-v2；它仍不可直接生成物品、概率或生产结算。",
+    "系统数据必须保留 economy-v2 的版本、proof-to-owner、来源/奖励计划和终态审计边界。",
     "货币账本和掉落 profile 不得伪装成 object_type=item；宠物本体不得伪装成物品。",
     "不得用有效参与或 DPS 荣誉自动授予稀有资格。",
     "不得将数值成长、技能点、装备/法宝/宠物强度引入商业化字段。"

@@ -1,4 +1,4 @@
-﻿# Lua 逻辑交接简报
+# Lua 逻辑交接简报
 
 ## 项目
 
@@ -44,8 +44,8 @@
                              "death and reconnect rules",
                              "event receipt"
                          ],
-        "runtimeBehavior":  "权威端仅在已采纳的资源表下授予经验，并以角色、事件、来源和版本去重。",
-        "owner":  "数值裁决后交给 y3-lua-api；当前仅规格数据"
+        "runtimeBehavior":  "未来权威端只能编译 economy-v2 或其后续版本，并以角色、遭遇实例、事件、来源和奖励槽幂等结算；当前没有运行时接入。",
+        "owner":  "economy-v2 已冻结；实际运行时集成仍待独立施工与审查"
     },
     {
         "name":  "装备、法宝、宠物和材料成长",
@@ -63,7 +63,7 @@
                              "storage and migration"
                          ],
         "runtimeBehavior":  "强化、进阶、合成和孵化必须以物品谱系、材料收据和原子事务结算。",
-        "owner":  "数值裁决后交给 y3-object-config 与 y3-lua-api"
+        "owner":  "装备、法宝、宠物数值仍待裁决；不因 economy-v2 自动开启物编或 Lua 施工"
     },
     {
         "name":  "货币账本与结算收据",
@@ -79,13 +79,13 @@
                              "migration",
                              "cleanup policy"
                          ],
-        "runtimeBehavior":  "同一收据重放只返回原结算，不二次改变余额、材料、保底或消耗。",
-        "owner":  "数值裁决后交给 y3-lua-api"
+        "runtimeBehavior":  "同一来源身份与指纹重放只返回原终态结算，不二次改变余额、材料、保底、首通或额度；新结算在同一可串行化事务内锁定身份和额度后才生成最终计划，不持久化 prepared 状态；跨版本同来源冲突而不重算。",
+        "owner":  "economy-v2 已冻结；持久化账本、证明解析和重连对账仍待独立运行时施工"
     },
     {
         "name":  "公共 Boss 资格、掉落与保底",
         "category":  "economy",
-        "designIntent":  "将荣誉、个人推进、参与箱、稀有资格、保底和 roll 保持分层，并消除参与箱 P1 双口径。",
+        "designIntent":  "将荣誉、个人推进、参与箱、稀有资格、保底和 roll 保持分层，并执行已冻结的 P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION。",
         "requiredData":  [
                              "qualification snapshots",
                              "final participation chest policy",
@@ -96,8 +96,8 @@
                              "resource table version",
                              "receipt policy"
                          ],
-        "runtimeBehavior":  "公共行为按 origin/window、event_id 和 occurrence 去重；primary/assist 不直接改变任何奖励资格。",
-        "owner":  "数值裁决后交给 y3-lua-api；花果山 manifest 仅在 P1 采纳后同步"
+        "runtimeBehavior":  "公共行为按 origin/window、event_id 和 occurrence 去重；P1 参与箱是三个公共 profile 的唯一基础包结算路径，公共首通/稀有必须绑定同事件已提交参与箱收据；团队稀有使用独立快照且不继承箱前置，primary/assist 不直接改变任何奖励资格。",
+        "owner":  "economy-v2 已冻结；花果山候选 manifest 仍保持非生产，不自动同步"
     },
     {
         "name":  "通天塔长期奖励",
@@ -110,10 +110,12 @@
                              "first clear",
                              "repeat rewards",
                              "tower currency",
+                             "qualification snapshot",
+                             "weekly counter before/after",
                              "season policy"
                          ],
-        "runtimeBehavior":  "入口逐人校验；奖励在版本化资源表批准前不产生实际结算。",
-        "owner":  "数值裁决后交给 y3-lua-api、y3-terrain-layout 和官方 y3-ui-pipeline"
+        "runtimeBehavior":  "入口逐人校验；团队成员还须通过 TOWER_FIRST_CYCLE_QUALIFICATION_V1 的入场、在场、存活与贡献快照。每个权威确认五拍循环在锁定角色周额度后只能按 economy-v2 的首通/重复奖励、周桶计数和零奖励封顶语义结算；当前没有实际结算。",
+        "owner":  "economy-v2 已冻结首轮奖励；塔运行时、地形和 UI 仍待独立施工"
     },
     {
         "name":  "零付费经济门禁",
@@ -129,15 +131,17 @@
         "owner":  "多维评审"
     }
 ]
+
 ## 技能与运行时需求
 
 [
     "四职业技能点、绝技和构筑均受既有成长基线约束",
     "职业战斗日志是后续装备与经验数值标定的输入，不是由经济表替代"
 ]
+
 ## 后续 Lua 任务
 
 [
-    "在决策采纳后实现版本化经验授予、资格快照、结算收据、货币账本、保底和迁移。",
+    "在独立运行时施工获批后实现版本化经验授予、资格快照、结算收据、货币账本、保底和迁移。",
     "重放、断线、跨资源表版本、资格伪造和 primary/assist 误用必须有拒绝路径。"
 ]

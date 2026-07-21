@@ -272,7 +272,18 @@ $Contract = Read-JsonFile $ContractPath $Errors 'contract'
 $Design = Read-JsonFile $DesignPath $Errors 'design'
 Test-InterfaceContract $Contract $ProjectRoot $Errors
 Test-DesignSpec $Design $Errors
-foreach ($ForbiddenDirectory in @('implementation\difu','implementation\growth')) { if (Test-Path -LiteralPath (Join-Path $ProjectRoot $ForbiddenDirectory)) { Add-Issue $Errors 'out_of_scope_implementation_present' $ForbiddenDirectory 'This preflight package must not create the implementation directory.' } }
+foreach ($ForbiddenDirectory in @('implementation\difu')) { if (Test-Path -LiteralPath (Join-Path $ProjectRoot $ForbiddenDirectory)) { Add-Issue $Errors 'out_of_scope_implementation_present' $ForbiddenDirectory 'This preflight package must not create the implementation directory.' } }
+$ExternalGrowthConfig = Join-Path $ProjectRoot 'implementation\growth\lua\growth_config.lua'
+if (Test-Path -LiteralPath (Join-Path $ProjectRoot 'implementation\growth')) {
+    if (-not (Test-Path -LiteralPath $ExternalGrowthConfig)) {
+        Add-Issue $Errors 'external_growth_boundary_invalid' 'implementation\growth' 'The external growth fixture must expose its candidate boundary configuration.'
+    } else {
+        $ExternalGrowthText = Get-Content -Raw -Encoding UTF8 -LiteralPath $ExternalGrowthConfig
+        if ($ExternalGrowthText -notmatch "offline_candidate_simulation_not_adopted" -or $ExternalGrowthText -notmatch "runtime_handoff\s*=\s*false") {
+            Add-Issue $Errors 'external_growth_boundary_invalid' 'implementation\growth' 'The external growth fixture may exist only as a runtime-closed offline candidate.'
+        }
+    }
+}
 $NegativeResults = @()
 if (-not $SkipNegativeTests -and $null -ne $Contract) {
     $NegativeResults = Invoke-NegativeTests $Contract $ProjectRoot

@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "package_status": "offline_candidate_simulation_not_adopted",
+  "execution_status": "offline_simulation_ready",
+  "production_gate": "closed",
+  "runtime_handoff": false,
+  "resource_table_status": "offline_candidate_not_adopted",
+  "resource_table_version": "f6h-v1",
+  "source_of_truth": "implementation/growth/lua/growth_config.lua",
+  "scope": {
+    "active_minutes": [0, 360],
+    "wall_clock_excluded": true,
+    "player_counts": [1, 2, 3, 4],
+    "level_range": [1, 20],
+    "chapter": "huaguoshan",
+    "end_state": "Lv20 plus repeatable Huaguoshan build and collection loop; this package does not grant entry to another chapter."
+  },
+  "experience_policy": {
+    "party_policy_id": "F6H_PARTY_FULL_QUALIFIED_XP_V1",
+    "qualified_party_member_award": "full personal base award once; party size never divides it",
+    "over_level_rule": "0-2=100%, 3-4=80%, 5-6=50%, 7+=20%",
+    "death_rule": "no new live-combat XP while dead",
+    "reconnect_rule": "the same authoritative receipt replays unchanged and cannot award twice",
+    "level_20_target_active_minute": 55,
+    "level_20_cumulative_xp": 9485
+  },
+  "public_boss_policy": {
+    "candidate_policy_id": "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION",
+    "source_decision_id": "ECO-P1-001",
+    "source_decision_status": "conflict",
+    "progression_participation": "damage>=3% OR valid_break OR valid_guard OR valid_public_action",
+    "participation_chest": "with an action window: valid_public_action AND (damage>=3% OR valid_break OR valid_guard); without one: damage>=3% OR valid_break OR valid_guard",
+    "rare_drop": "separate authority-attested Boss-clear eligibility; chest result cannot imply it",
+    "pity": "only a settled eligible rare-roll miss advances its own pool"
+  },
+  "team_raid_policy": {
+    "policy_id": "F6H_TEAM_RAID_RARE_ELIGIBILITY_V1",
+    "snapshot_schema_version": 1,
+    "member_count_range": [1, 4],
+    "required_snapshot_fields": [
+      "schema_version",
+      "policy_id",
+      "snapshot_id",
+      "raid_instance_id",
+      "completion_event_id",
+      "profile_key",
+      "completed",
+      "rare_clear_attested",
+      "authority_proof_ref",
+      "members"
+    ],
+    "required_member_fields": [
+      "owner_id",
+      "joined_before_lock",
+      "present_at_completion",
+      "actor_alive_at_completion",
+      "contribution_attested",
+      "rare_clear_attested"
+    ],
+    "participation": "joined before lock AND present and alive at completion AND contribution-attested",
+    "rare_drop": "qualified participation AND authority-attested team clear AND authority-attested personal rare eligibility",
+    "replay": "the original character-owned reward receipt replays without changing resources, uniques, first clear, pity, or event origin"
+  },
+  "settlement_contract": {
+    "owner_scope": "character",
+    "receipt_identity": [
+      "owner_scope",
+      "owner_id",
+      "event_id",
+      "profile_key",
+      "reward_slot_key",
+      "resource_table_version"
+    ],
+    "replay": "returns the original result without changing balances, uniques, first-clear state, or pity",
+    "migration": "not implemented here; live migration remains production-gated"
+  },
+  "first_five_build_milestones": [
+    {"key": "SKILL_SECOND_ACTIVE", "target_active_minute": 5, "condition": "level>=3"},
+    {"key": "CORE_ROUTE", "target_active_minute": 13, "condition": "level>=8"},
+    {"key": "FIRST_EQUIPMENT", "target_active_minute": 13, "condition": "EQ_HG_WEAPON_T1 first clear"},
+    {"key": "FIRST_ENHANCEMENT", "target_active_minute": 20, "condition": "spend CUR_GOLD 60 and MAT_STRENGTHEN_SHARD 3 on HG_ENHANCE_T1"},
+    {"key": "FIRST_ARTIFACT", "target_active_minute": 75, "condition": "ART_HG_TIDE_SEAL first clear"}
+  ],
+  "currency_boundary": {
+    "active": ["CUR_GOLD", "CUR_RAID_MARK"],
+    "reserved_for_later": ["CUR_TOWER_TOKEN"],
+    "team_wallet": false,
+    "trade": false
+  },
+  "covered_reward_profiles": [
+    "HG_DROP_MOUNTAIN_COMMON",
+    "HG_DROP_MOUNTAIN_ELITE",
+    "HG_DROP_MOUNTAIN_MAJOR",
+    "HG_DROP_WATERFALL_COMMON",
+    "HG_DROP_WATERFALL_ELITE",
+    "HG_DROP_MACAQUE_PUBLIC",
+    "HG_DROP_PEACH_COMMON",
+    "HG_DROP_PEACH_MAJOR",
+    "HG_DROP_CAVE_COMMON",
+    "HG_DROP_CAVE_MAJOR",
+    "HG_DROP_SEVENSTAR_COMMON",
+    "HG_DROP_SEVENSTAR_ELITE",
+    "HG_DROP_SEVENSTAR_MAJOR",
+    "HG_DROP_PENG_OPTIONAL",
+    "HG_DROP_EASTSEA_COMMON",
+    "HG_DROP_EASTSEA_ELITE",
+    "HG_DROP_JIAO_PUBLIC",
+    "HG_DROP_SHARK_PUBLIC",
+    "HG_DROP_DRAGON_OLD",
+    "HG_DROP_DRAGON_REVERSE",
+    "HG_DROP_OX_RAID"
+  ],
+  "acceptance_criteria": [
+    "all 20 level rows are continuous and reach Lv20 at 9485 XP",
+    "all 21 Huaguoshan reward profiles have an offline reward bundle",
+    "one named P1 conflict candidate is used only by the offline qualification and settlement simulation; it is not a final policy",
+    "chest, rare eligibility, and pity remain separate recorded results",
+    "HG_DROP_OX_RAID accepts only a correlated 1–4 member authority-attested team snapshot for its rare-roll and pity path",
+    "same receipt never applies a second XP, currency, unique, first-clear, or pity change",
+    "the scripted 0-360 active-minute trace reaches all five build milestones",
+    "the package contains no Y3 API calls and never claims a live map integration"
+  ]
+}

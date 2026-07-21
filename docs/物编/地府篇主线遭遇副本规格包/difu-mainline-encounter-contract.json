@@ -42,7 +42,40 @@
         "encounter_key": "DF_E_ZHUANLUN_HALL",
         "encounter_type": "team_instance",
         "writes_yanluo_progression": false,
-        "recovery_policy_key": "TEAM_INSTANCE_RETURN_TO_CHAPTER_INITIAL_SPAWN_V1"
+        "recovery_policy_key": "TEAM_INSTANCE_RETURN_TO_CHAPTER_INITIAL_SPAWN_V1",
+        "team_recovery_contract": {
+          "policy_key": "TEAM_INSTANCE_RETURN_TO_CHAPTER_INITIAL_SPAWN_V1",
+          "applies_to": [
+            "team_instance"
+          ],
+          "initial_spawn_reference": "chapter_initial_spawn",
+          "cleanup_ack_required": true,
+          "cleanup_ack_identity_fields": [
+            "raid_instance_id",
+            "session_epoch",
+            "cleanup_token"
+          ],
+          "reentry_before_cleanup_ack": "denied",
+          "member_death": {
+            "return_target": "chapter_initial_spawn",
+            "member_status": "dead",
+            "revive_before_return": true,
+            "left_behavior": "no_revive_no_return",
+            "reentry_lock": "until_matching_cleanup_ack",
+            "already_dead_repeat_return": "forbidden"
+          },
+          "full_wipe": {
+            "return_target": "chapter_initial_spawn",
+            "already_dead_repeat_return": "forbidden",
+            "cleanup_ack_required": true
+          },
+          "timeout": {
+            "return_target": "chapter_initial_spawn",
+            "eligible_member_state": "active",
+            "already_dead_return": "forbidden",
+            "cleanup_ack_required": true
+          }
+        }
       },
       "reverse_tide": {
         "consumer_encounter_key": "HG_E_DRAGON_REVERSE_TIDE",
@@ -70,7 +103,7 @@
       "maximum": 40
     },
     "central_question": "当轮回秩序被权力与煞气同时扭曲时，承命者应如何恢复流转而不把亡魂再度变成可被重置的工具？",
-    "narrative_resolution": "常规主线在阎罗殿确认并修复关键命册秩序；转轮殿保留为团队层面对轮回重置企图的挑战，不替代常规完成结果。",
+    "narrative_resolution": "常规主线在阎罗殿确认并修复关键命册秩序；接引院与判官殿以档案疑点和审判揭示为转轮一系的轮回重置企图提供非门槛叙事伏笔；转轮殿保留为团队层面的挑战，不替代常规完成结果。",
     "initial_spawn": {
       "logical_role": "chapter_initial_spawn",
       "real_resource_binding": null,
@@ -180,11 +213,12 @@
       "display_name": "接引院",
       "track": "chapter_completion",
       "content_kind": "story_checkpoint",
-      "design_role": "将失序亡魂的去向从单纯通关目标转为需要玩家理解和介入的官署冲突。",
+      "design_role": "将失序亡魂的去向从单纯通关目标转为需要玩家理解和介入的官署冲突，并以异常档案留下转轮一系拟将争议亡魂整体重置的叙事疑点；该疑点不是入口、前置或进度条件。",
       "encounter_theme_tags": [
         "接引",
         "第一殿节点",
-        "叙事转折"
+        "叙事转折",
+        "转轮重置企图伏笔"
       ],
       "decision_status": "offline_design",
       "source_refs": [
@@ -200,12 +234,13 @@
       "display_name": "判官殿",
       "track": "chapter_completion",
       "content_kind": "story_checkpoint_and_encounter_theme",
-      "design_role": "用审判、负面状态和判定主题完成中段升级，使玩家面对秩序本身也可能伤人的矛盾。",
+      "design_role": "用审判、负面状态和判定主题完成中段升级，使玩家面对秩序本身也可能伤人的矛盾，并揭示转轮一系将重置轮回当作解决方案的价值冲突；该揭示只承接叙事，不建立转轮殿入口、前置或完成键消费。",
       "encounter_theme_tags": [
         "审判",
         "负面状态",
         "判定",
-        "控制"
+        "控制",
+        "转轮重置企图揭示"
       ],
       "decision_status": "offline_design",
       "source_refs": [
@@ -331,7 +366,7 @@
       "spec_id_is_spec_local_only": true,
       "display_name": "白骨秘境",
       "content_kind": "solo_instance",
-      "design_role": "地府首发独立单人副本，承载白骨与多形态挑战主题，但不替代阎罗殿的常规最终职责。",
+      "design_role": "地府首发独立单人副本，承载白骨与多形态挑战主题；它可选、并行且非阻塞，不替代阎罗殿的常规最终职责，也不构成常规完成路径或团队内容路径的前置。",
       "decision_status": "fixed",
       "source_refs": [
         "docs/04-v1.0首发内容范围.md:52-52",
@@ -345,6 +380,12 @@
       "economic_boundary": {
         "production_reward_output": false,
         "numeric_reward_definition": false
+      },
+      "chapter_relation": {
+        "relation_to_chapter_completion": "optional_parallel_nonblocking",
+        "included_in_chapter_completion_path": false,
+        "included_in_team_content_path": false,
+        "requires_yanluo_completion": false
       },
       "unresolved": [
         "隐藏或非隐藏入口的可见性、实际入口、时长、阶段、对象、奖励资格与数值均未裁决。"
@@ -416,7 +457,7 @@
     ],
     "production_economy_output": false,
     "decision_source": "docs/物编/成长数值与经济裁决包/README.md",
-    "rule": "本包只描述来源类别；资格、物品、货币、经验、掉落、概率、保底、数量与资源吞吐全部保持 deferred。"
+    "rule": "本包只描述来源类别；economy-v2 已冻结全局设计基线，但未为地府分配 source_profile。资格、物品、货币、经验、掉落、概率、保底、数量与资源吞吐不得在本包推断或产生生产结算。"
   },
   "deferred": {
     "real_map_root": null,

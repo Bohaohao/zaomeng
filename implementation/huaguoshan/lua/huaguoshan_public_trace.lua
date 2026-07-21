@@ -31,6 +31,7 @@ local untrusted_authority_fields = {
     'completed_reading',
     'reading_continuous',
     'target_current',
+    'authority_proof_ref',
 }
 
 local function untrusted_authority_field(payload)
@@ -229,6 +230,9 @@ function Trace:complete_action(event, current_lifecycle)
         or proof.target_current ~= true then
         return false, 'trace-action-not-authoritatively-complete'
     end
+    if type(proof.authority_proof_ref) ~= 'string' or proof.authority_proof_ref:match('%S') == nil then
+        return false, 'trusted-trace-proof-reference-required'
+    end
     local now = proof.completed_tick
     if type(now) ~= 'number' then return false, 'trusted-trace-completed-tick-required' end
     if now < reservation.ready_at then return false, 'trace-reading-incomplete' end
@@ -253,11 +257,20 @@ function Trace:complete_action(event, current_lifecycle)
     local commands = {
         {
             type = 'trace_action_completed',
+            event_id = event.event_id,
+            actor_id = event.actor_id,
+            lifecycle_id = event.lifecycle_id,
             encounter_key = self.encounter_key,
             encounter_instance_id = self.instance_id,
-            actor_id = event.actor_id,
-            target_scope = 'explicit',
             target_id = self.target_id,
+            target_lifecycle_id = self.target_lifecycle_id,
+            encounter_action_key = event.encounter_action_key,
+            action_token = event.action_token,
+            combat_scope = event.combat_scope,
+            completed_tick = now,
+            authority_proof_ref = proof.authority_proof_ref,
+            source_identity_fingerprint = origin,
+            target_scope = 'explicit',
             credit_personal_progress = first_credit,
             rare_eligibility = 'none',
         },

@@ -1,0 +1,479 @@
+{
+  "version": 1,
+  "table": "economy-v2-resource-table",
+  "resource_table_version": "economy-v2",
+  "decision_status": "accepted-baseline",
+  "package_status": "accepted-design-baseline-runtime-not-integrated",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "supersedes": {
+    "resource_table_version": "economy-v1",
+    "path": "tables/economy-v1-resource-table.json",
+    "content_hash_sha256": "41C80BB5B1B648F666E4AC4498B943E92643F960DC6AC6D638CF2018D63D2CCD",
+    "reason": "Receipt-contract audit hardening only: frozen numerical values, qualification thresholds, drop chances, pity thresholds, and award amounts are unchanged."
+  },
+  "adoption": {
+    "adoption_id": "ECO-ADOPTION-20260721-R1",
+    "authority": "user-directed economic adoption audit and repair",
+    "scope": "Lv1-Lv60 progression, character currencies, Huaguoshan reward profiles and pity, public participation chest P1, Tongtian Tower first-cycle rewards, and hardened persistent receipt semantics.",
+    "implementation_boundary": "This is an accepted design resource table. It must not be copied into implementation/growth, Y3, an object editor, a ledger store, or a live service until a separately reviewed runtime integration consumes it.",
+    "immutable_change_rule": "Any numerical, qualification, reward, pity, or receipt change creates a new resource_table_version and may never recalculate an existing receipt."
+  },
+  "decision_ids": [
+    "ECO-XP-V2-001",
+    "ECO-MAT-V2-001",
+    "ECO-LEDGER-V2-001",
+    "ECO-P1-V2-001",
+    "ECO-DROP-V2-001",
+    "ECO-TOWER-V2-001"
+  ],
+  "progression": {
+    "decision_id": "ECO-XP-V2-001",
+    "owner_scope": "character",
+    "level_cap": 60,
+    "chapters": [
+      {"chapter": "花果山", "level_range": [1, 20], "cumulative_xp_range": [0, 9485], "target_active_minutes_at_cap": 55},
+      {"chapter": "地府", "level_range": [21, 40], "cumulative_xp_range": [10735, 66690], "target_active_minutes_at_cap": 330},
+      {"chapter": "天庭", "level_range": [41, 60], "cumulative_xp_range": [72515, 333300], "target_active_minutes_at_cap": 900}
+    ],
+    "legacy_explicit_rows": [
+      {"level": 1, "xp_to_next": 100, "cumulative_xp": 0, "expected_active_minutes": 0},
+      {"level": 2, "xp_to_next": 120, "cumulative_xp": 100, "expected_active_minutes": 2},
+      {"level": 3, "xp_to_next": 145, "cumulative_xp": 220, "expected_active_minutes": 5},
+      {"level": 4, "xp_to_next": 170, "cumulative_xp": 365, "expected_active_minutes": 7},
+      {"level": 5, "xp_to_next": 200, "cumulative_xp": 535, "expected_active_minutes": 9},
+      {"level": 6, "xp_to_next": 235, "cumulative_xp": 735, "expected_active_minutes": 10},
+      {"level": 7, "xp_to_next": 275, "cumulative_xp": 970, "expected_active_minutes": 12},
+      {"level": 8, "xp_to_next": 320, "cumulative_xp": 1245, "expected_active_minutes": 13},
+      {"level": 9, "xp_to_next": 370, "cumulative_xp": 1565, "expected_active_minutes": 15},
+      {"level": 10, "xp_to_next": 425, "cumulative_xp": 1935, "expected_active_minutes": 17},
+      {"level": 11, "xp_to_next": 485, "cumulative_xp": 2360, "expected_active_minutes": 20},
+      {"level": 12, "xp_to_next": 550, "cumulative_xp": 2845, "expected_active_minutes": 23},
+      {"level": 13, "xp_to_next": 620, "cumulative_xp": 3395, "expected_active_minutes": 28},
+      {"level": 14, "xp_to_next": 695, "cumulative_xp": 4015, "expected_active_minutes": 34},
+      {"level": 15, "xp_to_next": 775, "cumulative_xp": 4710, "expected_active_minutes": 40},
+      {"level": 16, "xp_to_next": 860, "cumulative_xp": 5485, "expected_active_minutes": 44},
+      {"level": 17, "xp_to_next": 950, "cumulative_xp": 6345, "expected_active_minutes": 47},
+      {"level": 18, "xp_to_next": 1045, "cumulative_xp": 7295, "expected_active_minutes": 49},
+      {"level": 19, "xp_to_next": 1145, "cumulative_xp": 8340, "expected_active_minutes": 52}
+    ],
+    "post_huaguoshan_curve": {
+      "applies_to_levels": [20, 59],
+      "formula": "xp_to_next(level) = 5 * round_half_up(250 * 1.08^(level - 20))",
+      "rounding": "round_half_up_to_integer_before_multiplying_by_5",
+      "cumulative_formula": "cumulative_xp(20)=9485; cumulative_xp(level+1)=cumulative_xp(level)+xp_to_next(level)",
+      "active_minute_anchors": [
+        {"level": 20, "active_minutes": 55},
+        {"level": 25, "active_minutes": 100},
+        {"level": 30, "active_minutes": 165},
+        {"level": 35, "active_minutes": 240},
+        {"level": 38, "active_minutes": 285},
+        {"level": 40, "active_minutes": 330},
+        {"level": 45, "active_minutes": 440},
+        {"level": 50, "active_minutes": 570},
+        {"level": 55, "active_minutes": 720},
+        {"level": 60, "active_minutes": 900}
+      ],
+      "validation_anchors": [
+        {"level": 20, "xp_to_next": 1250, "cumulative_xp": 9485},
+        {"level": 40, "xp_to_next": 5825, "cumulative_xp": 66690},
+        {"level": 55, "xp_to_next": 18480, "cumulative_xp": 224880},
+        {"level": 60, "xp_to_next": 0, "cumulative_xp": 333300}
+      ]
+    },
+    "huaguoshan_source_rows": [
+      {"source_key": "XP_INTRO", "base_xp": 100, "source_kind": "main_quest", "source_level": 1},
+      {"source_key": "XP_MOUNTAIN", "base_xp": 500, "source_kind": "public_normal", "source_level": 3},
+      {"source_key": "XP_WATERFALL", "base_xp": 500, "source_kind": "public_elite", "source_level": 5},
+      {"source_key": "XP_MACAQUE", "base_xp": 800, "source_kind": "public_boss", "source_level": 8},
+      {"source_key": "XP_PEACH", "base_xp": 600, "source_kind": "side_quest", "source_level": 10},
+      {"source_key": "XP_CAVE", "base_xp": 650, "source_kind": "solo_instance", "source_level": 11},
+      {"source_key": "XP_SEVENSTAR", "base_xp": 800, "source_kind": "public_elite", "source_level": 13},
+      {"source_key": "XP_PENG", "base_xp": 500, "source_kind": "optional_boss", "source_level": 14},
+      {"source_key": "XP_EASTSEA", "base_xp": 900, "source_kind": "public_normal", "source_level": 16},
+      {"source_key": "XP_JIAO", "base_xp": 1200, "source_kind": "public_boss", "source_level": 18},
+      {"source_key": "XP_SHARK", "base_xp": 1200, "source_kind": "public_boss", "source_level": 19},
+      {"source_key": "XP_CHAPTER_CLEAR", "base_xp": 1735, "source_kind": "chapter_clear", "source_level": 20}
+    ],
+    "future_chapter_source_budget_basis_points": [
+      {"source_kind": "main_quest", "weight_basis_points": 4400},
+      {"source_kind": "side_quest", "weight_basis_points": 800},
+      {"source_kind": "public_normal", "weight_basis_points": 1100},
+      {"source_kind": "public_elite", "weight_basis_points": 900},
+      {"source_kind": "public_boss", "weight_basis_points": 1100},
+      {"source_kind": "solo_instance", "weight_basis_points": 700},
+      {"source_kind": "team_instance", "weight_basis_points": 600},
+      {"source_kind": "tower", "weight_basis_points": 0},
+      {"source_kind": "first_clear", "weight_basis_points": 300},
+      {"source_kind": "repeat_clear", "weight_basis_points": 100}
+    ],
+    "future_source_profile_mapping_boundary": "The Lv21-Lv60 curve and source-kind budget are frozen, but no Difu or TianTing encounter may grant XP until a separately versioned chapter source-profile allocation table maps its authoritative source_profile, count, and rounding to this budget. An unmapped encounter must not infer an XP grant.",
+    "party_policy": {
+      "policy_id": "XP_PARTY_FULL_QUALIFIED_V1",
+      "distribution": "each_qualified_character_receives_the_full_base_award_once",
+      "party_size_changes_base_award": false,
+      "over_level_multipliers": [
+        {"max_over_source_level": 2, "multiplier_basis_points": 10000},
+        {"max_over_source_level": 4, "multiplier_basis_points": 8000},
+        {"max_over_source_level": 6, "multiplier_basis_points": 5000},
+        {"max_over_source_level": 999, "multiplier_basis_points": 2000}
+      ],
+      "death_rule": "A dead character receives no new live-combat XP; an already committed receipt remains replayable after revive.",
+      "reconnect_rule": "Reconnect reconciles the original receipt and must retain the original authoritative xp_session_id; it cannot issue a new XP grant or open a new repeat-clear quota.",
+      "repeat_clear_rule": "A repeat clear uses repeat multiplier 2500 basis points against its configured first-clear XP, rounds down before the over-level multiplier, and may settle at most once for the same owner_id, xp_source_key, and xp_session_id. Tower grants no XP.",
+      "repeat_clear_quota": {
+        "quota_identity": ["owner_id", "xp_source_key", "xp_session_id"],
+        "full_clear_multiplier_basis_points": 10000,
+        "repeat_clear_multiplier_basis_points": 2500,
+        "session_lifecycle": "xp_session_id is created only by the authoritative session-open transition and ends only at the authoritative session-close transition. Reconnect, a new encounter_instance_id, a new event_id, party reshaping, or a client retry must retain the same xp_session_id; only a later authoritative session-open after close may create a new value.",
+        "quota_consume_rule": "A committed repeat XP receipt consumes exactly one quota entry. Rejected, cap-blocked, duplicate, aborted, and uncommitted settlement attempts do not consume it; no prepared receipt or prepared state exists. The quota lookup and receipt commit use the same compare-and-swap or serializable transaction.",
+        "receipt_fields": ["xp_session_id", "xp_repeat_multiplier_basis_points"]
+      },
+      "xp_receipt_calculation": {
+        "calculation_rule_id": "XP_FLOOR_REPEAT_THEN_OVERLEVEL_V1",
+        "formula": "repeat_adjusted_xp = floor(xp_base_amount * xp_repeat_multiplier_basis_points / 10000); experience_delta = floor(repeat_adjusted_xp * xp_over_level_multiplier_basis_points / 10000)",
+        "required_authoritative_inputs": ["xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_session_id"],
+        "level_cap_rule": "At Lv60 a new experience settlement is rejected with experience_delta=0 and award_outcome=rejected; it must not consume a repeat quota."
+      },
+      "xp_receipt_binding_contract": {
+        "source_catalog": "progression.huaguoshan_source_rows",
+        "source_lookup_field": "xp_source_key",
+        "source_row_equality_fields": ["xp_source_kind", "xp_base_amount", "xp_source_level"],
+        "unmapped_or_mismatched_source_outcome": "rejected",
+        "over_level_multiplier_rule": "xp_over_level_multiplier_basis_points must equal the one frozen party_policy.over_level_multipliers row selected by xp_character_level_before - xp_source_level; no client value or inferred default is permitted.",
+        "settlement_kind_field": "xp_settlement_kind",
+        "settlement_kind_values": ["base_clear", "repeat_clear"],
+        "settlement_kind_multiplier_binding": [
+          {"xp_settlement_kind": "base_clear", "xp_repeat_multiplier_basis_points": 10000, "repeat_quota_effect": "none"},
+          {"xp_settlement_kind": "repeat_clear", "xp_repeat_multiplier_basis_points": 2500, "repeat_quota_effect": "consume_exactly_one_on_committed_receipt"}
+        ],
+        "settlement_kind_authority_rule": "The authoritative source-clear history classifies base_clear or repeat_clear before settlement. A receipt may not choose or upgrade its own kind; xp_settlement_kind, multiplier, source-row values, session identity, and computed experience_delta are immutable fingerprint inputs.",
+        "experience_delta_rule": "experience_delta must equal xp_receipt_calculation.formula using the bound source row and frozen multipliers; a mismatch is rejected."
+      }
+    }
+  },
+  "currencies_and_materials": {
+    "currency_decision_id": "ECO-LEDGER-V2-001",
+    "material_decision_id": "ECO-MAT-V2-001",
+    "owner_scope": "character",
+    "team_wallet": "disabled",
+    "trade": "disabled",
+    "currencies": [
+      {"currency_key": "CUR_GOLD", "display_name": "金币", "balance_cap": 9999999, "source_families": ["quest", "public", "solo_instance", "team_instance"], "sink_families": ["strengthen", "advance", "service"]},
+      {"currency_key": "CUR_RAID_MARK", "display_name": "团队本代币", "balance_cap": 99999, "source_families": ["team_instance"], "sink_families": ["raid_exchange"]},
+      {"currency_key": "CUR_TOWER_TOKEN", "display_name": "塔币", "balance_cap": 99999, "source_families": ["tower"], "sink_families": ["tower_exchange"]}
+    ],
+    "material_keys": [
+      {"material_key": "MAT_STRENGTHEN_SHARD", "stack_cap": 9999, "bind_rule": "character_bound"},
+      {"material_key": "MAT_ADVANCE_HG", "stack_cap": 9999, "bind_rule": "character_bound"},
+      {"material_key": "MAT_ARTIFACT_DUST", "stack_cap": 9999, "bind_rule": "character_bound"}
+    ],
+    "balance_and_stack_cap_policy": {
+      "award_application": "all_or_nothing_by_award_plan",
+      "overflow_outcome": "commit a zero-award receipt with award_outcome=balance_or_stack_cap_reached; do not consume a first-clear entitlement, grant a partial award, or advance pity. When pity_pool_key is non-null, the receipt must record pity_before and pity_after as equal values.",
+      "partial_award": "forbidden",
+      "pending_mail": "forbidden"
+    },
+    "forbidden_value_paths": [
+      "No currency, material, rare eligibility, pity progress, experience multiplier, or tower entry may be sold or accelerated by payment.",
+      "Materials remain item records and may not be represented as a second currency ledger.",
+      "A missing configured sink rejects the spend; it may not silently consume or mint a balance."
+    ]
+  },
+  "qualification": {
+    "public_chest_decision_id": "ECO-P1-V2-001",
+    "final_policy_id": "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION",
+    "policy_version": 1,
+    "progression_participation": "damage_ratio_ge_0.03 OR valid_break OR valid_guard OR one_valid_public_action",
+    "participation_chest_eligibility": "when a qualifying public-action window opened: valid_public_action AND (damage_ratio_ge_0.03 OR valid_break OR valid_guard); otherwise: damage_ratio_ge_0.03 OR valid_break OR valid_guard",
+    "public_rare_eligibility": "For public_rare_drop only: authority_attested_rare_clear AND (damage_ratio_ge_0.03 OR valid_break OR valid_guard); a rare roll additionally requires a settled eligible participation-chest receipt but is never inferred from that chest result",
+    "public_chest_settlement": {
+      "event_type": "participation_chest",
+      "policy_field": "p1_policy_id",
+      "policy_id": "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION",
+      "allowed_profile_keys": ["HG_DROP_MACAQUE_PUBLIC", "HG_DROP_JIAO_PUBLIC", "HG_DROP_SHARK_PUBLIC"],
+      "source_profile_rule": "source_profile equals the exact public profile_key; the policy ID is carried separately in p1_policy_id.",
+      "content_rule": "A committed eligible participation_chest is the only base-bundle grant for its public profile and awards that profile's public_boss bundle. The same public event must not also create a drop_bundle receipt.",
+      "downstream_binding_rule": "A public first_clear_grant or public_rare_drop must bind the committed eligible participation_chest receipt with the same owner_id, event_id, encounter_instance_id, qualification_snapshot_id, source_profile, and resource_table_version."
+    },
+    "must_not_derive": ["kill_honor_credit", "primary_assist_role", "participation_chest_result", "progression_participation_alone"],
+    "public_qualification_snapshot_required_fields": ["schema_version", "policy_id", "snapshot_id", "owner_id", "encounter_instance_id", "boss_instance_id", "phase_id", "event_id", "public_action_window_opened", "action_window_id", "damage_ratio", "valid_break", "valid_guard", "valid_public_action", "rare_clear_attested", "authority_proof_ref"],
+    "team_raid_policy": {
+      "policy_id": "TEAM_RAID_RARE_ELIGIBILITY_V1",
+      "member_count_range": [1, 4],
+      "participation": "joined_before_lock AND present_at_completion AND actor_alive_at_completion AND contribution_attested",
+      "rare_eligibility": "qualified_participation AND authority_attested_team_clear AND authority_attested_member_rare_eligibility",
+      "required_snapshot_fields": ["schema_version", "policy_id", "snapshot_id", "raid_instance_id", "completion_event_id", "profile_key", "completed", "rare_clear_attested", "authority_proof_ref", "members"],
+      "required_member_fields": ["owner_id", "joined_before_lock", "present_at_completion", "actor_alive_at_completion", "contribution_attested", "rare_clear_attested"],
+      "public_participation_chest_precondition": "not-applicable; team_raid_rare_drop binds only the TEAM_RAID_RARE_ELIGIBILITY_V1 snapshot and authority proof",
+      "receipt_identity_binding": "For team_raid_rare_drop, receipt.event_id MUST equal completion_event_id, receipt.encounter_instance_id MUST equal raid_instance_id, and source_profile MUST equal the exact eligible team-raid profile_key."
+    }
+  },
+  "drops_and_pity": {
+    "decision_id": "ECO-DROP-V2-001",
+    "reward_bundles": {
+      "mountain_common": [{"key": "CUR_GOLD", "amount": 8}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 1}],
+      "mountain_elite": [{"key": "CUR_GOLD", "amount": 20}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 2}],
+      "mountain_major": [{"key": "CUR_GOLD", "amount": 32}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 3}],
+      "waterfall_common": [{"key": "CUR_GOLD", "amount": 10}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 1}],
+      "waterfall_elite": [{"key": "CUR_GOLD", "amount": 24}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 2}],
+      "public_boss": [{"key": "CUR_GOLD", "amount": 50}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 3}],
+      "peach_common": [{"key": "CUR_GOLD", "amount": 14}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 1}],
+      "peach_major": [{"key": "CUR_GOLD", "amount": 34}, {"key": "MAT_ADVANCE_HG", "amount": 1}],
+      "cave_common": [{"key": "CUR_GOLD", "amount": 16}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 1}],
+      "cave_major": [{"key": "CUR_GOLD", "amount": 38}, {"key": "MAT_ADVANCE_HG", "amount": 1}],
+      "sevenstar_common": [{"key": "CUR_GOLD", "amount": 18}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 2}],
+      "sevenstar_elite": [{"key": "CUR_GOLD", "amount": 28}, {"key": "MAT_ADVANCE_HG", "amount": 1}],
+      "sevenstar_major": [{"key": "CUR_GOLD", "amount": 42}, {"key": "MAT_ADVANCE_HG", "amount": 2}],
+      "optional_major": [{"key": "CUR_GOLD", "amount": 44}, {"key": "MAT_ARTIFACT_DUST", "amount": 2}],
+      "eastsea_common": [{"key": "CUR_GOLD", "amount": 20}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 2}],
+      "eastsea_elite": [{"key": "CUR_GOLD", "amount": 32}, {"key": "MAT_ADVANCE_HG", "amount": 1}],
+      "dragon_old": [{"key": "CUR_GOLD", "amount": 100}, {"key": "MAT_ARTIFACT_DUST", "amount": 5}],
+      "dragon_reverse": [{"key": "CUR_GOLD", "amount": 120}, {"key": "MAT_ARTIFACT_DUST", "amount": 6}],
+      "ox_raid": [{"key": "CUR_GOLD", "amount": 120}, {"key": "CUR_RAID_MARK", "amount": 1}, {"key": "MAT_ADVANCE_HG", "amount": 2}]
+    },
+    "profiles": [
+      {"profile_key": "HG_DROP_MOUNTAIN_COMMON", "scope": "encounter", "bundle": "mountain_common"},
+      {"profile_key": "HG_DROP_MOUNTAIN_ELITE", "scope": "encounter", "bundle": "mountain_elite"},
+      {"profile_key": "HG_DROP_MOUNTAIN_MAJOR", "scope": "encounter", "bundle": "mountain_major"},
+      {"profile_key": "HG_DROP_WATERFALL_COMMON", "scope": "encounter", "bundle": "waterfall_common"},
+      {"profile_key": "HG_DROP_WATERFALL_ELITE", "scope": "encounter", "bundle": "waterfall_elite"},
+      {"profile_key": "HG_DROP_MACAQUE_PUBLIC", "scope": "public_boss", "bundle": "public_boss", "first_clear": {"key": "EQ_HG_WEAPON_T1", "duplicate_conversion": {"key": "CUR_GOLD", "amount": 90}}, "rare": {"key": "EQ_HG_TRINKET_T1", "chance_basis_points": 1000, "pity_pool_key": "PITY_HG_PUBLIC_GEAR", "guarantee_on_eligible_attempt": 5, "duplicate_conversion": {"key": "CUR_GOLD", "amount": 110}}},
+      {"profile_key": "HG_DROP_PEACH_COMMON", "scope": "encounter", "bundle": "peach_common"},
+      {"profile_key": "HG_DROP_PEACH_MAJOR", "scope": "encounter", "bundle": "peach_major"},
+      {"profile_key": "HG_DROP_CAVE_COMMON", "scope": "encounter", "bundle": "cave_common"},
+      {"profile_key": "HG_DROP_CAVE_MAJOR", "scope": "encounter", "bundle": "cave_major"},
+      {"profile_key": "HG_DROP_SEVENSTAR_COMMON", "scope": "encounter", "bundle": "sevenstar_common"},
+      {"profile_key": "HG_DROP_SEVENSTAR_ELITE", "scope": "encounter", "bundle": "sevenstar_elite"},
+      {"profile_key": "HG_DROP_SEVENSTAR_MAJOR", "scope": "encounter", "bundle": "sevenstar_major"},
+      {"profile_key": "HG_DROP_PENG_OPTIONAL", "scope": "encounter", "bundle": "optional_major"},
+      {"profile_key": "HG_DROP_EASTSEA_COMMON", "scope": "encounter", "bundle": "eastsea_common"},
+      {"profile_key": "HG_DROP_EASTSEA_ELITE", "scope": "encounter", "bundle": "eastsea_elite"},
+      {"profile_key": "HG_DROP_JIAO_PUBLIC", "scope": "public_boss", "bundle": "public_boss", "first_clear": {"key": "EQ_HG_ARMOR_T1", "duplicate_conversion": {"key": "CUR_GOLD", "amount": 90}}},
+      {"profile_key": "HG_DROP_SHARK_PUBLIC", "scope": "public_boss", "bundle": "public_boss", "first_clear": {"key": "EQ_HG_RING_T1", "duplicate_conversion": {"key": "CUR_GOLD", "amount": 90}}},
+      {"profile_key": "HG_DROP_DRAGON_OLD", "scope": "encounter", "bundle": "dragon_old", "first_clear": {"key": "ART_HG_TIDE_SEAL", "duplicate_conversion": {"key": "MAT_ARTIFACT_DUST", "amount": 8}}},
+      {"profile_key": "HG_DROP_DRAGON_REVERSE", "scope": "encounter", "bundle": "dragon_reverse"},
+      {"profile_key": "HG_DROP_OX_RAID", "scope": "team_raid", "bundle": "ox_raid", "first_clear": {"key": "EQ_HG_SET_GUARD_T1", "duplicate_conversion": {"key": "CUR_RAID_MARK", "amount": 2}}, "rare": {"key": "ART_HG_FLAME_CORE", "chance_basis_points": 800, "pity_pool_key": "PITY_HG_RAID_ARTIFACT", "guarantee_on_eligible_attempt": 6, "duplicate_conversion": {"key": "CUR_RAID_MARK", "amount": 3}}}
+    ],
+    "pity_pools": [
+      {"pity_pool_key": "PITY_HG_PUBLIC_GEAR", "owner_scope": "character", "eligible_profile_keys": ["HG_DROP_MACAQUE_PUBLIC"], "increment_after": "an eligible rare roll misses and its receipt commits", "reset_after": "a rare success, a pity-forced success, or a duplicate conversion from that rare success", "migration": "carry only through an explicit same-family migration record"},
+      {"pity_pool_key": "PITY_HG_RAID_ARTIFACT", "owner_scope": "character", "eligible_profile_keys": ["HG_DROP_OX_RAID"], "increment_after": "an eligible rare roll misses and its receipt commits", "reset_after": "a rare success, a pity-forced success, or a duplicate conversion from that rare success", "migration": "carry only through an explicit same-family migration record"}
+    ],
+    "profile_settlement_contract": {
+      "settlement_trigger": "one authoritative completion or clear event per source_profile and encounter_instance_id",
+      "repeat_rule": "A profile may pay again only for a new authoritative event_id. The same source_profile and event_id in the same encounter_instance_id replay the original receipt and may never reissue a grant.",
+      "first_clear_history_key": ["owner_id", "profile_key"],
+      "first_clear_version_rule": "A later resource_table_version never resets an existing first-clear history key; any duplicate conversion uses the profile rule preserved on the original receipt.",
+      "pity_increment_boundary": "Only a committed eligible rare miss advances a listed pity pool; ordinary bundle settlement, qualification failure, cap failure, and rejected receipts do not."
+    },
+    "pity_state_contract": {
+      "state_identity": ["owner_id", "pity_pool_key"],
+      "initial_counter": 0,
+      "counter_interpretation": "pity_before is the integer count of consecutive committed eligible rare misses before this attempt and must be in [0, guarantee_on_eligible_attempt - 1] for the bound profile.",
+      "resolution_order": "If pity_before equals guarantee_on_eligible_attempt - 1, resolve pity_forced_success before any normal random roll. Otherwise resolve exactly one authoritative normal roll.",
+      "rare_roll_outcome_values": ["miss", "chance_success", "pity_forced_success"],
+      "rare_grant_disposition_values": ["not_applicable", "granted", "duplicate_conversion"],
+      "transitions": {
+        "miss": "pity_after = pity_before + 1; rare_grant_disposition=not_applicable",
+        "chance_success": "pity_after = 0; rare_grant_disposition is granted or duplicate_conversion",
+        "pity_forced_success": "pity_after = 0; rare_grant_disposition is granted or duplicate_conversion",
+        "zero_award_or_rejected": "pity_after = pity_before; no pity increment, reset, or consumption"
+      },
+      "required_receipt_fields": ["drop_roll_id", "drop_roll_proof_ref", "rare_roll_outcome", "rare_grant_disposition", "pity_before", "pity_after"],
+      "roll_proof_rule": "drop_roll_id and drop_roll_proof_ref must resolve to one immutable authoritative roll record that identifies the profile, owner, encounter instance, event, pity_before, resolution branch, and table version. A client roll, an opaque identifier, or a second random roll is rejected.",
+      "migration_record_contract": {
+        "migration_identity": ["migration_id", "owner_id", "source_pity_pool_key", "target_pity_pool_key", "source_resource_table_version", "target_resource_table_version"],
+        "required_fields": ["migration_id", "owner_id", "source_pity_pool_key", "target_pity_pool_key", "source_resource_table_version", "target_resource_table_version", "pity_before", "pity_after", "authority_proof_ref", "migration_plan_hash"],
+        "rule": "A pity migration is a one-time authority-attested same-family transition. It must replay by migration_identity, cannot delete, recalculate, or reset a source counter, and must retain the source receipt lineage."
+      }
+    },
+    "profile_boundary": "Profiles without a rare field are deterministic guaranteed bundles plus their stated first-clear rule; they must not acquire a hidden probability, pity pool, or duplicate conversion."
+  },
+  "tower_rewards": {
+    "decision_id": "ECO-TOWER-V2-001",
+    "entry_rule": "every solo player or every member of a team must be at least Lv55",
+    "reward_unit": "one authority-confirmed five-abstract-beat cycle",
+    "record_scope": "character",
+    "cooperative_rule": "A team completion produces one individually qualified receipt only for a member that passes TOWER_FIRST_CYCLE_QUALIFICATION_V1; no pooled currency or team wallet exists.",
+    "qualification_policy": {
+      "policy_id": "TOWER_FIRST_CYCLE_QUALIFICATION_V1",
+      "eligibility": "entry_level_at_least_55 AND entry_qualified AND joined_before_run_lock AND present_at_authoritative_completion AND actor_alive_at_authoritative_completion AND contribution_attested",
+      "required_snapshot_fields": ["schema_version", "policy_id", "snapshot_id", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "completion_event_id", "authority_proof_ref", "members"],
+      "required_member_fields": ["owner_id", "entry_level", "entry_qualified", "joined_before_run_lock", "present_at_authoritative_completion", "actor_alive_at_authoritative_completion", "contribution_attested", "eligible"],
+      "receipt_binding": "For tower_reward, receipt.owner_id must name an eligible snapshot member, receipt.event_id must equal completion_event_id, receipt.encounter_instance_id must equal tower_run_id, and receipt tower_run_id/tower_cycle_id/tower_week_bucket/tower_mode must equal that snapshot. A disconnected, absent, dead, non-contributing, late-joining, or entry-ineligible member receives no tower_reward receipt."
+    },
+    "first_clear_history_key": ["owner_id", "tower_cycle_id", "tower_mode"],
+    "first_clear_version_rule": "A later resource_table_version never resets a tower first-clear history key.",
+    "first_clear_awards": [{"key": "CUR_TOWER_TOKEN", "amount": 3}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 3}],
+    "repeat_clear_awards": [{"key": "CUR_TOWER_TOKEN", "amount": 1}, {"key": "MAT_STRENGTHEN_SHARD", "amount": 1}],
+    "receipt_award_class_contract": {
+      "field": "tower_award_class",
+      "allowed_values": ["first_clear", "repeat_clear"],
+      "award_mapping": [
+        {"tower_award_class": "first_clear", "award_source": "tower_rewards.first_clear_awards", "first_clear_history_effect": "consume_only_when_award_outcome=awarded"},
+        {"tower_award_class": "repeat_clear", "award_source": "tower_rewards.repeat_clear_awards", "first_clear_history_effect": "none"}
+      ],
+      "zero_award_rule": "A weekly-token-cap or balance/stack-cap zero award retains the authority-determined tower_award_class but grants no balance, material, or unique delta and must not consume a first-clear history entry."
+    },
+    "weekly_tower_token_cap": 15,
+    "weekly_cap_policy": {
+      "bucket": "Asia/Shanghai ISO-8601 week derived by the authoritative service clock",
+      "cap_key": "CUR_TOWER_TOKEN",
+      "award_application": "all_or_nothing_by_award_plan",
+      "cap_reached_outcome": "commit a zero-award receipt with award_outcome=weekly_token_cap_reached; do not consume the first-clear entitlement, grant materials, or advance any pity state. tower_weekly_token_before and tower_weekly_token_after must be equal.",
+      "partial_award": "forbidden",
+      "quota_identity": ["owner_id", "tower_week_bucket", "CUR_TOWER_TOKEN"],
+      "receipt_counter_fields": ["tower_weekly_token_before", "tower_weekly_token_after"],
+      "concurrency_rule": "Read the weekly issued-token counter, verify planned_tokens <= cap - tower_weekly_token_before, write tower_weekly_token_after, the first-clear state, receipt origin, and receipt commit in one serializable transaction or compare-and-swap guarded transaction. A competing settlement re-reads the committed counter before it can award."
+    },
+    "xp_award": 0,
+    "pity_policy": "none",
+    "failure_or_exit_award": [],
+    "tower_mode_contract": {
+      "canonical_field": "tower_mode",
+      "allowed_values": ["first_cycle"],
+      "alias_policy": "mode is forbidden; no case, whitespace, or semantic alias is accepted."
+    },
+    "required_identity": ["tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "owner_id", "encounter_instance_id", "event_id"],
+    "deferred_non_economic_entitlements": ["title", "cosmetic_fragment"],
+    "global_tower_boundary": "Floor plan, affix pool, total floors, season, title asset IDs, cosmetic asset IDs, and exchange catalog remain separate content/runtime decisions. This reward table rejects settlement if tower_run_id or tower_cycle_id is absent."
+  },
+  "persistent_receipt_contract": {
+    "decision_id": "ECO-LEDGER-V2-001",
+    "schema_version": 1,
+    "owner_scope": "character",
+    "semantic_dedupe_identity": ["owner_scope", "owner_id", "encounter_instance_id", "event_id", "source_profile", "reward_slot_key"],
+    "canonical_receipt_field_contract": {
+      "comparison": "All canonical values are exact, case-sensitive ASCII identifiers. Whitespace, case, legacy aliases, display names, and inferred defaults are forbidden.",
+      "source_profile_by_event_type": {
+        "experience": {"field_rule": "source_profile equals xp_source_key", "allowed_values": ["XP_INTRO", "XP_MOUNTAIN", "XP_WATERFALL", "XP_MACAQUE", "XP_PEACH", "XP_CAVE", "XP_SEVENSTAR", "XP_PENG", "XP_EASTSEA", "XP_JIAO", "XP_SHARK", "XP_CHAPTER_CLEAR"]},
+        "drop_bundle": {"field_rule": "source_profile equals profile_key", "allowed_values": ["HG_DROP_MOUNTAIN_COMMON", "HG_DROP_MOUNTAIN_ELITE", "HG_DROP_MOUNTAIN_MAJOR", "HG_DROP_WATERFALL_COMMON", "HG_DROP_WATERFALL_ELITE", "HG_DROP_PEACH_COMMON", "HG_DROP_PEACH_MAJOR", "HG_DROP_CAVE_COMMON", "HG_DROP_CAVE_MAJOR", "HG_DROP_SEVENSTAR_COMMON", "HG_DROP_SEVENSTAR_ELITE", "HG_DROP_SEVENSTAR_MAJOR", "HG_DROP_PENG_OPTIONAL", "HG_DROP_EASTSEA_COMMON", "HG_DROP_EASTSEA_ELITE", "HG_DROP_DRAGON_OLD", "HG_DROP_DRAGON_REVERSE", "HG_DROP_OX_RAID"]},
+        "first_clear_grant": {"field_rule": "source_profile equals profile_key", "allowed_values": ["HG_DROP_MACAQUE_PUBLIC", "HG_DROP_JIAO_PUBLIC", "HG_DROP_SHARK_PUBLIC", "HG_DROP_DRAGON_OLD", "HG_DROP_OX_RAID"]},
+        "participation_chest": {"field_rule": "source_profile equals profile_key", "allowed_values": ["HG_DROP_MACAQUE_PUBLIC", "HG_DROP_JIAO_PUBLIC", "HG_DROP_SHARK_PUBLIC"]},
+        "public_rare_drop": {"field_rule": "source_profile equals profile_key", "allowed_values": ["HG_DROP_MACAQUE_PUBLIC"]},
+        "team_raid_rare_drop": {"field_rule": "source_profile equals profile_key", "allowed_values": ["HG_DROP_OX_RAID"]},
+        "tower_reward": {"required_value": "TOWER_FIRST_CYCLE_REWARD_V1"}
+      },
+      "reward_slot_key_by_event_type": {
+        "experience": "xp_grant",
+        "drop_bundle": "base_bundle",
+        "first_clear_grant": "first_clear",
+        "participation_chest": "participation_chest",
+        "public_rare_drop": "rare_drop",
+        "team_raid_rare_drop": "rare_drop",
+        "tower_reward": "tower_cycle_reward"
+      },
+      "tower_mode": {"canonical_field": "tower_mode", "required_value": "first_cycle", "forbidden_aliases": ["mode", "first-cycle", "FIRST_CYCLE"]}
+    },
+    "identity_fingerprint_fields": ["resource_table_version", "qualification_snapshot_id", "p1_policy_id", "drop_roll_id", "drop_roll_proof_ref", "pity_pool_key", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint", "first_clear_disposition", "rare_roll_outcome", "rare_grant_disposition", "xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_rounding_rule_id", "xp_session_id", "experience_delta", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "tower_award_class", "tower_weekly_token_before", "tower_weekly_token_after", "award_plan_hash"],
+    "required_record_fields": ["schema_version", "resource_table_version", "owner_scope", "owner_id", "event_id", "event_type", "source_profile", "reward_slot_key", "encounter_instance_id", "qualification_snapshot_id", "p1_policy_id", "drop_roll_id", "drop_roll_proof_ref", "pity_pool_key", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint", "first_clear_disposition", "rare_roll_outcome", "rare_grant_disposition", "xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_rounding_rule_id", "xp_session_id", "experience_delta", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "tower_award_class", "tower_weekly_token_before", "tower_weekly_token_after", "balance_delta", "material_delta", "unique_grants", "pity_before", "pity_after", "award_plan_hash", "authority_proof_ref", "receipt_id", "commit_state", "award_outcome"],
+    "global_required_non_null": ["schema_version", "resource_table_version", "owner_scope", "owner_id", "event_id", "event_type", "source_profile", "reward_slot_key", "encounter_instance_id", "balance_delta", "material_delta", "unique_grants", "award_plan_hash", "authority_proof_ref", "receipt_id", "commit_state", "award_outcome"],
+    "global_fixed_values": {"schema_version": 1, "resource_table_version": "economy-v2", "owner_scope": "character"},
+    "commit_states": ["committed", "rejected"],
+    "award_outcomes": ["awarded", "weekly_token_cap_reached", "balance_or_stack_cap_reached", "rejected"],
+    "owner_resolution_contract": {
+      "owner_id_rule": "owner_id is the stable character owner resolved by the authoritative encounter/progress provider. An active actor_id and lifecycle_id may be evidence inputs only; neither may substitute for owner_id or enter the receipt semantic dedupe identity as a character owner.",
+      "authority_mapping_inputs": ["actor_id", "lifecycle_id", "authority_proof_ref"],
+      "required_mapping_result": "resolved_owner_id_equals_receipt_owner_id",
+      "forbidden_inputs": ["client_supplied_owner_id", "raw_actor_id_as_owner_id", "raw_lifecycle_id_as_owner_id"],
+      "failure_outcome": "rejected"
+    },
+    "receipt_state_contract": {
+      "first_clear_disposition_values": ["first_clear_granted", "duplicate_conversion", "not_consumed_zero_award"],
+      "state_outcome_matrix": [
+        {"commit_state": "committed", "award_outcome": "awarded", "zero_award": "allowed_only_for_committed_rare_miss"},
+        {"commit_state": "committed", "award_outcome": "weekly_token_cap_reached", "zero_award": true, "no_pity_mutation": true, "no_first_clear_consumption": true},
+        {"commit_state": "committed", "award_outcome": "balance_or_stack_cap_reached", "zero_award": true, "no_pity_mutation": true, "no_first_clear_consumption": true},
+        {"commit_state": "rejected", "award_outcome": "rejected", "zero_award": true, "no_state_mutation": true}
+      ],
+      "zero_award_projection_rule": "A zero-award row requires balance_delta and material_delta to be empty or zero, unique_grants to be empty, and no first-clear, pity, repeat-quota, or tower-weekly-quota mutation."
+    },
+    "transactional_resolution_contract": {
+      "persistent_prepared_state": "forbidden",
+      "lock_and_plan": "For a new semantic identity, one serializable transaction first acquires the unique receipt identity and every affected first-clear, pity, XP repeat-quota, tower weekly-quota, balance, and stack lock; only after those locks are held may it resolve the complete final award plan, including zero-award cap outcomes and counter before/after values.",
+      "commit": "The same transaction writes every reward/state mutation, origin, and one terminal committed receipt with the resolved award_plan_hash. A rejected receipt is terminal and writes no reward, pity, first-clear, repeat quota, weekly quota, or origin mutation.",
+      "retry": "An aborted transaction leaves no durable receipt or mutation. A retry may use only the same immutable authoritative inputs (including event identity, qualification snapshot, drop_roll_id, and XP inputs); it reacquires locks before resolving a new terminal plan. Once a terminal receipt exists, it always replays; a different fingerprint is receipt_identity_conflict."
+    },
+    "profile_scope_receipt_rule": "For drop_bundle and first_clear_grant, source_profile equals an exact profile_key. drop_bundle excludes all public profiles because their base bundle is paid by participation_chest. team_raid profiles require a non-null qualification_snapshot_id from TEAM_RAID_RARE_ELIGIBILITY_V1; ordinary encounter profiles keep it null. first_clear_disposition is first_clear_granted, duplicate_conversion, or not_consumed_zero_award, and only first_clear_grant may set it non-null.",
+    "public_chest_profile_binding_rule": "participation_chest requires p1_policy_id=P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION and one allowed public source_profile. For a public source_profile, first_clear_grant and public_rare_drop must bind the same committed eligible chest receipt; HG_DROP_MACAQUE_PUBLIC, HG_DROP_JIAO_PUBLIC, and HG_DROP_SHARK_PUBLIC must never use drop_bundle.",
+    "conditional_field_rules": [
+      {"event_type": "experience", "required_non_null": ["source_profile", "reward_slot_key", "encounter_instance_id", "xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_rounding_rule_id", "xp_session_id", "experience_delta"], "required_null": ["p1_policy_id", "drop_roll_id", "drop_roll_proof_ref", "pity_pool_key", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint", "first_clear_disposition", "rare_roll_outcome", "rare_grant_disposition", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "tower_award_class", "tower_weekly_token_before", "tower_weekly_token_after", "pity_before", "pity_after"]},
+      {"event_type": "drop_bundle", "required_non_null": ["source_profile", "reward_slot_key", "encounter_instance_id"], "required_null": ["p1_policy_id", "drop_roll_id", "drop_roll_proof_ref", "pity_pool_key", "pity_before", "pity_after", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint", "first_clear_disposition", "rare_roll_outcome", "rare_grant_disposition", "xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_rounding_rule_id", "xp_session_id", "experience_delta", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "tower_award_class", "tower_weekly_token_before", "tower_weekly_token_after"]},
+      {"event_type": "first_clear_grant", "required_non_null": ["source_profile", "reward_slot_key", "encounter_instance_id", "first_clear_disposition"], "required_null": ["p1_policy_id", "drop_roll_id", "drop_roll_proof_ref", "pity_pool_key", "pity_before", "pity_after", "rare_roll_outcome", "rare_grant_disposition", "xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_rounding_rule_id", "xp_session_id", "experience_delta", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "tower_award_class", "tower_weekly_token_before", "tower_weekly_token_after"]},
+      {"event_type": "participation_chest", "required_non_null": ["source_profile", "reward_slot_key", "encounter_instance_id", "qualification_snapshot_id", "p1_policy_id"], "required_null": ["xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_rounding_rule_id", "xp_session_id", "experience_delta", "drop_roll_id", "drop_roll_proof_ref", "pity_pool_key", "pity_before", "pity_after", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint", "first_clear_disposition", "rare_roll_outcome", "rare_grant_disposition", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "tower_award_class", "tower_weekly_token_before", "tower_weekly_token_after"]},
+      {"event_type": "public_rare_drop", "required_non_null": ["source_profile", "reward_slot_key", "encounter_instance_id", "qualification_snapshot_id", "drop_roll_id", "drop_roll_proof_ref", "pity_pool_key", "pity_before", "pity_after", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint", "rare_roll_outcome", "rare_grant_disposition"], "required_null": ["p1_policy_id", "xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_rounding_rule_id", "xp_session_id", "experience_delta", "first_clear_disposition", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "tower_award_class", "tower_weekly_token_before", "tower_weekly_token_after"]},
+      {"event_type": "team_raid_rare_drop", "required_non_null": ["source_profile", "reward_slot_key", "encounter_instance_id", "qualification_snapshot_id", "drop_roll_id", "drop_roll_proof_ref", "pity_pool_key", "pity_before", "pity_after", "rare_roll_outcome", "rare_grant_disposition"], "required_null": ["p1_policy_id", "xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_rounding_rule_id", "xp_session_id", "experience_delta", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint", "first_clear_disposition", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "tower_award_class", "tower_weekly_token_before", "tower_weekly_token_after"]},
+      {"event_type": "tower_reward", "required_non_null": ["source_profile", "reward_slot_key", "encounter_instance_id", "qualification_snapshot_id", "tower_run_id", "tower_cycle_id", "tower_week_bucket", "tower_mode", "tower_award_class", "tower_weekly_token_before", "tower_weekly_token_after"], "required_null": ["p1_policy_id", "xp_source_key", "xp_source_kind", "xp_base_amount", "xp_source_level", "xp_character_level_before", "xp_over_level_multiplier_basis_points", "xp_repeat_multiplier_basis_points", "xp_settlement_kind", "xp_rounding_rule_id", "xp_session_id", "experience_delta", "drop_roll_id", "drop_roll_proof_ref", "pity_pool_key", "pity_before", "pity_after", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint", "first_clear_disposition", "rare_roll_outcome", "rare_grant_disposition"]}
+    ],
+    "receipt_profile_binding_rules": [
+      {
+        "rule_id": "PUBLIC_PROFILE_CHEST_BINDING_V2",
+        "event_types": ["first_clear_grant", "public_rare_drop"],
+        "source_profiles": ["HG_DROP_MACAQUE_PUBLIC", "HG_DROP_JIAO_PUBLIC", "HG_DROP_SHARK_PUBLIC"],
+        "required_non_null": ["qualification_snapshot_id", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint"],
+        "bound_receipt": {"event_type": "participation_chest", "commit_state": "committed", "p1_policy_id": "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION", "equality_fields": ["owner_id", "event_id", "encounter_instance_id", "qualification_snapshot_id", "source_profile", "resource_table_version"]},
+        "failure_outcome": "rejected"
+      },
+      {
+        "rule_id": "OX_TEAM_RAID_SNAPSHOT_BINDING_V2",
+        "event_types": ["drop_bundle", "first_clear_grant", "team_raid_rare_drop"],
+        "source_profiles": ["HG_DROP_OX_RAID"],
+        "required_non_null": ["qualification_snapshot_id"],
+        "required_null": ["p1_policy_id", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint"],
+        "snapshot_policy_id": "TEAM_RAID_RARE_ELIGIBILITY_V1",
+        "snapshot_member_rule": "owner_id must name a snapshot member with joined_before_lock, present_at_completion, actor_alive_at_completion, and contribution_attested all true. rare_clear_attested is additionally required only for team_raid_rare_drop.",
+        "snapshot_equality_fields": ["owner_id", "event_id=completion_event_id", "encounter_instance_id=raid_instance_id", "source_profile=profile_key"],
+        "failure_outcome": "rejected"
+      },
+      {
+        "rule_id": "ORDINARY_DROP_NO_SNAPSHOT_V2",
+        "event_types": ["drop_bundle"],
+        "source_profiles": ["HG_DROP_MOUNTAIN_COMMON", "HG_DROP_MOUNTAIN_ELITE", "HG_DROP_MOUNTAIN_MAJOR", "HG_DROP_WATERFALL_COMMON", "HG_DROP_WATERFALL_ELITE", "HG_DROP_PEACH_COMMON", "HG_DROP_PEACH_MAJOR", "HG_DROP_CAVE_COMMON", "HG_DROP_CAVE_MAJOR", "HG_DROP_SEVENSTAR_COMMON", "HG_DROP_SEVENSTAR_ELITE", "HG_DROP_SEVENSTAR_MAJOR", "HG_DROP_PENG_OPTIONAL", "HG_DROP_EASTSEA_COMMON", "HG_DROP_EASTSEA_ELITE", "HG_DROP_DRAGON_OLD", "HG_DROP_DRAGON_REVERSE"],
+        "required_null": ["qualification_snapshot_id", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint"],
+        "failure_outcome": "rejected"
+      },
+      {
+        "rule_id": "ORDINARY_FIRST_CLEAR_NO_SNAPSHOT_V2",
+        "event_types": ["first_clear_grant"],
+        "source_profiles": ["HG_DROP_DRAGON_OLD"],
+        "required_null": ["qualification_snapshot_id", "participation_chest_receipt_id", "participation_chest_receipt_fingerprint"],
+        "failure_outcome": "rejected"
+      }
+    ],
+    "award_plan_derivation_contract": {
+      "derivation_id": "ECO_AWARD_PLAN_DERIVATION_V2",
+      "common_rule": "balance_delta, material_delta, and unique_grants must be non-negative exact projections of one frozen rule below. A grant, key, amount, duplicate conversion, or partial bundle not present in the bound rule is rejected.",
+      "event_type_derivations": [
+        {"event_type": "experience", "source": "progression.party_policy.xp_receipt_binding_contract", "projection": "experience_delta only; no currency, material, or unique grant"},
+        {"event_type": "drop_bundle", "source": "drops_and_pity.profiles[profile_key].bundle -> drops_and_pity.reward_bundles", "projection": "exact_full_bundle_only; no unique grant"},
+        {"event_type": "participation_chest", "source": "qualification.public_chest_settlement + drops_and_pity.profiles[profile_key].bundle", "projection": "exact_public_boss_bundle_only; no unique grant"},
+        {"event_type": "first_clear_grant", "source": "drops_and_pity.profiles[profile_key].first_clear", "projection": "exact_unique_grant_or_its_frozen_duplicate_conversion_only"},
+        {"event_type": "public_rare_drop", "source": "drops_and_pity.profiles[profile_key].rare", "projection": "exact_rare_unique_grant_or_its_frozen_duplicate_conversion_only"},
+        {"event_type": "team_raid_rare_drop", "source": "drops_and_pity.profiles[profile_key].rare", "projection": "exact_rare_unique_grant_or_its_frozen_duplicate_conversion_only"},
+        {"event_type": "tower_reward", "source": "tower_rewards.receipt_award_class_contract", "projection": "tower_award_class maps exactly to first_clear_awards or repeat_clear_awards"}
+      ],
+      "hash_rule": "award_plan_hash includes the resolved derivation_id, source profile, every projected delta/grant, duplicate or rare disposition, qualification binding, and all event-specific calculation inputs."
+    },
+    "hash_contract": {
+      "resource_table_file_hash": "SHA-256 over the immutable UTF-8 resource-table file bytes, stored out-of-band in the decision register",
+      "award_plan_hash": "SHA-256 lowercase hexadecimal over RFC 8785 JSON Canonicalization Scheme UTF-8 bytes of the resolved award plan, including award_plan_derivation_contract.derivation_id, every exact projected grant, duplicate conversion, rare-roll proof/outcome/disposition, pity transition, qualification snapshot identity, XP source-row/kind/character-level/multiplier/settlement-kind/session inputs and experience_delta, tower award class and weekly counter before/after values, and table version"
+    },
+    "encounter_identity_rule": "encounter_instance_id is an authoritative unique lifecycle identity. It is required for every receipt type, including quest and experience grants; event_id need only be unique inside that encounter instance.",
+    "replay_rule": "The same semantic identity and fingerprint returns the original terminal committed or rejected receipt without another mutation. The same semantic identity with a different fingerprint, including a different resource_table_version, is a terminal receipt_identity_conflict.",
+    "cross_version_origin_rule": "A resource-table migration may create new receipts only for new authoritative events. The same origin identity may never be re-settled under a later resource_table_version; it is a terminal conflict rather than a recalculation.",
+    "public_rare_participation_chest_binding_rule": "A public_rare_drop receipt must bind participation_chest_receipt_id and participation_chest_receipt_fingerprint to one committed eligible participation_chest receipt with the same owner_id, event_id, encounter_instance_id, qualification_snapshot_id, source_profile, and resource_table_version. The same binding is mandatory for public first_clear_grant. team_raid_rare_drop must keep both participation-chest fields null. A chest result never by itself creates rare eligibility.",
+    "team_raid_event_binding_rule": "For every HG_DROP_OX_RAID drop_bundle, first_clear_grant, or team_raid_rare_drop, receipt.event_id equals completion_event_id and receipt.encounter_instance_id equals raid_instance_id from the TEAM_RAID_RARE_ELIGIBILITY_V1 snapshot; the receipt cannot substitute another team event or instance.",
+    "zero_award_pity_rule": "For balance_or_stack_cap_reached or weekly_token_cap_reached, a receipt with a non-null pity_pool_key must persist pity_before equal to pity_after. It may not increment, reset, or consume pity. A receipt with no pity_pool_key keeps both fields null.",
+    "atomicity_rule": "Currency, material, unique, first-clear, pity, XP repeat quota, tower weekly quota, receipt, and origin writes commit in one authoritative serializable transaction governed by transactional_resolution_contract. A crash or timeout reconciles by terminal receipt identity before any retry; it may not re-run a grant blindly.",
+    "migration_rule": "Migration is forward-only. Existing receipts retain their original resource_table_version and award result. An unknown or unmapped record enters an auditable isolation queue; no automatic deletion, recalculation, or pity reset is permitted.",
+    "proof_rule": "authority_proof_ref must resolve through the authoritative encounter/progress provider before a persistent receipt can commit and must attest the owner-resolution mapping when actor_id/lifecycle_id evidence is present. drop_roll_proof_ref additionally resolves the immutable rare roll. A non-empty opaque string alone is insufficient for production.",
+    "functional_retention_rule": "Keep a committed receipt available for reconciliation for the lifetime of its character state and through every migration that can reference it. Legal or account-deletion retention is owned by the future service data policy and may not weaken this functional reconciliation rule."
+  },
+  "runtime_integration_gates": [
+    "A future implementation must compile this table exactly and prove its content hash/version binding before it can set runtime_handoff=true.",
+    "The authoritative persistent store must enforce the receipt identity and fingerprint conflict rule across process restart and reconnect.",
+    "The encounter adapter must resolve authority_proof_ref and qualification snapshots; client or UI values are never evidence.",
+    "The existing implementation/growth f6h-v1 simulator remains a historical offline test fixture. It is not an economy-v1 runtime implementation and cannot be promoted by this document alone.",
+    "Y3 editor data, map root, object IDs, multiplayer synchronization, service storage, and live 30/60/90-minute balance validation remain separate production gates."
+  ]
+}

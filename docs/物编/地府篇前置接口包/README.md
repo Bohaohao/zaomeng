@@ -18,7 +18,7 @@
 
 - 地府单位、技能、效果、投射物、地图资源、地形坐标、Y3 ID 或编辑器对象。
 - 经验、掉落、概率、保底、货币、物品、奖励、数值或资源吞吐。
-- `implementation/difu/`、`implementation/growth/` 或任何可执行地图接入。
+- `implementation/difu/` 或任何可执行地图接入；工作区既有的 `implementation/growth/` 只能作为外部、runtime-closed 的离线候选，不能被本接口创建、消费或提升。
 
 所有上述内容保持 `null`、`deferred` 或不存在，不能从本包推导为生产配置。
 
@@ -29,8 +29,18 @@
 | [cross-chapter-interface.json](cross-chapter-interface.json) | 唯一机器可读接口契约与非生产证据协议 |
 | [design-spec.json](design-spec.json) | Y3 规划层交接视图；不替代接口契约 |
 | [validate-underworld-preflight.ps1](validate-underworld-preflight.ps1) | 严格验证固定决策、非生产边界、来源与负例 |
-| [validate-difu-huaguoshan-contract.ps1](validate-difu-huaguoshan-contract.ps1) | 只读静态比对地府接口与花果山 manifest、绑定和 Lua 配置镜像；不执行 Lua，不替代行为回归 |
+| [validate-difu-huaguoshan-contract.ps1](validate-difu-huaguoshan-contract.ps1) | 通过受信任、离线、执行式 Node/Fengari Lua 表投影比对地府接口与花果山 manifest、绑定和有效 Lua 配置字段；不替代行为回归 |
 | [validation-report.md](validation-report.md) | 本包最新离线验证记录 |
+
+### 跨篇 Lua 投影的信任边界
+
+`validate-difu-huaguoshan-contract.ps1` 不是纯文本扫描，也不能描述为“不执行 Lua”：它会在受控、受信任的 Node/Fengari 边界中执行唯一的 canonical `huaguoshan_config.lua`，读取 Lua 最终表值，因此能识别重复字段的后写覆盖和注释伪命中。该执行只用于离线配置投影；不会启动 Y3 引擎、地图、生产服务或任何生产运行时。
+
+校验器从自身的 `$ProjectRoot` 固定推导 `implementation/huaguoshan/tools/materialize-object-commands.ps1` 与 `implementation/huaguoshan/lua/huaguoshan_config.lua`，再对规范路径、项目根约束、文件名、链接状态和解析结果做校验；没有 `-MaterializerPath`、`-ConfigPath` 或正常导出的 `-LuaConfigPath` 覆盖入口，未知余参会被拒绝。材料器的常规 `-ExportCrossChapterLuaContract` 模式同样只能投影该 canonical 配置。
+
+负例不复用正常入口：校验器只会在专用临时根 `huaguoshan-cross-chapter-fixtures` 下创建命名固定为 `huaguoshan_config.lua` 的一次性 fixture，并调用独立的 `-ExportCrossChapterLuaFixtureContract` 模式。fixture 用 `loadfile(path, 't', environment)` 的最小 Lua 环境运行；环境不暴露 `os`、`io`、`package`、`require`、`debug`、`load`、`dofile` 或 `loadfile` 等危险全局。fixture 的作用仅限离线负例，不能替换常规 canonical 配置或获得 Y3/生产执行权限。
+
+投影会稳定导出所有有效 `Config.encounters` 的 `progression_key` 消费者；校验器断言 `DF_PROGRESS_YANLUO_HALL_CLEARED` 在有效 Lua 表中只能由 `HG_E_DRAGON_REVERSE_TIDE` 消费。
 
 执行：
 
@@ -49,9 +59,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\地府篇前�
 | 2 | 建立唯一进度接口 | 以 `cross-chapter-interface.json` 固定 `DF_PROGRESS_YANLUO_HALL_CLEARED` 的角色归属、阎罗殿唯一写入者、`(actor_id,event_id)` 幂等键、完成收据字段和非写入者。 |
 | 3 | 建立团队清理接口 | 固定 `dead -> revive -> chapter_initial_spawn`，并把 `left` 无回传、全灭去重、超时仅 `active`、以及 `raid_instance_id + session_epoch + cleanup_token` 的确认身份写入机器可读合同。 |
 | 4 | 同步花果山消费者 | 逆潮只将 `Lv38 + DF_PROGRESS_YANLUO_HALL_CLEARED` 交给受信任查询；牛魔旧战场只投影死亡回传/会话锁命令，不创建地府写入、地图或奖励。 |
-| 5 | 离线验证与终审 | 执行严格接口校验、生产值/Y3 ID/旧键/离场/确认身份负例、规格归一化、花果山预检和 Lua 回归；再做独立契约与运行时复审。 |
+| 5 | 离线验证与终审 | 执行严格接口校验、生产值/Y3 ID/旧键/离场/确认身份负例、受信任 Fengari 有效表投影与 Lua 回归；再做独立契约与运行时复审。 |
 | 6 | 归档发布 | 更新索引和施工归档，记录证据与未关闭门禁；通过 `git diff --check`、全量离线入口后提交并推送。 |
-| 7 | 后续地府篇施工（不在本轮） | 先在真实地图工程回读 `chapter_initial_spawn`、地图根和对象 ID，再创建地府单位、遭遇、地图、持久化写入与实机回归；数值、掉落和经济仍须先走裁决包。 |
+| 7 | 后续地府篇施工（不在本轮） | 先在真实地图工程回读 `chapter_initial_spawn`、地图根和对象 ID，再创建地府单位、遭遇、地图、持久化写入与实机回归；经济只能在补地府 profile 且完成 `economy-v2` 运行时门禁后接入。 |
 
 ## 后续交接
 

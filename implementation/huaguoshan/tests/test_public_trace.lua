@@ -74,6 +74,24 @@ do
     equal(forged_error, 'untrusted-authority-field:completed_reading',
         'forged trace read proof is rejected explicitly')
 
+    local forged_proof_ref, forged_proof_ref_error = trace:complete_action(
+        event(trace, { a = reservation }, 'a', 'trace:forged-proof-ref', {
+            authority_proof_ref = 'caller-controlled-proof-ref',
+        }), actor_is_current)
+    equal(forged_proof_ref, false, 'caller authority proof references cannot complete a trace')
+    equal(forged_proof_ref_error, 'untrusted-authority-field:authority_proof_ref',
+        'caller authority proof references are rejected explicitly')
+
+    authority:set_completion('trace:no-proof-reference', 2)
+    authority:set_proof_override('public_trace_action_complete', 'authority_proof_ref', false)
+    local no_proof_ref, no_proof_ref_error = trace:complete_action(
+        event(trace, { a = reservation }, 'a', 'trace:no-proof-reference'), actor_is_current)
+    equal(no_proof_ref, false, 'trace completion requires a trusted proof reference')
+    equal(no_proof_ref_error, 'trusted-trace-proof-reference-required',
+        'a missing or invalid trusted proof reference is explicit')
+    authority:set_proof_override('public_trace_action_complete', 'authority_proof_ref',
+        'fixture:public_trace_action_complete:trace-ready')
+
     authority:set_completion('trace:early', 1)
     local early, early_error = trace:complete_action(
         event(trace, { a = reservation }, 'a', 'trace:early'), actor_is_current)
@@ -158,10 +176,32 @@ end
 
 do
     authority:set_completion('trace:a', 2)
-    local ok, completion = trace:complete_action(event(trace, reservations, 'a', 'trace:a'), actor_is_current)
+    local completion_event = event(trace, reservations, 'a', 'trace:a')
+    local ok, completion = trace:complete_action(completion_event, actor_is_current)
     truthy(ok, 'the first trusted completed trace action resolves the encounter')
     equal(trace.state, 'resolved', 'trace enters resolved postlude after its first success')
     equal(completion.commands[1].type, 'trace_action_completed', 'resolution records personal progress once')
+    local evidence = completion.commands[1]
+    equal(evidence.event_id, completion_event.event_id, 'completion evidence retains the authoritative event identity')
+    equal(evidence.actor_id, completion_event.actor_id, 'completion evidence retains the actor identity')
+    equal(evidence.lifecycle_id, completion_event.lifecycle_id, 'completion evidence retains the actor lifecycle')
+    equal(evidence.encounter_key, 'HG_E_TIDE_TRACE', 'completion evidence identifies the Tide Trace encounter')
+    equal(evidence.encounter_instance_id, completion_event.encounter_instance_id,
+        'completion evidence retains the encounter instance')
+    equal(evidence.target_id, completion_event.target_id, 'completion evidence retains the target identity')
+    equal(evidence.target_lifecycle_id, completion_event.target_lifecycle_id,
+        'completion evidence retains the target lifecycle')
+    equal(evidence.encounter_action_key, completion_event.encounter_action_key,
+        'completion evidence retains the encounter action')
+    equal(evidence.action_token, completion_event.action_token,
+        'completion evidence retains the trusted reservation token')
+    equal(evidence.combat_scope, completion_event.combat_scope,
+        'completion evidence retains the public combat scope')
+    equal(evidence.completed_tick, 2, 'completion evidence retains the authoritative completion tick')
+    equal(evidence.authority_proof_ref, 'fixture:public_trace_action_complete:trace:a',
+        'completion evidence carries the trusted authority proof reference')
+    equal(evidence.source_identity_fingerprint, trace.seen_event_ids[completion_event.event_id],
+        'completion evidence carries the stable source identity fingerprint')
     equal(completion.commands[2].type, 'set_trace_local_environment', 'resolution starts the local environment')
     equal(trace.postlude_until, 32, 'postlude retains the environment for the configured duration')
     equal(next(trace.active_actions), nil, 'resolution cancels every remaining action reservation')

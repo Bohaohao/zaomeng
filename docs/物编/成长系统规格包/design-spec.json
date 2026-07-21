@@ -24,7 +24,10 @@
     "docs/物编/09-持明英雄单位与基础属性规格.md",
     "docs/物编/12-巡猎英雄单位与基础属性规格.md",
     "docs/物编/14-花果山怪物与BOSS单位物编规格.md",
-    "docs/物编/15-花果山遭遇与BOSS战斗契约.md"
+    "docs/物编/15-花果山遭遇与BOSS战斗契约.md",
+    "docs/物编/成长数值与经济裁决包/adoption-record.md",
+    "docs/物编/成长数值与经济裁决包/decision-register.json",
+    "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json"
   ],
   "worldview": {
     "theme": "西游题材的承命者修补世界裂隙，在多主城、公共野外、副本与通天塔中长期成长。",
@@ -32,7 +35,8 @@
       "v1.0 固定四职业，允许同职业玩家同时出现，不做正式转职。",
       "首发等级上限 Lv60：花果山 Lv1-20、地府 Lv21-40、天庭 Lv41-60。",
       "公共世界与副本奖励由同步权威逻辑结算，客户端 UI 不可直接改写共享状态。",
-      "商业化不得改变技能点、角色成长上限、装备/法宝/宠物强度与养成速度、掉率、保底、公共资格或通天塔门槛。"
+      "商业化不得改变技能点、角色成长上限、装备/法宝/宠物强度与养成速度、掉率、保底、公共资格或通天塔门槛。",
+      "economy-v2 是当前运行时关闭的设计基线，冻结 Lv1-60 经验、花果山掉落/保底、P1、塔首轮奖励与收据合同；economy-v1 仅保留为哈希绑定的历史冻结表，implementation/growth 仍是不可消费的离线候选。"
     ],
     "factions": [
       "承命者",
@@ -54,9 +58,9 @@
     "firstSessionGoal": "在花果山理解职业基础技能、完成首个核心路线与野外挑战，获得龙宫线索并看到装备/收集/法宝的长期目标；镇界 C02 的已采纳 Lv15 进阶主动例外仍按职业子基线执行。",
     "primaryMotivation": "用可选择的技能构筑、装备与法宝成长、公共遭遇和塔层挑战持续提高战力与收集完成度。",
     "frictionRisks": [
-      "经验、掉落和经济数值未定会导致前期升级或材料循环失真。",
-      "公共 BOSS 的有效参与、参与箱和稀有资格混用会造成玩家公平感受损。",
-      "长期存档状态若没有迁移、重连和幂等边界，会产生重复成长或奖励丢失。",
+      "已冻结数值若未按 economy-v2 的版本、来源和收据合同精确编译，会导致前期升级或材料循环失真。",
+      "公共 BOSS 若混用个人有效参与、参与箱和稀有资格，或绕过 proof-to-owner 映射，会造成玩家公平感受损。",
+      "长期存档状态若没有迁移、重连、权威证明与终态幂等边界，会产生重复成长或奖励丢失。",
       "Y3 地图实现若把公共世界当作无限 MMO 服务依赖，会超出自定义地图生产边界。"
     ]
   },
@@ -128,9 +132,9 @@
       "name": "等级与经验",
       "category": "progression",
       "designIntent": "用 Lv1-60 的三篇结构提供可读的角色成长和章节节奏。",
-      "requiredData": ["等级上限", "经验表", "经验来源", "组队分配", "等级差修正", "迁移规则"],
-      "runtimeBehavior": "权威端授予经验、升级并触发一次全量属性重算与技能点事务。",
-      "owner": "y3-lua-api；数值表待定"
+      "requiredData": ["economy-v2 经验表", "XP 来源行绑定", "组队分配", "等级差修正", "首次/重复结算类型", "收据迁移规则"],
+      "runtimeBehavior": "未来权威端只能精确编译 economy-v2 的 XP 来源、倍率和终态收据，再授予经验、升级并触发一次全量属性重算与技能点事务。",
+      "owner": "y3-lua-api；economy-v2 已采纳，运行时编译与持久化仍待施工"
     },
     {
       "name": "技能点、绝技与构筑",
@@ -152,17 +156,17 @@
       "name": "装备、法宝、宠物与材料",
       "category": "economy",
       "designIntent": "以装备强化/进阶、法宝合成/养成和未来宠物提供 Lv60 后的长期追求。",
-      "requiredData": ["item_asset 稳定键", "装备部位", "品质", "词条", "强化/进阶", "配方", "pet_unit/pet_ability 数据", "currency_ledger 的 owner_scope", "drop_policy", "pity_progress 与 drop_receipt_ledger"],
-      "runtimeBehavior": "所有长期物品、货币、保底和发奖变更必须具备幂等事务、来源/消耗审计、版本迁移和权威 event_id。",
+      "requiredData": ["item_asset 稳定键", "装备部位", "品质", "词条", "强化/进阶", "配方", "pet_unit/pet_ability 数据", "currency_ledger 的 owner_scope", "authority_proof_ref -> stable owner_id", "drop_policy", "pity_progress 与 drop_receipt_ledger"],
+      "runtimeBehavior": "所有长期物品、货币、保底和发奖变更必须具备 economy-v2 对应的幂等终态事务、来源/消耗审计、版本迁移、权威 event_id 与 proof-to-owner 解析；装备/法宝/宠物消耗数值仍待裁决。",
       "owner": "y3-object-config（item 资产与 pet unit/ability）+ y3-lua-api（货币账本与 drop policy）"
     },
     {
       "name": "公共 BOSS 奖励资格",
       "category": "economy",
       "designIntent": "让承伤、破韧和机制职业拥有可见个人推进，同时保留稀有奖励的独立资格。",
-      "requiredData": ["伤害快照", "破韧/护守/机制证据", "完整 encounter origin/window/event tuple", "参与箱规则", "稀有资格", "pity_progress", "drop_receipt_ledger", "drop profile", "resource_table_version", "owner_scope"],
-      "runtimeBehavior": "DPS 荣誉、个人有效参与、参与箱、稀有资格、保底和 roll 分开记录并以 owner_scope、版本和权威 event_id 结算；公共行为再按 occurrence tuple 去重，primary/assist 不直接转奖励资格。",
-      "owner": "y3-lua-api；资源吞吐表待定"
+      "requiredData": ["伤害快照", "破韧/护守/机制证据", "完整 encounter origin/window/event tuple", "authority_proof_ref -> stable owner_id", "P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION", "参与箱收据绑定", "稀有资格", "pity_progress", "drop_receipt_ledger", "drop profile", "resource_table_version", "owner_scope"],
+      "runtimeBehavior": "DPS 荣誉、个人有效参与、参与箱、稀有资格、保底和 roll 分开记录；所有收据由 authority_proof_ref 解析稳定 owner，再按 economy-v2 的版本、事件、资格快照、参与箱/团队绑定与终态矩阵结算。公共行为再按 occurrence tuple 去重，primary/assist 不直接转奖励资格。",
+      "owner": "y3-lua-api；资源吞吐与真实运行时仍待施工"
     },
     {
       "name": "主城收集与章节解锁",
@@ -176,8 +180,8 @@
       "name": "通天塔",
       "category": "progression",
       "designIntent": "以 Lv55 后的持续挑战检验装备、法宝、构筑和团队配合。",
-      "requiredData": ["逐人等级门槛", "层数记录", "奖励表", "词缀", "单人/团队记录", "赛季规则"],
-      "runtimeBehavior": "入口逐人校验 Lv55；每五层休整节点允许切换已保存预设。",
+      "requiredData": ["逐人等级门槛", "economy-v2 首轮奖励引用", "tower_award_class", "资格快照", "层数记录", "词缀", "单人/团队记录", "赛季规则"],
+      "runtimeBehavior": "入口逐人校验 Lv55；首轮仅外部引用 economy-v2 的五个抽象节拍奖励和 tower_award_class，实际结算仍关闭；每五拍休整节点允许切换已保存预设。",
       "owner": "y3-lua-api + y3-terrain-layout + 官方 y3-ui-pipeline"
     },
     {
@@ -203,7 +207,7 @@
     ],
     "units": [
       "花果山普通怪、精英、大精英、公共 BOSS、龙宫 BOSS、牛魔旧战场 BOSS 作为成长来源",
-      "单位奖励字段使用 reward_exp、drop_profile、participation_profile 与 break_profile，但实际资源表仍 deferred"
+      "单位奖励字段使用 reward_exp、drop_profile、participation_profile 与 break_profile；花果山当前设计值只能引用 economy-v2，白盒字段与后续篇章 profile 仍不可直接结算"
     ],
     "monsters": [
       "花果山山猴、山怪、藤妖、洞窟怪、水族兵与鲨魔系妖兵",
@@ -213,7 +217,7 @@
       "猕猴王、蛟魔王一阶段、鲨魔王一阶段等公共野外 BOSS",
       "龙王一阶段旧潮、龙王二阶段逆潮",
       "牛魔旧战场的人形态与披甲白牛形态",
-      "通天塔每五层小 BOSS、每十层大 BOSS"
+      "通天塔的 Boss、波次与层节奏均待后续全局塔合同裁决"
     ],
     "items": [
       "普通/精良/稀有/史诗/传说装备",
@@ -222,8 +226,8 @@
       "龙髓、逆鳞、龙蛋与成长型宠物方向"
     ],
     "waves": [
-      "通天塔 1-10 花果山、11-20 地府、21-30 天庭、31-40 混合精英、41-50 首发毕业挑战的层段方向",
-      "每五层休整，每十层大 BOSS；具体波次/词缀/最终层数待定"
+      "通天塔仅已冻结 Lv55 逐人准入、首轮五个抽象节拍与第五节拍休整；不声明总层数或篇章层段方向",
+      "楼层、波次、词缀、大 BOSS、最终层数与赛季均待定"
     ],
     "maps": [
       "花果山 Lv1-20：公共野外、龙宫、牛魔旧战场入口",
@@ -238,8 +242,8 @@
       "收集、龙宫版本选择、通天塔门槛、结算与公共 BOSS 资格反馈"
     ],
     "economy": [
-      "金币、强化石、进阶石、主城 BOSS 材料、法宝材料、塔币和团队本货币为已知命名/分类方向",
-      "货币稳定键、余额、来源、消耗、owner_scope、资源吞吐、掉率、保底、收据和迁移均待独立数值表"
+      "economy-v2 已冻结 CUR_GOLD、CUR_RAID_MARK、CUR_TOWER_TOKEN、三种材料、花果山 profile、两条保底池、P1、塔首轮奖励与角色 owner_scope",
+      "装备/法宝/宠物消耗、地府/天庭 source_profile、资源吞吐、兑换目录、楼层/词缀/赛季和真实运行时仍待独立裁决或施工"
     ],
     "progression": [
       "Lv1-60 章节等级",
@@ -260,13 +264,13 @@
       "成长系统花果山验证闭环：Lv1-20 门槛、技能点守恒、四职业裸装重算、三构筑、龙宫旧潮门槛和花果山收集结构",
       "存档/重连/构筑切换的幂等边界与临时战斗态清理，以及所有职业 Lv8 路线、C04 资格与绝对时钟的 actor 私有持久化",
       "公共 BOSS 的荣誉、个人进度、参与箱和稀有资格字段分层",
-      "经验、物品和资格事件的权威日志接口"
+      "economy-v2 的资源表哈希、来源/奖励投影、资格、roll、proof-to-owner 和终态收据接口"
     ],
     "shouldHave": [
       "Lv21-60 三篇门槛、龙宫逆潮、三阶绝技和通天塔 Lv55 逐人门槛",
       "装备、法宝、材料和收集对象表及其 UI",
-      "通天塔层数记录、每五层构筑切换与奖励表",
-      "花果山参与箱资格 P1 决策与资料统一"
+      "通天塔层数记录、首轮五拍后的构筑切换与后续奖励表",
+      "地府/天庭 source_profile 分配与装备/法宝/宠物消耗裁决"
     ],
     "later": [
       "每篇 +10 级资料片与新增主动/被动",
@@ -277,7 +281,7 @@
   "handoffs": {
     "objectConfig": [
       "根据 19 的分层记录头建立装备、法宝、材料与龙蛋等 item 资产，以及宠物 unit + ability 资产；待数值与真实 ID 取齐后才生成物编配置。",
-      "货币账本和 HG_DROP_* drop policy 交由同步系统数据承接；HG_DROP_* 保持 deferred，不能自动创建物品、货币或掉落。"
+      "货币账本和 HG_DROP_* drop policy 交由同步系统数据承接；花果山当前设计值只能精确引用 economy-v2，不能自动创建物品、货币或掉落。"
     ],
     "terrainLayout": [
       "为三篇等级引导、龙宫旧潮/逆潮、通天塔逐人门槛、奖励来源与安全回程建立空间可读性。",
@@ -285,6 +289,7 @@
     ],
     "luaLogic": [
       "实现经验、等级重算、技能点、存档/迁移、挑战门槛、掉落资格、保底和物品事务的同步幂等逻辑；Lv8 路线只能由同 actor、同职业、同 lifecycle 的 60 秒私有 attempt 以 event_id + route_key 原子写入。",
+      "所有 economy-v2 收据先由权威 (actor_id, lifecycle_id, authority_proof_ref) 解析 stable owner_id，再进行版本/来源/资格/计划哈希/终态检查；不得把裸 actor/lifecycle 或客户端 owner 写入账本。",
       "将 kill_honor_credit、progression_participation、participation_chest_eligibility 与 rare_drop_eligibility 分离。"
     ],
     "uiPipeline": [
@@ -293,26 +298,26 @@
     ],
     "reviewPanel": [
       "复审经验/经济节奏、四职业属性与装备尺度、公共 BOSS 公平性、零付费路径、存档迁移和 Y3 会话边界。",
-      "重点裁决参与箱 P1 冲突与所有数值表未决项。"
+      "重点复审 economy-v2 的数值不被候选覆盖、P1/团队资格绑定、proof-to-owner 解析与仍未决的装备/后续篇章数据。"
     ]
   },
   "risks": [
-    "经验、装备、法宝、宠物、掉率、保底与资源吞吐尚未定，过早实现会产生迁移债务。",
-    "花果山有效参与和参与箱资格的文本存在 P1 冲突，必须先分层并决策。",
+    "装备、法宝、宠物、后续篇章 source_profile、资源吞吐与真实运行时尚未定；不得用已冻结基础数值推断这些数据。",
+    "若实现绕过 economy-v2 的 P1/团队资格绑定、奖励投影、保底状态机或 proof-to-owner 解析，仍会造成重复奖励或不公平。",
     "现有 HG_DROP_* 与 reward_exp 是离线白盒/来源标识，不是生产经济数据。",
     "真实 Y3 地图、编辑器、物品资源、ID 台账与实机验证尚未接入。",
     "长期 ORPG 设计必须维持在 Y3 可执行的公共地图与权威子会话边界内。"
   ],
   "unresolved": [
-    "Lv1-60 经验阈值、经验来源权重、组队分配、等级差、任务/副本/BOSS 经验与死亡规则。",
+    "地府与天庭将 economy-v2 XP 来源预算分配到具体 source_profile、次数、首通/重复与舍入汇总的章节表。",
     "装备部位、职业限制、词条、强化/进阶/套装数值和材料吞吐。",
     "法宝/宠物槽位、成长、配方、孵化、绑定和数值。",
-    "参与箱资格与花果山 manifest/正文的 P1 统一结论。",
-    "货币 stable key、余额、来源、消耗、上限、团队货币与塔币规则。",
-    "通天塔单人/团队记录、奖励表、词缀、最终层数与赛季规则。",
+    "economy-v2 的权威编译、持久化收据、proof-to-owner 解析、跨重启对账和数据删除策略。",
+    "装备/法宝/宠物的货币消耗、兑换目录、服务消耗与未来交易政策。",
+    "通天塔单人/团队记录、后续奖励表、词缀、最终层数与赛季规则。",
     "是否建立独立的全角色境界成长，以及它与等级、绝技试炼、装备和章节门槛的关系。",
     "项目级目标游玩会话时长；花果山 55 分钟仅是首日内容密度参考，不是全局时长承诺。",
-    "货币、保底和掉落收据的 owner_scope、版本迁移、清理和重复事件处理规则。"
+    "地府/天庭的收入/掉落/保底在当前设计表之外的扩展版本与迁移策略。"
   ],
   "acceptanceCriteria": [
     "设计 JSON 可通过结构验证，Y3 适配性与完整性评分无缺失字段。",
@@ -323,9 +328,9 @@
     "所有 Lv8 路线完成键只由同 actor、同职业、同 lifecycle 的 60 秒私有 attempt 以 event_id + route_key 原子写入；失败/超时/断线只清理会话态 attempt，重复成功不重复结算。",
     "所有职业的路线完成记录，以及 C04 路线、一次性资格、绝技资格/永久阶级和 recovery_next_eligible_tick 以 actor_id 持久化且不被临时战斗态清理。",
     "C04 Lv15 一阶绝技试炼同时校验 C04_U01_TRIAL_ELIGIBLE、C04_REAL_RECOVERY_INTRO 和 u01_tier=0，临时一阶只有成功后才写永久阶级。",
-    "DPS 荣誉、个人有效参与、参与箱、稀有资格、保底和掉落 roll 保持独立字段与日志，并有 owner_scope、版本和权威 event_id。",
-    "花果山公共行为资格复用完整 encounter origin/window 载荷，并按 event_id 与 actor/boss/phase/occurrence/action 去重；primary/assist 不直接转参与箱、稀有资格或保底。",
-    "未决的经验、物品、货币和掉落数据在施工前保持 planned/deferred，不含伪造的 ID、概率或资源数值。",
+    "DPS 荣誉、个人有效参与、参与箱、稀有资格、保底和掉落 roll 保持独立字段与日志；经济收据只能由 authority_proof_ref 解析 stable owner_id，并带 economy-v2 版本、权威 event_id 与终态幂等身份。",
+    "花果山公共行为资格复用完整 encounter origin/window 载荷，并按 event_id 与 actor/boss/phase/occurrence/action 去重；primary/assist 不直接转参与箱、稀有资格或保底，公共首通/稀有和团队团本必须遵循 economy-v2 绑定。",
+    "已冻结的 economy-v2 数值只可作为运行时关闭的设计引用；未决的物品、后续篇章、兑换与掉落扩展在施工前保持 planned/deferred，不含伪造的 ID、概率或资源数值。",
     "商业字段验证拒绝任何影响角色成长、掉率、保底、公共资格或塔门槛的未登记设计。"
   ]
 }

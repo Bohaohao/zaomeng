@@ -1,4 +1,4 @@
-﻿{
+{
     "version":  1,
     "targetSkill":  "y3-terrain-layout",
     "project":  {
@@ -17,7 +17,7 @@
                                         "通天塔逐人校验 Lv55，不能用队伍平均等级绕过。",
                                         "公共奖励由权威逻辑结算；客户端或 UI 不可直接修改经验、货币、物品、保底或资格。",
                                         "技能、装备强化、法宝、宠物、数值材料、掉率、保底、公共资格和通天塔门槛禁止商业化。",
-                                        "HG_DROP 与 reward_exp 当前是来源或白盒候选，不是生产经济数据。"
+                                        "HG_DROP 与 reward_exp 在既有白盒/离线夹具中仍是候选输入；economy-v2 是已冻结的设计基线，但不是生产经济数据；economy-v1 仅保留为 economy-v2 哈希绑定的历史冻结表。"
                                     ],
                       "factions":  [
                                        "承命者",
@@ -66,7 +66,7 @@
                         {
                             "phase":  "花果山基础战斗",
                             "duration":  "0-5 分钟",
-                            "playerGoal":  "完成普通怪和精英战斗，获得可见但尚待校准的经验与掉落反馈。",
+                            "playerGoal":  "完成普通怪和精英战斗，获得可见且按 economy-v2 设计表可追溯的经验与掉落反馈。",
                             "systemsUsed":  [
                                                 "experience source policy",
                                                 "HG_DROP profile",
@@ -83,7 +83,7 @@
                                                 "skill budget",
                                                 "private route completion"
                                             ],
-                            "successCriteria":  "经验表在采纳前不实现；已采纳的 Lv8 门槛不被经济数据绕过。"
+                            "successCriteria":  "economy-v2 的经验曲线不被白盒字段覆盖；已采纳的 Lv8 门槛不被经济数据绕过。"
                         },
                         {
                             "phase":  "公共 Boss 贡献与个人结算",
@@ -105,7 +105,7 @@
                                                 "currency ledger",
                                                 "drop and pity"
                                             ],
-                            "successCriteria":  "没有已采纳数值、版本和收据前，任何掉落 profile 继续保持 deferred。"
+                            "successCriteria":  "已采纳的花果山 profile 只能引用 economy-v2；地府/天庭未分配 profile 不得推断为有数值或可运行结算。"
                         },
                         {
                             "phase":  "通天塔验证",
@@ -116,7 +116,7 @@
                                                 "tower reward policy",
                                                 "loadout lock"
                                             ],
-                            "successCriteria":  "任何成员低于 Lv55 被拒绝；塔奖励、词缀与赛季在采纳前不伪装为已实现。"
+                            "successCriteria":  "任何成员低于 Lv55 被拒绝；economy-v2 只冻结首轮奖励，楼层、词缀和赛季仍不伪装为已实现。"
                         }
                     ],
     "handoffNotes":  [
@@ -125,13 +125,11 @@
                      ],
     "unresolved":  [
                        "项目级目标游玩会话时长。",
-                       "Lv1-Lv60 经验阈值、来源权重、组队分配、级差、死亡和重连规则。",
                        "装备部位、职业限制、词条、强化/进阶/套装、材料吞吐和重复转化。",
                        "法宝/宠物槽位、配方、孵化、绑定、成长与数值。",
-                       "参与箱 P1 的唯一 final_policy_id。",
-                       "货币最终稳定键、余额上限、来源、消耗、兑换、保留期和迁移期限。",
-                       "掉率、稀有资格、保底阈值、重复收益和团队分配。",
-                       "通天塔记录、楼层、词缀、奖励、最终层数和赛季。",
+                       "地府与天庭按 economy-v2 来源预算分配到具体 source_profile、次数和舍入汇总的表。",
+                       "货币的兑换目录、服务消耗和法定数据删除保留期。",
+                       "通天塔楼层、词缀、兑换目录、最终层数和赛季。",
                        "独立全角色境界系统是否存在。"
                    ]
 }

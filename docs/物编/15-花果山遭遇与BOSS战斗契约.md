@@ -15,7 +15,7 @@
 伤害、破韧、护守与机制处理事件使用以下共同字段：
 
 ```text
-kind | event_id | actor_id | lifecycle_id | combat_scope
+kind | event_id | actor_id | lifecycle_id | authority_proof_ref | combat_scope
 boss_instance_id | phase_id | target_id | target_lifecycle_id | sync_tick
 skill_key | value | encounter_action_key | source_unit_id | source_unit_lifecycle_id
 ```
@@ -25,6 +25,7 @@ skill_key | value | encounter_action_key | source_unit_id | source_unit_lifecycl
 - 牛魔团本使用 `combat_scope=team_instance`，必须带 `raid_instance_id` 与成员快照。
 - `final_damage`、`actual_break`、`actual_protection` 必须由地图桥接先证明 `source_unit_id + source_unit_lifecycle_id + skill_key` 合法，且 `value>0`；核心不得用默认技能键、调用方声称的品级或候选目标推断结果。
 - 每个 `event_id` 在 `boss_instance_id + phase_id` 内只能结算一次。生命周期不匹配、对象已死亡、来源不合法或缺字段的事件静默拒绝，并写入诊断钩子。
+- 任何要进入 `economy-v2` 收据的事件还必须带遭遇权威签发的 `authority_proof_ref`。收据适配器只能以 `(actor_id, lifecycle_id, authority_proof_ref)` 解析稳定 `owner_id`；客户端值、裸 `actor_id` 或裸 `lifecycle_id` 都不得写为账本所有者。证明缺失、映射不唯一、映射失效或与事件身份不一致时，拒绝收据且不改变资格、余额、保底或首通状态。
 - 换相只能提交 `kind=boss_phase_transition`，结算只能提交 `kind=boss_finalization`。两者都必须携带稳定 `event_id`、当前 `boss_instance_id`、`from_phase`、当前 `boss_target_id + boss_target_lifecycle_id`；换相还必须携带下一阶段和下一目标生命周期。地图根的权威事件提供器负责签发水位证明，权威端再以当前阶段和目标生命周期作比较交换；调用方携带的 `authority_verified`、存活、范围、读条或水位断言一律拒绝，旧阶段、同阶段、回退、重复和复用旧 Boss 实例 ID 的回调同样拒绝。
 
 公共行为另用严格的 `kind=encounter_action_success` 契约：
@@ -58,7 +59,9 @@ OR
 完成本场 BOSS 明确开放、成功结算且未重复的 encounter_action_success
 ```
 
-每种非伤害贡献在单场内只提供一次参与信用；行为交互必须要求角色存活、处于交互半径、完成完整读条且事件生命周期匹配，因此不能靠挂机取得。个人有效参与只用于篇章入口、保证性收集、日常与非稀有参与箱；它不替代稀有装备、宠物、保底或最高 DPS 击杀资格。
+每种非伤害贡献在单场内只提供一次参与信用；行为交互必须要求角色存活、处于交互半径、完成完整读条且事件生命周期匹配，因此不能靠挂机取得。该个人有效参与是 `progression_participation`，只用于篇章入口、保证性收集和日常；它不自动成为参与箱、稀有装备、宠物、保底或最高 DPS 击杀资格。
+
+正式参与箱使用 [economy-v2](成长数值与经济裁决包/tables/economy-v2-resource-table.json) 的 `P1_PUBLIC_CHEST_BALANCED_CONTRIBUTION`：当本场曾开启合格公共行为窗口时，角色必须同时有一次有效公共行为，并满足有效伤害占比 `>=3%`、合格破韧或实际护守之一；本场从未开启该窗口时，只需后三者之一。稀有资格还必须有权威稀有通关证明，且稀有收据绑定同角色、同遭遇实例、同事件、同资格快照的已提交参与箱收据；参与箱结果本身不推导稀有资格或保底。团队团本使用 `TEAM_RAID_RARE_ELIGIBILITY_V1`，不继承公共参与箱前置。
 
 ### 单人本与团本
 
