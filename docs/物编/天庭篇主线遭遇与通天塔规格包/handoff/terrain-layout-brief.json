@@ -1,117 +1,55 @@
 {
-    "version":  1,
-    "targetSkill":  "y3-terrain-layout",
-    "project":  {
-                    "name":  "天庭篇主线、遭遇与通天塔首轮离线规格",
-                    "genre":  "最多 4 人同游、存档制的西游题材 ORPG 离线设计层",
-                    "camera":  "2.5D 俯视角",
-                    "sessionType":  "公共地图与可重复副本组成的单局会话；天庭运行时尚未施工",
-                    "targetPlayers":  "1-4 人",
-                    "targetDurationMinutes":  0,
-                    "pitch":  "以第三劫下的临时天庭为 Lv41-60 的内容锚点，先锁定跨篇、会话与经济边界；通天塔只承接 Lv55 逐人准入、每 5 层休整与玲珑主题并入全局塔的既定事实。"
-                },
-    "worldview":  {
-                      "theme":  "第三劫使天门、天律与封印体系暴露裂缝；临时天庭既是秩序余烬，也是调查起点。",
-                      "factions":  [
-                                       "临时天庭的秩序守望者（叙事职能待细化）",
-                                       "受控神将与天宫压力来源（具体单位待决）",
-                                       "玩家既有取经队伍（不在本包新增英雄）"
-                                   ],
-                      "tone":  "由天界秩序表象转入裂缝调查的高压、克制与悬念。",
-                      "visualKeywords":  [
-                                             "临时天庭主城",
-                                             "天宫道",
-                                             "南天门",
-                                             "天王殿外缘",
-                                             "凌霄方向",
-                                             "玲珑主题的全局通天塔"
-                                         ],
-                      "hardRules":  [
-                                        "天庭章节等级带精确为 Lv41-60，首发等级上限为 Lv60。",
-                                        "通天塔在 Lv55 后开放，所有参与者必须逐人校验；每 5 层存在构筑休整节点。",
-                                        "玲珑塔只作为全局通天塔的天庭主题，不建立第二套长期爬塔系统。",
-                                        "未经新决策，天庭不得消费或写入 DF_PROGRESS_YANLUO_HALL_CLEARED。",
-                                        "塔首轮奖励与收据只能外部引用 runtime-closed 的 economy-v2；implementation/growth/ 仍是禁止消费的离线候选。"
-                                    ]
-                  },
-    "maps":  {
-                 "specId":  "TT_SPEC_MAP_ROLE_GROUP",
-                 "status":  "offline_design",
-                 "role":  "临时天庭主城、天宫道、南天门、天王殿外缘、单人候选和凌霄方向仅保留职责。",
-                 "runtimeKey":  null
-             },
-    "waves":  {
-                  "specId":  "TT_SPEC_ENCOUNTER_WAVE_BOUNDARY",
-                  "status":  "deferred",
-                  "role":  "公共、单人、团队和通天塔的遭遇组成均待决，不预置波次与难度。",
-                  "runtimeKey":  null
-              },
-    "monsters":  {
-                     "specId":  "TT_SPEC_MONSTER_ECOLOGY",
-                     "status":  "offline_design",
-                     "role":  "天兵、天将、云兽、机关神像是生态方向，不是已建单位清单。",
-                     "runtimeKey":  null
-                 },
-    "bosses":  {
-                   "specId":  "TT_SPEC_BOSS_DIRECTION",
-                   "status":  "deferred",
-                   "role":  "受控神将与凌霄方向只保留叙事压力，不定义 Boss 名称、阶段或结算。",
-                   "runtimeKey":  null
-               },
-    "sessionFlow":  [
-                        {
-                            "phase":  "章节边界确认",
-                            "duration":  "未裁定",
-                            "playerGoal":  "在新独立进度合同出现前，识别天庭不能默认读取或写入的地府完成键。",
-                            "systemsUsed":  [
-                                                "跨篇进度边界（待新增决策）"
-                                            ],
-                            "successCriteria":  "DF_PROGRESS_YANLUO_HALL_CLEARED 不成为天庭默认前置条件或写入目标。"
-                        },
-                        {
-                            "phase":  "临时天庭公共职责",
-                            "duration":  "未裁定",
-                            "playerGoal":  "从主城锚点进入天宫道、南天门、天王殿外缘的公共方向。",
-                            "systemsUsed":  [
-                                                "公共区域权威状态边界"
-                                            ],
-                            "successCriteria":  "只描述区域职责，不生成地图邻接、刷怪、坐标或运行时遭遇。"
-                        },
-                        {
-                            "phase":  "遭遇承接",
-                            "duration":  "未裁定",
-                            "playerGoal":  "把受控神将、天兵、天将、云兽和机关神像保留为生态方向，而非资产清单。",
-                            "systemsUsed":  [
-                                                "遭遇白盒（待后续裁决）"
-                                            ],
-                            "successCriteria":  "不新增单位、技能、Boss、波次、掉落或难度数值。"
-                        },
-                        {
-                            "phase":  "副本职责分流",
-                            "duration":  "未裁定",
-                            "playerGoal":  "保留蟠桃园/御马监单人候选与凌霄团队方向，并等待选择、关系与准入合同。",
-                            "systemsUsed":  [
-                                                "单人及团队会话合同（待接入）"
-                                            ],
-                            "successCriteria":  "不把候选内容伪装成已选定副本或章节终点。"
-                        },
-                        {
-                            "phase":  "通天塔首轮五节拍子循环",
-                            "duration":  "Lv55 后；单次时长未裁定",
-                            "playerGoal":  "在唯一全局通天塔内通过逐人准入，依次完成五个抽象节拍，并在第五节拍后进入构筑休整或权威终局边界。",
-                            "systemsUsed":  [
-                                                "通天塔准入、五节拍状态与休整边界"
-                                            ],
-                            "successCriteria":  "准入、节拍推进、第五节拍休整、结算/失败/退出/交接与幂等语义均可离线验证；首轮奖励只外部引用 economy-v2，不定义总层数、层主题表、词缀、记录或赛季。"
-                        }
-                    ],
-    "handoffNotes":  "handoff/terrain-layout-brief.json：只提供地图与遭遇区域的逻辑职责；不含坐标、地形或装饰。",
-    "unresolved":  [
-                       "天庭独立入章与完成进度合同的键、写入者、消费者及断线语义。",
-                       "公共路线的真实顺序、事件触发、地图邻接、遭遇组成和完成关系。",
-                       "蟠桃园与御马监之间的单人副本选择，以及其准入、失败、退出和奖励槽位。",
-                       "凌霄团队方向与常规章节完成、成员条件、失败清理和恢复的关系。",
-                       "通天塔全局 run 的楼层计划、词缀、记录范围、持久化、失败恢复、续行、奖励槽位和赛季政策；首轮五节拍合同不替代这些裁决。",
-                       "天庭的具体 XP source_profile、次数与舍入分配；economy-v2 的权威编译、持久化收据、周桶封顶和证明解析运行时接入。"
-                   ]
+  "version": 2,
+  "targetSkill": "y3-terrain-layout",
+  "project": {
+    "name": "天庭篇主线、七星与二十八星宿离线规格",
+    "genre": "最多四人同游的西游题材 ORPG",
+    "camera": "2.5D 俯视角",
+    "sessionType": "公共路线、七星星盘、四象阵台与四圣兽场地；运行时未施工",
+    "targetPlayers": "1-4 人",
+    "targetDurationMinutes": 0,
+    "pitch": "为后续地形施工提供逻辑区域、可读性和路线职责，不提供任何坐标或地编资产。"
+  },
+  "sourceContract": {
+    "artifact": "../tianting-content-expansion-contract.json",
+    "status": "offline_design",
+    "runtimeKey": null
+  },
+  "maps": {
+    "specId": "TT_SPEC_TIANTING_LOGICAL_MAPS",
+    "status": "offline_design",
+    "role": "临时天庭、裂云南天门、天宫道、天王殿外缘、周天观台、凌霄外庭、七星星盘和四象阵台。",
+    "runtimeKey": null
+  },
+  "waves": {
+    "specId": "TT_SPEC_TIANTING_LOGICAL_ENCOUNTERS",
+    "status": "offline_design",
+    "role": "公共路线拆阵/救援、七星三段试炼、星宿双宿双宿双宿单宿与噩梦逐链净宿。",
+    "runtimeKey": null
+  },
+  "monsters": {
+    "specId": "TT_SPEC_TIANTING_TERRAIN_ENEMY_ROLES",
+    "status": "offline_design",
+    "role": "受控守卫、七星首领、二十八星官和四圣兽的场地职责；不含单位或刷新数据。",
+    "runtimeKey": null
+  },
+  "bosses": {
+    "specId": "TT_SPEC_TIANTING_TERRAIN_BOSS_READABILITY",
+    "status": "offline_design",
+    "role": "场地必须读得出七星轨道、青龙星链、朱雀火环、白虎猎印和玄武甲壁。",
+    "runtimeKey": null
+  },
+  "layoutRequirements": [
+    "南天门、天宫道、天王殿、周天观台和凌霄外庭的路径要支持主线因果，而非仅作为视觉串场。",
+    "七星场地各自只突出一个核心空间规则，避免七张同构圆形竞技场。",
+    "四象阵台必须预留最多四人完成的站位、路径、反制窗口和 Boss 读条空间。",
+    "噩梦场地必须同时容纳四圣兽、七宿共鸣和净宿路线，但不把双向关系藏在装饰后。",
+    "不得创建地图根、坐标、传送点、地形、装饰物、刷怪、区域等级或资源路径。"
+  ],
+  "handoffNotes": "此文件只提供地形/布局逻辑职责；真实施工要在地图工程存在后重新核验。",
+  "unresolved": [
+    "地图规模、邻接、坐标、出生点、镜头、可破坏物、刷怪、寻路和性能预算。",
+    "副本入口、失败重置、检查点、重连和场地状态同步。",
+    "通天塔如何实例化天庭 Boss 池。"
+  ]
 }

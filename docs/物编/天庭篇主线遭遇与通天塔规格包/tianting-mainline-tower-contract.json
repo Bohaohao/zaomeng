@@ -43,12 +43,15 @@
     "cross_chapter_boundary": {
       "protected_existing_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
       "current_allowed_consumer": "HG_E_DRAGON_REVERSE_TIDE",
-      "tianting_rule": "must_not_consume_or_write_protected_existing_key_without_new_explicit_decision",
+      "tianting_rule": "must_not_consume_or_write_protected_existing_key; entry may only verify an opaque handoff proof whose trusted source producer is DF_E_YANLUO_HALL",
       "entry_contract": {
-        "status": "deferred",
-        "required_progression_key": null,
-        "writer": null,
-        "trusted_consumers": [],
+        "status": "offline_design",
+        "artifact": "authority/tianting-progression-and-instance-authority-contract.json",
+        "entry_progress_spec_id": "TT_SPEC_PROGRESS_CHAPTER_ENTERED",
+        "minimum_level": 41,
+        "trusted_handoff_producer": "DF_E_YANLUO_HALL",
+        "direct_protected_key_consumer": "prohibited",
+        "writer_contract": "TT_SPEC_TIANTING_PROGRESSION_AND_INSTANCE_AUTHORITY",
         "runtime_key": null
       }
     },
@@ -132,56 +135,65 @@
       "map_key": null
     },
     {
-      "spec_id": "TT_SPEC_SOLO_CANDIDATE",
-      "decision_status": "deferred",
-      "content_role": "single_player_instance_choice",
-      "candidate_options": [
-        "蟠桃园",
-        "御马监"
-      ],
-      "selected_option": null,
+      "spec_id": "TT_SPEC_SEVEN_STAR_SOLO",
+      "decision_status": "fixed-user-requirement",
+      "content_role": "seven_star_single_player_series",
+      "source_direction": "天枢、天璇、天玑、天权、玉衡、开阳、瑶光；旧蟠桃园/御马监二选一降为场景素材。",
+      "selected_option": "seven_star_series",
       "runtime_key": null,
       "reward_profile": null
     },
     {
-      "spec_id": "TT_SPEC_TEAM_CANDIDATE",
-      "decision_status": "deferred",
-      "content_role": "team_instance_direction",
-      "source_direction": "凌霄宝殿与杨戬线的范围方向",
-      "chapter_completion_relation": null,
+      "spec_id": "TT_SPEC_TWENTY_EIGHT_MANSIONS_RAID",
+      "decision_status": "fixed-user-requirement",
+      "content_role": "highest_end_repeatable_team_raid",
+      "source_direction": "二十八星宿按十二时辰四象轮换；凌霄/杨戬降为主线高潮或后续故事素材。",
+      "chapter_completion_relation": "post_mainline_optional_repeatable_not_regular_completion",
       "runtime_key": null,
       "reward_profile": null
     },
     {
-      "spec_id": "TT_SPEC_CHAPTER_COMPLETION",
-      "decision_status": "deferred",
+      "spec_id": "TT_SPEC_MAINLINE_NORMAL_CLOSURE",
+      "decision_status": "offline_design",
       "content_role": "regular_chapter_completion",
-      "writer_of_new_progression_key": null,
+      "source_direction": "凌霄外庭·裂律观台为常规天庭篇收束；它不被二十八星宿团队本替代。",
+      "completion_progress_spec_id": "TT_SPEC_PROGRESS_MAINLINE_CLEARED",
+      "authority_contract": "authority/tianting-progression-and-instance-authority-contract.json",
       "runtime_key": null
     }
   ],
   "tracks": {
     "chapter_mainline": {
       "decision_status": "offline_design",
-      "world_direction": "临时天庭锚点、天宫公共压力、神将失控与天律裂缝的调查方向",
-      "entry_relation": "deferred",
-      "ordered_nodes": [],
-      "completion_relation": "deferred"
+      "world_direction": "临时天庭锚点、错误天律、四方轮值失衡、七星校正与裂律收束。",
+      "entry_relation": "per-character TT_SPEC_PROGRESS_CHAPTER_ENTERED via the offline authority contract; Lv41 plus opaque DF_E_YANLUO_HALL handoff proof, never the protected progression key",
+      "ordered_nodes": [
+        "TT_SPEC_MAINLINE_NODE_01_SOUTH_GATE",
+        "TT_SPEC_MAINLINE_NODE_02_HEAVENLY_ROAD",
+        "TT_SPEC_MAINLINE_NODE_03_KING_HALL",
+        "TT_SPEC_MAINLINE_NODE_04_CELESTIAL_OBSERVATORY",
+        "TT_SPEC_MAINLINE_NODE_05_LINGXIAO_OUTER_COURT"
+      ],
+      "completion_relation": "TT_SPEC_MAINLINE_NORMAL_CLOSURE writes TT_SPEC_PROGRESS_MAINLINE_CLEARED only through the offline authority contract; runtime key remains null"
     },
     "solo_content": {
-      "decision_status": "deferred",
-      "selected_option": null,
-      "entry_rule": null,
-      "failure_rule": "must_reuse_existing_solo_instance_contract_when_adopted",
-      "reward_relation": "future_resource_table_only"
+      "decision_status": "fixed-user-requirement",
+      "selected_option": "TT_SPEC_SEVEN_STAR_SOLO",
+      "entry_rule": "after per-character TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN through TT_SPEC_SESSION_SEVEN_STAR",
+      "failure_rule": "offline authority contract fixes active-to-cleanup_pending-to-closed and denies reentry until matching cleanup acknowledgement",
+      "reward_relation": "seven_fragment_and_title_categories_only; resource_table_binding_deferred",
+      "content_contract": "tianting-content-expansion-contract.json",
+      "authority_contract": "authority/tianting-progression-and-instance-authority-contract.json"
     },
     "team_content": {
-      "decision_status": "deferred",
-      "direction": "凌霄宝殿",
-      "entry_rule": null,
-      "chapter_completion_relation": null,
-      "failure_rule": "must_reuse_existing_team_instance_cleanup_contract_when_adopted",
-      "reward_relation": "future_resource_table_only"
+      "decision_status": "fixed-user-requirement",
+      "direction": "TT_SPEC_TWENTY_EIGHT_MANSIONS_RAID",
+      "entry_rule": "every member holds TT_SPEC_PROGRESS_MAINLINE_CLEARED; normal and nightmare sessions use the offline authority contract with a frozen Asia/Shanghai rotation snapshot",
+      "chapter_completion_relation": "post_mainline_optional_repeatable_not_regular_completion",
+      "failure_rule": "offline authority contract fixes member lifecycle, death, leave, cleanup acknowledgement and no-reconnect boundaries",
+      "reward_relation": "normal_key_candidate_and_nightmare_reward_categories_only; resource_table_binding_deferred",
+      "content_contract": "tianting-content-expansion-contract.json",
+      "authority_contract": "authority/tianting-progression-and-instance-authority-contract.json"
     },
     "tower_first_cycle": {
       "decision_status": "offline_design",
@@ -224,33 +236,33 @@
       "season_policy": {
         "status": "deferred",
         "effective_value": null
+      },
+      "tianting_content_reuse": {
+        "status": "offline_design",
+        "artifact": "tianting-content-expansion-contract.json",
+        "rule": "seven_stars_and_twenty_eight_mansions_are_future_mini_boss_pools_only",
+        "mini_boss_cadence": "deferred_3_or_5_floors",
+        "major_boss_cadence": "user_directed_every_10_floors; roster_deferred",
+        "reward_rule": "deferred_after_tianting_mainline_and_instance_design",
+        "runtime_key": null
       }
     }
   },
+  "adopted_offline_contracts": [
+    {
+      "contract": "tianting_progression_and_instance_authority",
+      "artifact": "authority/tianting-progression-and-instance-authority-contract.json",
+      "status": "offline_design",
+      "covers": [
+        "chapter entry and three character-scoped logical progress records",
+        "private one-to-four mainline closure",
+        "seven-star solo session lifecycle",
+        "twenty-eight-mansions normal and nightmare team lifecycle",
+        "Asia/Shanghai rotation snapshot and per-character nightmare credential admission"
+      ]
+    }
+  ],
   "required_future_contracts": [
-    {
-      "contract": "chapter_entry_and_progression",
-      "blocking_decision": "TT-DEFER-001",
-      "required_fields": [
-        "new_progression_key",
-        "writer",
-        "trusted_consumer",
-        "event_id",
-        "actor_id",
-        "lifecycle_and_reconnect_behavior"
-      ]
-    },
-    {
-      "contract": "mainline_and_instance_roles",
-      "blocking_decision": "TT-DEFER-003_and_TT-DEFER-004",
-      "required_fields": [
-        "public_route_order",
-        "solo_selection",
-        "normal_completion_role",
-        "team_relation",
-        "entry_and_failure_rules"
-      ]
-    },
     {
       "contract": "tower_run_and_rewards",
       "blocking_decision": "TT-DEFER-005_and_TT-DEFER-006",
@@ -267,9 +279,10 @@
     }
   ],
   "non_production_boundaries": [
-    "No new Y3 object, map, encounter, item, ability, progression or resource key is created.",
+    "No new Y3 object, map, encounter, item, ability, runtime progression key or resource key is created.",
     "No DF_PROGRESS_YANLUO_HALL_CLEARED consumer is added.",
-    "No floor count, tower theme schedule, Boss cadence, embedded reward amount, probability, pity threshold or season is adopted; economy-v2 is referenced externally as a runtime-closed design baseline.",
+    "Logical TT_SPEC progress identities, authority receipt shapes and session states remain offline-only and do not create persistence or a trusted runtime provider.",
+    "No concrete global floor plan, selected mini-Boss cadence, Boss roster, embedded reward amount, probability, pity threshold or season is adopted; the user-directed ten-floor major-Boss interface remains content-only and economy-v2 is referenced externally as a runtime-closed design baseline.",
     "No proposal, conflict, deferred or whitebox-candidate value is promoted to an effective runtime value.",
     "implementation/growth/ remains an offline candidate; economy-v2 does not imply an authoritative runtime resource table, ledger, proof resolver or reward issuer."
   ],
@@ -277,9 +290,15 @@
     "天庭章节带必须精确为 Lv41-60。",
     "通天塔必须精确为 Lv55 逐人校验与每 5 层休整。",
     "玲珑塔不可与全局通天塔并列为两个长期系统。",
-    "天庭入章合同在新决策前不得消费或写入 DF_PROGRESS_YANLUO_HALL_CLEARED。",
+    "天庭入章只可校验同角色、源自 DF_E_YANLUO_HALL 的不透明权威交接证明；不得消费、写入或注册 DF_PROGRESS_YANLUO_HALL_CLEARED。",
+    "天庭进度必须精确为入章、周天观台开启、常规主线完成三段 TT_SPEC 逻辑记录；三者均使用唯一生产者和 (actor_id,event_id) 幂等，运行时键为 null。",
+    "七星只能在周天观台逻辑记录后以单人会话进入；二十八星宿普通/噩梦必须逐人校验常规主线完成。",
+    "二十八星宿的方位只能由 Asia/Shanghai 权威时间基准在创建会话时冻结；客户端时钟、客户端方位与重试重算均不可接受。",
     "塔首轮奖励只能外部引用 runtime-closed 的 economy-v2；楼层、词缀、兑换目录和赛季保持 deferred，implementation/growth/ 继续禁止消费。",
     "所有规格局部内容角色必须使用 TT_SPEC_ 前缀且 runtime_key 为 null。",
-    "首轮五节拍合同只定义准入、顺序、第五节拍休整、结算/失败/退出/交接与幂等边界，不定义总层数或任何运行时内容。"
+    "首轮五节拍合同只定义准入、顺序、第五节拍休整、结算/失败/退出/交接与幂等边界，不定义总层数或任何运行时内容。",
+    "七星必须精确为七个固定单人试炼；同星十枚残片合成对应星君称号，七称号自动解锁名称待定的集合称号；所有物品和数值仍非运行时资产。",
+    "二十八星宿必须精确为四象各七宿；子/辰/申青龙、丑/巳/酉朱雀、寅/午/戌白虎、卯/未/亥玄武，并在入场时冻结权威轮换快照。",
+    "噩梦必须保留七宿强化同方位四圣、四圣庇护七宿的双向关系；通天塔仅复用内容池，不决定掉落或层位。"
   ]
 }

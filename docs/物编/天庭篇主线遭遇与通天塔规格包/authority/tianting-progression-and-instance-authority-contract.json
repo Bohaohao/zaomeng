@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "package_status": "offline-design-spec",
+  "production_gate": "closed",
+  "implementation_handoff": false,
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_PROGRESSION_AND_INSTANCE_AUTHORITY",
+    "display_name": "天庭入章、完成进度与副本会话权威合同",
+    "scope": "定义天庭角色级逻辑进度、主线终局、七星单人本、二十八星宿普通/噩梦团队本的未来权威准入、完成、失败、清理、幂等与时辰快照边界；不创建任何运行时资产。",
+    "runtime_key": null
+  },
+  "source_contracts": {
+    "tianting_mainline": "../tianting-mainline-tower-contract.json",
+    "tianting_content": "../tianting-content-expansion-contract.json",
+    "difu_cross_chapter_interface": "../../地府篇前置接口包/cross-chapter-interface.json",
+    "difu_team_recovery_semantics": "../../地府篇前置接口包/cross-chapter-interface.json",
+    "rule": "本合同只复用既有地府完成收据与团队回传的语义，不读取、写入或新增既有地府进度键的消费者。"
+  },
+  "hard_boundaries": {
+    "protected_difu_progress_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+    "protected_key_rule": "must_not_read_write_register_as_consumer_or_substitute_as_tianting_default_unlock",
+    "permitted_difu_handoff_source": "DF_E_YANLUO_HALL authoritative success proof only",
+    "level_band": {
+      "minimum": 41,
+      "maximum": 60,
+      "entry_level_check": "authority_confirmed_per_actor",
+      "runtime_key": null
+    },
+    "party_cap": {
+      "minimum_players": 1,
+      "maximum_players": 4,
+      "member_check": "every_member_independently",
+      "runtime_key": null
+    },
+    "economy_runtime_status": "accepted-design-reference-runtime-not-integrated",
+    "economy_rule": "本合同不授予、扣除、计算或承诺经验、货币、物品、材料、钥匙、掉落、概率、保底、装备属性或任何收据；资格证明的实际物品形态、消耗与发放继续 deferred。",
+    "runtime_asset_rule": "所有 TT_SPEC_ 身份仅是离线规格身份；所有 runtime_key、runtime_progression_key、runtime_item_key、runtime_event_key、runtime_map_key 与 runtime_time_provider_key 均为 null。"
+  },
+  "semantic_identity_policy": {
+    "new_runtime_keys": [],
+    "new_persistent_keys": [],
+    "new_resource_keys": [],
+    "all_spec_ids_are_offline_only": true,
+    "progression_records_are_logical_only": true,
+    "client_is_not_authority": true,
+    "runtime_key": null
+  },
+  "receipt_and_idempotency_contract": {
+    "spec_id": "TT_SPEC_TIANTING_COMPLETION_RECEIPT_IDEMPOTENCY",
+    "decision_status": "offline_design",
+    "receipt_kind": "authoritative_completion_receipt",
+    "record_scope": "character",
+    "required_receipt_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "event_id",
+      "producer_spec_id",
+      "session_instance_id",
+      "session_epoch",
+      "completed_tick",
+      "authority_proof_ref",
+      "schema_version"
+    ],
+    "session_identity_fields": [
+      "session_instance_id",
+      "session_epoch"
+    ],
+    "idempotency_key_fields": [
+      "actor_id",
+      "event_id"
+    ],
+    "event_id_rule": "event_id 必须由未来权威端生成并绑定单次语义事件；客户端自填、跨角色复用、过期生命周期复用或同一事件改写第二种结果均被拒绝。",
+    "replay_result": "同一 (actor_id, event_id) 重放只返回已持久化的首次权威结果；不得重复写逻辑进度、开启第二个会话、重复关闭会话或产生任何经济效果。",
+    "normal_completion_persistence_rule": "权威成功收据已写入后，后续 cleanup_ack 失败、延迟或重放不得回滚该正常完成结果；清理只解除会话锁。",
+    "runtime_key": null
+  },
+  "logical_progression": {
+    "spec_id": "TT_SPEC_TIANTING_LOGICAL_PROGRESSION",
+    "record_scope": "character",
+    "ordering_rule": "TT_SPEC_PROGRESS_CHAPTER_ENTERED → TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN → TT_SPEC_PROGRESS_MAINLINE_CLEARED；后项不得通过队长、队友、旁观者、客户端布尔值、世界状态或未验证收据代写。",
+    "records": [
+      {
+        "spec_id": "TT_SPEC_PROGRESS_CHAPTER_ENTERED",
+        "display_name": "天庭已入章",
+        "record_scope": "character",
+        "runtime_progression_key": null,
+        "runtime_key": null,
+        "write_event": "TT_SPEC_EVENT_SOUTH_GATE_TRANSITION_SUCCESS",
+        "unique_producer_spec_id": "TT_SPEC_EVENT_SOUTH_GATE_TRANSITION_SUCCESS",
+        "producer_session_spec_id": "TT_SPEC_SESSION_SOUTH_GATE_TRANSITION",
+        "prerequisite_progress_spec_ids": [],
+        "write_conditions": [
+          "当前请求角色由权威端确认达到 Lv41。",
+          "当前请求角色持有并通过验证的 TT_SPEC_CHAPTER_ENTRY_HANDOFF_PROOF。",
+          "过渡事件由权威端确认成功，且收据中的 actor_id 与请求角色相同。"
+        ],
+        "required_receipt_fields": [
+          "actor_id",
+          "actor_lifecycle_id",
+          "event_id",
+          "producer_spec_id",
+          "session_instance_id",
+          "session_epoch",
+          "completed_tick",
+          "authority_proof_ref",
+          "schema_version"
+        ],
+        "idempotency_key_fields": [
+          "actor_id",
+          "event_id"
+        ],
+        "replay_result": "return_existing_authoritative_chapter_entered_result_only",
+        "non_writer_sources": [
+          "DF_PROGRESS_YANLUO_HALL_CLEARED",
+          "队伍领队或队友进度",
+          "客户端等级或本地时钟",
+          "世界状态",
+          "七星或二十八星宿副本结果"
+        ]
+      },
+      {
+        "spec_id": "TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN",
+        "display_name": "周天观台已开启",
+        "record_scope": "character",
+        "runtime_progression_key": null,
+        "runtime_key": null,
+        "write_event": "TT_SPEC_EVENT_CELESTIAL_OBSERVATORY_OPEN_SUCCESS",
+        "unique_producer_spec_id": "TT_SPEC_MAINLINE_NODE_04_CELESTIAL_OBSERVATORY",
+        "producer_session_spec_id": "TT_SPEC_SESSION_CELESTIAL_OBSERVATORY_MAINLINE",
+        "prerequisite_progress_spec_ids": [
+          "TT_SPEC_PROGRESS_CHAPTER_ENTERED"
+        ],
+        "write_conditions": [
+          "当前角色已拥有 TT_SPEC_PROGRESS_CHAPTER_ENTERED。",
+          "朝会殿·周天观台节点由权威端确认成功。",
+          "成功收据的 actor_id、actor_lifecycle_id 与当前有效参与者一致。"
+        ],
+        "required_receipt_fields": [
+          "actor_id",
+          "actor_lifecycle_id",
+          "event_id",
+          "producer_spec_id",
+          "session_instance_id",
+          "session_epoch",
+          "completed_tick",
+          "authority_proof_ref",
+          "schema_version"
+        ],
+        "idempotency_key_fields": [
+          "actor_id",
+          "event_id"
+        ],
+        "replay_result": "return_existing_authoritative_celestial_observatory_open_result_only",
+        "non_writer_sources": [
+          "TT_SPEC_SEVEN_STAR_SOLO_SERIES",
+          "TT_SPEC_TWENTY_EIGHT_MANSIONS_RAID",
+          "队伍领队或队友进度",
+          "客户端节点完成标记"
+        ]
+      },
+      {
+        "spec_id": "TT_SPEC_PROGRESS_MAINLINE_CLEARED",
+        "display_name": "天庭常规主线已完成",
+        "record_scope": "character",
+        "runtime_progression_key": null,
+        "runtime_key": null,
+        "write_event": "TT_SPEC_EVENT_LINGXIAO_OUTER_COURT_SUCCESS",
+        "unique_producer_spec_id": "TT_SPEC_MAINLINE_NODE_05_LINGXIAO_OUTER_COURT",
+        "producer_session_spec_id": "TT_SPEC_SESSION_LINGXIAO_MAINLINE",
+        "prerequisite_progress_spec_ids": [
+          "TT_SPEC_PROGRESS_CHAPTER_ENTERED",
+          "TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN"
+        ],
+        "write_conditions": [
+          "当前角色已拥有 TT_SPEC_PROGRESS_CHAPTER_ENTERED 与 TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN。",
+          "凌霄外庭·裂律观台私有主线终局由权威端确认成功。",
+          "当前角色存在于冻结成员快照中，状态为 active，生命周期与快照一致，且被权威端确认满足有效参与者条件。",
+          "队长、旁观者、未授权队友、已离场成员及旧生命周期成员均不能代领。"
+        ],
+        "required_receipt_fields": [
+          "actor_id",
+          "actor_lifecycle_id",
+          "event_id",
+          "producer_spec_id",
+          "session_instance_id",
+          "session_epoch",
+          "completed_tick",
+          "authority_proof_ref",
+          "schema_version"
+        ],
+        "idempotency_key_fields": [
+          "actor_id",
+          "event_id"
+        ],
+        "replay_result": "return_existing_authoritative_mainline_cleared_result_only",
+        "non_writer_sources": [
+          "TT_SPEC_TWENTY_EIGHT_MANSIONS_RAID",
+          "普通或噩梦团本通关",
+          "队伍领队或队友进度",
+          "旁观或仅存在于客户端队伍列表",
+          "客户端完成标记"
+        ]
+      }
+    ],
+    "runtime_key": null
+  },
+  "entry_contract": {
+    "spec_id": "TT_SPEC_TIANTING_CHAPTER_ENTRY_AUTHORITY",
+    "runtime_key": null,
+    "minimum_level": 41,
+    "level_validation_rule": "only_authority_confirmed_current_actor_level_at_least_41",
+    "required_progress_spec_id": null,
+    "writer_progress_spec_id": "TT_SPEC_PROGRESS_CHAPTER_ENTERED",
+    "yanluo_handoff_proof": {
+      "spec_id": "TT_SPEC_CHAPTER_ENTRY_HANDOFF_PROOF",
+      "runtime_key": null,
+      "proof_kind": "authoritative_cross_chapter_completion_handoff_proof",
+      "source_encounter_key": "DF_E_YANLUO_HALL",
+      "source_success_rule": "proof must originate from an authoritative success receipt for DF_E_YANLUO_HALL",
+      "source_progression_key": null,
+    "required_source_receipt_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "event_id",
+      "producer_encounter_key",
+      "session_instance_id",
+      "session_epoch",
+      "completed_tick",
+      "authority_proof_ref"
+    ],
+    "handoff_envelope_required_fields": [
+      "actor_id",
+      "source_event_id",
+      "source_producer_encounter_key",
+      "source_session_instance_id",
+      "source_session_epoch",
+      "source_completed_tick",
+      "source_authority_proof_ref",
+      "handoff_authority_proof_ref",
+      "schema_version"
+    ],
+    "handoff_envelope_rule": "schema_version belongs to the new TianTing handoff-proof envelope, not to the legacy DF_E_YANLUO_HALL source receipt; the envelope must preserve the source receipt identity without modifying the Difu contract.",
+      "same_actor_rule": "chapter_entry_request.actor_id == proof.actor_id",
+      "source_lifecycle_rule": "proof.actor_lifecycle_id is an immutable audit field from the source completion; it is not required to equal the current entry-request lifecycle, but the proof subject must remain the same actor_id.",
+      "proof_validation_rule": "only a future trusted proof resolver may verify authority_proof_ref and source identity; client-provided booleans, copied receipts, team membership and local storage are insufficient.",
+      "forbidden_progression_key_operations": [
+        "read_DF_PROGRESS_YANLUO_HALL_CLEARED",
+        "write_DF_PROGRESS_YANLUO_HALL_CLEARED",
+        "register_as_DF_PROGRESS_YANLUO_HALL_CLEARED_consumer",
+        "use_DF_PROGRESS_YANLUO_HALL_CLEARED_as_unlock_substitute"
+      ]
+    },
+    "accepted_result": "authority_writes_only_TT_SPEC_PROGRESS_CHAPTER_ENTERED_using_TT_SPEC_EVENT_SOUTH_GATE_TRANSITION_SUCCESS",
+    "rejections": [
+      "authority_level_below_41",
+      "missing_or_untrusted_yanluo_handoff_proof",
+      "proof_actor_id_differs_from_request_actor_id",
+      "proof_source_is_not_DF_E_YANLUO_HALL_authoritative_success",
+      "client_attempts_to_supply_progression_or_proof_result",
+      "stale_or_conflicting_event_replay"
+    ]
+  },
+  "mainline_final_session": {
+    "spec_id": "TT_SPEC_SESSION_LINGXIAO_MAINLINE",
+    "runtime_key": null,
+    "session_kind": "private_mainline_final",
+    "participant_capacity": {
+      "minimum": 1,
+      "maximum": 4,
+      "runtime_key": null
+    },
+    "identity_fields": [
+      "session_instance_id",
+      "session_epoch",
+      "revision",
+      "cleanup_token"
+    ],
+    "member_snapshot_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "member_status",
+      "membership_snapshot_id"
+    ],
+    "state_sequence": [
+      "active",
+      "cleanup_pending",
+      "closed"
+    ],
+    "participant_validation": {
+      "rule": "every_frozen_member_independently_requires_TT_SPEC_PROGRESS_CHAPTER_ENTERED",
+      "required_progress_spec_id": "TT_SPEC_PROGRESS_CHAPTER_ENTERED",
+      "membership_rule": "only authority-created frozen membership snapshot members may participate; admission completes before active state.",
+      "rejected_actor_classes": [
+        "leader_without_individual_prerequisite",
+        "spectator",
+        "unfrozen_teammate",
+        "stale_lifecycle_member",
+        "client_injected_member"
+      ]
+    },
+    "completion_write_rule": {
+      "writer_progress_spec_id": "TT_SPEC_PROGRESS_MAINLINE_CLEARED",
+      "producer_spec_id": "TT_SPEC_MAINLINE_NODE_05_LINGXIAO_OUTER_COURT",
+      "write_event": "TT_SPEC_EVENT_LINGXIAO_OUTER_COURT_SUCCESS",
+      "eligible_member_rule": "only a frozen member whose actor_id and actor_lifecycle_id match the active authority snapshot at authoritative success, and who satisfies the effective-participation rule, receives the character-scoped logical completion receipt.",
+      "proxy_claim_rule": "leader, spectator, inactive teammate, left member and any actor not meeting effective participation receive no completion write.",
+      "receipt_contract_spec_id": "TT_SPEC_TIANTING_COMPLETION_RECEIPT_IDEMPOTENCY",
+      "success_before_cleanup_rule": "accepted normal completion receipts persist before cleanup confirmation; cleanup failure cannot revoke them.",
+      "runtime_key": null
+    },
+  "cleanup_ack_identity_fields": [
+    "session_instance_id",
+    "session_epoch",
+    "revision",
+    "cleanup_token"
+    ],
+    "reentry_before_cleanup_ack": "denied",
+    "runtime_progression_key": null
+  },
+  "seven_star_solo_session": {
+    "spec_id": "TT_SPEC_SESSION_SEVEN_STAR",
+    "runtime_key": null,
+    "session_kind": "single_player_repeatable_trial",
+    "owner_scope": "character",
+    "identity_fields": [
+      "owner_actor_id",
+      "lifecycle_id",
+      "session_instance_id",
+      "session_epoch",
+      "revision",
+      "cleanup_token"
+    ],
+    "state_sequence": [
+      "active",
+      "cleanup_pending",
+      "closed"
+    ],
+    "participant_validation": {
+      "rule": "owner_actor_id independently requires TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN and a matching current lifecycle_id before authoritative session creation.",
+      "required_progress_spec_id": "TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN",
+      "ownership_rule": "no leader, teammate, spectator, copied owner identity or client-selected star result may substitute for the owner.",
+      "runtime_key": null
+    },
+    "failure_triggers": [
+      "owner_death",
+      "timeout",
+      "owner_disconnect",
+      "owner_lifecycle_invalid"
+    ],
+    "failure_rule": "任何失败触发都先冻结会话终局并转入 cleanup_pending；matching cleanup acknowledgement 前不得重入、重连、重复结算或复用旧 session_epoch。",
+    "completion_write_rule": {
+      "writer_progress_spec_id": null,
+      "rule": "七星完成不写入三段天庭主线逻辑进度；材料、称号、法宝、次数、资格、收据和经济结果均不在本合同生成。",
+      "runtime_key": null
+    },
+  "cleanup_ack_identity_fields": [
+    "session_instance_id",
+    "session_epoch",
+    "revision",
+    "cleanup_token"
+    ],
+    "reentry_before_cleanup_ack": "denied",
+    "runtime_progression_key": null
+  },
+  "mansion_raid_session": {
+    "spec_id": "TT_SPEC_MANSION_RAID_SESSION_AUTHORITY",
+    "runtime_key": null,
+    "session_kind": "team_raid",
+    "participant_capacity": {
+      "minimum": 1,
+      "maximum": 4,
+      "runtime_key": null
+    },
+    "identity_fields": [
+      "raid_instance_id",
+      "boss_instance_id",
+      "session_epoch",
+      "phase_id",
+      "revision",
+      "cleanup_token"
+    ],
+    "member_snapshot_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "member_status",
+      "membership_snapshot_id"
+    ],
+    "state_sequence": [
+      "active",
+      "cleanup_pending",
+      "closed"
+    ],
+    "participant_validation": {
+      "rule": "every_frozen_member_independently_requires_TT_SPEC_PROGRESS_MAINLINE_CLEARED before raid creation; party leader approval never substitutes for a member check.",
+      "required_progress_spec_id": "TT_SPEC_PROGRESS_MAINLINE_CLEARED",
+      "rejected_actor_classes": [
+        "leader_without_individual_mainline_completion",
+        "member_without_individual_mainline_completion",
+        "spectator",
+        "unfrozen_teammate",
+        "stale_lifecycle_member",
+        "client_injected_member"
+      ]
+    },
+    "modes": [
+      {
+        "spec_id": "TT_SPEC_SESSION_MANSION_NORMAL",
+        "difficulty": "normal",
+        "runtime_key": null,
+        "entry_rule": "uses shared per-member TT_SPEC_PROGRESS_MAINLINE_CLEARED validation and one frozen rotation snapshot.",
+        "completion_write_rule": {
+          "writer_progress_spec_id": null,
+          "rule": "普通团本完成不写三段天庭主线逻辑进度；仅可在未来权威资格/经济合同中形成同方位噩梦资格证明的候选依据。",
+          "runtime_key": null
+        }
+      },
+      {
+        "spec_id": "TT_SPEC_SESSION_MANSION_NIGHTMARE",
+        "difficulty": "nightmare",
+        "runtime_key": null,
+        "entry_rule": "uses shared per-member TT_SPEC_PROGRESS_MAINLINE_CLEARED validation, one frozen rotation snapshot, and TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL validation for every frozen member.",
+        "completion_write_rule": {
+          "writer_progress_spec_id": null,
+          "rule": "噩梦团本完成不写三段天庭主线逻辑进度；四圣称号、材料、装备、法宝、收据与经济结果仍由未来独立合同裁决。",
+          "runtime_key": null
+        }
+      }
+    ],
+  "cleanup_ack_identity_fields": [
+    "raid_instance_id",
+    "session_epoch",
+    "revision",
+    "cleanup_token"
+    ],
+    "reentry_before_cleanup_ack": "denied",
+    "runtime_progression_key": null
+  },
+  "rotation_snapshot_contract": {
+    "spec_id": "TT_SPEC_TIME_BASIS_ASIA_SHANGHAI_SHICHEN",
+    "runtime_key": null,
+    "applies_to": [
+      "TT_SPEC_SESSION_MANSION_NORMAL",
+      "TT_SPEC_SESSION_MANSION_NIGHTMARE"
+    ],
+    "timezone": "Asia/Shanghai",
+    "time_basis": "server_authoritative_natural_shichen",
+    "authority_time_provider_runtime_key": null,
+    "required_fields": [
+      "rotation_snapshot_id",
+      "schedule_version",
+      "authoritative_time_slot",
+      "quadrant",
+      "difficulty",
+      "instance_scope",
+      "authority_time_basis_id",
+      "captured_authoritative_instant",
+      "schema_version"
+    ],
+    "schedule": [
+      {
+        "time_slots": [
+          "子",
+          "辰",
+          "申"
+        ],
+        "quadrant": "东方青龙",
+        "raid_spec_id": "TT_SPEC_RAID_AZURE_DRAGON",
+        "runtime_key": null
+      },
+      {
+        "time_slots": [
+          "丑",
+          "巳",
+          "酉"
+        ],
+        "quadrant": "南方朱雀",
+        "raid_spec_id": "TT_SPEC_RAID_VERMILION_BIRD",
+        "runtime_key": null
+      },
+      {
+        "time_slots": [
+          "寅",
+          "午",
+          "戌"
+        ],
+        "quadrant": "西方白虎",
+        "raid_spec_id": "TT_SPEC_RAID_WHITE_TIGER",
+        "runtime_key": null
+      },
+      {
+        "time_slots": [
+          "卯",
+          "未",
+          "亥"
+        ],
+        "quadrant": "北方玄武",
+        "raid_spec_id": "TT_SPEC_RAID_BLACK_TORTOISE",
+        "runtime_key": null
+      }
+    ],
+    "creation_rule": "only the first successful authority raid-creation operation, after all member admission checks pass, creates the immutable rotation snapshot for that raid instance and session epoch.",
+    "client_clock_rule": "prohibited",
+    "client_quadrant_rule": "prohibited",
+    "recalculation_rule": "retry, reconnect request, phase retry, cleanup replay, client clock change and local timezone change must reference the existing rotation_snapshot_id and must_not_recalculate_quadrant_or_time_slot.",
+    "instance_lifetime_rule": "副本生命期内方位、难度和快照字段不可变；只有创建全新的未来 raid_instance_id 与 session_epoch 才能取得新快照。"
+  },
+  "nightmare_qualification_contract": {
+    "spec_id": "TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL",
+  "runtime_key": null,
+  "credential_scope": "character_and_quadrant",
+  "owner_scope": "character",
+  "per_member_required": true,
+    "credential_runtime_item_key": null,
+    "credential_representation": "opaque_authority_resolved_credential",
+    "required_fields": [
+      "credential_subject_actor_id",
+      "normal_clear_rotation_snapshot_id",
+      "normal_clear_quadrant",
+      "nightmare_access_credential",
+      "nightmare_rotation_snapshot_id",
+      "owner_scope",
+      "authority_proof_ref",
+      "schema_version"
+    ],
+    "per_member_validation_rule": "未来权威端必须为每一个冻结成员独立解析其本人不透明资格凭证；队长持有、队友共享、客户端拷贝或仅显示普通通关均不构成其他成员的资格。",
+    "quadrant_match_rule": "normal_clear.quadrant == credential.quadrant == nightmare.rotation_snapshot.quadrant",
+    "actor_match_rule": "credential.credential_subject_actor_id == nightmare_member.actor_id",
+    "lifecycle_rule": "凭证主体必须匹配当前成员 actor_id；当前成员生命周期必须匹配冻结成员快照，旧生命周期和跨角色凭证均被拒绝。",
+    "economy_boundary": "资格凭证是否为物品、如何取得、是否消耗、是否可重复、掉落数量、发放收据和奖励结算均 deferred_to_future_authoritative_economy_contract。"
+  },
+  "recovery_contract": {
+    "spec_id": "TT_SPEC_TIANTING_INSTANCE_RECOVERY",
+    "runtime_key": null,
+    "state_sequence": [
+      "active",
+      "cleanup_pending",
+      "closed"
+    ],
+  "shared_cleanup_rule": "only an authority cleanup acknowledgement whose instance identity, session_epoch, revision and cleanup_token all match the frozen session may transition cleanup_pending to closed and release the reentry lock.",
+    "solo": {
+      "applies_to": "TT_SPEC_SESSION_SEVEN_STAR",
+      "failure_events": [
+        "owner_death",
+        "timeout",
+        "owner_disconnect",
+        "owner_lifecycle_invalid"
+      ],
+      "result": "transition_to_cleanup_pending_then_closed_only_after_matching_cleanup_ack",
+      "reconnect_rule": "forbidden_before_matching_cleanup_ack",
+      "runtime_key": null
+    },
+    "team": {
+      "applies_to": [
+        "TT_SPEC_SESSION_LINGXIAO_MAINLINE",
+        "TT_SPEC_SESSION_MANSION_NORMAL",
+        "TT_SPEC_SESSION_MANSION_NIGHTMARE"
+      ],
+      "member_death": {
+        "return_target": "current_chapter_initial_spawn",
+        "member_status": "dead",
+        "revive_before_return": true,
+        "reentry_lock": "until_matching_cleanup_ack",
+        "already_dead_repeat_return": "forbidden",
+        "runtime_key": null
+      },
+      "member_disconnect": {
+        "member_status": "left",
+        "reconnect_rule": "forbidden_for_the_current_raid_instance",
+        "completion_and_reward_eligibility": "left_member_cannot_receive_instance_completion_or_future_reward_eligibility_from_the_current_raid",
+        "remaining_member_rule": "remaining_active_members_may_continue_subject_to_future_encounter_rules",
+        "runtime_key": null
+      },
+    "full_wipe_or_timeout": {
+      "return_target": "current_chapter_initial_spawn",
+      "cleanup_ack_required": true,
+      "already_dead_repeat_return": "forbidden",
+      "timeout_eligible_member_state": "active",
+      "left_member_return_rule": "no_revive_no_return",
+      "runtime_key": null
+      }
+    }
+  },
+  "negative_cases": [
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_PROTECTED_DIFU_KEY",
+      "case": "任何天庭入章、主线、七星或星宿流程尝试读取、写入、注册或以 DF_PROGRESS_YANLUO_HALL_CLEARED 替代交接证明。",
+      "expected_result": "reject_operation_without_progression_write_or_session_creation",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_FORGED_ENTRY_PROOF",
+      "case": "请求角色等级未由权威确认，或 DF_E_YANLUO_HALL 交接证明来源、主体、证明引用无效。",
+      "expected_result": "reject_chapter_entry_without_writing_TT_SPEC_PROGRESS_CHAPTER_ENTERED",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_PROXY_COMPLETION",
+      "case": "领队、旁观者、未冻结队友、无效参与者或旧生命周期成员试图领取凌霄外庭常规主线完成。",
+      "expected_result": "reject_actor_completion_write_and_preserve_existing_authoritative_results",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_SOLO_PREMATURE_ENTRY",
+      "case": "未拥有 TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN 的角色尝试创建七星会话。",
+      "expected_result": "reject_solo_session_creation",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_RAID_MEMBER_GATE",
+      "case": "任何冻结团队成员未拥有 TT_SPEC_PROGRESS_MAINLINE_CLEARED，或试图由领队资格替代逐人校验。",
+      "expected_result": "reject_raid_creation_for_the_whole_requested_roster",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_CLIENT_ROTATION",
+      "case": "客户端时钟、客户端方位、时区变更、重试或重连请求尝试计算、改变或重算当前团本轮换。",
+      "expected_result": "reject_recalculation_and_return_existing_rotation_snapshot_only",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_NIGHTMARE_CREDENTIAL",
+      "case": "任何成员缺失本人凭证、凭证主体不匹配、普通完成方位不匹配或噩梦快照方位不匹配。",
+      "expected_result": "reject_nightmare_raid_creation_for_the_whole_requested_roster",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_CLEANUP_REPLAY",
+      "case": "旧实例、错误 session_epoch、错误 revision、错误 cleanup_token 或已关闭会话的清理确认试图释放重入锁或改写结果。",
+      "expected_result": "reject_cleanup_ack_and_preserve_current_lock_and_terminal_result",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_DUPLICATE_EVENT",
+      "case": "同一 (actor_id, event_id) 的进度写入、会话关闭或完成收据重复提交，或竞争提交不同终局。",
+      "expected_result": "return_first_authoritative_result_only_without_second_write_or_economic_effect",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_NEGATIVE_RUNTIME_OR_ECONOMY_LEAK",
+      "case": "合同尝试绑定真实进度键、物品键、地图键、对象键、时间服务键，或嵌入奖励、数量、概率、保底、属性、钥匙消耗或经济收据。",
+      "expected_result": "reject_as_out_of_scope_for_offline_design_contract",
+      "runtime_key": null
+    }
+  ],
+  "deferred": {
+    "trusted_proof_resolver_implementation": null,
+    "authoritative_level_query_implementation": null,
+    "authoritative_time_provider_implementation": null,
+    "actual_progression_storage": null,
+    "actual_session_storage": null,
+    "actual_cleanup_transport": null,
+    "actual_reconnect_transport": null,
+    "actual_map_and_spawn_bindings": null,
+    "actual_y3_objects_lua_ui_and_ecas": null,
+    "actual_nightmare_credential_representation_and_consumption": null,
+    "actual_reward_receipt_and_economy_issuance": null,
+    "runtime_key": null
+  },
+  "forbidden_field_names": [
+    "y3_id",
+    "y3_ids",
+    "map_resource_key",
+    "map_path",
+    "unit_id",
+    "ability_id",
+    "effect_id",
+    "projectile_id",
+    "item_id",
+    "item_key",
+    "progression_key",
+    "reward_amount",
+    "reward_exp",
+    "currency_amount",
+    "currency_key",
+    "item_amount",
+    "drop_probability",
+    "pity_threshold",
+    "equipment_stat_value",
+    "material_drop_count",
+    "key_consumption_amount"
+  ],
+  "acceptance_invariants": [
+    "三段角色级逻辑进度均只有指定唯一生产者，并以 (actor_id, event_id) 幂等。",
+    "入章只能在权威 Lv41 校验和同角色 DF_E_YANLUO_HALL 成功交接证明同时成立时写入；DF_PROGRESS_YANLUO_HALL_CLEARED 始终不是天庭消费者。",
+    "七星只在周天观台已开启后可由其所有者创建；失败、断线、超时和生命周期失效均需先完成匹配清理才能重入。",
+    "凌霄外庭主线终局与二十八星宿均逐人验证冻结成员；主线完成只写给有效参与者，星宿普通和噩梦均要求每人天庭主线已完成。",
+    "二十八星宿仅由 Asia/Shanghai 权威自然时辰在首次成功建本时冻结快照；客户端或重试不得改宿。",
+    "噩梦资格逐人、逐角色、逐方位验证，且 normal_clear.quadrant == credential.quadrant == nightmare.rotation_snapshot.quadrant。",
+    "所有会话只能 active → cleanup_pending → closed，且只有匹配实例身份、epoch、revision 与 cleanup_token 的权威确认才能释放锁。",
+    "正常完成一经权威持久化不因后续清理失败而回滚；重复事件只返回首次权威结果。",
+    "所有 runtime_key 为 null；本合同不含真实运行时键、经济值、奖励、物品、钥匙、掉落或收据实现。"
+  ],
+  "validation_contract": {
+    "validator": "../validate-tianting-tower-spec.ps1",
+    "strict_schema": true,
+    "negative_tests_required": true,
+    "required_runtime_key_value": null,
+    "production_gate": "closed",
+    "runtime_key": null
+  }
+}

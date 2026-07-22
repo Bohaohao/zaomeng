@@ -1,0 +1,540 @@
+{
+  "version": 1,
+  "package_status": "offline-design-spec",
+  "production_gate": "closed",
+  "scope": "天庭主线、七星单人本、二十八星宿团队本、四圣兽噩梦、通天塔复用及其离线权威进度/会话接口的内容设计合同；不创建运行时资产或结算。",
+  "authority": {
+    "user_directed_requirements": "七星单人本、十枚同星材料合成星君称号、二十八星宿四时辰轮换、普通通关取得噩梦钥匙、四圣兽噩梦终局与通天塔复用，均以本轮用户指令为准。",
+    "literary_reference_role": "《西游记》星官叙事和形象只用于灵感与全名校对；技能、关卡和美术方案均为本项目原创设计，不复制外部资产或文本。",
+    "runtime_rule": "所有 spec_id 仅是离线身份；runtime_key、运行时物品键、进度键、地图键和对象键均为 null。"
+  },
+  "hard_boundaries": {
+    "level_band": {
+      "min_level": 41,
+      "max_level": 60,
+      "status": "fixed"
+    },
+    "party_cap": {
+      "max_players": 4,
+      "status": "fixed",
+      "shared_state_rule": "future_authoritative_gameplay_only"
+    },
+    "cross_chapter": {
+      "protected_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+      "tianting_default_use": "prohibited",
+      "new_entry_and_completion_contract": "authority/tianting-progression-and-instance-authority-contract.json",
+      "entry_relation": "Lv41 plus a same-character opaque handoff proof whose trusted source producer is DF_E_YANLUO_HALL; the protected progression key is never consumed or written.",
+      "runtime_key": null
+    },
+    "economy": {
+      "external_design_dependency": "economy-v2",
+      "runtime_status": "accepted_design_reference_runtime_not_integrated",
+      "forbidden_embedded_values": [
+        "xp_amount",
+        "currency_amount",
+        "drop_probability",
+        "pity_threshold",
+        "reward_amount",
+        "equipment_stat_value",
+        "material_drop_count"
+      ],
+      "user_fixed_offline_recipe_exception": "同一种七星残片十枚兑换对应星君称号，是用户明确指定的离线配方倍率；它不是掉落量、货币值或已接入的运行时物品配方。",
+      "runtime_key": null
+    },
+    "tower_identity": {
+      "rule": "linglong_theme_within_global_tongtian_tower",
+      "must_not_create": "a_second_long_term_tower_system",
+      "runtime_key": null
+    }
+  },
+  "mainline": {
+    "spec_id": "TT_SPEC_MAINLINE_CONTENT_EXPANSION",
+    "decision_status": "offline_design",
+    "runtime_key": null,
+    "central_question": "当被污染的天律把秩序变成枷锁，承命者是强行摧毁星盘，还是让仍有自我意识的天庭守卫重归自己的星位？",
+    "regular_completion_relation": {
+      "spec_id": "TT_SPEC_MAINLINE_NORMAL_CLOSURE",
+      "decision_status": "offline_design",
+      "chapter_role": "天庭常规主线在凌霄外庭的裂律观台收束；二十八星宿团本为主线后开放的最高端重复团队轨道，不替代常规主线完成。",
+      "completion_progress_spec_id": "TT_SPEC_PROGRESS_MAINLINE_CLEARED",
+      "authority_contract": "authority/tianting-progression-and-instance-authority-contract.json",
+      "runtime_key": null
+    },
+    "ordered_nodes": [
+      {
+        "spec_id": "TT_SPEC_MAINLINE_NODE_01_SOUTH_GATE",
+        "name": "裂云南天门",
+        "arc_role": "钩子：受控天兵封锁入口，千里眼与顺风耳的巡天视听被污染星讯劫持。",
+        "player_change": "玩家得知天庭危机不是单纯叛乱，而是星历与天律同时失序。",
+        "encounter_function": "双视野/听觉预警与遮蔽位的公共遭遇原型。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_MAINLINE_NODE_02_HEAVENLY_ROAD",
+        "name": "天宫道·断虹阵",
+        "arc_role": "升级：巨灵神所守的阵门把天兵编成会自我修复的战阵。",
+        "player_change": "玩家学会优先破除阵眼与救回被迫参战的守卫，而非只清空敌人。",
+        "encounter_function": "阵眼、护送与精英反扑的公共遭遇原型。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_MAINLINE_NODE_03_KING_HALL",
+        "name": "天王殿外缘·四门失衡",
+        "arc_role": "中段改写：四方的守备信号互相冲突，说明污染沿星盘轮换扩散。",
+        "player_change": "玩家从追查单一敌人转为修复四方秩序，并得到进入周天观台的许可。",
+        "encounter_function": "四方机关、失控巡逻与分流救援的公共遭遇原型。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_MAINLINE_NODE_04_CELESTIAL_OBSERVATORY",
+        "name": "朝会殿·周天观台",
+        "arc_role": "危机：七星锚点逐一熄灭，二十八宿轮换被外力当成增幅器。",
+        "player_change": "七星单人试炼开放；玩家获得以净化而非击杀星官来削弱污染的行动方案。",
+        "encounter_function": "七星入口、星历快照与团队本预告。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_MAINLINE_NODE_05_LINGXIAO_OUTER_COURT",
+        "name": "凌霄外庭·裂律观台",
+        "arc_role": "收束：玩家击退由裂律驱动的监律天将，保住临时天庭的最后一条可用天律。",
+        "player_change": "常规天庭篇完成；星宿轮换团本从调查目标转为可主动挑战的高端轨道。",
+        "encounter_function": "多阶段封印重置、可净化首领与常规章节收束原型。",
+        "runtime_key": null
+      }
+    ]
+  },
+  "seven_star_solo": {
+    "spec_id": "TT_SPEC_SEVEN_STAR_SOLO_SERIES",
+    "decision_status": "fixed-user-requirement",
+    "runtime_key": null,
+    "selection_rule": "七星为天庭固定单人本系列，替代旧有“蟠桃园/御马监二选一单人本”假设；蟠桃园和御马监可作为公共路线叙事地点保留。",
+    "entry_relation": "同一角色持有 TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN 后可重复挑战；会话创建、失败清理和严格不重连语义由 authority/tianting-progression-and-instance-authority-contract.json 裁决。",
+    "fragment_rule": {
+      "presentation_name_pattern": "{star_name}残片",
+      "one_category_per_star": true,
+      "consumption_semantics": "deferred_to_future_economy_contract; the title recipe and graduation-artifact recipe must not silently spend the same fragment twice.",
+      "runtime_item_key": null,
+      "drop_count": null,
+      "drop_probability": null
+    },
+    "star_titles": {
+      "same_star_fragment_units_required": 10,
+      "decision_status": "fixed-user-requirement",
+      "effect_delivery": "每个已获得称号提供一个非数值化的收藏增益标签；七曜集合称号解锁后作为唯一生效的七曜效果集合，不能与单称号重复叠加。展示位可单独选择，具体属性、PvP/PvE边界与持久化均 deferred。",
+      "effect_scope": "deferred_to_future_combat_and_title_contract",
+      "unique_visual_rule": "每个称号拥有独立星轨、武器拖光或头顶星图的展示方向；真实特效资产不在本包创建。",
+      "runtime_item_key": null
+    },
+    "aggregate_title": {
+      "spec_id": "TT_SPEC_SEVEN_STAR_AGGREGATE_TITLE",
+      "display_name": null,
+      "name_status": "deferred_by_user",
+      "unlock_rule": "七个星君称号均已获得时自动解锁。",
+      "required_title_spec_ids": [
+        "TT_SPEC_TITLE_TIANSHU_STAR_LORD",
+        "TT_SPEC_TITLE_TIANXUAN_STAR_LORD",
+        "TT_SPEC_TITLE_TIANJI_STAR_LORD",
+        "TT_SPEC_TITLE_TIANQUAN_STAR_LORD",
+        "TT_SPEC_TITLE_YUHENG_STAR_LORD",
+        "TT_SPEC_TITLE_KAIYANG_STAR_LORD",
+        "TT_SPEC_TITLE_YAOGUANG_STAR_LORD"
+      ],
+      "effect_rule": "合并七个星君的收藏增益标签，并展示完整七星星图；数值与实现键均 deferred。",
+      "runtime_key": null
+    },
+    "graduation_artifact": {
+      "spec_id": "TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT",
+      "display_name": null,
+      "name_status": "deferred_by_user",
+      "stage_role": "天庭阶段毕业法宝。",
+      "recipe_rule": "需要七种残片均已齐备，并配合珍贵材料候选；候选可来自四圣噩梦与天律线，但最终配方不默认强制绑定任一团队轨道。各材料的实际消耗量、名称、来源资格与属性均 deferred。",
+      "runtime_item_key": null
+    },
+    "stars": [
+      {
+        "order": 1,
+        "spec_id": "TT_SPEC_SOLO_TIANSHU",
+        "star_name": "天枢",
+        "fragment_spec_id": "TT_SPEC_MATERIAL_TIANSHU_FRAGMENT",
+        "fragment_name": "天枢残片",
+        "fragment_runtime_key": null,
+        "title_spec_id": "TT_SPEC_TITLE_TIANSHU_STAR_LORD",
+        "title_name": "天枢星君",
+        "title_runtime_key": null,
+        "title_tag": "定极",
+        "effect_direction": "受控位移后的稳定窗口",
+        "boss_direction": "镇枢天将：持轮盘重戟的中轴守卫。",
+        "mechanic_direction": "以可移动的中轴、方向翻转与稳定锚为核心；先稳住星盘再输出。",
+        "display_direction": "北极星盘与沉稳光环。",
+        "runtime_key": null
+      },
+      {
+        "order": 2,
+        "spec_id": "TT_SPEC_SOLO_TIANXUAN",
+        "star_name": "天璇",
+        "fragment_spec_id": "TT_SPEC_MATERIAL_TIANXUAN_FRAGMENT",
+        "fragment_name": "天璇残片",
+        "fragment_runtime_key": null,
+        "title_spec_id": "TT_SPEC_TITLE_TIANXUAN_STAR_LORD",
+        "title_name": "天璇星君",
+        "title_runtime_key": null,
+        "title_tag": "回环",
+        "effect_direction": "位移后的回环路径",
+        "boss_direction": "回轮天女：双环与镜面交替的星轨守卫。",
+        "mechanic_direction": "以双轨轮转、镜像落点和回环闪避为核心；玩家要读懂下一次轨道而非追逐当前位置。",
+        "display_direction": "双环旋星与步伐残影。",
+        "runtime_key": null
+      },
+      {
+        "order": 3,
+        "spec_id": "TT_SPEC_SOLO_TIANJI",
+        "star_name": "天玑",
+        "fragment_spec_id": "TT_SPEC_MATERIAL_TIANJI_FRAGMENT",
+        "fragment_name": "天玑残片",
+        "fragment_runtime_key": null,
+        "title_spec_id": "TT_SPEC_TITLE_TIANJI_STAR_LORD",
+        "title_name": "天玑星君",
+        "title_runtime_key": null,
+        "title_tag": "洞微",
+        "effect_direction": "弱点与隐蔽预警识别",
+        "boss_direction": "匿曜监星使：披帛遮面的隐曜观测者。",
+        "mechanic_direction": "以真假星标、隐藏施法和可揭示的破绽为核心；玩家通过观察与验证暴露真身。",
+        "display_direction": "细碎暗星与洞察符纹。",
+        "runtime_key": null
+      },
+      {
+        "order": 4,
+        "spec_id": "TT_SPEC_SOLO_TIANQUAN",
+        "star_name": "天权",
+        "fragment_spec_id": "TT_SPEC_MATERIAL_TIANQUAN_FRAGMENT",
+        "fragment_name": "天权残片",
+        "fragment_runtime_key": null,
+        "title_spec_id": "TT_SPEC_TITLE_TIANQUAN_STAR_LORD",
+        "title_name": "天权星君",
+        "title_runtime_key": null,
+        "title_tag": "裁衡",
+        "effect_direction": "团队共同打断响应",
+        "boss_direction": "衡律天官：执法尺与浮空天秤的裁决者。",
+        "mechanic_direction": "以双侧承压、裁决条与打断窗口为核心；玩家必须在过度偏移前修回平衡。",
+        "display_direction": "悬衡、律尺与金色裁断线。",
+        "runtime_key": null
+      },
+      {
+        "order": 5,
+        "spec_id": "TT_SPEC_SOLO_YUHENG",
+        "star_name": "玉衡",
+        "fragment_spec_id": "TT_SPEC_MATERIAL_YUHENG_FRAGMENT",
+        "fragment_name": "玉衡残片",
+        "fragment_runtime_key": null,
+        "title_spec_id": "TT_SPEC_TITLE_YUHENG_STAR_LORD",
+        "title_name": "玉衡星君",
+        "title_runtime_key": null,
+        "title_tag": "调和",
+        "effect_direction": "护持与资源调和",
+        "boss_direction": "玉衡灵卫：玉石甲胄与水木灵息共存的守衡灵兽。",
+        "mechanic_direction": "以资源调和、轮替安全区和过量反馈为核心；玩家需避免单一手段持续压制。",
+        "display_direction": "玉衡枝叶、玉色护环。",
+        "runtime_key": null
+      },
+      {
+        "order": 6,
+        "spec_id": "TT_SPEC_SOLO_KAIYANG",
+        "star_name": "开阳",
+        "fragment_spec_id": "TT_SPEC_MATERIAL_KAIYANG_FRAGMENT",
+        "fragment_name": "开阳残片",
+        "fragment_runtime_key": null,
+        "title_spec_id": "TT_SPEC_TITLE_KAIYANG_STAR_LORD",
+        "title_name": "开阳星君",
+        "title_runtime_key": null,
+        "title_tag": "启阙",
+        "effect_direction": "开场破障窗口",
+        "boss_direction": "开阙神将：金门、长枪与破阵旗的先锋守卫。",
+        "mechanic_direction": "以开门/封门、冲锋线路和抢占先机为核心；玩家用正确的开阙时机创造输出窗口。",
+        "display_direction": "门阙虚影与前冲流光。",
+        "runtime_key": null
+      },
+      {
+        "order": 7,
+        "spec_id": "TT_SPEC_SOLO_YAOGUANG",
+        "star_name": "瑶光",
+        "fragment_spec_id": "TT_SPEC_MATERIAL_YAOGUANG_FRAGMENT",
+        "fragment_name": "瑶光残片",
+        "fragment_runtime_key": null,
+        "title_spec_id": "TT_SPEC_TITLE_YAOGUANG_STAR_LORD",
+        "title_name": "瑶光星君",
+        "title_runtime_key": null,
+        "title_tag": "追影",
+        "effect_direction": "追击与收束窗口",
+        "boss_direction": "曳光天将：长披风、流星刃与多段残影的收束守卫。",
+        "mechanic_direction": "以拖光轨迹、终结判定和回溯残影为核心；玩家在正确的收束时机追击真身。",
+        "display_direction": "长尾星芒与多层残影。",
+        "runtime_key": null
+      }
+    ]
+  },
+  "twenty_eight_mansions_raid": {
+    "spec_id": "TT_SPEC_TWENTY_EIGHT_MANSIONS_RAID",
+    "decision_status": "fixed-user-requirement",
+    "runtime_key": null,
+    "chapter_relation": "天庭常规主线完成后开放的最高端团队副本；它不是常规章节完成键的写入者。",
+    "canonical_name_policy": "full_name 是二十八星官的唯一规范身份；出现史料异文时只能作为后续 alias 记录，不能创建第二名星官。",
+    "rotation": {
+      "spec_id": "TT_SPEC_MANSION_ROTATION",
+      "rule": "十二时辰按四个连续槽位循环，日内完整循环三次。",
+      "schedule": [
+        {
+          "time_slots": ["子", "辰", "申"],
+          "quadrant": "东方青龙",
+          "raid_spec_id": "TT_SPEC_RAID_AZURE_DRAGON"
+        },
+        {
+          "time_slots": ["丑", "巳", "酉"],
+          "quadrant": "南方朱雀",
+          "raid_spec_id": "TT_SPEC_RAID_VERMILION_BIRD"
+        },
+        {
+          "time_slots": ["寅", "午", "戌"],
+          "quadrant": "西方白虎",
+          "raid_spec_id": "TT_SPEC_RAID_WHITE_TIGER"
+        },
+        {
+          "time_slots": ["卯", "未", "亥"],
+          "quadrant": "北方玄武",
+          "raid_spec_id": "TT_SPEC_RAID_BLACK_TORTOISE"
+        }
+      ],
+      "snapshot_rule": "首次成功创建团队会话时由未来权威时间提供方按 Asia/Shanghai 自然时辰生成 rotation_snapshot；副本生命期内锁定其方位与难度，禁止以客户端本地时钟或重试中途换宿。",
+      "snapshot_contract": {
+        "spec_id": "TT_SPEC_MANSION_ROTATION_SNAPSHOT",
+        "required_field_names": [
+          "rotation_snapshot_id",
+          "schedule_version",
+          "authoritative_time_slot",
+          "quadrant",
+          "difficulty",
+          "instance_scope",
+          "authority_time_basis_id",
+          "captured_authoritative_instant",
+          "schema_version"
+        ],
+        "client_clock_rule": "prohibited",
+        "runtime_key": null
+      },
+      "trusted_time_source": {
+        "spec_id": "TT_SPEC_TIME_BASIS_ASIA_SHANGHAI_SHICHEN",
+        "time_zone": "Asia/Shanghai",
+        "calendar_rule": "server-natural-twelve-earthly-branches",
+        "implementation": null,
+        "runtime_key": null
+      },
+      "runtime_key": null
+    },
+    "normal_mode": {
+      "spec_id": "TT_SPEC_MANSION_NORMAL_MODE",
+      "raid_shape": "同一方位的七宿按前阵双宿、中阵双宿、后阵双宿、守位单宿的四段联动遭遇依次出现；每一星官保留一项独特机制。",
+      "clear_result": "普通通关产出对应方位的噩梦挑战钥匙候选。",
+      "failure_rule": "成员死亡、离场、超时、清理与严格不重连均由 authority/tianting-progression-and-instance-authority-contract.json 的团队会话合同裁决。",
+      "runtime_key": null
+    },
+    "nightmare_mode": {
+      "spec_id": "TT_SPEC_MANSION_NIGHTMARE_MODE",
+      "unlock_rule": "每名请求进入的角色均须持有同一方位普通难度完成所派生的不透明受信任资格凭证；资格的实体形态、消耗与重复发放仍由经济合同 deferred。",
+      "final_boss_rule": "对应四圣兽登场；七宿全员在场并以宿曜贡辉高额强化圣兽，圣兽同时向七宿施加圣兽庇护。",
+      "all_seven_officers_present": true,
+      "reciprocal_bond_contract": {
+        "officer_to_sacred_beast_link_count": 7,
+        "sacred_beast_to_officer_link_count": 7,
+        "officer_to_sacred_beast_effect": "宿曜贡辉",
+        "sacred_beast_to_officer_effect": "圣兽庇护",
+        "numeric_values": null,
+        "buff_runtime_key": null
+      },
+      "qualification_match_contract": {
+        "spec_id": "TT_SPEC_NIGHTMARE_QUADRANT_MATCH",
+        "rule": "normal_clear.rotation_snapshot.quadrant == nightmare_access_credential.quadrant == nightmare.rotation_snapshot.quadrant",
+        "owner_scope": "character",
+        "required_field_names": [
+          "credential_subject_actor_id",
+          "normal_clear_rotation_snapshot_id",
+          "normal_clear_quadrant",
+          "nightmare_access_credential",
+          "nightmare_rotation_snapshot_id",
+          "owner_scope",
+          "authority_proof_ref",
+          "schema_version"
+        ],
+        "credential_resolution_rule": "authority resolves every participant credential; caller-provided owner, quadrant or proof fields are forbidden.",
+        "replay_and_receipt_semantics": "admission and session replay are defined by the offline authority contract; credential issuance, consumption and economic receipt remain deferred.",
+        "runtime_key": null
+      },
+      "counterplay_rule": "团队逐一处理七宿独特机制，把星官与圣兽间的共鸣链转为净宿状态；不能靠无视星官直接击杀圣兽完成战斗。",
+      "reward_role": "提供天庭毕业法宝所需的四圣珍贵材料候选与四圣称号进度候选，不内嵌掉率、数量或属性。",
+      "runtime_key": null
+    },
+    "normal_clear_key": {
+      "spec_id": "TT_SPEC_MANSION_NIGHTMARE_KEY",
+      "presentation_name_pattern": "{quadrant}夜巡钥",
+      "decision_status": "fixed-user-requirement",
+      "recipient_and_receipt_semantics": "future character-scoped opaque credential per authority-qualified normal-clear participant; materialization, consumption and economy receipt remain deferred.",
+      "runtime_item_key": null
+    },
+    "reward_families": [
+      {
+        "spec_id": "TT_SPEC_REWARD_MANSION_SEAL",
+        "presentation_name": "方位宿印",
+        "source": "普通二十八星宿",
+        "role": "对应方位的铸造、收藏与噩梦资格候选。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_REWARD_STAR_OFFICER_RELIC",
+        "presentation_name": "星官遗契",
+        "source": "普通与噩梦二十八星宿",
+        "role": "天庭装备词条、法宝胚子或外观收藏的候选材料族；具体资产和属性 deferred。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_REWARD_SACRED_BEAST_CORE",
+        "presentation_name": "四圣铸核",
+        "source": "噩梦四圣兽",
+        "role": "七星毕业法宝的珍贵材料候选。",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_REWARD_SACRED_BEAST_TROPHY",
+        "presentation_name": "圣兽遗珍",
+        "source": "噩梦四圣兽",
+        "role": "高阶装备胚子、外观与四圣称号收集的候选材料族。",
+        "runtime_key": null
+      }
+    ],
+    "quadrants": [
+      {
+        "spec_id": "TT_SPEC_RAID_AZURE_DRAGON",
+        "quadrant": "东方青龙",
+        "sacred_beast_spec_id": "TT_SPEC_SACRED_BEAST_AZURE_DRAGON",
+        "sacred_beast": "青龙",
+        "sacred_beast_runtime_key": null,
+        "raid_identity": "行云走位、星链路线与连续换位。",
+        "nightmare_boss_identity": "青龙以巡天龙轨压缩场地；净宿后的星链变成可反制的导流路径。",
+        "officers": [
+          {"spec_id": "TT_SPEC_MANSION_JIA_MU_JIAO", "full_name": "角木蛟", "aliases": [], "unique_skill": "角梁缠星：在两名玩家间架设可被转向的星链。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_KANG_JIN_LONG", "full_name": "亢金龙", "aliases": [], "unique_skill": "亢龙升势：沿标记列升腾，留下延迟坠落的龙影。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_DI_TU_HE", "full_name": "氐土貉", "aliases": [], "unique_skill": "地脉潜遁：潜入阵眼并从错误站位下突袭。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_FANG_RI_TU", "full_name": "房日兔", "aliases": [], "unique_skill": "日房映界：以日轮划分可见与不可见的安全扇区。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_XIN_YUE_HU", "full_name": "心月狐", "aliases": [], "unique_skill": "心月惑影：复制最近一次关键动作，真假影需要共同辨认。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_WEI_HUO_HU", "full_name": "尾火虎", "aliases": [], "unique_skill": "虎尾燎轨：尾扫后留下会追踪路径的火痕。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_JI_SHUI_BAO", "full_name": "箕水豹", "aliases": [], "unique_skill": "箕风泼雨：扇形水压推动玩家并重排星链。", "runtime_key": null}
+        ]
+      },
+      {
+        "spec_id": "TT_SPEC_RAID_VERMILION_BIRD",
+        "quadrant": "南方朱雀",
+        "sacred_beast_spec_id": "TT_SPEC_SACRED_BEAST_VERMILION_BIRD",
+        "sacred_beast": "朱雀",
+        "sacred_beast_runtime_key": null,
+        "raid_identity": "火候管理、灰烬复燃与安全区轮换。",
+        "nightmare_boss_identity": "朱雀在浴火重明中循环重置火场；净宿可把失控余烬转成短暂的庇护区。",
+        "officers": [
+          {"spec_id": "TT_SPEC_MANSION_JING_MU_AN", "full_name": "井木犴", "aliases": [], "unique_skill": "井木擒猎：锁定离群目标后飞扑、撕咬并拖向火井。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_GUI_JIN_YANG", "full_name": "鬼金羊", "aliases": [], "unique_skill": "鬼铃反响：金铃在队伍间回声传递，需按顺序截断。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_LIU_TU_ZHANG", "full_name": "柳土獐", "aliases": [], "unique_skill": "柳障封庭：从地面长出交叉土枝，阻断旧安全区。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_XING_RI_MA", "full_name": "星日马", "aliases": [], "unique_skill": "日驭长驱：沿日轨冲锋并点燃经过的格位。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_ZHANG_YUE_LU", "full_name": "张月鹿", "aliases": [], "unique_skill": "月鹿开张：拉出月弦，将远近两组玩家互换位置。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_YI_HUO_SHE", "full_name": "翼火蛇", "aliases": [], "unique_skill": "火翼环锁：盘旋火环逐层收束，留下唯一可穿越的缺口。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_ZHEN_SHUI_YIN", "full_name": "轸水蚓", "aliases": [], "unique_skill": "轸渊潜行：从余烬下潜并在被忽略的水脉口爆发。", "runtime_key": null}
+        ]
+      },
+      {
+        "spec_id": "TT_SPEC_RAID_WHITE_TIGER",
+        "quadrant": "西方白虎",
+        "sacred_beast_spec_id": "TT_SPEC_SACRED_BEAST_WHITE_TIGER",
+        "sacred_beast": "白虎",
+        "sacred_beast_runtime_key": null,
+        "raid_identity": "猎印转移、目标保护与爆发窗口。",
+        "nightmare_boss_identity": "白虎把猎印叠成肃杀风场；净宿可把被追猎者的轨迹反转为破甲窗口。",
+        "officers": [
+          {"spec_id": "TT_SPEC_MANSION_KUI_MU_LANG", "full_name": "奎木狼", "aliases": [], "unique_skill": "奎狼逐月：以月影跃迁追咬最后离开阵线者。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_LOU_JIN_GOU", "full_name": "娄金狗", "aliases": [], "unique_skill": "娄关守嗅：嗅出携带猎印者，设下不可硬闯的拦截线。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_WEI_TU_ZHI", "full_name": "胃土雉", "aliases": [], "unique_skill": "胃土啄阵：啄碎地表后掀起可遮挡或困住的土翎。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_MAO_RI_JI", "full_name": "昴日鸡", "aliases": [], "unique_skill": "昴日鸣晓：鸣叫驱散隐身，却令未躲入阴影者暴露。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_BI_YUE_WU", "full_name": "毕月乌", "aliases": [], "unique_skill": "毕月罗网：月羽编网，要求队友在限定时机共同撕开。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_ZI_HUO_HOU", "full_name": "觜火猴", "aliases": [], "unique_skill": "觜火裂点：以短促连击敲碎单个星点，错位会引爆连锁。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_SHEN_SHUI_YUAN", "full_name": "参水猿", "aliases": [], "unique_skill": "参猿翻瀑：跃过场地并留下回卷水瀑，改变追猎路线。", "runtime_key": null}
+        ]
+      },
+      {
+        "spec_id": "TT_SPEC_RAID_BLACK_TORTOISE",
+        "quadrant": "北方玄武",
+        "sacred_beast_spec_id": "TT_SPEC_SACRED_BEAST_BLACK_TORTOISE",
+        "sacred_beast": "玄武",
+        "sacred_beast_runtime_key": null,
+        "raid_identity": "护甲拆解、屏障分工与持久压场。",
+        "nightmare_boss_identity": "玄武用甲壁与冥水切割战场；净宿会打开短暂的共守窗口，让队伍选择何处破壁。",
+        "officers": [
+          {"spec_id": "TT_SPEC_MANSION_DOU_MU_XIE", "full_name": "斗木獬", "aliases": [], "unique_skill": "斗角裁衡：以独角判定两侧承压，失衡时强制击退。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_NIU_JIN_NIU", "full_name": "牛金牛", "aliases": [], "unique_skill": "金牛镇桩：冲撞后留下不能轻易移动的镇桩。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_NV_TU_FU", "full_name": "女土蝠", "aliases": [], "unique_skill": "蝠影回声：黑暗中以回声标记动作过快的玩家。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_XU_RI_SHU", "full_name": "虚日鼠", "aliases": [], "unique_skill": "虚穴蚀界：钻出虚穴吞没一块地面，稍后从另一端吐回。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_WEI_YUE_YAN", "full_name": "危月燕", "aliases": [], "unique_skill": "危月折返：高空折返俯冲，落点随月相延迟变化。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_SHI_HUO_ZHU", "full_name": "室火猪", "aliases": [], "unique_skill": "室火筑城：堆起火甲城垒，迫使队伍分工开墙与守点。", "runtime_key": null},
+          {"spec_id": "TT_SPEC_MANSION_BI_SHUI_YU", "full_name": "壁水貐", "aliases": [], "unique_skill": "壁水回廊：竖起水壁并反射远程轨迹，重塑安全路线。", "runtime_key": null}
+        ]
+      }
+    ],
+    "four_sacred_titles": {
+      "spec_id": "TT_SPEC_FOUR_SACRED_TITLE_SERIES",
+      "decision_status": "offline_design",
+      "collection_rule": "完成对应方位普通难度，并在噩梦难度中把七宿共鸣全部转为净宿，直接取得该方位的称号资格候选。",
+      "directional_titles": [
+        {"spec_id": "TT_SPEC_TITLE_AZURE_DRAGON_PATROL", "quadrant": "东方青龙", "title_name": "青龙巡天", "effect_tag": "行云", "visual_direction": "青龙星链绕身", "runtime_key": null},
+        {"spec_id": "TT_SPEC_TITLE_VERMILION_BIRD_BLAZE", "quadrant": "南方朱雀", "title_name": "朱雀焚曜", "effect_tag": "浴火", "visual_direction": "赤羽余烬", "runtime_key": null},
+        {"spec_id": "TT_SPEC_TITLE_WHITE_TIGER_EDGE", "quadrant": "西方白虎", "title_name": "白虎执锐", "effect_tag": "执锐", "visual_direction": "白金爪痕", "runtime_key": null},
+        {"spec_id": "TT_SPEC_TITLE_BLACK_TORTOISE_WARD", "quadrant": "北方玄武", "title_name": "玄武镇界", "effect_tag": "镇界", "visual_direction": "玄甲水纹", "runtime_key": null}
+      ],
+      "aggregate_title": {
+        "spec_id": "TT_SPEC_FOUR_SACRED_AGGREGATE_TITLE",
+        "title_name": "四象镇天",
+        "unlock_rule": "四个方位圣兽称号均已获得。",
+        "required_title_spec_ids": [
+          "TT_SPEC_TITLE_AZURE_DRAGON_PATROL",
+          "TT_SPEC_TITLE_VERMILION_BIRD_BLAZE",
+          "TT_SPEC_TITLE_WHITE_TIGER_EDGE",
+          "TT_SPEC_TITLE_BLACK_TORTOISE_WARD"
+        ],
+        "effect_rule": "汇集四种收藏增益标签并以四象环阵展示；它替代四个单称号的效果集合，不能重复叠加。数值与实现规则 deferred。",
+        "runtime_key": null
+      }
+    }
+  },
+  "tower_reuse_interface": {
+    "spec_id": "TT_SPEC_TOWER_TIANTING_CONTENT_REUSE",
+    "decision_status": "fixed-user-requirement",
+    "rule": "七星与二十八星宿可在未来全局通天塔作为小 Boss 池复用；具体抽取、波次、词缀、难度、掉落、记录和实现均不在本包决定。",
+    "mini_boss_cadence": {
+      "candidate_options": [3, 5],
+      "selected_value": null,
+      "status": "deferred_by_user"
+    },
+    "major_boss_cadence": {
+      "every_floors": 10,
+      "major_boss_design": "deferred_by_user",
+      "runtime_key": null
+    },
+    "first_cycle_isolation": {
+      "rule": "content_pool_only; no binding to the existing five abstract beats",
+      "must_not_bind_existing_beats": true,
+      "existing_beat_bindings": [],
+      "runtime_key": null
+    },
+    "reward_rule": "通天塔掉落材料待天庭主线与副本设计完成后的独立经济裁决；本接口不增加材料、数量、掉率或奖励表。",
+    "runtime_key": null
+  },
+  "remaining_deferred": [
+    "天庭逻辑进度、会话身份、可信时间基准和资格凭证的真实运行时键、持久化、提供方接入与迁移。",
+    "七星、二十八星宿与四圣兽的真实地图、对象、技能、数值、AI、波次、检查点、失败清理和多人同步。",
+    "所有材料、钥匙、装备、法宝、称号的运行时 ID、持久化、收据、发放概率、数量、保底、属性与兑换规则。",
+    "可信时间提供方的真实部署、维护窗口、异常回退与跨服务时钟对账。",
+    "通天塔的小 Boss 间隔在每三层或每五层之间的最终选择，以及十层大 Boss 名单和所有塔奖励。"
+  ]
+}

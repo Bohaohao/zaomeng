@@ -1,120 +1,47 @@
 # Lua 逻辑交接简报
 
-## 项目
+本包不生成 Lua。[进度与副本会话权威合同](../authority/tianting-progression-and-instance-authority-contract.json) 只冻结未来权威玩法逻辑必须接手的语义边界，不能由 UI、本地时间或临时脚本绕过。
 
-{
-    "name":  "天庭篇主线、遭遇与通天塔首轮离线规格",
-    "genre":  "最多 4 人同游、存档制的西游题材 ORPG 离线设计层",
-    "camera":  "2.5D 俯视角",
-    "sessionType":  "公共地图与可重复副本组成的单局会话；天庭运行时尚未施工",
-    "targetPlayers":  "1-4 人",
-    "targetDurationMinutes":  0,
-    "pitch":  "以第三劫下的临时天庭为 Lv41-60 的内容锚点，先锁定跨篇、会话与经济边界；通天塔只承接 Lv55 逐人准入、每 5 层休整与玲珑主题并入全局塔的既定事实。"
+## 必须先有的权威合同
+
+| 域 | 未来逻辑必须保证 | 本包未提供 |
+|---|---|---|
+| 天庭章节 | 权威端逐人确认达到 Lv41 与同角色 `TT_SPEC_CHAPTER_ENTRY_HANDOFF_PROOF`（源自 `DF_E_YANLUO_HALL` 成功），依序写入 `TT_SPEC_PROGRESS_CHAPTER_ENTERED`、`TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN`、`TT_SPEC_PROGRESS_MAINLINE_CLEARED`；不消费或写入 `DF_PROGRESS_YANLUO_HALL_CLEARED`。 | 真实键、证明签发/验签、存储、写入者服务和网络事件。 |
+| 主线终局 | `TT_SPEC_SESSION_LINGXIAO_MAINLINE` 私有 1–4 人会话逐人校验入章；仅有效权威参与者可获得常规完成，队长/旁观者不能代领。 | Lua 状态机、地图、队列、进度写入与实例服务。 |
+| 七星单人本 | `TT_SPEC_SESSION_SEVEN_STAR` 仅由周天观台开启者创建；使用 owner、生命周期、实例、epoch、revision、cleanup token，并在死亡、超时、断线或生命周期失效后进入清理、清理前禁止重入。 | Lua 状态机、单位、技能、复活、掉落与实际锁。 |
+| 星宿轮换 | `TT_SPEC_TIME_BASIS_ASIA_SHANGHAI_SHICHEN` 在首次成功创建会话时，从服务器 `Asia/Shanghai` 权威时间冻结 rotation_snapshot；整个实例都锁定方位和难度。 | 时间服务、快照存储、恢复和异常回退。 |
+| 星宿普通 | 冻结 1–4 人权威成员快照，并逐人校验常规主线完成；共享七宿的双宿/双宿/双宿/单宿阶段状态。 | 波次、AI、检查点、收益和实际成员锁。 |
+| 星宿噩梦 | 每位成员各自持有并由权威端解析 `TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL` 同方位资格；七宿向四圣施加宿曜贡辉，四圣向七宿施加圣兽庇护；每条共鸣链只能由权威逻辑转为净宿一次。 | 凭证物品/消耗、Buff ID、数值、持续时间、效果实现。 |
+| 死亡与断线 | 团队成员死亡后回当前篇章初始出生点并锁至清理确认；断线成员为 `left`，不得重连或领奖，其他 `active` 成员可以继续。 | 出生点、复活流程、断线检测、锁和奖励实现。 |
+| 奖励 | 资格、所有者、实例、事件、幂等收据和资源表版本。 | 实际材料、钥匙、称号、法宝、数值和发奖。 |
+| 通天塔 | 未来只可把七星/星宿作为内容池；不可把它们塞入现有五节拍状态键。 | 全局 run、楼层、抽取、掉落和赛季。 |
+
+## 时辰快照最低语义
+
+~~~text
+authority_time(Asia/Shanghai) -> rotation_snapshot
+rotation_snapshot = {
+  rotation_snapshot_id, schedule_version, authoritative_time_slot, quadrant,
+  difficulty, instance_scope, authority_time_basis_id,
+  captured_authoritative_instant, schema_version
 }
+first successful session creation -> snapshot immutable
+client clock / client quadrant / retry recomputation -> prohibited
+reconnect is not allowed after leave; a surviving session reads its existing snapshot
+~~~
 
-## 核心循环
+上面是合同语义，不是实际字段、Lua 类型或网络协议。
 
-{
-    "shortLoop":  "确认权威章节条件后，在临时天庭及其公共压力方向中承接遭遇角色；具体事件、怪物和战斗流程待裁定。",
-    "midLoop":  "以公共区域、单人候选与凌霄团队方向形成内容职责分层；二者的准入、完成关系与失败处理必须在后续合同中固定。",
-    "longLoop":  "Lv55 后逐人满足准入要求，按五个抽象节拍推进首轮子循环并在第五节拍后休整；结算、失败、退出与下一循环交接遵循离线状态合同，但全局楼层方案、记录、重开与赛季政策均不在本包定义。",
-    "rewards":  [
-                    "外部引用 runtime-closed economy-v2 的首轮奖励设计与收据字段；本包不内嵌物品、掉率、货币、保底或奖励数值。"
-                ]
-}
+## 幂等重点
 
-## 系统拆分
+1. 同一角色事件对 `(actor_id, event_id)` 的三段逻辑进度重放，只返回既有结果，不能重复写入；收据语义必须包含 actor、生命周期、生产者、会话、completed tick、authority proof 与 schema 版本。
+2. 同一入场请求只能返回同一个权威方位快照，不能跨时辰重掷；普通完成方位、角色资格凭证方位和噩梦快照方位必须逐人一致。
+3. 同一星链的净宿请求重复到达时，只返回既有状态，不能重复削弱 Boss 或重复产生奖励资格。
+4. 失败、退出或生命周期失效必须转为 `cleanup_pending`；只有匹配实例身份、`session_epoch`、`revision` 与 cleanup token 的权威确认可关闭会话。已确认的正常完成不因后续清理确认失败而回滚。
 
-[
-    {
-        "name":  "天庭章节进度合同",
-        "category":  "progression",
-        "designIntent":  "为天庭建立独立、受信任的入口与完成合同，避免隐式耦合地府完成键。",
-        "requiredData":  [
-                             "新进度键",
-                             "写入者",
-                             "受信任消费者",
-                             "事件标识",
-                             "断线与重连语义"
-                         ],
-        "runtimeBehavior":  "deferred；本包不创建运行时键。",
-        "owner":  "后续成长/实现合同裁决"
-    },
-    {
-        "name":  "天庭公共遭遇职责",
-        "category":  "encounter",
-        "designIntent":  "以临时天庭与三处公共方向承接第三劫压力，不预设实体或数值。",
-        "requiredData":  [
-                             "区域职责",
-                             "事件触发合同",
-                             "参与者归属",
-                             "失败与清理规则"
-                         ],
-        "runtimeBehavior":  "offline_design；必须继承权威共享状态边界。",
-        "owner":  "后续遭遇与地图施工"
-    },
-    {
-        "name":  "单人和团队副本关系",
-        "category":  "instance",
-        "designIntent":  "在不替代现有会话合同的前提下，裁决单人候选、凌霄方向与常规完成的关系。",
-        "requiredData":  [
-                             "单人选择结果",
-                             "团队关系",
-                             "准入规则",
-                             "失败、退出和清理语义"
-                         ],
-        "runtimeBehavior":  "deferred；不创建副本、地图或成员限制数据。",
-        "owner":  "后续副本合同裁决"
-    },
-    {
-        "name":  "通天塔首轮五节拍状态与时序合同",
-        "category":  "long_term",
-        "designIntent":  "承接唯一全局塔的天庭主题，将 Lv55 逐人准入、五个抽象节拍、第五节拍休整、终局互斥和幂等边界结构化为可验证的离线合同。",
-        "requiredData":  [
-                             "未来 run 范围",
-                             "幂等语义包络",
-                             "记录范围与持久化",
-                             "后续循环合同",
-                             "失败、退出、结算与恢复语义"
-                         ],
-        "runtimeBehavior":  "offline_design；只引用 tower-first-cycle-state-contract.json，不创建状态键、节拍内容、楼层总数、词缀、记录、奖励或赛季。",
-        "owner":  "后续全局通天塔合同"
-    },
-    {
-        "name":  "经济与奖励收据依赖",
-        "category":  "economy",
-        "designIntent":  "确保天庭内容只外部引用被采纳、但运行时关闭的 economy-v2，而不是把数值写进规格或误用旧候选。",
-        "requiredData":  [
-                             "resource_table_version",
-                             "owner_id",
-                             "qualification_snapshot_id",
-                             "encounter_instance_id",
-                             "event_id",
-                             "reward_slot_key",
-                             "receipt_id",
-                             "award_plan_hash",
-                             "tower_run_id",
-                             "tower_cycle_id",
-                             "tower_week_bucket",
-                             "tower_mode",
-                             "tower_weekly_token_before",
-                             "tower_weekly_token_after",
-                             "award_outcome"
-                         ],
-        "runtimeBehavior":  "accepted_design_reference_runtime_not_integrated；economy-v2 可以被设计合同引用，但天庭不得调用、编译或创建生产资源；implementation/growth/ 仍为离线候选。",
-        "owner":  "成长数值与经济裁决的独立运行时实施"
-    }
-]
+## 明确不做
 
-## 技能与运行时需求
-
-{
-    "specId":  "TT_SPEC_ABILITY_BOUNDARY",
-    "status":  "deferred",
-    "role":  "不新增天庭技能、Buff 或数值；构筑切换只在通天塔每 5 层休整边界中被允许。",
-    "runtimeKey":  null
-}
-
-## 后续 Lua 任务
-
-handoff/lua-logic-brief.md：补充首轮状态/时序与幂等边界；不含 Lua 实现。
+- 不在本交接件写 Lua、Y3 API、对象 ID、技能 ID、Buff ID、伤害、冷却、概率、掉落、地图路径或持久化键。
+- 不以客户端本地时间、UI 缓存或队长单方面状态决定轮换。
+- 不创建真实进度键、跨章证明、资格凭证、收据、会话锁、时间服务或奖励；合同中的 `TT_SPEC_*` 与 `null/deferred` 不能被当作可运行资产。
+- 不新增 tower_mode、通天塔奖励模式或第二套爬塔记录。

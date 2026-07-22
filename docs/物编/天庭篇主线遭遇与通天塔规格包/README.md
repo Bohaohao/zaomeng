@@ -1,57 +1,77 @@
-# 天庭篇主线、遭遇与通天塔首轮规格包
+# 天庭篇主线、遭遇与通天塔规格包
 
 ## 状态
 
-offline-design-spec / review-ready / production-gate-closed
+offline-design-spec / content-expanded / authority-contract-specified / independent-review-approved / archived / production-gate-closed
 
-本包只整理天庭 Lv41-60 的章节职责、主线与副本关系，以及通天塔首轮五节拍子循环的离线状态/时序边界。它外部引用 runtime-closed 的 `economy-v2` 设计表，但不创建真实地图、Y3 对象、Lua、UI、账本、进度键或运行时遭遇。
+本包已从“边界已冻结、内容待定”扩展为可复审的纯离线内容规格：
 
-## 当前可继承的结论
+- 天庭主线：临时天庭 → 南天门 → 天宫道 → 天王殿外缘 → 周天观台 → 凌霄外庭常规收束。
+- 单人本：固定七星系列，天枢至瑶光各有机制、残片、星君称号和展示方向。
+- 团队本：二十八星宿按十二时辰四象轮换；普通教学七宿，噩梦由四圣兽与七宿双向加成构成版本终局。
+- 长期复用：七星与二十八星宿仅登记为唯一全局通天塔的未来小 Boss 内容池。
+- 权威边界：入章、三段逻辑进度、主线终局、七星/星宿会话、时辰快照和噩梦逐人资格均已有纯离线合同语义。
 
-| 范围 | 本包可继承的事实 | 本包不得补写的内容 |
+它不创建真实地图、Y3 对象、Lua、UI、物品、奖励、账本、实际进度键、时间服务或多人运行时。合同中的 `TT_SPEC_*` 仅是逻辑身份；所有运行时键、服务、存储和发奖仍为空或延期。
+
+本阶段的归档结论、复审与验收证据见[天庭篇主线、遭遇、副本与权威合同归档](../../归档/物编施工/06-天庭篇主线遭遇副本与权威合同归档.md)。
+
+## 本轮用户定向规则
+
+| 范围 | 已明确内容 | 仍不在本包冻结 |
 |---|---|---|
-| 等级 | 天庭覆盖 Lv41-60，首发上限 Lv60。 | 经验阈值、升级时长、经验来源和分配。 |
-| 通天塔首轮 | Lv55 后逐人校验；五个抽象节拍依次推进；仅第五节拍完成后打开休整；结算、失败、退出和下一循环交接均有离线状态边界；首通/重复奖励、周桶与收据语义外部引用 `economy-v2`。 | 总层数、后续节拍、层主题、词缀、记录范围、兑换目录、赛季、任何运行时状态键。 |
-| 世界观 | 第三劫的天门倾覆、临时天庭主城、天宫道/南天门/天王殿外缘、凌霄相关团队内容和玲珑塔并入全局通天塔均是当前方向。 | 具体章节节点、地图邻接、Boss 名单、战斗阶段、物品或剧情台词。 |
-| 单人内容 | 首发单人本在蟠桃园与御马监之间二选一。 | 选择结果、入口、时长、Boss、奖励和运行时键。 |
-| 团队内容 | 天庭首发团队内容定位于凌霄宝殿；世界观保留杨戬线的方向。 | 常规完成者与团队终点的关系、入口、成员条件、最终 Boss 和完成键。 |
-| 经济 | `economy-v2` 已冻结角色货币/材料、收据、花果山 profile 与塔首轮奖励；本包只引用其塔/收据边界。 | 天庭具体掉率、材料、保底、XP source_profile、兑换目录、赛季货币和任何运行时资源吞吐。 |
+| 入章与三段进度 | 权威端确认达到 Lv41，并验证同角色、源自 `DF_E_YANLUO_HALL` 成功事件的 `TT_SPEC_CHAPTER_ENTRY_HANDOFF_PROOF`；依次形成 `TT_SPEC_PROGRESS_CHAPTER_ENTERED`、`TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN`、`TT_SPEC_PROGRESS_MAINLINE_CLEARED` 三段逻辑进度。 | 实际进度键、证明签发/验签服务、存储、网络协议与运行时写入。 |
+| 主线终局 | 凌霄外庭·裂律观台使用私有 1–4 人会话；入场成员逐人校验已入章，只有权威确认的有效参与者获得常规完成。 | 真实实例、队列、地图、脚本与任何进度发放。 |
+| 七星单人本 | 天枢、天璇、天玑、天权、玉衡、开阳、瑶光；每星对应残片、星君称号和独立机制。 | 实际副本、掉落、Boss 数值、对象与技能。 |
+| 七星称号 | 同一种残片累计十枚合成对应星君称号；集齐七称号自动解锁名称待定的集合称号。 | 数值、属性作用域、持久化与真实 title ID。 |
+| 毕业法宝 | 七种残片均齐备，加上珍贵材料候选，合成名称待定的天庭毕业法宝。 | 最终名称、配方数量、属性、是否强制团本材料。 |
+| 七星与团队会话 | `TT_SPEC_SESSION_SEVEN_STAR`、`TT_SPEC_SESSION_MANSION_NORMAL` 与 `TT_SPEC_SESSION_MANSION_NIGHTMARE` 固定身份、版本、成员快照、失败、清理与幂等语义；死亡、超时、断线或生命周期失效进入清理，确认前不可重入。 | 真实会话服务、锁、复活、断线恢复或状态机实现。 |
+| 二十八星宿 | 四象各七宿；`TT_SPEC_TIME_BASIS_ASIA_SHANGHAI_SHICHEN` 按服务器 `Asia/Shanghai` 时辰四槽循环三次，首次成功创建会话时冻结不可变轮换快照。 | 权威时间服务、时辰边界计算、快照存储与实例实现。 |
+| 团本普通/噩梦 | 普通和噩梦均逐人要求天庭常规主线完成；噩梦还逐人验证 `TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL` 的同方位不透明资格，且普通完成、凭证和本次噩梦快照三方位必须相同。 | 钥匙形态、消耗、奖励、Buff 数值和收据。 |
+| 通天塔 | 七星/星宿未来可作小 Boss；每三或五层待选，每十层大 Boss 只登记接口。 | 总层数、层位、抽取、掉落、词缀、赛季、记录。 |
 
-天庭不得默认消费 DF_PROGRESS_YANLUO_HALL_CLEARED。该键的当前跨篇消费者仅是花果山龙宫逆潮；若未来要建立地府至天庭的进度合同，必须先获得新决策并建立独立、受信任的写入/消费边界。
+## 不可突破的约束
 
-## 工件
+- 天庭精确覆盖 Lv41–60，首发上限 Lv60。
+- 通天塔 Lv55 逐人准入，每五层休整；玲珑只属于唯一全局通天塔。
+- 天庭不得读取、写入或注册为 `DF_PROGRESS_YANLUO_HALL_CLEARED` 的消费者；入章只验证同角色的 `DF_E_YANLUO_HALL` 成功交接证明。
+- 三段角色逻辑进度以 `(actor_id, event_id)` 幂等；其语义收据包含 actor、生命周期、事件、唯一生产者、会话身份、完成时刻、权威证明与 schema 版本，但不创建真实账本。
+- 首发最多四人；主线终局、七星和星宿会话的离线权威语义均已冻结，实际运行时由未来权威逻辑接入。会话状态只能从 `active` 经 `cleanup_pending` 到 `closed`，只有匹配实例身份、`session_epoch`、`revision` 与清理令牌的权威确认才可释放锁。
+- 星宿快照固定使用服务器 `Asia/Shanghai` 自然时辰；客户端时钟、客户端方位和重试重新抽宿均不得参与决定。死亡成员回当前篇章初始出生点并锁至清理确认；断线成员标记为 `left`，不得重连或领奖。
+- economy-v2 只能作为运行时关闭的设计引用；本包不新增 MAT_、CUR_、tower_mode 或任何现有资源表值。
+- “十枚同星残片合成称号”是用户明确的离线配方倍率，不是掉落数量或已接入的资源配方。
+
+## 主要工件
 
 | 工件 | 用途 |
 |---|---|
-| [tianting-mainline-tower-contract.json](tianting-mainline-tower-contract.json) | 本包唯一领域事实源：冻结约束、规格局部内容角色、塔循环边界、跨篇禁令和经济依赖。 |
-| [decision-register.md](decision-register.md) | 区分 fixed、offline_design、deferred 与外部经济裁决状态。 |
-| [mainline-route.md](mainline-route.md) | 世界观方向与尚未裁决的章节角色关系。 |
-| [topology-whitebox.md](topology-whitebox.md) | 不含坐标、资源键或地图邻接的逻辑拓扑。 |
-| [tower-first-cycle-state-contract.json](tower-first-cycle-state-contract.json) | 首轮五节拍的机器可校验状态、迁移、终态互斥、结算/失败/退出与幂等语义合同。 |
-| [tower-first-cycle-sequence.md](tower-first-cycle-sequence.md) | 首轮五节拍的可读时序、休整与下一循环交接边界。 |
-| [design-spec.json](design-spec.json) | 供设计规格校验与后续离线交接使用的规划视图。 |
-| [design-spec-report.md](design-spec-report.md) | 可读的规划摘要与未决项说明。 |
-| [acceptance-matrix.md](acceptance-matrix.md) | 离线规格、生产门禁和下游施工的验收分层。 |
-| [handoff](handoff) | 物编、地形、Lua、UI 与复审的无代码简报。 |
-| [validate-tianting-tower-spec.ps1](validate-tianting-tower-spec.ps1) | 校验冻结值、禁用跨篇消费、资源表边界、JSON 集合形状和负例。 |
-| [validation-report.md](validation-report.md) | 本包最新离线验证记录。 |
+| [tianting-mainline-tower-contract.json](tianting-mainline-tower-contract.json) | 原有冻结边界与天庭内容选择的领域事实源。 |
+| [tianting-content-expansion-contract.json](tianting-content-expansion-contract.json) | 七星、星宿轮换、噩梦四圣、奖励候选与塔复用的机器可读内容合同。 |
+| [authority/tianting-progression-and-instance-authority-contract.json](authority/tianting-progression-and-instance-authority-contract.json) | 入章、三段逻辑进度、主线终局、会话生命周期、时辰快照与噩梦资格的权威合同；纯离线、不可直接投产。 |
+| [mainline-route.md](mainline-route.md) | 主线因果弧、公共遭遇和副本职责关系。 |
+| [instances/七星单人本规格.md](instances/七星单人本规格.md) | 七个单人试炼、称号、毕业法宝和学习闭环。 |
+| [instances/二十八星宿团队本规格.md](instances/二十八星宿团队本规格.md) | 十二时辰轮换、二十八星官签名动作、普通/噩梦与四圣称号。 |
+| [encounters/天庭公共遭遇规格.md](encounters/天庭公共遭遇规格.md) | 公共路线遭遇骨架、可读性与施工前验收。 |
+| [economy-candidates/天庭奖励候选登记.md](economy-candidates/天庭奖励候选登记.md) | 仅奖励类别、称号防叠加与经济接入前置。 |
+| [tower/天庭Boss复用接口.md](tower/天庭Boss复用接口.md) | 全局通天塔的未来内容池接口，不定义塔运行或掉落。 |
+| [references/西游记与造梦参考.md](references/西游记与造梦参考.md) | 文学/视觉灵感的使用边界与来源。 |
+| [acceptance-matrix.md](acceptance-matrix.md) | 规格、生产门禁和下游施工的验收矩阵。 |
+| [validate-tianting-tower-spec.ps1](validate-tianting-tower-spec.ps1) | 校验既有硬边界、新内容合同、轮换完整性、双向噩梦关系与负例。 |
 
-## 来源优先级
+## 内容关系
 
-1. [全局设计基线](../../全局设计基线.md)。
-2. [成长系统进度、掉落与长期目标契约](../18-成长系统进度、掉落与长期目标契约.md) 与 [装备、法宝、宠物与材料物编规格](../19-装备、法宝、宠物与材料物编规格.md)。
-3. [v1.0 首发内容范围](../../04-v1.0首发内容范围.md)、[项目统一世界观总纲](../../10-项目统一世界观总纲.md)、[公共野外与副本规则](../../02-公共野外与副本规则.md)。
-4. [成长数值与经济裁决包](../成长数值与经济裁决包/README.md)。其中只有 accepted-baseline 可被引用为结构事实；proposal、deferred、conflict 和 whitebox-candidate 均不是生产数据。
-
-## 生产边界
-
-- `economy-v2` 已采纳为运行时关闭的设计表；所有天庭奖励只能外部引用它，不能内嵌或发放。`implementation/growth/` 仍是离线候选模拟，本包不得调用或提升它。
-- 新增天庭 encounter、地图、对象、物品、技能、进度和资源键均保持 spec_id 或 deferred，不能伪装为 runtime key。
-- 玲珑塔只能作为全局通天塔中的天庭主题表达，不能创建第二套长期爬塔系统。
-- 首轮五节拍只是一段抽象子循环：第五节拍后的继续只能交接给未来全局塔运行合同，不能由本包隐式生成第六节拍或总层数。
-- 准入、节拍终局、休整关闭、结算、失败与退出都须经未来权威逻辑和幂等语义包络裁决；重复请求只能返回既有权威结论。
-- UI 只能展示权威状态和发起请求；传送、准入、结算、记录和奖励不得由本地 UI 改写。
-- 团队与单人副本在真实施工时必须继承既有权威会话、成员锁、失败、清理确认和同步边界；本包不实现它们。
+~~~mermaid
+flowchart LR
+  H["DF_E_YANLUO_HALL 成功交接证明"] --> I["天门入章：角色级逻辑进度"]
+  I --> A["朝会殿·周天观台开启"]
+  A --> B["七星：单人长期收集"]
+  A --> C["常规主线：凌霄外庭收束"]
+  C --> D["二十八星宿普通"]
+  D --> E["逐人同方位资格凭证候选"]
+  E --> F["噩梦四圣兽：三方位匹配"]
+  B -. "未来小 Boss 池" .-> G["唯一全局通天塔"]
+  D -. "未来小 Boss 池" .-> G
+~~~
 
 ## 运行校验
 
@@ -61,4 +81,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\Administrator\.code
 powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\Administrator\.codex\skills\y3-design-spec-normalizer\scripts\score-spec-completeness.ps1 -DesignPath .\docs\物编\天庭篇主线遭遇与通天塔规格包\design-spec.json
 ~~~
 
-通过只证明离线设计结构可交接，不等同于天庭地图、塔层、对象、奖励、存档、同步或多人实机已完成。
+通过仅表示离线设计可被后续专项接手；不代表任何副本、Boss、材料、称号、地图、同步或结算已经实现。
