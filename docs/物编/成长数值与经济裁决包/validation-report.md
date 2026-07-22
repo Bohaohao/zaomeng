@@ -2,6 +2,10 @@
 
 验证日期：2026-07-21。
 
+> 2026-07-22 追加了独立的 `economy-v2` 权威结算内核纯离线验收；本页保留 7 月 21 日设计表验证记录，新增验收的详细证据见 [implementation/economy-v2-authoritative-settlement/validation-report.md](../../../implementation/economy-v2-authoritative-settlement/validation-report.md)。
+
+> 同日复审修订已补齐外部 Tide Trace fixture 可信闭包、保留原型 map key/塔周桶/XP fail-closed、Tide evidence attestation，并建立[天庭零价值权威收据输入交接](../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json)。它没有分配任何天庭奖励值。
+
 ## 结果
 
 | 检查 | 结果 | 说明 |
@@ -31,4 +35,18 @@
 
 ## 未解除的门禁
 
-本包没有解除生产门禁。尤其不能据此启用 `implementation/growth/` 中的候选模拟作为 `economy-v2` 运行时结算、生产账本、物编、UI、真实掉落表或商业字段。下一门禁是精确编译/哈希绑定、权威持久化账本、proof-to-owner 解析、重连对账、地府/天庭 source_profile 分配及 30/60/90 分钟实测；标定候选仍只能用于采样与审阅。
+本包没有解除生产门禁。尤其不能据此启用 `implementation/growth/` 中的候选模拟作为 `economy-v2` 运行时结算、生产账本、物编、UI、真实掉落表或商业字段。精确编译/哈希绑定与 proof-to-owner/origin binding 已在纯离线参考中验收；下一门禁是将其移交到真实权威持久化账本、proof/snapshot/roll 服务、跨进程锁、迁移与重连对账，并补地府/天庭 `source_profile` 分配及 30/60/90 分钟实测；标定候选仍只能用于采样与审阅。
+
+## 2026-07-22：权威结算内核纯离线验收
+
+| 检查 | 结果 | 说明 |
+|---|---|---|
+| 独立编译门 | 通过 | 只接受 `economy-v2` 原表的精确 UTF-8 字节、冻结 SHA、关闭门禁；篡改 baseline 不可进入结算。 |
+| 七类结算事件 | 通过 | XP、普通/团队掉落、P1、首通、公共/团队稀有保底与塔奖励都由冻结表派生。 |
+| 权威与幂等 | 通过 | proof-to-owner、profile/event 绑定、同 origin 换主拒绝、终态重放、跨重启恢复与冲突路径均有离线回归。 |
+| 收据和快照 | 通过 | 终态收据条件字段、P1/团队/塔快照、roll 的 pity/分支、首通已消耗及恢复状态注入负例均被覆盖。 |
+| 受信任执行边界 | 通过 | Node/Fengari、环境变量、PATH、固定闭包、`-E` 与 Lua/Y3 API 隔离回归通过。 |
+| 复审修订 | 通过 | 外部 fixture 闭包、保留 map key、塔周桶、无效 XP、Tide attestation 与 Lua/Node 标识符边界回归通过。 |
+| 天庭零价值输入交接 | 通过 | `TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE` 原子绑定完成 receipt/proof、会话 revision、成员/轮换快照；资格快照、重放、断线与 cleanup 边界通过，所有经济字段保持 `null/deferred`。 |
+
+这项结果仅将状态推进为 `offline-acceptance-passed`，不改变 `runtime_handoff=false` 与 `production_gate=closed`。生产账本、真实证明服务、跨进程并发/重连、Y3 接入和地府/天庭新来源分配仍必须另行施工和复审。

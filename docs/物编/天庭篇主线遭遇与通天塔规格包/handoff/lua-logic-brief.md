@@ -13,6 +13,7 @@
 | 星宿普通 | 冻结 1–4 人权威成员快照，并逐人校验常规主线完成；共享七宿的双宿/双宿/双宿/单宿阶段状态。 | 波次、AI、检查点、收益和实际成员锁。 |
 | 星宿噩梦 | 每位成员各自持有并由权威端解析 `TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL` 同方位资格；七宿向四圣施加宿曜贡辉，四圣向七宿施加圣兽庇护；每条共鸣链只能由权威逻辑转为净宿一次。 | 凭证物品/消耗、Buff ID、数值、持续时间、效果实现。 |
 | 死亡与断线 | 团队成员死亡后回当前篇章初始出生点并锁至清理确认；断线成员为 `left`，不得重连或领奖，其他 `active` 成员可以继续。 | 出生点、复活流程、断线检测、锁和奖励实现。 |
+| economy-v2 输入交接 | `TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE` 必须从同一完成 receipt/proof 和冻结会话快照原子导出 actor/生命周期/成功事件、route/实例/epoch/revision、成员状态与轮换；成功事实可保留但不能调用 materializer。 | source_profile、slot、owner、资格 ID、roll、保底、经济实例 ID、收据和一切奖励数值。 |
 | 奖励 | 资格、所有者、实例、事件、幂等收据和资源表版本。 | 实际材料、钥匙、称号、法宝、数值和发奖。 |
 | 通天塔 | 未来只可把七星/星宿作为内容池；不可把它们塞入现有五节拍状态键。 | 全局 run、楼层、抽取、掉落和赛季。 |
 
@@ -43,5 +44,6 @@ reconnect is not allowed after leave; a surviving session reads its existing sna
 
 - 不在本交接件写 Lua、Y3 API、对象 ID、技能 ID、Buff ID、伤害、冷却、概率、掉落、地图路径或持久化键。
 - 不以客户端本地时间、UI 缓存或队长单方面状态决定轮换。
+- 不把 `session_instance_id`、`raid_instance_id`、噩梦入场凭证或 cleanup 成功直接转换为 economy-v2 的经济实例、奖励资格或结算请求；未获批 source profile 时所有经济字段必须保持 `null/deferred`。
 - 不创建真实进度键、跨章证明、资格凭证、收据、会话锁、时间服务或奖励；合同中的 `TT_SPEC_*` 与 `null/deferred` 不能被当作可运行资产。
 - 不新增 tower_mode、通天塔奖励模式或第二套爬塔记录。

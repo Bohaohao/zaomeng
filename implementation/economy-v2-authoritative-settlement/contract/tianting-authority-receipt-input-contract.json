@@ -1,0 +1,391 @@
+{
+  "schema_version": 1,
+  "contract_id": "ECO_V2_TT_AUTHORITY_RECEIPT_INPUT_HANDOFF",
+  "display_name": "天庭完成与会话到 economy-v2 权威收据输入交接合同",
+  "package_status": "offline-design-handoff",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "implementation_handoff": false,
+  "purpose": "把已经冻结的天庭角色身份、生命周期、成功事件、会话身份、成员快照、轮换快照、断线和清理语义整理为未来 economy-v2 权威收据输入的唯一离线交接边界；不创建可结算请求、奖励、资格、资源键或真实服务。",
+  "source_contracts": {
+    "tianting_authority": {
+      "path": "../../../docs/物编/天庭篇主线遭遇与通天塔规格包/authority/tianting-progression-and-instance-authority-contract.json",
+      "spec_id": "TT_SPEC_TIANTING_PROGRESSION_AND_INSTANCE_AUTHORITY",
+      "receipt_contract_spec_id": "TT_SPEC_TIANTING_COMPLETION_RECEIPT_IDEMPOTENCY",
+      "status": "offline-design-spec"
+    },
+    "economy_v2_authority_core": {
+      "path": "../package-contract.json",
+      "package": "economy-v2-authoritative-settlement",
+      "status": "offline-acceptance-reference-only",
+      "resource_table_reference": "../../../docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json",
+      "resource_table_version": "economy-v2"
+    }
+  },
+  "handoff_boundary": {
+    "handoff_kind": "authoritative_completion_and_session_input_candidate",
+    "not_a_settlement_request": true,
+    "settlement_entry_rule": "本合同中的任何记录都不得直接调用 economy-v2 materializer、编译器、账本或收据写入；只有未来独立批准的天庭 source_profile 分配和权威资格/证明服务同时存在时，才可从本输入候选派生真实结算请求。",
+    "client_authority_rule": "客户端、UI、队长、队友、旁观者、本地时钟、复制收据或本地存储不能创建、补全、升级或重放本合同的输入候选。",
+    "runtime_key": null
+  },
+  "source_receipt_mapping": {
+    "required_authoritative_input_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "event_id",
+      "producer_spec_id",
+      "completed_tick",
+      "authority_proof_ref",
+      "schema_version",
+      "source_session_spec_id",
+      "source_session_instance_id",
+      "source_session_epoch",
+      "source_session_revision",
+      "source_membership_snapshot_id",
+      "source_member_status"
+    ],
+    "economy_v2_projection": {
+      "actor_id": "actor_id",
+      "lifecycle_id": "actor_lifecycle_id",
+      "event_id": "event_id",
+      "encounter_instance_id": null,
+      "authority_proof_ref": "authority_proof_ref",
+      "completed_tick": "completed_tick"
+    },
+    "source_evidence_envelope_spec_id": "TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE",
+    "source_evidence_envelope_rule": "required_authoritative_input_fields are fields of one authority-resolved source-evidence envelope, not caller-supplied request fields. The resolver must atomically bind them to one existing TianTing completion receipt, its authority_proof_ref, and its frozen session snapshot before any zero-value candidate may exist.",
+    "settlement_encounter_instance_boundary": {
+      "current_settlement_encounter_instance_id": null,
+      "normalized_source_instance_field": "source_session_instance_id",
+      "route_normalization": {
+        "TT_SPEC_SESSION_LINGXIAO_MAINLINE": "session_instance_id -> source_session_instance_id",
+        "TT_SPEC_SESSION_SEVEN_STAR": "session_instance_id -> source_session_instance_id",
+        "TT_SPEC_SESSION_MANSION_NORMAL": "raid_instance_id -> source_session_instance_id",
+        "TT_SPEC_SESSION_MANSION_NIGHTMARE": "raid_instance_id -> source_session_instance_id"
+      },
+      "future_derivation_input_order": [
+        "source_session_spec_id",
+        "source_session_instance_id",
+        "source_session_epoch"
+      ],
+      "future_derivation_rule": "Only after a separately approved TianTing source-profile allocation, derive an opaque encounter_instance_id from the three frozen fields in future_derivation_input_order. Raw session_instance_id or raid_instance_id alone must never be used as an economy-v2 semantic identity, and session revision or cleanup token must never enter that identity.",
+      "runtime_key": null
+    },
+    "future_authority_resolver_only": [
+      "source_evidence_envelope",
+      "owner_id",
+      "authority_origin_key",
+      "origin_owner_binding_verified"
+    ],
+    "forbidden_caller_fields": [
+      "owner_id",
+      "source_evidence_envelope",
+      "event_type",
+      "source_profile",
+      "reward_slot_key",
+      "qualification_snapshot_id",
+      "drop_roll_id",
+      "drop_roll_proof_ref",
+      "pity",
+      "award_plan",
+      "award_plan_hash",
+      "receipt_id",
+      "balance_delta",
+      "material_delta",
+      "unique_grants",
+      "experience_delta",
+      "tower_snapshot_id",
+      "client_reward"
+    ],
+    "runtime_key": null
+  },
+  "source_evidence_envelope": {
+    "spec_id": "TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE",
+    "source_authority_contract_spec_id": "TT_SPEC_TIANTING_PROGRESSION_AND_INSTANCE_AUTHORITY",
+    "source_completion_receipt_contract_spec_id": "TT_SPEC_TIANTING_COMPLETION_RECEIPT_IDEMPOTENCY",
+    "runtime_key": null,
+    "only_authority_resolver_may_construct_or_verify": true,
+    "caller_input_rule": "No client, UI, party member, leader, spectator, copied receipt, local store, or retry payload may submit individual mapped fields or construct this envelope. Future authority resolution must derive and atomically verify it from one existing completion receipt and one frozen source-session snapshot.",
+    "required_bound_fields_source": "tianting_authority.economy_v2_handoff_source_evidence_contract.required_bound_fields",
+    "mansion_additional_bound_fields_source": "tianting_authority.economy_v2_handoff_source_evidence_contract.mansion_additional_bound_fields",
+    "atomic_binding_rule": "A valid envelope binds one authority_proof_ref and completion receipt to the exact route, instance, epoch, revision, membership snapshot, member status, and—when applicable—rotation snapshot, quadrant, and difficulty. Mixed snapshots, revisions, statuses, routes, or rotations are invalid.",
+    "candidate_member_status": "active",
+    "member_status_rule": "Only active evidence from the frozen authority snapshot may form a zero-value candidate. left, inactive, spectator, unfrozen, stale_lifecycle, forged, or failed evidence cannot form a candidate, qualification snapshot, settlement request, or receipt.",
+    "replay_mutation_rule": "For one (actor_id, event_id), changed required_bound_fields or mansion additional fields reject rather than creating a second candidate or economic effect; an exact replay returns only the existing source result.",
+    "normal_completion_cleanup_rule": "A persisted normal TianTing completion survives later cleanup failure, delay, or replay as source fact only. cleanup acknowledgement is never a way to alter this envelope or produce an economic receipt.",
+    "non_economic_boundary": "This envelope does not allocate source_profile, reward_slot_key, owner, qualification_snapshot_id, roll, pity, XP, currency, material, item, title, key, probability, or any award value; all such future fields remain null/deferred."
+  },
+  "source_session_routes": [
+    {
+      "source_session_spec_id": "TT_SPEC_SESSION_LINGXIAO_MAINLINE",
+      "source_session_kind": "private_mainline_final",
+      "source_success_event_spec_id": "TT_SPEC_EVENT_LINGXIAO_OUTER_COURT_SUCCESS",
+      "economy_encounter_instance_id_source_field": null,
+      "source_instance_normalization_source_field": "session_instance_id",
+      "member_snapshot_fields": [
+        "actor_id",
+        "actor_lifecycle_id",
+        "member_status",
+        "membership_snapshot_id"
+      ],
+      "handoff_candidate_rule": "仅冻结成员中 actor_id、actor_lifecycle_id 与成功时 active 权威快照一致，且通过有效参与校验的角色，才可形成无奖励的输入候选。",
+      "rejected_member_statuses": [
+        "left",
+        "inactive",
+        "spectator",
+        "unfrozen",
+        "stale_lifecycle"
+      ],
+      "future_economy_route_status": "source_profile_unmapped_no_settlement_request"
+    },
+    {
+      "source_session_spec_id": "TT_SPEC_SESSION_SEVEN_STAR",
+      "source_session_kind": "single_player_repeatable_trial",
+      "source_success_event_spec_id": null,
+      "economy_encounter_instance_id_source_field": null,
+      "source_instance_normalization_source_field": "session_instance_id",
+      "member_snapshot_fields": [
+        "owner_actor_id",
+        "lifecycle_id",
+        "session_epoch",
+        "revision"
+      ],
+      "handoff_candidate_rule": "现有天庭合同未冻结七星经济成功事件或奖励资格；本路由只能保留会话身份和失败清理证据，不能创建 economy-v2 输入候选或结算请求。",
+      "rejected_member_statuses": [
+        "owner_disconnect",
+        "owner_death",
+        "timeout",
+        "owner_lifecycle_invalid"
+      ],
+      "future_economy_route_status": "completion_event_and_source_profile_deferred"
+    },
+    {
+      "source_session_spec_id": "TT_SPEC_SESSION_MANSION_NORMAL",
+      "source_session_kind": "team_raid_normal",
+      "source_success_event_spec_id": null,
+      "economy_encounter_instance_id_source_field": null,
+      "source_instance_normalization_source_field": "raid_instance_id",
+      "member_snapshot_fields": [
+        "actor_id",
+        "actor_lifecycle_id",
+        "member_status",
+        "membership_snapshot_id",
+        "rotation_snapshot_id",
+        "quadrant"
+      ],
+      "handoff_candidate_rule": "现有合同只冻结逐人主线准入、成员快照和同方位噩梦资格候选；普通星宿完成不得自动变成 economy-v2 资格快照、奖励资格或结算请求。",
+      "rejected_member_statuses": [
+        "left",
+        "spectator",
+        "unfrozen",
+        "stale_lifecycle"
+      ],
+      "future_economy_route_status": "completion_event_qualification_policy_and_source_profile_deferred"
+    },
+    {
+      "source_session_spec_id": "TT_SPEC_SESSION_MANSION_NIGHTMARE",
+      "source_session_kind": "team_raid_nightmare",
+      "source_success_event_spec_id": null,
+      "economy_encounter_instance_id_source_field": null,
+      "source_instance_normalization_source_field": "raid_instance_id",
+      "member_snapshot_fields": [
+        "actor_id",
+        "actor_lifecycle_id",
+        "member_status",
+        "membership_snapshot_id",
+        "rotation_snapshot_id",
+        "quadrant",
+        "nightmare_credential_subject_actor_id"
+      ],
+      "handoff_candidate_rule": "现有合同只冻结逐人同方位准入凭证与会话身份；噩梦准入凭证不等于 economy-v2 奖励资格快照，且不得派生任何奖励、保底、装备、称号或结算请求。",
+      "rejected_member_statuses": [
+        "left",
+        "spectator",
+        "unfrozen",
+        "stale_lifecycle",
+        "credential_subject_mismatch",
+        "quadrant_mismatch"
+      ],
+      "future_economy_route_status": "completion_event_qualification_policy_and_source_profile_deferred"
+    }
+  ],
+  "qualification_snapshot_boundary": {
+    "spec_id": "TT_SPEC_ECONOMY_HANDOFF_QUALIFICATION_SNAPSHOT",
+    "runtime_key": null,
+    "current_qualification_snapshot_id": null,
+    "purpose": "为未来天庭经济资格裁决保留来源证据字段，不授予 economy-v2 的 qualification_snapshot_id，也不把副本准入等同于奖励资格。",
+    "required_source_evidence_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "event_id",
+      "source_session_spec_id",
+      "source_session_instance_id",
+      "source_session_epoch",
+      "source_session_revision",
+      "source_membership_snapshot_id",
+      "source_member_status",
+      "authority_proof_ref",
+      "completed_tick"
+    ],
+    "mansion_additional_source_evidence_fields": [
+      "rotation_snapshot_id",
+      "quadrant",
+      "difficulty"
+    ],
+    "nightmare_admission_not_reward_qualification": "TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL 只证明逐人同方位入场资格；它不是 economy-v2 qualification_snapshot_id、掉落资格、P1、稀有 roll、保底资格或奖励收据。",
+    "left_member_rule": "left 成员不能为当前 raid_instance_id 形成任何未来奖励资格输入；不得重连、补领、由队长代领或用同一事件创建第二个候选。",
+    "dead_member_rule": "现有天庭合同只冻结死亡回篇章初始出生点和清理锁；本交接合同不臆造死亡成员的经济资格。未来资格政策必须显式消费权威成员快照，不能从死亡或回城动作推断资格。"
+  },
+  "future_economy_fields": {
+    "settlement_encounter_instance_id": null,
+    "owner_id": null,
+    "authority_origin_key": null,
+    "origin_owner_binding_verified": null,
+    "event_type": null,
+    "source_profile": null,
+    "reward_slot_key": null,
+    "qualification_snapshot_id": null,
+    "drop_roll_id": null,
+    "drop_roll_proof_ref": null,
+    "pity_pool_key": null,
+    "award_plan": null,
+    "award_plan_hash": null,
+    "receipt_id": null,
+    "balance_delta": null,
+    "material_delta": null,
+    "unique_grants": null,
+    "experience_delta": null,
+    "tower_snapshot_id": null,
+    "runtime_key": null
+  },
+  "replay_disconnect_and_cleanup_boundary": {
+    "source_idempotency_key_fields": [
+      "actor_id",
+      "event_id"
+    ],
+    "source_replay_rule": "同一 (actor_id, event_id) 的天庭成功事件只能返回同一权威完成结果和同一无奖励交接候选状态；不得生成第二个会话、第二个候选或任何经济副作用。",
+    "economy_identity_rule": "source_profile 与 reward_slot_key 均为 null 时不得形成 economy-v2 六元语义身份、authority_origin_key 或持久化经济收据。未来获批映射后，必须以 economy-v2 的 owner_scope、owner_id、encounter_instance_id、event_id、source_profile、reward_slot_key 六元组重新形成身份并逐次验证 authority_proof_ref。",
+    "normal_success_before_cleanup_rule": "已经由天庭权威端持久化的正常完成不因后续 cleanup_ack 失败、延迟或重放而回滚；本事实仅保持来源完成/候选边界，不自动提交经济收据。",
+    "failure_rule": "死亡、超时、断线、生命周期失效、伪造成员或失败清理路径只能进入 cleanup_pending，不能形成交接候选、资格快照、经济收据或任何奖励。",
+    "cleanup_ack_identity_by_session": {
+      "TT_SPEC_SESSION_LINGXIAO_MAINLINE": [
+        "session_instance_id",
+        "session_epoch",
+        "revision",
+        "cleanup_token"
+      ],
+      "TT_SPEC_SESSION_SEVEN_STAR": [
+        "session_instance_id",
+        "session_epoch",
+        "revision",
+        "cleanup_token"
+      ],
+      "TT_SPEC_SESSION_MANSION_NORMAL": [
+        "raid_instance_id",
+        "session_epoch",
+        "revision",
+        "cleanup_token"
+      ],
+      "TT_SPEC_SESSION_MANSION_NIGHTMARE": [
+        "raid_instance_id",
+        "session_epoch",
+        "revision",
+        "cleanup_token"
+      ]
+    },
+    "disconnect_rule": "星宿成员断线即为 left，当前 raid_instance_id 内不得重连或进入未来奖励资格输入；七星 owner 断线不得在匹配 cleanup_ack 前重连或重入。"
+  },
+  "negative_cases": [
+    {
+      "spec_id": "ECO_V2_TT_NEGATIVE_CLIENT_REWARD_INPUT",
+      "case": "客户端、UI 或队长提交 owner、奖励、profile、slot、资格、roll、保底或收据字段。",
+      "expected_result": "reject_without_handoff_candidate_or_economic_side_effect"
+    },
+    {
+      "spec_id": "ECO_V2_TT_NEGATIVE_UNMAPPED_PROFILE",
+      "case": "任何天庭主线、七星、普通星宿或噩梦星宿尝试从名称、材料候选、称号、凭证或方位自动推导 economy-v2 source_profile、reward_slot_key 或 event_type。",
+      "expected_result": "reject_settlement_request_and_keep_future_economy_fields_null"
+    },
+    {
+      "spec_id": "ECO_V2_TT_NEGATIVE_DIFU_PROGRESS_KEY",
+      "case": "天庭交接尝试读取、写入、订阅或把 DF_PROGRESS_YANLUO_HALL_CLEARED 当作本合同的完成、资格或收据输入。",
+      "expected_result": "reject_and_use_only_the_tianting_authority_contract_handoff_proof"
+    },
+    {
+      "spec_id": "ECO_V2_TT_NEGATIVE_PROXY_OR_STALE_MEMBER",
+      "case": "队长、旁观者、未冻结成员、left 成员、旧生命周期成员或跨角色证明试图形成经济输入。",
+      "expected_result": "reject_without_qualification_or_receipt"
+    },
+    {
+      "spec_id": "ECO_V2_TT_NEGATIVE_NIGHTMARE_ADMISSION_CONFUSION",
+      "case": "把噩梦同方位准入凭证直接作为 economy-v2 qualification_snapshot_id、掉落资格或收据。",
+      "expected_result": "reject_without_economic_side_effect"
+    },
+    {
+      "spec_id": "ECO_V2_TT_NEGATIVE_CLEANUP_REPLAY",
+      "case": "错误实例、epoch、revision 或 cleanup_token 的确认试图回滚成功候选、释放错误锁或创建第二次结算。",
+      "expected_result": "reject_and_preserve_terminal_source_result"
+    },
+    {
+      "spec_id": "ECO_V2_TT_NEGATIVE_SOURCE_EVIDENCE_DRIFT",
+      "case": "同一 (actor_id, event_id) 的完成事实附带不同 source_session_spec_id、source_session_instance_id、source_session_epoch、source_session_revision、source_membership_snapshot_id、source_member_status，或星宿 rotation_snapshot_id/quadrant/difficulty。",
+      "expected_result": "reject_changed_envelope_or_return_existing_source_result_without_second_candidate_qualification_or_economic_side_effect"
+    },
+    {
+      "spec_id": "ECO_V2_TT_NEGATIVE_DUPLICATE_EVENT",
+      "case": "同一 (actor_id, event_id) 以不同 proof、成员、快照、profile 或奖励字段重新提交。",
+      "expected_result": "return_existing_source_result_only_without_economic_side_effect"
+    },
+    {
+      "spec_id": "ECO_V2_TT_NEGATIVE_RUNTIME_LEAK",
+      "case": "交接合同试图绑定真实 Y3、地图、存档、服务、物品、货币、掉率、保底或运行时资源键。",
+      "expected_result": "reject_as_out_of_scope_for_offline_handoff"
+    }
+  ],
+  "deferred": {
+    "tianting_source_profile_allocation": null,
+    "tianting_reward_slot_allocation": null,
+    "tianting_event_type_selection": null,
+    "tianting_authoritative_success_events_for_seven_star_and_mansions": null,
+    "tianting_economy_qualification_policy": null,
+    "tianting_source_evidence_resolver": null,
+    "tianting_owner_and_origin_resolver": null,
+    "tianting_drop_roll_and_pity_policy": null,
+    "tianting_xp_count_and_rounding_allocation": null,
+    "tianting_persistent_economic_receipts": null,
+    "tianting_runtime_service_and_network_integration": null,
+    "runtime_key": null
+  },
+  "forbidden_field_names": [
+    "y3_id",
+    "map_resource_key",
+    "item_id",
+    "item_key",
+    "currency_key",
+    "reward_amount",
+    "reward_exp",
+    "currency_amount",
+    "item_amount",
+    "drop_probability",
+    "pity_threshold",
+    "equipment_stat_value",
+    "material_drop_count",
+    "key_consumption_amount"
+  ],
+  "acceptance_invariants": [
+    "天庭交接只映射权威身份、生命周期、成功事件、会话和快照证据；不创建 economy-v2 结算请求。",
+    "所有映射字段必须由 TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE 从同一完成收据、authority_proof_ref 与冻结会话快照原子绑定；不得由调用方拼接或重写。",
+    "actor_lifecycle_id 映射为 economy-v2 lifecycle_id；主线/七星的 session_instance_id 与星宿的 raid_instance_id 只可规范化为 source_session_instance_id。未来不透明 encounter_instance_id 只能由 source_session_spec_id、source_session_instance_id 与 source_session_epoch 三个冻结字段共同派生。",
+    "每个未来资格快照必须从冻结成员、生命周期、实例、epoch、revision、证明和完成事件构成；噩梦准入凭证不等于奖励资格。",
+    "left、旁观、未冻结、伪造、旧生命周期和失败清理路径不能形成未来奖励资格或收据。",
+    "source_profile、reward_slot_key、event_type、owner_id、origin、资格、roll、保底和所有奖励字段在当前合同均为 null/deferred。",
+    "成功先于 cleanup 的天庭完成事实不回滚，但在 source_profile 未获批前绝不产生经济收据或经济副作用。",
+    "Node/Fengari 只可用于本包离线静态校验，不属于玩家副本会话、证明服务或运行时结算。"
+  ],
+  "validation": {
+    "runner": "tests/test-tianting-authority-handoff.js",
+    "strict_cross_contract_assertions": true,
+    "runtime_key": null
+  }
+}

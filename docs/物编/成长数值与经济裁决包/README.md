@@ -4,8 +4,8 @@
 
 - 版本：v2.0-economy-v2-accepted-design-baseline。
 - 建立日期：2026-07-17。
-- 最近采纳：2026-07-21。
-- 状态：mixed decision-draft + economy-v2 accepted design baseline / economy-v1 superseded-historical / review-ready / production-gates-closed。
+- 最近采纳/离线复审：2026-07-22。
+- 状态：mixed decision-draft + economy-v2 accepted design baseline + offline-acceptance-passed / economy-v1 superseded-historical / production-gates-closed。
 - 范围：经验、货币、材料、装备成长、掉落、保底、公共 BOSS 参与箱、通天塔奖励和结算迁移。
 - 定位：`economy-v2` 是当前冻结的经验、货币、材料、花果山掉落/保底、P1、通天塔首轮奖励和持久化收据设计基线；`economy-v1` 仅保留为不可改写的历史冻结表。装备/法宝/宠物、地府/天庭来源分配、塔楼层/词缀/赛季仍是待决项。所有运行时与生产门禁仍关闭。
 
@@ -16,6 +16,8 @@
 - [成长系统离线施工与 Y3 接入状态](../20-成长系统离线施工与Y3接入状态.md)
 - [全局设计基线](../../全局设计基线.md)
 - [economy-v2 采纳与复审记录](adoption-record.md)
+- [economy-v2 权威结算内核纯离线验收包](../../../implementation/economy-v2-authoritative-settlement/README.md)
+- [天庭完成/会话 → economy-v2 权威收据输入交接](../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json)
 - [economy-v2 当前资源表](tables/economy-v2-resource-table.json)
 - [economy-v1 历史冻结表](tables/economy-v1-resource-table.json)
 
@@ -39,6 +41,8 @@
 | [标定候选](calibration/README.md) | 采纳前的来源文件哈希、白盒快照、假设和四类非生产标定场景；全部输出保持空值。 |
 | [validate-growth-economy-decision-package.ps1](validate-growth-economy-decision-package.ps1) | 校验旧候选仍被隔离，并冻结 economy-v2 的数值、资格、塔结算和收据语义。 |
 | [validation-report.md](validation-report.md) | 本轮 JSON、结构、语义和交叉引用验证记录。 |
+| [economy-v2 权威结算内核](../../../implementation/economy-v2-authoritative-settlement/README.md) | 已通过的独立 Node/Fengari 纯离线验收参考：冻结表编译、终态收据、重放/恢复与 Tide Trace 适配；不是运行时或生产账本。 |
+| [天庭权威收据输入交接](../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json) | 只冻结天庭完成/会话字段映射、资格快照、重放、断线与清理边界；所有天庭经济分配仍为 `null/deferred`。 |
 | [handoff](handoff) | 为物编、地形、Lua、UI 和复审生成的五类下游简报。 |
 
 ## 状态语义
@@ -51,7 +55,7 @@
 | conflict | 当前来源存在互斥口径，必须先裁决。 | 否。 |
 | whitebox-candidate | 离线白盒输入，只用于校准，不是生产数值。 | 否。 |
 
-任何非 accepted-baseline 条目都必须保持 effective_value 为 null、runtime_handoff 为 false。即使是 `economy-v2` accepted-baseline，本包也不生成 Lua、Y3 物编、UI、服务端账本或生产掉落表。
+任何非 accepted-baseline 条目都必须保持 effective_value 为 null、runtime_handoff 为 false。即使是 `economy-v2` accepted-baseline，本设计包也不生成 **Y3 运行时** Lua、Y3 物编、UI、服务端账本或生产掉落表；独立验收包中的 Lua 仅为 Tide Trace 离线适配器，Node 仅为内存参考模型。
 
 标定候选使用独立的 `calibration_status=candidate`，不是新的采纳状态。它只引用登记册中已有决策并保存来源文件哈希、白盒快照、待验证假设和空的候选输出；不能借用 `proposal`、`deferred` 或 `whitebox-candidate` 的名称让任一数值提前生效。`non_production`、`observation_only` 和 `runtime_handoff` 必须是显式 JSON 布尔值；候选输出只能是 `null`。候选 JSON 使用封闭字段结构，未知字段、无关快照或未绑定白盒来源都会被拒绝。
 
@@ -63,13 +67,13 @@
 4. 冻结通天塔逐人 Lv55、团队资格快照、五拍循环首通 `3 塔币 + 3 强化碎片`、重复 `1 塔币 + 1 强化碎片`、上海时区 ISO 周桶、周额度前后值和每周 15 塔币全有或全无封顶；不发 XP、不产生保底。
 5. 冻结遭遇实例级幂等终态收据、权威 owner 解析、稳定来源/奖励槽、XP 来源行/倍率/首次或重复结算、奖励计划精确投影、roll 证明/保底状态机、跨版本来源冲突、公共首通/稀有与参与箱收据绑定、团队团本资格快照、锁后决策的原子提交、前进迁移、证明解析和功能性保留期。
 
-仍待决的是装备/法宝/宠物数值、地府/天庭每个来源 profile 的分配、塔楼层/词缀/兑换目录/赛季，以及实际运行时接入。
+仍待决的是装备/法宝/宠物数值、地府/天庭每个来源 profile 的分配、塔楼层/词缀/兑换目录/赛季，以及实际运行时接入。天庭已有零价值的完成/会话输入交接，但它不分配 profile、slot、owner、资格、roll、保底、XP 或奖励。
 
 ## 进入下一阶段的门槛
 
-`implementation/growth/` 现已存在，但只是一套隔离的 `f6h-v1` 离线候选模拟：它只能在受信任 Node/Fengari 测试边界中运行，`runtime_handoff=false`，不得被 Y3、物编、生产账本或天庭资源表调用。它不是 `economy-v2` 的实现。将 `economy-v2` 接入任何运行时前，必须同时满足：
+`implementation/growth/` 现已存在，但只是一套隔离的 `f6h-v1` 离线候选模拟：它只能在受信任 Node/Fengari 测试边界中运行，`runtime_handoff=false`，不得被 Y3、物编、生产账本或天庭资源表调用。它不是 `economy-v2` 的实现。独立的 [economy-v2 权威结算内核](../../../implementation/economy-v2-authoritative-settlement/README.md) 已通过纯离线验收，但同样不构成运行时接入。将 `economy-v2` 接入任何运行时前，必须同时满足：
 
-- 资源表被精确编译并以文件哈希/版本绑定；旧候选夹具不能作为编译输入。
+- 生产编译链独立复现已验收的精确文件哈希/版本绑定；旧候选夹具不能作为编译输入。
 - 持久化账本跨重启与重连执行来源身份、指纹冲突和原子提交；权威证明、资格快照与稀有参与箱绑定可解析。
 - 参与箱只有一个 final_policy_id，且未来运行时资格字段、owner 解析、奖励投影和保底/roll 收据都与 `economy-v2` 一致；花果山旧 manifest 继续仅作候选参与证据。
 - 本包的结构与语义校验通过；零付费 30/60/90 分钟验证指标已能由数据与日志覆盖。

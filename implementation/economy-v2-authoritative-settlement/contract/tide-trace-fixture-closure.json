@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "contract_id": "ECO_V2_TIDE_TRACE_FIXTURE_CLOSURE_V1",
+  "status": "offline_acceptance_only",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "purpose": "Freeze the exact package-external Huaguoshan Lua fixture and API-isolation verifier consumed by the offline Tide Trace acceptance lane. This is a reproducibility and trusted-executor boundary only; it creates no runtime dependency or player-facing session.",
+  "fixture_entrypoints": [
+    "tests/emit_tide_trace_intent.lua",
+    "tests/test_tide_trace_adapter.lua"
+  ],
+  "loader_contract": {
+    "package_path_prefixes": [
+      "implementation/economy-v2-authoritative-settlement/lua/?.lua",
+      "implementation/huaguoshan/tests/?.lua",
+      "implementation/huaguoshan/lua/?.lua"
+    ],
+    "transitive_module_closure": [
+      "economy_v2_tide_trace_adapter",
+      "fake_authority_provider",
+      "huaguoshan_config",
+      "huaguoshan_runtime",
+      "huaguoshan_map_binding",
+      "huaguoshan_public_boss",
+      "huaguoshan_public_trace",
+      "huaguoshan_instances",
+      "huaguoshan_contribution"
+    ],
+    "dynamic_loader_rule": "No Lua dynamic loader, environment variable, or client path may extend this closure. The runner clears LUA_* and validates every listed physical file before and after each Fengari execution."
+  },
+  "closure_hash_contract": {
+    "algorithm": "SHA-256",
+    "record_encoding": "UTF-8 without BOM",
+    "record_canonicalization": "Sort entries by path using ordinal code-point order. Hash the concatenation of path, one U+0000 byte, lowercase SHA-256 hexadecimal content hash, and one LF byte for every entry.",
+    "expected_sha256": "8a3efe03dc826f154f14c9f6cc99130b9972d194d6231a9f0e80cc41a4c049b0",
+    "files": [
+      {
+        "path": "../huaguoshan/lua/huaguoshan_config.lua",
+        "role": "fixture_lua",
+        "sha256": "304E3E0406D9A7DCCDC102AA2115C8AD23B1DA360CC66F4B0027FFB25E77222D"
+      },
+      {
+        "path": "../huaguoshan/lua/huaguoshan_contribution.lua",
+        "role": "fixture_lua",
+        "sha256": "5148F91964CB28EB93ECC0AD7AD4BE92D180B3DF71FD5C9BF9FE555AD079EA3B"
+      },
+      {
+        "path": "../huaguoshan/lua/huaguoshan_instances.lua",
+        "role": "fixture_lua",
+        "sha256": "C87221DDE7AC89FC3FD6A0BCC8D1DE4588378B507956829FD3A6F323D65A1C13"
+      },
+      {
+        "path": "../huaguoshan/lua/huaguoshan_map_binding.lua",
+        "role": "fixture_lua",
+        "sha256": "5075534BEBDEA7927416BB7EB30B0F3470D10DCFFE0A64A09B25391BC80D45A3"
+      },
+      {
+        "path": "../huaguoshan/lua/huaguoshan_public_boss.lua",
+        "role": "fixture_lua",
+        "sha256": "73A1BAA100C26C450083CA4D89FD0134D66EC0915B48241597F00978BDFCF537"
+      },
+      {
+        "path": "../huaguoshan/lua/huaguoshan_public_trace.lua",
+        "role": "fixture_lua",
+        "sha256": "91DFD571158A9EE1134FFE14895790D8DCC8E861BA7E8B54AE174F86756D4397"
+      },
+      {
+        "path": "../huaguoshan/lua/huaguoshan_runtime.lua",
+        "role": "fixture_lua",
+        "sha256": "B429C6C2CACCA7C71D86B566E0C0B2CB5A05F97B53E70AD5CD50B5EA89EDE7C3"
+      },
+      {
+        "path": "../huaguoshan/tests/fake_authority_provider.lua",
+        "role": "fixture_lua",
+        "sha256": "F4B08AE41E7E8FC3D547B666486DBD96B9B78B1049D293F57CE80094FF4E0F6F"
+      },
+      {
+        "path": "../huaguoshan/tests/verify-y3-api.ps1",
+        "role": "isolation_verifier",
+        "sha256": "7F53CA53FCD61F14E4E8D0FEEB1A9424BF89FF2F184FBCAB50608ED3432C13B6"
+      }
+    ]
+  },
+  "api_isolation_contract": {
+    "rule": "The exact fixture_lua closure is copied only into an ephemeral package-rooted scratch directory and scanned by the SHA-256-pinned verifier before Fengari executes it. The verifier may not be replaced, and the scratch directory is deleted after the check.",
+    "forbidden_runtime_surfaces": [
+      "Y3",
+      "GameAPI",
+      "GlobalAPI",
+      "CAPI",
+      "network",
+      "wall_clock",
+      "filesystem_loader"
+    ],
+    "scope": "offline fixture isolation only; not a claim that the broader Huaguoshan package is a production runtime dependency of economy-v2"
+  },
+  "trusted_filesystem_condition": "For one invocation, the offline package root, every listed external Huaguoshan file and its path components, the selected pinned Node executable, and the pinned Fengari closure are exclusively controlled by the trusted executor. No untrusted principal may create, delete, rename, replace, or add a reparse point to those paths while validation or execution is in progress.",
+  "validation": {
+    "runner": "tests/test-tide-trace-fixture-closure.ps1",
+    "pre_and_post_execution_hash_check": true,
+    "realpath_and_reparse_check": true,
+    "closed_on_missing_extra_or_drifted_file": true
+  }
+}

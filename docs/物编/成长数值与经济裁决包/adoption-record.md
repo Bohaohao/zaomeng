@@ -2,6 +2,8 @@
 
 初始采纳日期：2026-07-21
 收据合同复审：2026-07-21
+纯离线权威结算验收：2026-07-22
+复审修订与天庭零价值收据输入交接：2026-07-22
 
 ## 采纳范围
 
@@ -31,5 +33,12 @@
 ## 非实施边界
 
 - `implementation/growth/` 仍是 `f6h-v1` 的 Node/Fengari 离线测试夹具，不是 `economy-v2` 的运行时实现。
-- 本轮没有生成 Lua、Y3 物编、地图、存档后端、对象 ID、UI、交易、兑换商店或多人同步。
+- 本轮生成了独立的 Node 内存结算参考与 Tide Trace 离线 Lua 适配器，并已通过受信任 Node/Fengari 验收；没有生成 **Y3 运行时** Lua、Y3 物编、地图、存档后端、对象 ID、UI、交易、兑换商店或多人同步。
+- 离线参考实现只证明冻结表编译、proof-to-owner 夹具、origin 防换主、终态收据、重放/恢复和七类已冻结事件的合同一致性；它不是生产账本、真实证明服务或运行时接入授权。
 - 本轮数值作为版本化设计基线冻结；实机日志可以提出新版本，不得静默改写 `economy-v2`、`economy-v1` 或历史收据。地府与天庭的具体 XP source_profile 分配、塔楼层/词缀/赛季和装备/法宝/宠物数值不在本次采纳范围。
+
+## 2026-07-22 复审修订与天庭交接
+
+本轮对独立离线验收包的复审补齐了三类防漂移边界：外部花果山 Tide Trace fixture 必须是完整哈希闭包，保留原型 map key/畸形塔周桶/越界 XP 必须 fail-closed，Tide canonical evidence 必须经 resolver attestation 绑定到回放与奖励计划指纹。所有修订仍在 Node/Fengari 纯离线参考中完成，未改变资源表数值或生产门禁。
+
+同时建立[天庭完成/会话 → economy-v2 权威收据输入交接合同](../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json)。`TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE` 把同一完成 receipt/proof、route/instance/epoch/revision、成员快照/状态与星宿轮换原子绑定；它只冻结这些来源事实与资格边界、重放、断线和 cleanup 规则。在独立采纳天庭 source-profile 前，`source_profile`、slot、owner、资格、roll、保底、经济收据和一切奖励值均保持 `null/deferred`，且合同不得调用 materializer。

@@ -27,5 +27,6 @@
 | TT-ACC-023 | 噩梦逐人资格 | 每名噩梦入场者各自持有并由权威端解析 `TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL`；普通完成方位、该凭证方位与本次噩梦快照方位三者相同。 | 队长共享资格、跨方位凭证、客户端提交方位、忽略普通完成。 | 权威合同与校验器。 | passed（离线） |
 | TT-ACC-024 | 清理与完成边界 | 会话只可 `active → cleanup_pending → closed`；只有匹配实例身份、`session_epoch`、`revision` 和 cleanup token 的权威确认才可解锁；已确认的正常完成不因后续清理确认失败而回滚。 | 旧清理令牌解锁、跨实例解锁、旧 revision 解锁、失败清理偷渡结算、完成回滚。 | 权威合同与校验器。 | passed（离线） |
 | TT-ACC-025 | 生产下发 | 本轮只冻结权威合同语义；实际章节、会话、时间、经济、对象、地图、Lua、UI、存储与多人服务均未施工。 | 从本包直接生成、部署或接入运行时内容。 | 实施门禁复审。 | blocked（运行时前置未决） |
+| TT-ACC-026 | economy-v2 权威收据输入交接 | `TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE` 原子绑定同一完成 receipt/proof、route/instance/epoch/revision、成员快照/状态与星宿轮换；仅这些来源事实可映射为零价值候选。`source_profile`、slot、owner、资格、roll、保底与所有奖励值均为 `null/deferred`，且未映射时不能形成结算请求。 | 原始 session/raid ID 直接充当经济实例、混拼 revision/成员/轮换快照、噩梦入场凭证充当奖励资格、成功 cleanup 后自动发奖、`left`/失败/代理成员补领。 | 双向 JSON 合同与 `test-tianting-authority-handoff.js`。 | passed（离线） |
 
 passed（离线）只表示规格自洽、可复审、可交接；它不代表副本、Boss、钥匙、材料、称号、地图、同步或结算已实现。

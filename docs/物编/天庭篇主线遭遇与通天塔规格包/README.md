@@ -2,7 +2,7 @@
 
 ## 状态
 
-offline-design-spec / content-expanded / authority-contract-specified / independent-review-approved / archived / production-gate-closed
+offline-design-spec / content-expanded / authority-contract-specified / economy-v2-input-handoff-specified / independent-review-approved / archived / production-gate-closed
 
 本包已从“边界已冻结、内容待定”扩展为可复审的纯离线内容规格：
 
@@ -11,10 +11,13 @@ offline-design-spec / content-expanded / authority-contract-specified / independ
 - 团队本：二十八星宿按十二时辰四象轮换；普通教学七宿，噩梦由四圣兽与七宿双向加成构成版本终局。
 - 长期复用：七星与二十八星宿仅登记为唯一全局通天塔的未来小 Boss 内容池。
 - 权威边界：入章、三段逻辑进度、主线终局、七星/星宿会话、时辰快照和噩梦逐人资格均已有纯离线合同语义。
+- 经济交接：天庭完成/会话事实可作为 economy-v2 的未来权威收据**输入候选**；当前只冻结字段映射、资格快照、重放、断线和清理边界，所有 profile、slot、资格 ID 与奖励值均为 `null/deferred`。
 
 它不创建真实地图、Y3 对象、Lua、UI、物品、奖励、账本、实际进度键、时间服务或多人运行时。合同中的 `TT_SPEC_*` 仅是逻辑身份；所有运行时键、服务、存储和发奖仍为空或延期。
 
 本阶段的归档结论、复审与验收证据见[天庭篇主线、遭遇、副本与权威合同归档](../../归档/物编施工/06-天庭篇主线遭遇副本与权威合同归档.md)。
+
+后续 economy-v2 零价值收据输入交接的复审与归档见[economy-v2 权威结算内核与天庭收据输入交接归档](../../归档/物编施工/07-economy-v2权威结算内核与天庭收据输入交接归档.md)；它不改变本包的生产门禁。
 
 ## 本轮用户定向规则
 
@@ -28,6 +31,7 @@ offline-design-spec / content-expanded / authority-contract-specified / independ
 | 七星与团队会话 | `TT_SPEC_SESSION_SEVEN_STAR`、`TT_SPEC_SESSION_MANSION_NORMAL` 与 `TT_SPEC_SESSION_MANSION_NIGHTMARE` 固定身份、版本、成员快照、失败、清理与幂等语义；死亡、超时、断线或生命周期失效进入清理，确认前不可重入。 | 真实会话服务、锁、复活、断线恢复或状态机实现。 |
 | 二十八星宿 | 四象各七宿；`TT_SPEC_TIME_BASIS_ASIA_SHANGHAI_SHICHEN` 按服务器 `Asia/Shanghai` 时辰四槽循环三次，首次成功创建会话时冻结不可变轮换快照。 | 权威时间服务、时辰边界计算、快照存储与实例实现。 |
 | 团本普通/噩梦 | 普通和噩梦均逐人要求天庭常规主线完成；噩梦还逐人验证 `TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL` 的同方位不透明资格，且普通完成、凭证和本次噩梦快照三方位必须相同。 | 钥匙形态、消耗、奖励、Buff 数值和收据。 |
+| economy-v2 收据输入交接 | `TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE` 将同一完成收据/proof 与会话 route、instance、epoch、revision、成员快照/状态和星宿轮换原子绑定；这些事实才可进入零价值输入候选，且原始 session/raid ID 不可直接成为经济实例身份。 | `source_profile`、`reward_slot_key`、owner、资格/roll/保底、经济收据、材料、货币、XP 与全部实际奖励。 |
 | 通天塔 | 七星/星宿未来可作小 Boss；每三或五层待选，每十层大 Boss 只登记接口。 | 总层数、层位、抽取、掉落、词缀、赛季、记录。 |
 
 ## 不可突破的约束
@@ -39,6 +43,7 @@ offline-design-spec / content-expanded / authority-contract-specified / independ
 - 首发最多四人；主线终局、七星和星宿会话的离线权威语义均已冻结，实际运行时由未来权威逻辑接入。会话状态只能从 `active` 经 `cleanup_pending` 到 `closed`，只有匹配实例身份、`session_epoch`、`revision` 与清理令牌的权威确认才可释放锁。
 - 星宿快照固定使用服务器 `Asia/Shanghai` 自然时辰；客户端时钟、客户端方位和重试重新抽宿均不得参与决定。死亡成员回当前篇章初始出生点并锁至清理确认；断线成员标记为 `left`，不得重连或领奖。
 - economy-v2 只能作为运行时关闭的设计引用；本包不新增 MAT_、CUR_、tower_mode 或任何现有资源表值。
+- [天庭完成/会话 → economy-v2 权威收据输入合同](../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json) 不可调用结算内核：`TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE` 必须把同一完成 receipt/proof、冻结会话 route/instance/epoch/revision、成员快照/状态和星宿轮换原子绑定。主线成功在 cleanup 后仍可保留来源事实，但不能因此产生经济收据；失败、`left`、旁观、伪造成员、旧生命周期、字段漂移和错误 cleanup 确认均不得形成资格或结算输入。
 - “十枚同星残片合成称号”是用户明确的离线配方倍率，不是掉落数量或已接入的资源配方。
 
 ## 主要工件
@@ -48,6 +53,7 @@ offline-design-spec / content-expanded / authority-contract-specified / independ
 | [tianting-mainline-tower-contract.json](tianting-mainline-tower-contract.json) | 原有冻结边界与天庭内容选择的领域事实源。 |
 | [tianting-content-expansion-contract.json](tianting-content-expansion-contract.json) | 七星、星宿轮换、噩梦四圣、奖励候选与塔复用的机器可读内容合同。 |
 | [authority/tianting-progression-and-instance-authority-contract.json](authority/tianting-progression-and-instance-authority-contract.json) | 入章、三段逻辑进度、主线终局、会话生命周期、时辰快照与噩梦资格的权威合同；纯离线、不可直接投产。 |
+| [economy-v2 天庭权威收据输入合同](../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json) | 天庭完成/会话事实到未来 economy-v2 收据输入候选的唯一交接件；字段映射和资格边界已冻结，所有经济值仍为 `null/deferred`。 |
 | [mainline-route.md](mainline-route.md) | 主线因果弧、公共遭遇和副本职责关系。 |
 | [instances/七星单人本规格.md](instances/七星单人本规格.md) | 七个单人试炼、称号、毕业法宝和学习闭环。 |
 | [instances/二十八星宿团队本规格.md](instances/二十八星宿团队本规格.md) | 十二时辰轮换、二十八星官签名动作、普通/噩梦与四圣称号。 |

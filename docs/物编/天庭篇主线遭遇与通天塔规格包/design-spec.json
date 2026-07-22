@@ -431,5 +431,15 @@
     "status": "offline_design",
     "runtimeKey": null,
     "productionGate": "closed"
+  },
+  "economyV2AuthorityReceiptInputHandoff": {
+    "artifact": "../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json",
+    "status": "offline_design_handoff",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "settlementRequest": null,
+    "economicValues": "null_or_deferred",
+    "sourceEvidenceEnvelopeSpecId": "TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE",
+    "directCallerInput": false
   }
 }

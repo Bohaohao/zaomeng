@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "package": "economy-v2-authoritative-settlement",
+  "package_status": "offline-acceptance-reference-only",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "purpose": "Offline acceptance reference implementation for the frozen economy-v2 authoritative-settlement contract. It proves offline compilation, terminal-receipt, replay, recovery, and boundary behavior only; it does not authorize runtime integration.",
+  "frozen_input_contract": {
+    "resource_table": {
+      "path": "../../docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json",
+      "table": "economy-v2-resource-table",
+      "resource_table_version": "economy-v2",
+      "sha256": "3288BD9CD1BFBB516DB4808EF002C45FECCF5F1C7F4C80499DB81E31B2F84EAE",
+      "required_runtime_handoff": false,
+      "required_production_gate": "closed",
+      "acceptance_rule": "Compile exact immutable UTF-8 file bytes only; a changed byte, source hash, resource_table_version, runtime_handoff, or production_gate is rejected."
+    },
+    "canonical_evidence": {
+      "source_path": "../huaguoshan/lua/huaguoshan_public_trace.lua",
+      "event_type": "trace_action_completed",
+      "adapter_detail_contract": "contract/tide-trace-adapter-contract.json",
+      "fixture_closure_contract": "contract/tide-trace-fixture-closure.json",
+      "allowlist": [
+        "type",
+        "event_id",
+        "actor_id",
+        "lifecycle_id",
+        "encounter_key",
+        "encounter_instance_id",
+        "target_id",
+        "target_lifecycle_id",
+        "encounter_action_key",
+        "action_token",
+        "combat_scope",
+        "completed_tick",
+        "authority_proof_ref",
+        "source_identity_fingerprint",
+        "target_scope",
+        "credit_personal_progress",
+        "rare_eligibility"
+      ],
+      "exact_key_set": true,
+      "fixed_values": {
+        "type": "trace_action_completed",
+        "encounter_key": "HG_E_TIDE_TRACE",
+        "encounter_action_key": "stabilize_tide_trace",
+        "combat_scope": "public",
+        "target_scope": "explicit",
+        "credit_personal_progress": true,
+        "rare_eligibility": "none"
+      },
+      "rejection_rule": "Unknown, missing, wrong-typed, metatable-backed, or fixed-value-mismatched fields fail closed before the trusted Tide Trace completion verifier is called.",
+      "acceptance_rule": "Only canonical Tide Trace completion evidence with exactly this key set may enter the adapter. Client, UI, object-editor, map, or hand-authored reward data is not settlement evidence.",
+      "authority_attestation": {
+        "required_resolver_result_fields": [
+          "tide_trace_attestation_ref",
+          "tide_trace_canonical_digest"
+        ],
+        "canonical_digest_fields": [
+          "schema_version",
+          "source_event_type",
+          "event_type",
+          "source_profile",
+          "reward_slot_key",
+          "event_id",
+          "actor_id",
+          "lifecycle_id",
+          "encounter_key",
+          "encounter_instance_id",
+          "target_id",
+          "target_lifecycle_id",
+          "encounter_action_key",
+          "action_token",
+          "combat_scope",
+          "completed_tick",
+          "source_identity_fingerprint",
+          "target_scope",
+          "credit_personal_progress",
+          "rare_eligibility"
+        ],
+        "proof_ref_rule": "authority_proof_ref is reverified on every attempt but deliberately excluded from canonical_digest and replay fingerprint, preserving the generic valid-proof replay contract.",
+        "attestation_ref_stability_rule": "tide_trace_attestation_ref must be stable for one identical canonical Tide evidence projection and must not encode or rotate with authority_proof_ref. A valid rotated proof can replay only with that evidence-stable attestation ref; a different ref is an identity conflict rather than a fresh award.",
+        "receipt_binding": "The exact attestation ref and digest enter offline_request_fingerprint and offline_award_plan; award_plan_hash is already an immutable receipt identity-fingerprint input. A changed canonical Tide evidence projection conflicts rather than replaying.",
+        "production_boundary": "This is an offline resolver-result contract, not a real proof service or a production cryptographic attestation format."
+      }
+    }
+  },
+  "scope_exclusions": [
+    "Y3 runtime",
+    "Y3 map script root",
+    "object editor data",
+    "map content",
+    "server persistent ledger",
+    "real authority proof service",
+    "live migration or reconnect service",
+    "new Difu content",
+    "TianTing source-profile, event-type, reward-slot, qualification, roll, pity, XP, or reward allocation",
+    "live TianTing settlement"
+  ],
+  "tianting_authority_handoff": {
+    "contract": "contract/tianting-authority-receipt-input-contract.json",
+    "status": "offline-design-handoff-only",
+    "rule": "It freezes only source completion/session evidence, qualification-boundary, replay, disconnect, and cleanup facts. It cannot invoke this materializer or create a profile, slot, owner, economic qualification, receipt, reward, material, key, probability, or pity value."
+  },
+  "historical_fixture_boundary": {
+    "path": "../growth/",
+    "status": "f6h-v1 historical offline fixture",
+    "rule": "It is not an economy-v2 implementation, source of rewards, or runtime promotion path."
+  },
+  "receipt_contract": {
+    "schema_version": 1,
+    "owner_scope": "character",
+    "semantic_identity_fields": [
+      "owner_scope",
+      "owner_id",
+      "encounter_instance_id",
+      "event_id",
+      "source_profile",
+      "reward_slot_key"
+    ],
+    "owner_resolution": {
+      "authority_mapping_inputs": [
+        "actor_id",
+        "lifecycle_id",
+        "authority_proof_ref"
+      ],
+      "required_result_fields": [
+        "owner_id",
+        "actor_id",
+        "lifecycle_id",
+        "event_id",
+        "encounter_instance_id",
+        "source_profile",
+        "event_type",
+        "authority_origin_key",
+        "origin_owner_binding_verified"
+      ],
+      "owner_id_semantics": "owner_id is the stable, non-client, non-actor, non-lifecycle character owner resolved by the trusted authority service.",
+      "required_authority_origin_binding": {
+        "origin_fields": [
+          "actor_id",
+          "lifecycle_id",
+          "encounter_instance_id",
+          "event_id",
+          "source_profile",
+          "reward_slot_key"
+        ],
+        "origin_key_algorithm": {
+          "prefix": "economy-v2-origin:",
+          "input_array_order": [
+            "actor_id",
+            "lifecycle_id",
+            "encounter_instance_id",
+            "event_id",
+            "source_profile",
+            "reward_slot_key"
+          ],
+          "input_validation": "actor_id, encounter_instance_id, event_id, source_profile, and reward_slot_key are non-empty ASCII identifiers matching [A-Za-z0-9_.:-]+. lifecycle_id is either the same identifier form or a non-negative JavaScript safe integer.",
+          "serialization": "Encode the six detached, validated values as one compact JSON array in exactly input_array_order: JSON strings use JSON quoting/escaping, a numeric lifecycle_id uses its shortest base-10 JSON number form, detached canonicalization normalizes -0 to 0 before validation, and no whitespace is permitted. Hash the resulting UTF-8 bytes.",
+          "digest": "SHA-256, lowercase hexadecimal",
+          "test_vector": {
+            "input_array": [
+              "trace-actor-a",
+              7,
+              "economy-v2-trace-instance-1",
+              "economy-v2-trace-event-1",
+              "HG_DROP_WATERFALL_ELITE",
+              "base_bundle"
+            ],
+            "canonical_utf8_json": "[\"trace-actor-a\",7,\"economy-v2-trace-instance-1\",\"economy-v2-trace-event-1\",\"HG_DROP_WATERFALL_ELITE\",\"base_bundle\"]",
+            "sha256": "17bb857c14e4893d7076819afee3a150496a26b4d8e0b6f2840bbcea0041e463",
+            "authority_origin_key": "economy-v2-origin:17bb857c14e4893d7076819afee3a150496a26b4d8e0b6f2840bbcea0041e463"
+          }
+        },
+        "required_result_fields": [
+          "authority_origin_key",
+          "origin_owner_binding_verified"
+        ],
+        "rule": "The trusted proof resolver, not this in-memory ledger, must durably bind one origin key to one stable owner before any settlement outcome and across its own restart. The resolver returns the exact key and origin_owner_binding_verified=true; a changed owner is rejected even if the first ledger receipt was rejected."
+      },
+      "forbidden_substitutes": [
+        "client_supplied_owner_id",
+        "raw_actor_id_as_owner_id",
+        "raw_lifecycle_id_as_owner_id"
+      ]
+    },
+    "fingerprint_contract": {
+      "resource_table_version_included": true,
+      "authority_proof_ref_included": false,
+      "source_rule": "Use every immutable fingerprint input required by persistent_receipt_contract.identity_fingerprint_fields in the frozen resource table.",
+      "offline_replay_input_projection": "The reference stores offline_request_fingerprint as canonical request input excluding actor_id, lifecycle_id, and authority_proof_ref. It is valid only because every referenced authority snapshot, roll, XP record, and tower record is immutable and its resolved projection is written into the terminal receipt identity_fingerprint and award plan. Production must enforce the same immutability or use its own authoritative replay fingerprint.",
+      "cross_version_rule": "The same semantic identity with a different resource_table_version is receipt_identity_conflict; it is never a recalculation."
+    },
+    "proof_replay_contract": {
+      "current_proof_must_verify": [
+        "same_owner_id",
+        "same_event_id",
+        "same_encounter_instance_id"
+      ],
+      "on_verified_replay": "Return the original terminal receipt and perform no new settlement or state mutation.",
+      "on_failed_verification": "Reject with zero economic side effect; a changed proof ref never creates a new settlement identity."
+    },
+    "terminal_states": [
+      "committed",
+      "rejected"
+    ],
+    "forbidden_states": [
+      "prepared"
+    ],
+    "rejected_zero_side_effect": [
+      "balance",
+      "material_stack",
+      "unique_item",
+      "first_clear",
+      "pity",
+      "xp_repeat_quota",
+      "tower_weekly_quota",
+      "origin"
+    ],
+    "replay_rule": "A matching semantic identity and fingerprint returns the original terminal receipt. A different fingerprint returns receipt_identity_conflict without mutating the original receipt or economic state."
+  },
+  "trusted_recovery_contract": {
+    "snapshot_schema_version": 1,
+    "required_fields": [
+      "snapshot_schema_version",
+      "state",
+      "state_hmac_sha256"
+    ],
+    "integrity_rule": "A raw diagnostic exportState value is never a restore input. Recovery accepts only a HMAC-SHA-256 sealed snapshot plus an external integrity_key held outside the snapshot, receipt, environment, and package files. The reference detaches the snapshot once before verification to prevent accessor/Proxy swaps.",
+    "scope_boundary": "This is an offline reference integrity boundary, not a production key-management, persistence, migration, or reconnection solution."
+  },
+  "pinned_execution_runtime": {
+    "node": {
+      "runtime_version": "v20.19.5",
+      "sha256": "E6FF5F7FEFA7A94FB97ED86A9578DCF65DF1BD5D0AB3117E6CB9B9C0BC74E17A",
+      "signature_requirement": "Valid OpenJS Foundation or Node.js Foundation Authenticode signature",
+      "rule": "The runner rejects a different signed Node release or byte hash. This is an archive reproducibility pin, not a production runtime selection."
+    },
+    "fengari": {
+      "package": "fengari-node-cli@0.1.0",
+      "closure_sha256": "E8E88EFDB5BEFFE0F140BA72EDDCEC5E1B52D7788062A9FCF0E09F6988745AF4"
+    }
+  },
+  "trusted_execution_filesystem_boundary": {
+    "required_condition": "For one invocation, the offline package root, every compiler output-parent component, the selected SHA-256-pinned signed node.exe, the pinned Fengari closure, and every file/path component listed by contract/tide-trace-fixture-closure.json are exclusively controlled by the trusted executor. No untrusted principal may create, delete, rename, replace, or add a reparse point to any of those paths while validation or execution is in progress.",
+    "covered_defense": "The reference rejects environment/PATH injection, pins Node and Fengari bytes, validates each observed compiler output-parent component with lstat/realpath, and validates the complete external Tide Trace fixture closure before and after each Fengari execution. Non-directory or symbolic-link parents, closure drift, or parents resolving outside their declared roots fail closed; compiler output creation never overwrites an existing final name.",
+    "explicit_exclusion": "Path-based Node and PowerShell APIs cannot prove safety against a concurrent local ACL-level path replacement after a check and before a later path operation. That adversary is outside this offline reference acceptance claim.",
+    "production_requirement": "A production implementation that must tolerate such an adversary needs an independently reviewed native handle-relative writer/launcher or an equivalent isolated signing service; this package is not that implementation."
+  },
+  "expected_event_types": [
+    "experience",
+    "drop_bundle",
+    "participation_chest",
+    "first_clear_grant",
+    "public_rare_drop",
+    "team_raid_rare_drop",
+    "tower_reward"
+  ],
+  "acceptance_matrix": [
+    {
+      "id": "AC-01",
+      "requirement": "Exact resource-table compiler binding and closed gate rejection."
+    },
+    {
+      "id": "AC-02",
+      "requirement": "Canonical Tide Trace evidence and authority owner resolution only."
+    },
+    {
+      "id": "AC-03",
+      "requirement": "No client-controlled owner, reward, qualification, pity, XP, or tower input can mint an award."
+    },
+    {
+      "id": "AC-04",
+      "requirement": "Same fingerprint is idempotent across restart and returns the original terminal receipt."
+    },
+    {
+      "id": "AC-05",
+      "requirement": "Different fingerprint, including a different resource-table version, is receipt_identity_conflict."
+    },
+    {
+      "id": "AC-06",
+      "requirement": "Proof ref is excluded from the fingerprint but revalidated on each replay."
+    },
+    {
+      "id": "AC-07",
+      "requirement": "Every supported event type derives exact awards and bindings from the frozen table."
+    },
+    {
+      "id": "AC-08",
+      "requirement": "Caps and atomic failures create only allowed zero-award terminal results with no partial or hidden consumption."
+    },
+    {
+      "id": "AC-09",
+      "requirement": "Rejected, conflict, abort, and replay paths leave no forbidden mutation or prepared state."
+    },
+    {
+      "id": "AC-10",
+      "requirement": "The standalone package and the exact external Tide Trace fixture closure remain isolated from Y3, maps, objects, network, clocks, and uncontrolled Node/Fengari environment injection, under the declared exclusive trusted-filesystem condition."
+    },
+    {
+      "id": "AC-11",
+      "requirement": "Reserved object-prototype map keys, malformed tower counters, unsafe owner ids, and invalid XP levels fail closed with zero economic side effect."
+    },
+    {
+      "id": "AC-12",
+      "requirement": "Tide Trace resolver attestation is bound into offline replay and award-plan fingerprints; changed source evidence conflicts, while a separately revalidated rotated proof may replay."
+    },
+    {
+      "id": "AC-13",
+      "requirement": "The TianTing source handoff remains zero-value and cannot form a settlement request before a separately approved source-profile allocation."
+    }
+  ],
+  "validation_status": "offline-acceptance-passed",
+  "validation_evidence": {
+    "runner": "tests/run-all.ps1",
+    "scope": "offline reference only; not a runtime handoff",
+    "coverage": [
+      "exact frozen-table compilation and baseline injection rejection",
+      "canonical Tide Trace fixture to Node adapter boundary",
+      "complete external Huaguoshan fixture closure hash/realpath checks before and after Fengari execution, plus closure-specific API isolation scan",
+      "authority owner/profile/event binding and origin-owner conflict rejection",
+      "Tide authority-attestation binding, terminal receipt, restart-state, idempotency, seven event families, reserved-map-key, caps, pity, XP, tower, and atomic-abort regression",
+      "TianTing completion/session to zero-value economy input handoff cross-contract assertions",
+      "static compiler output reparse rejection under the declared exclusive trusted-filesystem condition"
+    ],
+    "required_closed_gates": [
+      "runtime_handoff=false",
+      "production_gate=closed"
+    ]
+  }
+}

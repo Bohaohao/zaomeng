@@ -38,6 +38,7 @@
 | TT-AUTH-004 | `TT_SPEC_SESSION_SEVEN_STAR` 复用单人会话身份与清理骨架；`TT_SPEC_SESSION_MANSION_NORMAL` / `TT_SPEC_SESSION_MANSION_NIGHTMARE` 复用团队成员快照与阶段骨架，状态为 `active → cleanup_pending → closed`。 | offline-contract-fixed | 死亡、超时、断线或生命周期失效进入失败清理；只有匹配实例身份、`session_epoch`、`revision` 和 cleanup token 的权威确认才可解除重入锁。 |
 | TT-AUTH-005 | `TT_SPEC_TIME_BASIS_ASIA_SHANGHAI_SHICHEN` 在星宿会话首次成功创建时，以服务器 `Asia/Shanghai` 时辰冻结权威轮换快照。 | offline-contract-fixed | 客户端时钟、客户端方位及重试重算均禁止；真实时间提供方、存储和恢复策略仍延期。 |
 | TT-AUTH-006 | `TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL` 按角色逐人解析不透明凭证；每人都满足 `normal_clear.quadrant == credential.quadrant == nightmare.rotation_snapshot.quadrant`。 | offline-contract-fixed | 凭证物品形态、消耗、掉落、数量与收据仍由经济裁决包决定。 |
+| TT-AUTH-007 | 建立天庭完成/会话 → economy-v2 权威收据输入交接合同；`TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE` 原子绑定同一完成 receipt/proof、会话 route/instance/epoch/revision、成员快照/状态与星宿轮换，才可形成零价值候选。 | offline-contract-fixed | 未分配 `source_profile`、slot、owner、qualification、roll、保底或任何奖励；主线成功不因 cleanup 自动结算，失败、`left` 或任意绑定字段漂移均不得成为输入候选。 |
 
 ## 明确延期
 

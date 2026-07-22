@@ -1,0 +1,25 @@
+{
+  "allowlist_schema_version": 1,
+  "package_status": "offline-acceptance-reference-only",
+  "compiler_id": "economy-v2-authoritative-settlement-offline-compiler-v1",
+  "source": {
+    "relative_path": "docs/物编/成长数值与经济裁决包/tables/economy-v2-resource-table.json",
+    "resource_table_file_sha256": "3288BD9CD1BFBB516DB4808EF002C45FECCF5F1C7F4C80499DB81E31B2F84EAE",
+    "document_version": 1,
+    "table": "economy-v2-resource-table",
+    "resource_table_version": "economy-v2",
+    "runtime_handoff": false,
+    "production_gate": "closed"
+  },
+  "output": {
+    "baseline_schema_version": 1,
+    "format": "economy-v2-authoritative-settlement/offline-compiled-baseline/v1",
+    "prohibited_targets": [
+      "runtime",
+      "Y3",
+      "object-editor",
+      "live-service",
+      "persistent-ledger"
+    ]
+  }
+}

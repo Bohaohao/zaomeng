@@ -81,6 +81,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\run-all-pre
 - 包内校验 `1828 checks`、JSON 严格解析、Y3 设计规格校验与 `100/100 ready` 完整度评分均已通过；独立终审 P0 / P1 / P2 为 `0`。
 - 归档不代表已经实现进度键、证明/时间/会话服务、存档、经济收据、地图、Y3 对象、Lua、UI 或多人实机；所有运行时与经济门禁仍保持关闭。
 
+### economy-v2 权威结算内核与天庭收据输入交接（2026-07-22）
+
+- [economy-v2 权威结算内核与天庭收据输入交接归档](docs/归档/物编施工/07-economy-v2权威结算内核与天庭收据输入交接归档.md) 已记录经济内核复审修复、Tide Trace 外部 fixture 的可信闭包、受信任 Node/Fengari 离线验收，以及天庭完成/会话到经济收据输入候选的零价值交接。
+- 天庭来源证据封套把完成 receipt/proof、会话 route/instance/epoch/revision、成员快照/状态和星宿轮换原子绑定；没有 source-profile、slot、资格、roll、保底或任何奖励分配。
+- 全量离线验收通过 `225` 条结算、`395` 条天庭交接与 `83` 条 Tide Lua 断言；独立复审 P0/P1/P2 均已关闭。生产账本、证明服务、Y3 接入和多人实机仍未开始。
+
 ## 版本管理范围
 
 仓库保留正式策划文档、离线 Lua、测试、预施工规格及布局预览交付物；`.omx/`、`.omc/`、`.subagent-runs/`、本地缓存、日志和环境文件由 [`.gitignore`](.gitignore) 排除。

@@ -14,6 +14,8 @@
     "tianting_content": "../tianting-content-expansion-contract.json",
     "difu_cross_chapter_interface": "../../地府篇前置接口包/cross-chapter-interface.json",
     "difu_team_recovery_semantics": "../../地府篇前置接口包/cross-chapter-interface.json",
+    "economy_v2_authority_receipt_input_handoff": "../../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json",
+    "economy_v2_authority_receipt_input_handoff_rule": "该离线交接件只读取本合同已冻结的完成、会话、成员、轮换、断线与清理事实，且所有经济字段保持 null/deferred；它不能创建结算请求、经济收据或奖励。",
     "rule": "本合同只复用既有地府完成收据与团队回传的语义，不读取、写入或新增既有地府进度键的消费者。"
   },
   "hard_boundaries": {
@@ -33,7 +35,7 @@
       "runtime_key": null
     },
     "economy_runtime_status": "accepted-design-reference-runtime-not-integrated",
-    "economy_rule": "本合同不授予、扣除、计算或承诺经验、货币、物品、材料、钥匙、掉落、概率、保底、装备属性或任何收据；资格证明的实际物品形态、消耗与发放继续 deferred。",
+    "economy_rule": "本合同不授予、扣除、计算或承诺经验、货币、物品、材料、钥匙、掉落、概率、保底、装备属性或任何经济收据；逻辑完成收据只能作为后续离线交接的来源事实，不能变成结算请求。资格证明的实际物品形态、消耗与发放继续 deferred。",
     "runtime_asset_rule": "所有 TT_SPEC_ 身份仅是离线规格身份；所有 runtime_key、runtime_progression_key、runtime_item_key、runtime_event_key、runtime_map_key 与 runtime_time_provider_key 均为 null。"
   },
   "semantic_identity_policy": {
@@ -73,6 +75,47 @@
     "replay_result": "同一 (actor_id, event_id) 重放只返回已持久化的首次权威结果；不得重复写逻辑进度、开启第二个会话、重复关闭会话或产生任何经济效果。",
     "normal_completion_persistence_rule": "权威成功收据已写入后，后续 cleanup_ack 失败、延迟或重放不得回滚该正常完成结果；清理只解除会话锁。",
     "runtime_key": null
+  },
+  "economy_v2_handoff_source_evidence_contract": {
+    "spec_id": "TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE",
+    "decision_status": "offline_design",
+    "runtime_key": null,
+    "source_completion_receipt_contract_spec_id": "TT_SPEC_TIANTING_COMPLETION_RECEIPT_IDEMPOTENCY",
+    "record_scope": "character_completion_input_candidate",
+    "only_issuer": "future_authority_resolver_from_one_existing_authoritative_completion_and_frozen_session_snapshot",
+    "caller_input_rule": "客户端、UI、队长、队友、旁观者、本地缓存或复制收据不得构造、补全、替换或选择本来源证据封套中的任何字段；未来权威 resolver 必须从同一完成事实和冻结会话快照原子派生并验证该封套。",
+    "required_bound_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "event_id",
+      "producer_spec_id",
+      "completed_tick",
+      "authority_proof_ref",
+      "schema_version",
+      "source_session_spec_id",
+      "source_session_instance_id",
+      "source_session_epoch",
+      "source_session_revision",
+      "source_membership_snapshot_id",
+      "source_member_status"
+    ],
+    "session_route_instance_normalization": {
+      "TT_SPEC_SESSION_LINGXIAO_MAINLINE": "session_instance_id -> source_session_instance_id",
+      "TT_SPEC_SESSION_SEVEN_STAR": "session_instance_id -> source_session_instance_id",
+      "TT_SPEC_SESSION_MANSION_NORMAL": "raid_instance_id -> source_session_instance_id",
+      "TT_SPEC_SESSION_MANSION_NIGHTMARE": "raid_instance_id -> source_session_instance_id"
+    },
+    "mansion_additional_bound_fields": [
+      "rotation_snapshot_id",
+      "quadrant",
+      "difficulty"
+    ],
+    "candidate_member_status": "active",
+    "member_binding_rule": "只有来源封套中 actor_id、actor_lifecycle_id、source_membership_snapshot_id 与权威冻结快照一致且 source_member_status 为 active 的角色，才可形成无奖励输入候选；left、旁观、未冻结、旧生命周期、伪造成员或任何失败路径均不得形成候选。",
+    "atomic_binding_rule": "authority_proof_ref 所指的来源完成事实与 required_bound_fields、星宿附加字段及相应会话路由必须由同一次权威解析原子绑定；不得把一张已接受的完成收据与另一 revision、成员快照、成员状态、会话路由或轮换快照拼接。",
+    "replay_mutation_rule": "同一 (actor_id, event_id) 的已接受来源结果只能返回同一封套；任何已绑定字段或星宿附加字段漂移均拒绝，不得创建第二个候选、资格或经济副作用。",
+    "normal_completion_cleanup_rule": "正常天庭完成在后续 cleanup_ack 失败、延迟或重放后仍保留为来源完成事实；这不自动产生经济收据。错误实例、epoch、revision 或 cleanup_token 不能替换来源封套或解除其他会话锁。",
+    "non_economic_boundary": "本封套不是实际进度键、资格 ID、经济收据或结算请求；source_profile、reward_slot_key、owner、roll、保底、XP、材料、货币与全部奖励值仍为 null/deferred。"
   },
   "logical_progression": {
     "spec_id": "TT_SPEC_TIANTING_LOGICAL_PROGRESSION",

@@ -388,6 +388,7 @@ try {
     'hard_boundaries',
     'semantic_identity_policy',
     'receipt_and_idempotency_contract',
+    'economy_v2_handoff_source_evidence_contract',
     'logical_progression',
     'entry_contract',
     'mainline_final_session',
@@ -419,6 +420,9 @@ try {
   Assert-Equal $AuthoritySources.tianting_content '../tianting-content-expansion-contract.json' 'authority source content contract'
   Assert-Equal $AuthoritySources.difu_cross_chapter_interface '../../地府篇前置接口包/cross-chapter-interface.json' 'authority source Difu cross-chapter contract'
   Assert-Equal $AuthoritySources.difu_team_recovery_semantics '../../地府篇前置接口包/cross-chapter-interface.json' 'authority source Difu recovery contract'
+  Assert-Equal $AuthoritySources.economy_v2_authority_receipt_input_handoff '../../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json' 'authority source economy-v2 handoff contract'
+  Assert-Condition ([string]$AuthoritySources.economy_v2_authority_receipt_input_handoff_rule -match 'null/deferred') 'authority economy-v2 handoff keeps economic values deferred'
+  Assert-Condition ([string]$AuthoritySources.economy_v2_authority_receipt_input_handoff_rule -match '不能创建结算请求') 'authority economy-v2 handoff cannot create settlement request'
   Assert-Condition ([string]$AuthoritySources.rule -match '不读取、写入或新增既有地府进度键的消费者') 'authority source rule preserves protected Difu-key boundary'
 
   $AuthorityBoundaries = $Authority.hard_boundaries
@@ -435,6 +439,7 @@ try {
   Assert-Null $AuthorityBoundaries.party_cap.runtime_key 'authority party-cap runtime key'
   Assert-Equal $AuthorityBoundaries.economy_runtime_status 'accepted-design-reference-runtime-not-integrated' 'authority economy runtime status'
   Assert-Condition ([string]$AuthorityBoundaries.economy_rule -match '不授予、扣除、计算或承诺') 'authority economy rule forbids issuance'
+  Assert-Condition ([string]$AuthorityBoundaries.economy_rule -match '不能变成结算请求') 'authority logical receipts cannot become settlement requests'
   Assert-Condition ([string]$AuthorityBoundaries.runtime_asset_rule -match '均为 null') 'authority runtime asset rule keeps all runtime keys null'
 
   $SemanticIdentity = $Authority.semantic_identity_policy
@@ -458,6 +463,28 @@ try {
   Assert-Condition ([string]$AuthorityReceipt.event_id_rule -match '客户端自填') 'authority receipt rejects client event ids'
   Assert-Condition ([string]$AuthorityReceipt.replay_result -match '不得重复写逻辑进度') 'authority receipt replay has no duplicate write'
   Assert-Condition ([string]$AuthorityReceipt.normal_completion_persistence_rule -match '不得回滚') 'authority completion survives cleanup replay'
+
+  $AuthorityHandoffEvidence = $Authority.economy_v2_handoff_source_evidence_contract
+  $HandoffEvidenceFields = @('actor_id', 'actor_lifecycle_id', 'event_id', 'producer_spec_id', 'completed_tick', 'authority_proof_ref', 'schema_version', 'source_session_spec_id', 'source_session_instance_id', 'source_session_epoch', 'source_session_revision', 'source_membership_snapshot_id', 'source_member_status')
+  Assert-Equal $AuthorityHandoffEvidence.spec_id 'TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE' 'authority economy handoff source evidence spec id'
+  Assert-Equal $AuthorityHandoffEvidence.decision_status 'offline_design' 'authority economy handoff source evidence status'
+  Assert-Null $AuthorityHandoffEvidence.runtime_key 'authority economy handoff source evidence runtime key'
+  Assert-Equal $AuthorityHandoffEvidence.source_completion_receipt_contract_spec_id 'TT_SPEC_TIANTING_COMPLETION_RECEIPT_IDEMPOTENCY' 'authority economy handoff source receipt contract'
+  Assert-Equal $AuthorityHandoffEvidence.record_scope 'character_completion_input_candidate' 'authority economy handoff source evidence scope'
+  Assert-Condition ([string]$AuthorityHandoffEvidence.only_issuer -match 'future_authority_resolver') 'authority economy handoff source evidence issuer'
+  Assert-Condition ([string]$AuthorityHandoffEvidence.caller_input_rule -match '不得构造') 'authority economy handoff source evidence rejects caller construction'
+  Assert-ExactArray $AuthorityHandoffEvidence.required_bound_fields $HandoffEvidenceFields 'authority economy handoff source evidence fields'
+  Assert-Equal $AuthorityHandoffEvidence.session_route_instance_normalization.TT_SPEC_SESSION_LINGXIAO_MAINLINE 'session_instance_id -> source_session_instance_id' 'authority handoff mainline instance normalization'
+  Assert-Equal $AuthorityHandoffEvidence.session_route_instance_normalization.TT_SPEC_SESSION_SEVEN_STAR 'session_instance_id -> source_session_instance_id' 'authority handoff seven-star instance normalization'
+  Assert-Equal $AuthorityHandoffEvidence.session_route_instance_normalization.TT_SPEC_SESSION_MANSION_NORMAL 'raid_instance_id -> source_session_instance_id' 'authority handoff normal mansion instance normalization'
+  Assert-Equal $AuthorityHandoffEvidence.session_route_instance_normalization.TT_SPEC_SESSION_MANSION_NIGHTMARE 'raid_instance_id -> source_session_instance_id' 'authority handoff nightmare mansion instance normalization'
+  Assert-ExactArray $AuthorityHandoffEvidence.mansion_additional_bound_fields @('rotation_snapshot_id', 'quadrant', 'difficulty') 'authority handoff mansion additional evidence fields'
+  Assert-Equal $AuthorityHandoffEvidence.candidate_member_status 'active' 'authority handoff candidate member status'
+  Assert-Condition ([string]$AuthorityHandoffEvidence.member_binding_rule -match 'source_member_status 为 active') 'authority handoff active member binding'
+  Assert-Condition ([string]$AuthorityHandoffEvidence.atomic_binding_rule -match '原子绑定') 'authority handoff atomic evidence binding'
+  Assert-Condition ([string]$AuthorityHandoffEvidence.replay_mutation_rule -match '漂移均拒绝') 'authority handoff evidence replay mutation rejection'
+  Assert-Condition ([string]$AuthorityHandoffEvidence.normal_completion_cleanup_rule -match '不自动产生经济收据') 'authority handoff cleanup cannot create economic receipt'
+  Assert-Condition ([string]$AuthorityHandoffEvidence.non_economic_boundary -match 'null/deferred') 'authority handoff source evidence keeps economic values deferred'
   Assert-Null $AuthorityReceipt.runtime_key 'authority receipt runtime key'
 
   $LogicalProgression = $Authority.logical_progression
@@ -972,7 +999,7 @@ try {
     Assert-Null $Node.runtime_key "contract runtime key: $($Node.spec_id)"
   }
 
-  $RequiredDesignTop = @('version', 'project', 'sourceMaterials', 'worldview', 'playerExperience', 'coreLoop', 'sessionFlow', 'systems', 'content', 'mvp', 'handoffs', 'risks', 'unresolved', 'acceptanceCriteria', 'crossChapterBoundary', 'towerFirstCycleContract', 'contentExpansionContract', 'authorityProgressionAndInstanceContract')
+  $RequiredDesignTop = @('version', 'project', 'sourceMaterials', 'worldview', 'playerExperience', 'coreLoop', 'sessionFlow', 'systems', 'content', 'mvp', 'handoffs', 'risks', 'unresolved', 'acceptanceCriteria', 'crossChapterBoundary', 'towerFirstCycleContract', 'contentExpansionContract', 'authorityProgressionAndInstanceContract', 'economyV2AuthorityReceiptInputHandoff')
   foreach ($Name in $RequiredDesignTop) {
     Assert-Condition (Test-HasProperty $Design $Name) "design top-level field: $Name"
   }
@@ -998,6 +1025,15 @@ try {
   Assert-Equal $Design.authorityProgressionAndInstanceContract.status 'offline_design' 'design authority progression and instance status'
   Assert-Null $Design.authorityProgressionAndInstanceContract.runtimeKey 'design authority progression and instance runtime key'
   Assert-Equal $Design.authorityProgressionAndInstanceContract.productionGate 'closed' 'design authority progression and instance production gate'
+
+  Assert-Equal $Design.economyV2AuthorityReceiptInputHandoff.artifact '../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json' 'design economy-v2 authority receipt input handoff artifact'
+  Assert-Equal $Design.economyV2AuthorityReceiptInputHandoff.status 'offline_design_handoff' 'design economy-v2 authority receipt input handoff status'
+  Assert-Null $Design.economyV2AuthorityReceiptInputHandoff.runtimeKey 'design economy-v2 authority receipt input handoff runtime key'
+  Assert-Equal $Design.economyV2AuthorityReceiptInputHandoff.productionGate 'closed' 'design economy-v2 authority receipt input handoff production gate'
+  Assert-Null $Design.economyV2AuthorityReceiptInputHandoff.settlementRequest 'design economy-v2 authority receipt input handoff settlement request'
+  Assert-Equal $Design.economyV2AuthorityReceiptInputHandoff.economicValues 'null_or_deferred' 'design economy-v2 authority receipt input handoff economic values'
+  Assert-Equal $Design.economyV2AuthorityReceiptInputHandoff.sourceEvidenceEnvelopeSpecId 'TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE' 'design economy-v2 authority receipt input handoff source evidence spec id'
+  Assert-Condition ($Design.economyV2AuthorityReceiptInputHandoff.directCallerInput -eq $false) 'design economy-v2 authority receipt input handoff rejects direct caller input'
 
   foreach ($CollectionName in @('sourceMaterials', 'sessionFlow', 'systems', 'risks', 'unresolved', 'acceptanceCriteria')) {
     $Collection = $Design.PSObject.Properties[$CollectionName].Value
