@@ -3,7 +3,8 @@
   "package_status": "mixed-decision-draft-and-accepted-design-baseline",
   "package_scope": "growth-numerics-and-economy",
   "current_accepted_resource_table_version": "economy-v2",
-  "baseline_policy": "Only accepted-baseline items belonging to current_accepted_resource_table_version are inherited design facts. Superseded accepted tables remain immutable historical evidence only. Proposals, conflicts, deferred items, and whitebox candidates are not effective data. Current accepted design data remains non-production until its independent runtime gate is opened.",
+  "current_future_route_overlay_version": "economy-v3",
+  "baseline_policy": "Only accepted-baseline items belonging to current_accepted_resource_table_version are inherited full-resource-table design facts. The separately registered current future-route overlay may change only its explicit, versioned, non-runtime route scope; it cannot silently mutate economy-v2, historical receipts, or any unlisted economic field. Superseded accepted tables remain immutable historical evidence only. Proposals, conflicts, deferred items, and whitebox candidates are not effective data. Current accepted design data remains non-production until its independent runtime gate is opened.",
   "adopted_resource_tables": [
     {
       "resource_table_version": "economy-v1",
@@ -42,6 +43,23 @@
         "ECO-DROP-V2-001",
         "ECO-TOWER-V2-001"
       ],
+      "runtime_handoff": false,
+      "production_gate": "closed"
+    }
+  ],
+  "adopted_route_overlays": [
+    {
+      "resource_table_version": "economy-v3",
+      "path": "tables/economy-v3-resource-table.json",
+      "content_hash_sha256": "FE1707853FB0F51FABBEFA7917E7D8F9E370D07916DC0ADFD91420FFA4067F4C",
+      "base_resource_table_version": "economy-v2",
+      "base_content_hash_sha256": "3288BD9CD1BFBB516DB4808EF002C45FECCF5F1C7F4C80499DB81E31B2F84EAE",
+      "decision_id": "ECO-XP-ROUTE-V3-001",
+      "decision_status": "accepted-baseline",
+      "package_status": "offline-design-only-runtime-not-integrated",
+      "current": true,
+      "lifecycle_status": "current-future-route-overlay",
+      "scope": "future-huaguoshan-lv1-lv20-route-xp-and-semantic-bindings-only",
       "runtime_handoff": false,
       "production_gate": "closed"
     }
@@ -651,6 +669,20 @@
       "current": true,
       "supersedes_decision_id": "ECO-TOWER-V1-001",
       "blocks": ["authoritative tower run and weekly-cap store", "tower exchange catalog and live validation"],
+      "runtime_handoff": false
+    },
+    {
+      "decision_id": "ECO-XP-ROUTE-V3-001",
+      "domain": "experience-route-continuity",
+      "title": "economy-v3 花果山路线 XP 与语义覆盖",
+      "decision_status": "accepted-baseline",
+      "claim": "在保留 economy-v2 不可变、历史收据不重算、Lv1-Lv20 总经验 9,485 与 55 分钟锚点不变的前提下，未来花果山路线须在可选鹏魔王与非战斗裂口发现之间恰选其一；二者不得双领，且鹏魔王永远不是章节门槛。覆盖层还仅为未来首通冻结 XP_PEACH 与 XP_CAVE 的必经公共主线语义，不改写其 v2 历史分类、收据或其他经济字段。",
+      "effective_value": {"base_resource_table_version": "economy-v2", "overlay_table_path": "tables/economy-v3-resource-table.json", "route_choice_id": "HG_ROUTE_PENG_OR_CRACK_V3", "scope": "future-huaguoshan-lv1-lv20-route-xp-and-semantic-bindings-only", "future_route_semantic_binding_source_keys": ["XP_PEACH", "XP_CAVE"], "historical_receipt_mutation": false},
+      "source_refs": ["docs/物编/成长数值与经济裁决包/tables/economy-v3-resource-table.json", "docs/物编/成长数值与经济裁决包/three-chapter-growth-lineage-contract.json", "docs/物编/地府篇前置接口包/huaguoshan-mainline-closure-proof-contract.json", "docs/07-花果山篇副本与掉落设计.md"],
+      "adoption_ref": "THREE-CHAPTER-CONTINUITY-20260724",
+      "effective_scope": "future-huaguoshan-route-design-overlay-runtime-not-integrated",
+      "current": true,
+      "blocks": ["authoritative progression compiler", "route-choice authority proof", "live cadence validation"],
       "runtime_handoff": false
     }
   ]

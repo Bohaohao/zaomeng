@@ -15,7 +15,9 @@
     "docs/02-公共野外与副本规则.md",
     "docs/04-v1.0首发内容范围.md",
     "docs/物编/15-花果山遭遇与BOSS战斗契约.md",
-    "docs/物编/18-成长系统进度、掉落与长期目标契约.md"
+    "docs/物编/18-成长系统进度、掉落与长期目标契约.md",
+    "docs/物编/地府篇前置接口包/huaguoshan-mainline-closure-proof-contract.json",
+    "docs/物编/地府篇前置接口包/chapter-entry-contract.json"
   ],
   "worldview": {
     "theme": "地府篇开始前的轮回、命册与跨篇回访接口准备",
@@ -23,6 +25,7 @@
       "DF_E_ZHUANLUN_HALL 是 team_instance。",
       "DF_E_YANLUO_HALL 是非团队地府常规最终副本。",
       "DF_PROGRESS_YANLUO_HALL_CLEARED 仅由受信任阎罗殿完成事件按角色幂等写入。",
+      "花果山→地府只消费同角色 Lv20 与不透明常规收束证明；该证明唯一来自鲨魔王逐人有效参与后的熔脉裂口发现，来源生命周期仅作不可变审计，当前入章请求生命周期独立受信任校验，不要求两者相等；可选、团队、稀有或队友结果均不能替代。",
       "HG_E_DRAGON_REVERSE_TIDE 只在 Lv38 且可信查询到该键时开放。",
       "本包不生成 Y3 资产、地图、掉落或数值。"
     ],
@@ -124,12 +127,13 @@
     "maps": ["仅引用 chapter_initial_spawn 这一抽象角色；不定义地图资源。"],
     "ui": ["未来 UI 只能显示权威查询结果；本包不生成 UI。"],
     "economy": ["所有奖励、掉落、概率、保底、货币与物品值均为 deferred/null。"],
-    "progression": ["DF_PROGRESS_YANLUO_HALL_CLEARED：角色级、权威、completion event 幂等。"],
+    "progression": ["HG_SPEC_MAINLINE_CLOSURE_SUCCESS_V1：花果山 spec-local、鲨魔→裂口唯一生产者、同角色幂等的不透明交接证明；来源生命周期不可变审计，当前入章请求生命周期独立受信任校验；DF_SPEC_CHAPTER_ENTERED_V1 只消费该证明与 Lv20。", "DF_PROGRESS_YANLUO_HALL_CLEARED：角色级、权威、completion event 幂等。"],
     "monetization": ["不定义商业字段；不得绕过解锁条件。"]
   },
   "mvp": {
     "mustHave": [
       "固定阎罗殿、转轮殿与龙宫逆潮的键和角色。",
+      "固定花果山鲨魔逐人参与→熔脉裂口→唯一常规收束证明→地府 Lv20 入章的生产者/消费者边界。",
       "完成收据、幂等写入、可信查询和拒绝旧键的接口协议。",
       "团队死亡、全灭、超时与 cleanup_ack 的回传边界。",
       "严格 JSON 校验与负例。"
@@ -164,6 +168,7 @@
   ],
   "acceptanceCriteria": [
     "cross-chapter-interface.json 严格固定 DF_E_ZHUANLUN_HALL、DF_E_YANLUO_HALL、DF_PROGRESS_YANLUO_HALL_CLEARED 与 HG_E_DRAGON_REVERSE_TIDE。",
+    "HG_SPEC_MAINLINE_CLOSURE_SUCCESS_V1 仅由同一角色、同一来源生命周期内的未来必经公共路线、HG_E_SHARK_KING 逐人有效参与与熔脉裂口发现按序生产；entry 合同只消费同角色 Lv20 与该不透明证明，来源生命周期审计不等同当前入章请求生命周期。",
     "只有角色等级至少 38 且受信任查询命中完成键时，逆潮接口才可放行。",
     "完成键按 actor_id 与 event_id 幂等，非阎罗殿、客户端、队友或世界状态不可写入。",
     "成员死亡在 cleanup_ack 前不可重入；全灭不重复回传死者；超时只回传 active 成员。",

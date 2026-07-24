@@ -22,12 +22,12 @@
       "decision_id": "ECO-BASE-001",
       "decision_status": "accepted-baseline",
       "source_refs": [
-        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:23-50",
-        "docs/物编/成长数值与经济裁决包/decision-register.json:8-37"
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:21-59",
+        "docs/物编/成长数值与经济裁决包/decision-register.json:92-127"
       ],
       "source_file_hashes": [
-        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "561397F9DC846A18B14AF54048127CEEEDF90154D6C700ECCAF43687C3049592"},
-        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "4A065268B609445EC92583B8C8B1DCB066AB5BF7F3B976FFAF5BC8A397AECBDE"}
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "B9C2D1BCE7EDAC6AA347851A24963A9A0BCADC2AE369393A20F1B364CA42460F"},
+        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "42A09A8934BC6D181E34BF7B252C448A81306A6D7D75317BA105F233B86D006A"}
       ],
       "permitted_use": [
         "Lv60 上限、三篇等级段和关键等级检查点的边界校验",
@@ -45,11 +45,11 @@
       "decision_status": "deferred",
       "source_refs": [
         "docs/物编/成长数值与经济裁决包/tables/experience-progression.json:18-81",
-        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:159-172,214-222"
+        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:155-181,214-228"
       ],
       "source_file_hashes": [
         {"path": "docs/物编/成长数值与经济裁决包/tables/experience-progression.json", "sha256": "E0141B3C1FCEFCD49C2BD11B20DB742E5D95CD04EFE1C19CF52675E8B1528330"},
-        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "561397F9DC846A18B14AF54048127CEEEDF90154D6C700ECCAF43687C3049592"}
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "B9C2D1BCE7EDAC6AA347851A24963A9A0BCADC2AE369393A20F1B364CA42460F"}
       ],
       "permitted_use": [
         "定义经验表必须拥有的字段、收据和可追溯性",
@@ -93,7 +93,7 @@
         "docs/物编/成长数值与经济裁决包/tables/item-growth.json"
       ],
       "source_file_hashes": [
-        {"path": "docs/物编/19-装备、法宝、宠物与材料物编规格.md", "sha256": "78E50C3C036BE692855B0920C228DB520FA7C378FE10367158AF3E778028970A"},
+        {"path": "docs/物编/19-装备、法宝、宠物与材料物编规格.md", "sha256": "AC46752AE7D4CCADE11E59E0FF6B112A34C9D2D1A8B7BC0661A20537204429D4"},
         {"path": "docs/物编/成长数值与经济裁决包/tables/item-growth.json", "sha256": "A8D0806BCE822482564723DB6F4B574B923D25614A6934778D997BBCB655B3FF"}
       ],
       "permitted_use": [
@@ -111,11 +111,11 @@
       "decision_id": "ECO-LEDGER-001",
       "decision_status": "proposal",
       "source_refs": [
-        "docs/物编/成长数值与经济裁决包/decision-register.json:129-158",
+        "docs/物编/成长数值与经济裁决包/decision-register.json:194-238",
         "docs/物编/成长数值与经济裁决包/tables/currency-ledger.json:1-98"
       ],
       "source_file_hashes": [
-        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "4A065268B609445EC92583B8C8B1DCB066AB5BF7F3B976FFAF5BC8A397AECBDE"},
+        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "42A09A8934BC6D181E34BF7B252C448A81306A6D7D75317BA105F233B86D006A"},
         {"path": "docs/物编/成长数值与经济裁决包/tables/currency-ledger.json", "sha256": "62AB827A5545213412DE624E183A83A09AC9C0CBCC3D8E98315D2ED16A2C6A23"}
       ],
       "permitted_use": [
@@ -138,7 +138,7 @@
       ],
       "source_file_hashes": [
         {"path": "docs/物编/成长数值与经济裁决包/tables/drop-and-pity.json", "sha256": "C2D0350D16C692E8E523AA81089C126F0C4585B1FED4435E2F9CFD5253429202"},
-        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "561397F9DC846A18B14AF54048127CEEEDF90154D6C700ECCAF43687C3049592"}
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "B9C2D1BCE7EDAC6AA347851A24963A9A0BCADC2AE369393A20F1B364CA42460F"}
       ],
       "permitted_use": [
         "保持荣誉、个人推进、参与箱、稀有资格、roll 和保底的分层采样",
@@ -157,12 +157,12 @@
       "source_refs": [
         "implementation/huaguoshan/preconstruction-manifest.json:93-96",
         "docs/08-花果山篇野外怪物与BOSS设计.md:311-320",
-        "docs/物编/成长数值与经济裁决包/decision-register.json:185-212"
+        "docs/物编/成长数值与经济裁决包/decision-register.json:273-297"
       ],
       "source_file_hashes": [
         {"path": "implementation/huaguoshan/preconstruction-manifest.json", "sha256": "221384CF0D343FDF850C3CCC054859D31F7725AE11EDFA291FFE27C6BF6569C1"},
-        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "5BF3723E50A21E3D12D81A946D038ABB626B925800100BF75B5B080C77564C76"},
-        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "4A065268B609445EC92583B8C8B1DCB066AB5BF7F3B976FFAF5BC8A397AECBDE"}
+        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "1C9869EA94656A9B91D97463C0E3E415FCF967AAC1160D152C532C423CBBD711"},
+        {"path": "docs/物编/成长数值与经济裁决包/decision-register.json", "sha256": "42A09A8934BC6D181E34BF7B252C448A81306A6D7D75317BA105F233B86D006A"}
       ],
       "permitted_use": [
         "建立资格证据采样字段",
@@ -181,8 +181,8 @@
         "docs/物编/18-成长系统进度、掉落与长期目标契约.md:172,221"
       ],
       "source_file_hashes": [
-        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "5BF3723E50A21E3D12D81A946D038ABB626B925800100BF75B5B080C77564C76"},
-        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "561397F9DC846A18B14AF54048127CEEEDF90154D6C700ECCAF43687C3049592"}
+        {"path": "docs/08-花果山篇野外怪物与BOSS设计.md", "sha256": "1C9869EA94656A9B91D97463C0E3E415FCF967AAC1160D152C532C423CBBD711"},
+        {"path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md", "sha256": "B9C2D1BCE7EDAC6AA347851A24963A9A0BCADC2AE369393A20F1B364CA42460F"}
       ],
       "permitted_use": [
         "将 Lv8 路线所在的 10-15 分钟内容密度窗口作为软性审阅锚点",
@@ -197,10 +197,10 @@
       "source_id": "SRC-OX-RETRY-001",
       "source_kind": "documented-combat-reference",
       "source_refs": [
-        "docs/07-花果山篇副本与掉落设计.md:195-223"
+        "docs/07-花果山篇副本与掉落设计.md:36-46"
       ],
       "source_file_hashes": [
-        {"path": "docs/07-花果山篇副本与掉落设计.md", "sha256": "AC132E972DD344A81C6EABF676CC2460A467776FC9484CB72600ECA8924F0EBF"}
+        {"path": "docs/07-花果山篇副本与掉落设计.md", "sha256": "57E9FFBB53656B78387D0D6672661B760B26208EAEBFBA6D9B70E78B9AED2E10"}
       ],
       "permitted_use": [
         "观察失败循环的既有战斗压力和时间窗口",

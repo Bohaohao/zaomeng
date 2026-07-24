@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "package": "huaguoshan-mainline-closure-proof-contract",
+  "artifact_status": "non-production-interface-contract",
+  "status": "offline-interface-ready",
+  "production_gate": "closed",
+  "implementation_handoff": false,
+  "scope": {
+    "includes": [
+      "same_actor_shark_effective_participation_to_molten_rift_discovery_sequence",
+      "spec_local_huaguoshan_regular_mainline_closure_proof_issue_or_replay_only",
+      "unique_producer_boundary_for_difu_entry_handoff"
+    ],
+    "excludes": [
+      "actual_runtime_or_persistent_key_or_save_write",
+      "map_coordinate_y3_object_unit_skill_encounter_or_session_implementation",
+      "xp_drop_probability_pity_currency_item_reward_economy_receipt_or_value"
+    ]
+  },
+  "source_refs": [
+    {
+      "role": "worldview_master",
+      "path": "docs/10-项目统一世界观总纲.md"
+    },
+    {
+      "role": "huaguoshan_route",
+      "path": "docs/07-花果山篇副本与掉落设计.md"
+    },
+    {
+      "role": "huaguoshan_encounter_contract",
+      "path": "docs/物编/15-花果山遭遇与BOSS战斗契约.md"
+    },
+    {
+      "role": "growth_route_overlay",
+      "path": "docs/物编/成长数值与经济裁决包/tables/economy-v3-resource-table.json"
+    },
+    {
+      "role": "difu_entry_consumer",
+      "path": "docs/物编/地府篇前置接口包/chapter-entry-contract.json"
+    }
+  ],
+  "semantic_identifiers": {
+    "identifier_scope": "spec_local_semantic_only",
+    "shark_encounter_key": "HG_E_SHARK_KING",
+    "shark_participation_evidence": "HG_SPEC_SHARK_PERSONAL_EFFECTIVE_PARTICIPATION_V1",
+    "molten_rift_discovery_event": "HG_SPEC_MOLTEN_RIFT_DISCOVERY_V1",
+    "huaguoshan_mainline_closure_event": "HG_SPEC_MAINLINE_CLOSURE_SUCCESS_V1",
+    "semantic_identifier_not_runtime_key": true,
+    "actual_runtime_event_key": null,
+    "actual_runtime_progression_key": null,
+    "actual_storage_key": null
+  },
+  "producer_authorization": {
+    "unique_producer": true,
+    "producer_authority": "trusted_huaguoshan_chapter_authority",
+    "proof_scope": "non_team_per_actor_mainline_closure_success",
+    "same_actor_required": true,
+    "same_actor_lifecycle_required": true,
+    "same_actor_lifecycle_scope": "source_proof_issuance_evidence_only",
+    "ordered_authority_evidence": [
+      {
+        "order": 1,
+        "semantic_id": "HG_SPEC_FUTURE_REQUIRED_PUBLIC_ROUTE_V3",
+        "meaning": "The same actor completed the future Huaguoshan mandatory public route, including Peach Grove and Bat Cave public-mainline semantics, without treating optional content as a substitute.",
+        "source_profile_mapping": null,
+        "runtime_mapping": null
+      },
+      {
+        "order": 2,
+        "semantic_id": "HG_SPEC_SHARK_PERSONAL_EFFECTIVE_PARTICIPATION_V1",
+        "encounter_key": "HG_E_SHARK_KING",
+        "meaning": "Trusted per-actor progression_participation for the Shark King encounter; Jiao participation alone is insufficient.",
+        "source_profile_mapping": null,
+        "runtime_mapping": null
+      },
+      {
+        "order": 3,
+        "semantic_id": "HG_SPEC_MOLTEN_RIFT_DISCOVERY_V1",
+        "meaning": "The same actor discovers the molten rift after Shark participation; this is the only narrative bridge into the Fire Mountain seal outpost and dream-rift old battlefield.",
+        "source_profile_mapping": null,
+        "runtime_mapping": null
+      }
+    ],
+    "route_choice_interlock": {
+      "choice_id": "HG_ROUTE_PENG_OR_CRACK_V3",
+      "narrative_discovery_event": "HG_SPEC_MOLTEN_RIFT_DISCOVERY_V1",
+      "crack_xp_source_key": "XP_HG_CRACK_DISCOVERY",
+      "peng_xp_source_key": "XP_PENG",
+      "rule": "Molten-rift discovery is required for regular-mainline closure in either route choice. It may carry XP_HG_CRACK_DISCOVERY only when the future route selected the crack branch; a Peng selection still requires discovery but must not emit or replay the crack XP key.",
+      "source_profile_mapping": null,
+      "runtime_mapping": null
+    },
+    "forbidden_substitutes": [
+      "HG_E_JIAO_KING participation alone",
+      "XP_PENG or Peng Demon King clear",
+      "HG_E_DRAGON_OLD_TIDE completion",
+      "HG_E_OX_BATTLEFIELD team completion",
+      "teammate leader party or client-reported result",
+      "rare award collection checklist or tower progress"
+    ]
+  },
+  "logical_proof_contract": {
+    "proof_semantic_id": "HG_SPEC_MAINLINE_CLOSURE_SUCCESS_V1",
+    "write_authority": "trusted_huaguoshan_chapter_authority",
+    "actor_lifecycle_claim_semantic": "immutable_source_lifecycle_audit",
+    "downstream_current_lifecycle_binding": "source_claim_audit_only_not_equal_to_current_entry_request",
+    "idempotency_key_fields": [
+      "actor_id",
+      "event_id"
+    ],
+    "required_claim_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "event_id",
+      "source_event_semantic_id",
+      "opaque_handoff_proof_ref",
+      "completed_tick",
+      "authority_proof_ref",
+      "schema_version"
+    ],
+    "first_accept_outcome": "issue_spec_local_opaque_handoff_proof_only",
+    "exact_replay_outcome": "return_existing_spec_local_opaque_handoff_proof_without_second_issue",
+    "actual_runtime_proof_key": null,
+    "actual_storage_key": null
+  },
+  "rejection_contract": {
+    "foreign_actor": "denied",
+    "stale_or_mismatched_actor_lifecycle": "denied",
+    "missing_invalid_or_foreign_authority_evidence": "denied",
+    "shark_participation_missing_or_not_personal": "denied",
+    "molten_rift_discovery_missing_or_out_of_order": "denied",
+    "jiao_only_peng_dragon_ox_team_rare_collection_or_tower_substitute": "denied",
+    "client_reported_progress_or_proof": "denied",
+    "replay_with_mismatched_lifecycle_or_evidence": "denied",
+    "teammate_leader_or_party_result": "denied"
+  },
+  "evidence_protocol": {
+    "artifact_status": "non-production",
+    "evidence_only": true,
+    "permitted_outcomes": [
+      "issue_spec_local_opaque_handoff_proof_only",
+      "return_existing_spec_local_opaque_handoff_proof_without_second_issue"
+    ],
+    "forbidden_outcomes": [
+      "grant_reward",
+      "grant_currency",
+      "grant_item",
+      "grant_xp",
+      "set_probability",
+      "set_pity",
+      "open_map_session",
+      "write_runtime_key"
+    ],
+    "production_value": null,
+    "candidate_value": null
+  },
+  "deferred": {
+    "runtime_event_key": null,
+    "runtime_progression_key": null,
+    "persistent_storage_key": null,
+    "map_key": null,
+    "map_id": null,
+    "map_coordinates": null,
+    "y3_object_ids": null,
+    "reward_values": null,
+    "xp_values": null,
+    "currency_values": null,
+    "item_values": null,
+    "drop_tables": null,
+    "probability_values": null,
+    "pity_values": null,
+    "economy_receipt": null
+  },
+  "validation_contract": {
+    "validator": "validate-huaguoshan-mainline-closure-proof-contract.ps1",
+    "strict_schema": true,
+    "source_refs_must_resolve": true,
+    "negative_tests_required": true,
+    "production_value": null,
+    "candidate_value": null
+  }
+}

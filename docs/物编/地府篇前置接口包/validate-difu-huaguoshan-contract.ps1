@@ -521,3 +521,4 @@ if (-not $SkipNegativeTests -and $null -ne $Contract -and $null -ne $Manifest -a
     negative_tests = $NegativeResults
 } | ConvertTo-Json -Depth 12
 if ($Errors.Count -gt 0) { exit 1 }
+$global:LASTEXITCODE = 0

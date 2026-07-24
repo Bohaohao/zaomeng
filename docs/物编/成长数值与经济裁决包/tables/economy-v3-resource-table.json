@@ -1,0 +1,201 @@
+{
+  "version": 1,
+  "table": "economy-v3-resource-table-overlay",
+  "resource_table_version": "economy-v3",
+  "kind": "versioned_delta_overlay",
+  "decision_id": "ECO-XP-ROUTE-V3-001",
+  "decision_status": "accepted-baseline",
+  "package_status": "offline-design-only-runtime-not-integrated",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "inherits": {
+    "resource_table_version": "economy-v2",
+    "path": "tables/economy-v2-resource-table.json",
+    "content_hash_sha256": "3288BD9CD1BFBB516DB4808EF002C45FECCF5F1C7F4C80499DB81E31B2F84EAE",
+    "inheritance_rule": "All economy-v2 fields are inherited unchanged unless this explicit overlay names a Huaguoshan future-route XP delta or a non-executable future-route semantic binding."
+  },
+  "scope": {
+    "included": "Only the future Huaguoshan Lv1-Lv20 design-route XP repair that removes an optional Peng Demon King clear from the mandatory progression total, plus the non-executable future-route semantics that bind XP_PEACH and XP_CAVE to mandatory public mainline nodes.",
+    "excluded": [
+      "currency, material, drop, pity, qualification, receipt, tower, equipment, artifact, source-profile, and runtime changes",
+      "any mutation of economy-v2",
+      "any recalculation, migration, or rewrite of a historical receipt"
+    ],
+    "historical_receipt_rule": "A receipt created under economy-v2 remains bound to economy-v2. This overlay may only be selected by a later separately reviewed authoritative integration for a new future event."
+  },
+  "preserved_route_invariants": {
+    "huaguoshan_total_xp": 9485,
+    "huaguoshan_target_active_minutes_at_cap": 55,
+    "pre_clear_cumulative_xp": 8340,
+    "pre_clear_level": 19,
+    "final_cumulative_xp": 9485,
+    "final_level": 20,
+    "no_legacy_receipt_recalculation": true
+  },
+  "progression_delta": {
+    "row_overrides": [
+      {
+        "source_key": "XP_EASTSEA",
+        "base_xp": 1490,
+        "replaces_economy_v2_base_xp": 900,
+        "reason": "Moves the 590 XP removed from the final chapter-clear row into the mandatory East Sea route so either fork reaches the same pre-clear anchor."
+      },
+      {
+        "source_key": "XP_CHAPTER_CLEAR",
+        "base_xp": 1145,
+        "replaces_economy_v2_base_xp": 1735,
+        "reason": "Keeps the Lv20 total unchanged after the East Sea route repair."
+      }
+    ],
+    "new_design_route_rows": [
+      {
+        "source_key": "XP_HG_CRACK_DISCOVERY",
+        "base_xp": 500,
+        "source_kind": "main_quest",
+        "source_level": 14,
+        "design_route_role": "non-combat discovery branch that replaces the Peng Demon King XP when the player declines that optional boss",
+        "runtime_mapping": null
+      }
+    ],
+    "future_route_semantic_bindings": [
+      {
+        "source_key": "XP_PEACH",
+        "historical_economy_v2_source_kind": "side_quest",
+        "future_route_node_id": "HG_PEACH_GROVE_PUBLIC_MAINLINE",
+        "future_route_node_name": "桃林公共主路线",
+        "future_route_semantics": "mandatory_public_mainline",
+        "required_for_regular_mainline_closure": true,
+        "creates_solo_instance": false,
+        "is_optional_content": false,
+        "forbidden_substitutes": [
+          "HG_E_DRAGON_OLD_TIDE",
+          "team_instance",
+          "rare_award",
+          "tower"
+        ],
+        "source_profile_mapping": null,
+        "runtime_mapping": null,
+        "historical_receipt_mutation": false
+      },
+      {
+        "source_key": "XP_CAVE",
+        "historical_economy_v2_source_kind": "solo_instance",
+        "future_route_node_id": "HG_BAT_CAVE_PUBLIC_MAINLINE",
+        "future_route_node_name": "蝙蝠窟公共主路线",
+        "future_route_semantics": "mandatory_public_mainline",
+        "required_for_regular_mainline_closure": true,
+        "creates_solo_instance": false,
+        "is_optional_content": false,
+        "forbidden_substitutes": [
+          "HG_E_DRAGON_OLD_TIDE",
+          "team_instance",
+          "rare_award",
+          "tower"
+        ],
+        "source_profile_mapping": null,
+        "runtime_mapping": null,
+        "historical_receipt_mutation": false
+      }
+    ],
+    "route_choice": {
+      "choice_id": "HG_ROUTE_PENG_OR_CRACK_V3",
+      "selection_cardinality": {
+        "minimum": 1,
+        "maximum": 1
+      },
+      "options": [
+        {
+          "source_key": "XP_PENG",
+          "base_xp": 500,
+          "route_kind": "optional_boss",
+          "boss_is_mandatory": false
+        },
+        {
+          "source_key": "XP_HG_CRACK_DISCOVERY",
+          "base_xp": 500,
+          "route_kind": "non_combat_discovery",
+          "boss_is_mandatory": false
+        }
+      ],
+      "anti_double_claim": {
+        "prohibited_source_key_pairs": [
+          [
+            "XP_PENG",
+            "XP_HG_CRACK_DISCOVERY"
+          ]
+        ],
+        "rule": "One future route chooses exactly one branch. A design, adapter, or receipt plan that credits both branch keys for the same Huaguoshan route is invalid."
+      },
+      "no_boss_path_rule": "XP_HG_CRACK_DISCOVERY must remain available without defeating Peng Demon King; XP_PENG must never become a chapter-entry or chapter-clear prerequisite."
+    },
+    "ordered_route_segments": [
+      {
+        "segment_id": "before_choice",
+        "selection": "all_required",
+        "source_keys": [
+          "XP_INTRO",
+          "XP_MOUNTAIN",
+          "XP_WATERFALL",
+          "XP_MACAQUE",
+          "XP_PEACH",
+          "XP_CAVE",
+          "XP_SEVENSTAR"
+        ]
+      },
+      {
+        "segment_id": "peng_or_crack",
+        "selection": "exactly_one",
+        "choice_id": "HG_ROUTE_PENG_OR_CRACK_V3",
+        "source_keys": [
+          "XP_PENG",
+          "XP_HG_CRACK_DISCOVERY"
+        ]
+      },
+      {
+        "segment_id": "after_choice_before_clear",
+        "selection": "all_required",
+        "source_keys": [
+          "XP_EASTSEA",
+          "XP_JIAO",
+          "XP_SHARK"
+        ]
+      },
+      {
+        "segment_id": "chapter_clear",
+        "selection": "all_required",
+        "source_keys": [
+          "XP_CHAPTER_CLEAR"
+        ]
+      }
+    ],
+    "route_math": {
+      "before_choice_xp": 3950,
+      "exactly_one_choice_xp": 500,
+      "after_choice_before_clear_xp": 3890,
+      "pre_clear_xp": 8340,
+      "chapter_clear_xp": 1145,
+      "final_xp": 9485,
+      "formula": "before_choice_xp + exactly_one_choice_xp + after_choice_before_clear_xp = pre_clear_xp; pre_clear_xp + chapter_clear_xp = final_xp"
+    }
+  },
+  "non_production_boundary": {
+    "design_route_only": true,
+    "source_profile_mapping": null,
+    "actual_receipt_creation": false,
+    "actual_economic_execution": false,
+    "runtime_keys": null,
+    "implementation_rule": "This overlay is not a Y3 table, a live ledger instruction, a materializer input, or a source-profile allocation. A future integration must separately bind the immutable version/hash, route choice, authority evidence, and receipt semantics before any award can occur."
+  },
+  "validation_contract": {
+    "validator": "../validate-three-chapter-growth-continuity.ps1",
+    "must_verify": [
+      "economy-v2 file hash and inheritance version",
+      "only XP_EASTSEA and XP_CHAPTER_CLEAR are overridden",
+      "the new crack discovery row is the only new route row",
+      "XP_PEACH and XP_CAVE retain historical source kinds while gaining only explicit future mandatory-public-mainline semantics",
+      "Peng-or-crack has exactly-one selection and an explicit anti-double-claim rule",
+      "the two branch totals, Lv19 anchor, Lv20 anchor, and 55-minute anchor remain exact",
+      "runtime and economic execution remain disabled"
+    ]
+  }
+}

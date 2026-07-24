@@ -2,12 +2,16 @@
 
 ## 结果
 
-验证日期：`2026-07-21`
+最新验证日期：`2026-07-24`
+
+本报告保留 `2026-07-21` 的前置接口基线证据；本轮已在其上补验花果山常规收束证明的唯一生产者、地府入章消费者，以及“来源生命周期审计 / 当前请求生命周期独立可信校验”的重连边界。三篇综合终审见[三篇世界观、成长路线与阶段装备终审核验收报告](../../归档/物编施工/10-三篇世界观成长路线与装备法宝终审核验收报告.md)。
 
 | 检查 | 结果 | 证据 |
 |---|---|---|
 | JSON 解析 | 通过 | `cross-chapter-interface.json`、`design-spec.json` 均可由 PowerShell `ConvertFrom-Json` 解析。 |
 | 严格接口校验 | 通过 | `validate-underworld-preflight.ps1` 返回 `ok=true`、`0` errors，并通过 `7/7` 负例。 |
+| 花果山常规收束证明 | 通过 | `validate-huaguoshan-mainline-closure-proof-contract.ps1` 固定未来公共主线→鲨魔逐人有效参与→熔脉裂口的唯一生产者、来源生命周期仅限签发期证据，并通过 `10/10` 负例。 |
+| 花果山→地府入章 | 通过 | `validate-difu-chapter-entry-contract.ps1` 固定同角色 `Lv20`、不透明 proof、来源生命周期不可变审计与当前请求生命周期独立可信校验；可信重连可幂等重放，旧／伪造／跨角色请求被拒绝，负例 `26/26` 通过。 |
 | 负例：非空生产值 | 通过 | 向 `production_value` 注入 `1`，被 `non_null_nonproduction_value` 拒绝。 |
 | 负例：伪造 Y3 ID | 通过 | 注入 `y3_id`，被 `forbidden_production_field` 拒绝。 |
 | 负例：工作区外来源 | 通过 | 注入绝对来源， 被 `non_relative_source_ref` 拒绝。 |
@@ -15,12 +19,12 @@
 | 负例：离场复活/回传 | 通过 | 把 `left_behavior` 改为复活回传，被 `fixed_value_mismatch` 拒绝。 |
 | 负例：清理确认身份顺序 | 通过 | 改写 `raid_instance_id + session_epoch + cleanup_token` 身份字段顺序，被 `fixed_array_mismatch` 拒绝。 |
 | 负例：非写入者集合漂移 | 通过 | 将白骨秘境替换为 `DF_E_YANLUO_HALL`，被 `fixed_array_mismatch` 拒绝，保持阎罗殿的唯一写入者语义。 |
-| 地府—花果山执行式 Lua 合同校验 | 通过 | `validate-difu-huaguoshan-contract.ps1` 通过固定 canonical materializer 调用受控 Node/Fengari，对接口、花果山 manifest、地图绑定及唯一 canonical Lua 表字段做离线比对；`0` errors、`28/28` 镜像、固定合同与入口边界负例均通过。 |
+| 地府—花果山执行式 Lua 合同校验 | 通过 | `validate-difu-huaguoshan-contract.ps1` 通过固定 canonical materializer 调用受控 Node/Fengari，对接口、花果山 manifest、地图绑定及唯一 canonical Lua 表字段做离线比对；`0` errors、`28/28` 镜像、固定合同与入口边界负例均通过；成功路径显式复位 `$LASTEXITCODE=0`，不会把预期失败负例误报为整包失败。 |
 | 负例：Lua 重复键/注释伪命中 | 通过 | 重复 `progression_key`、重复 `unlock_rule` 的后写覆盖，以及将正确键留在 Lua 注释中的伪命中，均被有效表投影拒绝。 |
 | 负例：Lua 第二消费者 | 通过 | 向 `HG_E_OX_BATTLEFIELD` 注入 `DF_PROGRESS_YANLUO_HALL_CLEARED`，被 `unauthorized_lua_progression_consumer` 拒绝。 |
 | 负例：受限 fixture 载荷 | 通过 | fixture 中尝试 `os.execute` 创建临时标记文件，被 `trusted_fixture_projection_failed` 拒绝，标记文件未创建。 |
 | 负例：入口路径覆盖 | 通过 | validator 的 `-ConfigPath`、常规导出的 `-LuaFixturePath`、以及旧 `-LuaConfigPath` 均被拒绝；常规入口只能使用 canonical 配置。 |
-| Normalizer 校验 | 通过 | `0` errors；保留 `missing_duration` 警告，因为本前置接口包不定义生产会话时长。 |
+| Normalizer 校验 | 通过 | `0` errors；保留预期的时长／未决项提示，因为本前置接口包不定义生产会话时长或生产内容。 |
 | Normalizer 完整度 | `100/100 ready` | 仅表示规划结构可交接；不表示地府内容、Y3 接入或生产门禁已开放。 |
 
 ## 已验证边界
@@ -28,6 +32,7 @@
 - 固定 `DF_E_ZHUANLUN_HALL` 为 `team_instance`，`DF_E_YANLUO_HALL` 为非团队地府常规最终副本。
 - 固定 `DF_PROGRESS_YANLUO_HALL_CLEARED` 为角色级、受信任、按 `(actor_id, event_id)` 幂等写入的进度键；花果山只能经受信任查询直接读取这一稳定键，不存在第二个写入键或第二套幂等收据。
 - 固定 `HG_E_DRAGON_REVERSE_TIDE` 必须同时满足等级至少 `38` 与受信任查询命中该键；`underworld_late` 明确被拒绝。
+- 花果山常规收束 proof 在签发时必须由同一角色、同一**来源生命周期**内的公共主线、鲨魔逐人参与和熔脉裂口证据形成；地府消费时保留该 lifecycle 作为不可变审计 claim，但不把它错误等同于当前登录／入章请求 lifecycle。当前请求必须另由受信任角色权威校验，因此合法重连不会卡章，陈旧回调、伪造 claim 与跨角色 proof 仍被拒绝。
 - 跨篇校验不是 Lua 源码文本匹配：它在受控、受信任的 Node/Fengari 边界中离线执行唯一 canonical 配置并读取最终表语义。材料器与配置均由校验器的 `$ProjectRoot` 固定推导为 `implementation/huaguoshan/tools/materialize-object-commands.ps1` 与 `implementation/huaguoshan/lua/huaguoshan_config.lua`；规范路径、项目根、链接状态和解析结果均受校验，且不存在 `-MaterializerPath`、`-ConfigPath` 或常规导出的 `-LuaConfigPath` 覆盖入口。
 - Lua 负例只使用 `huaguoshan-cross-chapter-fixtures` 临时根下的专用 `huaguoshan_config.lua` fixture，并通过独立的 fixture 导出模式加载。其 `loadfile(path, 't', environment)` 环境不暴露 `os`、`io`、`package`、`require`、`debug`、`load`、`dofile` 或 `loadfile`；`os.execute` 标记载荷已证明不能创建文件。
 - 投影稳定枚举所有有效 `Config.encounters` 的 `progression_key` 消费者，并断言 `DF_PROGRESS_YANLUO_HALL_CLEARED` 只能由 `HG_E_DRAGON_REVERSE_TIDE` 消费；这不是 Y3 引擎、地图或生产运行时的启动/接入。

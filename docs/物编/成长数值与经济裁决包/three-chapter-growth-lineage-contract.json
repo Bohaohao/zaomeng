@@ -1,0 +1,809 @@
+{
+  "version": 1,
+  "contract_id": "THREE_CHAPTER_GROWTH_LINEAGE_V1",
+  "table": "three-chapter-growth-lineage-contract",
+  "decision_status": "offline-continuity-contract",
+  "package_status": "offline-design-only-runtime-not-integrated",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "scope": {
+    "purpose": "Freeze the design lineage from Huaguoshan Lv20 through Difu and TianTing Lv60 without creating a real chapter source-profile allocation, a runtime key, a reward table, or an economic execution path.",
+    "source_of_numeric_truth": [
+      {
+        "resource_table_version": "economy-v2",
+        "path": "tables/economy-v2-resource-table.json",
+        "content_hash_sha256": "3288BD9CD1BFBB516DB4808EF002C45FECCF5F1C7F4C80499DB81E31B2F84EAE"
+      },
+      {
+        "resource_table_version": "economy-v3",
+        "path": "tables/economy-v3-resource-table.json",
+        "role": "future Huaguoshan route-repair overlay only"
+      }
+    ],
+    "design_route_only": true,
+    "actual_source_profile_mapping": null,
+    "actual_reward_execution": false,
+    "runtime_keys": null
+  },
+  "level_20_to_60_route": {
+    "continuity_rule": "Each chapter consumes exactly its frozen total XP envelope. Chapter gates may not demand a team clear, a rare award, an optional instance, or tower XP.",
+    "chapters": [
+      {
+        "chapter_id": "HG",
+        "chapter_name": "花果山",
+        "exit_character_level": 20,
+        "exit_cumulative_xp": 9485,
+        "route_source": "economy-v3 future route overlay; historical economy-v2 receipts remain unchanged",
+        "future_mandatory_route_semantic_bindings": [
+          {
+            "source_key": "XP_PEACH",
+            "future_route_node_id": "HG_PEACH_GROVE_PUBLIC_MAINLINE",
+            "future_route_semantics": "mandatory_public_mainline",
+            "required_for_regular_mainline_closure": true,
+            "actual_source_profile": null,
+            "runtime_mapping": null
+          },
+          {
+            "source_key": "XP_CAVE",
+            "future_route_node_id": "HG_BAT_CAVE_PUBLIC_MAINLINE",
+            "future_route_semantics": "mandatory_public_mainline",
+            "required_for_regular_mainline_closure": true,
+            "actual_source_profile": null,
+            "runtime_mapping": null
+          }
+        ],
+        "successor_gate": "DF entry is unlocked at Lv20 after the same-character Huaguoshan regular-mainline closure proof; Peng Demon King, Dragon Old Tide, team, rare, and tower content cannot substitute for the mandatory public route."
+      },
+      {
+        "chapter_id": "DF",
+        "chapter_name": "地府",
+        "entry_character_level": 20,
+        "progression_level_band": [
+          21,
+          40
+        ],
+        "entry_cumulative_xp": 9485,
+        "successor_entry_character_level": 41,
+        "successor_entry_cumulative_xp": 72515,
+        "total_delta_xp": 63030,
+        "entry_gate": {
+          "required": [
+            "character level is at least 20"
+          ],
+          "forbidden": [
+            "Peng Demon King clear",
+            "team clear",
+            "rare award",
+            "optional instance clear",
+            "tower XP"
+          ]
+        },
+        "successor_gate": "TianTing entry additionally requires the character's authoritative Yanluo Hall success handoff proof."
+      },
+      {
+        "chapter_id": "TT",
+        "chapter_name": "天庭",
+        "entry_character_level": 41,
+        "progression_level_band": [
+          41,
+          60
+        ],
+        "entry_cumulative_xp": 72515,
+        "final_character_level": 60,
+        "final_cumulative_xp": 333300,
+        "total_delta_xp": 260785,
+        "entry_gate": {
+          "required": [
+            "character level is at least 41",
+            "one opaque authoritative Yanluo Hall success handoff proof for the same character"
+          ],
+          "forbidden": [
+            "a raw Difu progress-key read",
+            "team clear",
+            "rare award",
+            "optional instance clear",
+            "tower XP"
+          ]
+        }
+      }
+    ],
+    "yanluo_handoff_boundary": {
+      "producer_event": "DF_E_YANLUO_HALL successful completion",
+      "consumer": "TianTing entry authority",
+      "form": "opaque authority-attested handoff proof bound to the same character",
+      "not_a_consumer_of": "DF_PROGRESS_YANLUO_HALL_CLEARED raw runtime progress key",
+      "runtime_mapping": null
+    }
+  },
+  "design_route_node_map": {
+    "status": "design-route-only",
+    "purpose": "Make the required Difu and TianTing narrative order machine-readable without turning a node into a real XP source_profile, reward record, or runtime progression key.",
+    "actual_source_profile_rule": "Every listed node keeps actual_source_profile=null until a separately adopted chapter allocation maps an authority-attested source profile, count, rounding, and receipt contract.",
+    "permitted_mandatory_budget_classes": [
+      "main_quest",
+      "public_normal",
+      "public_elite",
+      "public_boss",
+      "solo_instance"
+    ],
+    "node_value_rule": "Every content node has allocated_xp=null and reward_values=null. The only numeric progression fact represented here is the already frozen minimum 1250 XP transition from Lv20 to Lv21 at the Ghost City opening; it is a gate threshold, not a newly allocated reward value.",
+    "runtime_mapping": null,
+    "chapters": [
+      {
+        "chapter_id": "DF",
+        "mandatory_ordered_nodes": [
+          {
+            "order": 1,
+            "node_id": "DF_ENTRY_HG_HANDOFF_LV20",
+            "node_name": "花果山交接证明 / Lv20",
+            "node_kind": "chapter_entry_gate",
+            "mandatory": true,
+            "entry_requirements": [
+              "same-character opaque Huaguoshan regular-mainline completion handoff proof",
+              "character level is at least 20"
+            ],
+            "permitted_budget_classes": [],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null
+          },
+          {
+            "order": 2,
+            "node_id": "DF_GHOST_CITY_OPENING",
+            "node_name": "鬼城首段",
+            "node_kind": "mandatory_mainline",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null,
+            "known_level_transition": {
+              "from_level": 20,
+              "to_level": 21,
+              "minimum_xp_threshold": 1250,
+              "meaning": "existing Lv20-to-Lv21 gate threshold only; not a node reward allocation"
+            }
+          },
+          {
+            "order": 3,
+            "node_id": "DF_WUCHANG_ALLEY",
+            "node_name": "无常巷",
+            "node_kind": "mandatory_mainline",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null,
+            "known_level_transition": null
+          },
+          {
+            "order": 4,
+            "node_id": "DF_GHOST_GATE",
+            "node_name": "鬼门关",
+            "node_kind": "mandatory_mainline",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null,
+            "known_level_transition": null
+          },
+          {
+            "order": 5,
+            "node_id": "DF_RECEPTION_COURTYARD",
+            "node_name": "接引院",
+            "node_kind": "mandatory_mainline",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null,
+            "known_level_transition": null
+          },
+          {
+            "order": 6,
+            "node_id": "DF_JUDGE_HALL",
+            "node_name": "判官殿",
+            "node_kind": "mandatory_mainline",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null,
+            "known_level_transition": null
+          },
+          {
+            "order": 7,
+            "node_id": "DF_YANLUO_HALL",
+            "node_name": "阎罗殿",
+            "node_kind": "mandatory_mainline_final",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null,
+            "known_level_transition": null
+          }
+        ]
+      },
+      {
+        "chapter_id": "TT",
+        "mandatory_ordered_nodes": [
+          {
+            "order": 1,
+            "node_id": "TT_ENTRY_LV41_YANLUO_HANDOFF",
+            "node_name": "Lv41 + 阎罗殿交接证明",
+            "node_kind": "chapter_entry_gate",
+            "mandatory": true,
+            "entry_requirements": [
+              "character level is at least 41",
+              "one opaque authoritative Yanluo Hall success handoff proof for the same character"
+            ],
+            "permitted_budget_classes": [],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null
+          },
+          {
+            "order": 2,
+            "node_id": "TT_RIFT_NANTIAN_GATE",
+            "node_name": "裂云南天门",
+            "node_kind": "mandatory_mainline",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null
+          },
+          {
+            "order": 3,
+            "node_id": "TT_BROKEN_RAINBOW_FORMATION",
+            "node_name": "天宫道·断虹阵",
+            "node_kind": "mandatory_mainline",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null
+          },
+          {
+            "order": 4,
+            "node_id": "TT_FOUR_GATES_IMBALANCE",
+            "node_name": "天王殿外缘·四门失衡",
+            "node_kind": "mandatory_mainline",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null
+          },
+          {
+            "order": 5,
+            "node_id": "TT_ZHOUTIAN_OBSERVATORY",
+            "node_name": "朝会殿·周天观台",
+            "node_kind": "mandatory_mainline",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null
+          },
+          {
+            "order": 6,
+            "node_id": "TT_LINGXIAO_OUTER_COURT",
+            "node_name": "凌霄外庭·裂律观台",
+            "node_kind": "mandatory_mainline_final",
+            "mandatory": true,
+            "entry_requirements": [],
+            "permitted_budget_classes": [
+              "main_quest",
+              "public_normal",
+              "public_elite",
+              "public_boss",
+              "solo_instance"
+            ],
+            "actual_source_profile": null,
+            "allocated_xp": null,
+            "reward_values": null
+          }
+        ]
+      }
+    ],
+    "non_mandatory_or_zero_xp_content": [
+      {
+        "content_id": "DF_SIDE_BAIGU_SECRET_REALM",
+        "content_name": "白骨秘境",
+        "progression_treatment": "nonblocking_equal_value_substitution_only",
+        "permitted_budget_classes": [],
+        "actual_source_profile": null,
+        "allocated_xp": null,
+        "reward_values": null
+      },
+      {
+        "content_id": "DF_E_ZHUANLUN_HALL",
+        "content_name": "转轮殿",
+        "progression_treatment": "nonblocking_equal_value_substitution_only",
+        "permitted_budget_classes": [],
+        "actual_source_profile": null,
+        "allocated_xp": null,
+        "reward_values": null
+      },
+      {
+        "content_id": "TT_SEVEN_STAR_SERIES",
+        "content_name": "七星单人本",
+        "progression_treatment": "nonblocking_equal_value_substitution_only",
+        "permitted_budget_classes": [],
+        "actual_source_profile": null,
+        "allocated_xp": null,
+        "reward_values": null
+      },
+      {
+        "content_id": "TT_MANSION_NORMAL_AND_NIGHTMARE",
+        "content_name": "二十八星宿普通/噩梦",
+        "progression_treatment": "nonblocking_equal_value_substitution_only",
+        "permitted_budget_classes": [],
+        "actual_source_profile": null,
+        "allocated_xp": null,
+        "reward_values": null
+      },
+      {
+        "content_id": "RARE_AWARD_PATHS",
+        "content_name": "稀有奖励路径",
+        "progression_treatment": "nonblocking_equal_value_substitution_only",
+        "permitted_budget_classes": [],
+        "actual_source_profile": null,
+        "allocated_xp": null,
+        "reward_values": null
+      },
+      {
+        "content_id": "GLOBAL_TONGTIAN_TOWER",
+        "content_name": "全局通天塔",
+        "progression_treatment": "zero_xp",
+        "permitted_budget_classes": [],
+        "actual_source_profile": null,
+        "allocated_xp": 0,
+        "reward_values": null
+      }
+    ],
+    "anti_forced_content_rule": "No listed non-mandatory content may become an entry gate, a mandatory-node predecessor, a mandatory-final-residual recipient, or a double-counted XP path. Equal-value substitution remains a future allocation requirement, not an award instruction."
+  },
+  "difu_and_tianting_budget_contract": {
+    "unit": "experience points",
+    "source_profile_mapping": {
+      "status": "deferred",
+      "value": null,
+      "rule": "These are design-budget envelopes, not real source_profile assignments. No encounter can infer an XP grant from this contract."
+    },
+    "weights_basis_points": [
+      {
+        "source_kind": "main_quest",
+        "weight_basis_points": 4400
+      },
+      {
+        "source_kind": "side_quest",
+        "weight_basis_points": 800
+      },
+      {
+        "source_kind": "public_normal",
+        "weight_basis_points": 1100
+      },
+      {
+        "source_kind": "public_elite",
+        "weight_basis_points": 900
+      },
+      {
+        "source_kind": "public_boss",
+        "weight_basis_points": 1100
+      },
+      {
+        "source_kind": "solo_instance",
+        "weight_basis_points": 700
+      },
+      {
+        "source_kind": "team_instance",
+        "weight_basis_points": 600
+      },
+      {
+        "source_kind": "tower",
+        "weight_basis_points": 0
+      },
+      {
+        "source_kind": "first_clear",
+        "weight_basis_points": 300
+      },
+      {
+        "source_kind": "repeat_clear",
+        "weight_basis_points": 100
+      }
+    ],
+    "rounding_rule": "For each source kind, use floor(chapter_total_delta_xp * weight_basis_points / 10000). Attach the resulting positive remainder only to the chapter's mandatory final mainline node; do not allocate it to a team, rare, optional, or tower node.",
+    "chapter_budget_envelopes": [
+      {
+        "chapter_id": "DF",
+        "total_delta_xp": 63030,
+        "source_kind_amounts_before_residual": [
+          {
+            "source_kind": "main_quest",
+            "amount": 27733
+          },
+          {
+            "source_kind": "side_quest",
+            "amount": 5042
+          },
+          {
+            "source_kind": "public_normal",
+            "amount": 6933
+          },
+          {
+            "source_kind": "public_elite",
+            "amount": 5672
+          },
+          {
+            "source_kind": "public_boss",
+            "amount": 6933
+          },
+          {
+            "source_kind": "solo_instance",
+            "amount": 4412
+          },
+          {
+            "source_kind": "team_instance",
+            "amount": 3781
+          },
+          {
+            "source_kind": "tower",
+            "amount": 0
+          },
+          {
+            "source_kind": "first_clear",
+            "amount": 1890
+          },
+          {
+            "source_kind": "repeat_clear",
+            "amount": 630
+          }
+        ],
+        "rounded_sum_before_residual": 63026,
+        "mandatory_final_mainline_residual": 4,
+        "resolved_total_delta_xp": 63030,
+        "mandatory_final_node": "DF regular-mainline final node; concrete encounter/source-profile is deferred"
+      },
+      {
+        "chapter_id": "TT",
+        "total_delta_xp": 260785,
+        "source_kind_amounts_before_residual": [
+          {
+            "source_kind": "main_quest",
+            "amount": 114745
+          },
+          {
+            "source_kind": "side_quest",
+            "amount": 20862
+          },
+          {
+            "source_kind": "public_normal",
+            "amount": 28686
+          },
+          {
+            "source_kind": "public_elite",
+            "amount": 23470
+          },
+          {
+            "source_kind": "public_boss",
+            "amount": 28686
+          },
+          {
+            "source_kind": "solo_instance",
+            "amount": 18254
+          },
+          {
+            "source_kind": "team_instance",
+            "amount": 15647
+          },
+          {
+            "source_kind": "tower",
+            "amount": 0
+          },
+          {
+            "source_kind": "first_clear",
+            "amount": 7823
+          },
+          {
+            "source_kind": "repeat_clear",
+            "amount": 2607
+          }
+        ],
+        "rounded_sum_before_residual": 260780,
+        "mandatory_final_mainline_residual": 5,
+        "resolved_total_delta_xp": 260785,
+        "mandatory_final_node": "TT regular-mainline final node; concrete encounter/source-profile is deferred"
+      }
+    ],
+    "node_and_substitution_rules": {
+      "mandatory_completion_node_class": "main_quest",
+      "mandatory_final_residual_node_class": "mandatory_final_mainline",
+      "non_blocking_node_classes": [
+        "team_instance",
+        "rare_award",
+        "optional_instance",
+        "tower"
+      ],
+      "non_blocking_source_budget_classes": [
+        "side_quest",
+        "team_instance",
+        "repeat_clear",
+        "tower"
+      ],
+      "first_clear_attachment_rule": "A first_clear budget may attach only to an authority-available mandatory mainline, public, or solo node as its one-time settlement qualifier. It cannot name optional, rare, team, repeat, or tower content as a chapter prerequisite.",
+      "substitution_rule": "A later chapter allocation may place experience in a side_quest, team_instance, repeat_clear, tower, or other non-blocking node only if an authority-available mainline, public, or solo route preserves the same chapter total without requiring that non-blocking node. A first_clear budget may qualify its attached mandatory node but cannot be a separate content gate. Non-blocking content may add replayable route variety but may not add a prerequisite, double-count an envelope amount, or move the mandatory final residual away from the final mainline node.",
+      "tower_rule": "Tower has zero XP in both chapter envelopes and cannot satisfy a chapter level gate."
+    }
+  },
+  "equipment_and_artifact_stage_matrix": {
+    "artifact_slot_contract": {
+      "version": "v1",
+      "active_artifact_slot_count": 1,
+      "mainline_required_artifact_keys": [],
+      "entry_gate_required_artifact_keys": [],
+      "rule": "A character may choose at most one active artifact. Neither current Huaguoshan artifact may be presumed owned, equipped, consumed, upgraded, or required by a mainline gate."
+    },
+    "stages": [
+      {
+        "stage_id": "HG_PUBLIC_BASELINE",
+        "stage_name": "花果山公共基线装备",
+        "logical_equipment_keys": [
+          "EQ_HG_WEAPON_T1",
+          "EQ_HG_ARMOR_T1",
+          "EQ_HG_RING_T1"
+        ],
+        "acquisition_boundary": "Existing economy-v2 Huaguoshan public-profile first-clear facts only; qualification and duplicate conversion remain owned by economy-v2.",
+        "stats": null,
+        "slot_replacement_rule": "deferred",
+        "mainline_required": false
+      },
+      {
+        "stage_id": "HG_PUBLIC_RARE_TRINKET",
+        "stage_name": "花果山公共稀有饰品",
+        "logical_equipment_keys": [
+          "EQ_HG_TRINKET_T1"
+        ],
+        "acquisition_boundary": "Existing economy-v2 Macaque public-profile rare fact only; chance, pity, qualification, duplicate conversion, and receipt semantics remain owned by economy-v2.",
+        "stats": null,
+        "slot_replacement_rule": "deferred",
+        "mainline_required": false
+      },
+      {
+        "stage_id": "HG_TEAM_OPTIONAL_SET",
+        "stage_name": "花果山团队本可选套装",
+        "logical_equipment_keys": [
+          "EQ_HG_SET_GUARD_T1"
+        ],
+        "acquisition_boundary": "Existing economy-v2 Ox raid first-clear fact only; a team clear is never a chapter gate.",
+        "stats": null,
+        "slot_replacement_rule": "deferred",
+        "mainline_required": false
+      },
+      {
+        "stage_id": "HG_ARTIFACT_CHOICES",
+        "stage_name": "花果山横向法宝选择",
+        "artifacts": [
+          {
+            "logical_artifact_key": "ART_HG_TIDE_SEAL",
+            "source_fact": "Dragon Old Tide first-clear grant in economy-v2",
+            "role": "optional early single-active artifact",
+            "acquisition_class": "first_clear",
+            "mainline_required": false,
+            "stats": null,
+            "upgrade_recipe": null
+          },
+          {
+            "logical_artifact_key": "ART_HG_FLAME_CORE",
+            "source_fact": "Ox Old Battlefield rare grant in economy-v2",
+            "role": "optional rare horizontal single-active artifact",
+            "acquisition_class": "rare",
+            "mainline_required": false,
+            "stats": null,
+            "upgrade_recipe": null
+          }
+        ]
+      },
+      {
+        "stage_id": "DF_MIDGAME",
+        "stage_name": "地府中期装备与法宝承接",
+        "logical_equipment_keys": null,
+        "logical_artifact_keys": null,
+        "source_profile_mapping": null,
+        "stats": null,
+        "replacement_or_upgrade_rule": "deferred",
+        "mainline_required": false
+      },
+      {
+        "stage_id": "TT_ENDGAME",
+        "stage_name": "天庭后期装备与法宝承接",
+        "logical_equipment_keys": null,
+        "logical_artifact_keys": null,
+        "source_profile_mapping": null,
+        "stats": null,
+        "replacement_or_upgrade_rule": "deferred",
+        "mainline_required": false
+      }
+    ],
+    "lineage_invariants": [
+      "A later stage may not silently invalidate an owned optional Huaguoshan artifact before a separately adopted replacement or upgrade contract exists.",
+      "A later stage may not require a random-only, rare-only, team-only, or optional-only artifact or equipment result for mainline continuation.",
+      "DF and TT asset identifiers, stats, recipes, replacement costs, and upgrade formulas remain null/deferred until their own source-profile and economic adoption exists."
+    ]
+  },
+  "currency_material_and_receipt_boundary": {
+    "resource_family_matrix": [
+      {
+        "logical_key": "CUR_GOLD",
+        "kind": "currency",
+        "current_source_families": [
+          "quest",
+          "public",
+          "solo_instance",
+          "team_instance"
+        ],
+        "sink_families": [
+          "strengthen",
+          "advance",
+          "service"
+        ],
+        "stage_lineage": "Existing accepted sources are Huaguoshan; Difu and TT source allocation is deferred."
+      },
+      {
+        "logical_key": "CUR_RAID_MARK",
+        "kind": "currency",
+        "current_source_families": [
+          "team_instance"
+        ],
+        "sink_families": [
+          "raid_exchange"
+        ],
+        "stage_lineage": "Existing accepted source scope is Huaguoshan team content; later-stage allocation is deferred."
+      },
+      {
+        "logical_key": "CUR_TOWER_TOKEN",
+        "kind": "currency",
+        "current_source_families": [
+          "tower"
+        ],
+        "sink_families": [
+          "tower_exchange"
+        ],
+        "stage_lineage": "Global tower reward lineage only; it carries zero chapter XP."
+      },
+      {
+        "logical_key": "MAT_STRENGTHEN_SHARD",
+        "kind": "material",
+        "design_use_family": "strengthen",
+        "stage_lineage": "Current accepted Huaguoshan material key; later-stage carry, spend, and replacement rules are deferred.",
+        "bind_rule": "character_bound"
+      },
+      {
+        "logical_key": "MAT_ADVANCE_HG",
+        "kind": "material",
+        "design_use_family": "advance",
+        "stage_lineage": "Current accepted Huaguoshan advance-family material key; DF and TT successors are deferred.",
+        "bind_rule": "character_bound"
+      },
+      {
+        "logical_key": "MAT_ARTIFACT_DUST",
+        "kind": "material",
+        "design_use_family": "artifact",
+        "stage_lineage": "Current accepted Huaguoshan artifact-family material key; artifact recipe and future-stage conversion are deferred.",
+        "bind_rule": "character_bound"
+      }
+    ],
+    "receipt_boundary": {
+      "owner_scope": "character",
+      "team_wallet": "disabled",
+      "trade": "disabled",
+      "design_contract_may_create_receipt": false,
+      "future_integration_rule": "Any future award must use the separately adopted immutable resource-table version and its authority proof, qualification, replay, first-clear, rare, pity, and receipt rules. This lineage contract cannot mint, spend, convert, or settle any resource.",
+      "historical_rule": "A later table version cannot recalculate an existing receipt or reset an existing first-clear history."
+    }
+  },
+  "legacy_candidate_boundary": [
+    {
+      "candidate": "老龙王五件装备链",
+      "status": "candidate_only",
+      "current_mandatory_chain": false,
+      "current_reward_source": null
+    },
+    {
+      "candidate": "号角法宝链",
+      "status": "candidate_only",
+      "current_mandatory_chain": false,
+      "current_reward_source": null
+    },
+    {
+      "candidate": "宠物链",
+      "status": "candidate_only",
+      "current_mandatory_chain": false,
+      "current_reward_source": null
+    }
+  ],
+  "validation_contract": {
+    "validator": "validate-three-chapter-growth-continuity.ps1",
+    "must_verify": [
+      "Lv20 -> DF -> Lv41 + Yanluo proof -> TT -> Lv60 continuity",
+      "DF and TT budget formulas, residuals, and zero tower XP",
+      "team, rare, and optional content cannot become a chapter prerequisite",
+      "one active artifact slot and no mandatory Huaguoshan artifact",
+      "DF/TT assets and real source-profile mappings remain deferred",
+      "currency/material boundaries remain receipt-owned and non-executable"
+    ]
+  }
+}

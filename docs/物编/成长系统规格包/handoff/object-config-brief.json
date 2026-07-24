@@ -3,13 +3,13 @@
   "targetSkill": "y3-object-config",
   "systemOwner": "y3-lua-api",
   "project": "造梦 ORPG 成长系统",
-  "goal": "在真实 Y3 工程接入后，规范化装备、法宝、材料和龙蛋等 item 资产，以及宠物的 unit + ability 资产；货币账本和掉落 profile 由同步系统数据承接，不生成物编对象。本交接不授权分配真实 ID。",
+  "goal": "在真实 Y3 工程接入且候选资产另行采纳后，规范化装备、法宝、材料和宠物等资产；货币账本和掉落 profile 由同步系统数据承接，不生成物编对象。本交接不授权分配真实 ID，也不将未采纳候选变为施工清单。",
   "knownAssetFamilies": [
     "五品质装备：普通、精良、稀有、史诗、传说",
     "强化石、进阶石、主城 BOSS 材料、法宝材料、宠物相性材料",
-    "龙王一阶/二阶法宝与牛魔号角",
-    "龙蛋等孵化材料 item 资产",
-    "成长型宠物龙与白牛的 unit + ability 资产方向"
+    "候选、未采纳：龙王一阶/二阶法宝与牛魔号角",
+    "候选、未采纳：龙蛋等孵化材料 item 资产",
+    "候选、未采纳：成长型宠物龙与白牛的 unit + ability 资产方向"
   ],
   "requiredRecordFields": {
     "itemAsset": ["record_key", "object_type=item", "status", "chapter", "design_role", "source_doc", "dependencies", "y3_fields", "runtime_fields", "acceptance"],
@@ -33,6 +33,7 @@
     "花果山 HG_DROP_* 当前设计值只能精确引用 economy-v2；它仍不可直接生成物品、概率或生产结算。",
     "系统数据必须保留 economy-v2 的版本、proof-to-owner、来源/奖励计划和终态审计边界。",
     "货币账本和掉落 profile 不得伪装成 object_type=item；宠物本体不得伪装成物品。",
+    "龙王主题二阶、牛魔号角、龙蛋、成长型宠物龙与白牛均为 candidate_only；未出现独立采纳、稳定键、来源、配方与数值前不得创建对象或资源 ID。",
     "不得用有效参与或 DPS 荣誉自动授予稀有资格。",
     "不得将数值成长、技能点、装备/法宝/宠物强度引入商业化字段。"
   ]

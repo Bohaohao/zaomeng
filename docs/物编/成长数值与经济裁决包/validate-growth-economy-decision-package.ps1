@@ -753,6 +753,97 @@ function Test-EconomyV2Adoption {
   if ($raw -match '(?i)"y3_id"\s*:') { Add-Issue $script:errors 'y3_id_not_allowed' 'economy-v2 may not contain Y3 object IDs.' $path }
 }
 
+function Test-EconomyV3RouteOverlay {
+  param($Overlay, $Register)
+
+  $path = 'tables/economy-v3-resource-table.json'
+  if ($null -eq $Overlay) { return }
+
+  if ([string]$Overlay.table -ne 'economy-v3-resource-table-overlay' -or [string]$Overlay.resource_table_version -ne 'economy-v3' -or [string]$Overlay.kind -ne 'versioned_delta_overlay') {
+    Add-Issue $script:errors 'invalid_economy_v3_identity' 'economy-v3 must be an explicit versioned route overlay.' $path
+  }
+  if ([string]$Overlay.decision_id -ne 'ECO-XP-ROUTE-V3-001' -or [string]$Overlay.decision_status -ne 'accepted-baseline' -or [string]$Overlay.package_status -ne 'offline-design-only-runtime-not-integrated' -or -not (Test-StrictBoolean $Overlay.runtime_handoff $false) -or [string]$Overlay.production_gate -ne 'closed') {
+    Add-Issue $script:errors 'invalid_economy_v3_status' 'economy-v3 must be an accepted, runtime-closed future-route overlay.' $path
+  }
+  if ([string]$Overlay.inherits.resource_table_version -ne 'economy-v2' -or [string]$Overlay.inherits.path -ne 'tables/economy-v2-resource-table.json') {
+    Add-Issue $script:errors 'invalid_economy_v3_inheritance' 'economy-v3 must explicitly inherit economy-v2.' $path
+  } else {
+    $baseHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $script:Root 'tables/economy-v2-resource-table.json')).Hash
+    if ($baseHash -ine [string]$Overlay.inherits.content_hash_sha256) {
+      Add-Issue $script:errors 'economy_v3_base_hash_mismatch' 'economy-v3 must bind the exact economy-v2 base-table hash.' $path
+    }
+  }
+
+  $overrideMap = @{}
+  foreach ($row in @(Get-Items $Overlay.progression_delta.row_overrides)) { $overrideMap[[string]$row.source_key] = $row }
+  if ($overrideMap.Count -ne 2 -or $null -eq $overrideMap['XP_EASTSEA'] -or $null -eq $overrideMap['XP_CHAPTER_CLEAR'] -or [int]$overrideMap['XP_EASTSEA'].base_xp -ne 1490 -or [int]$overrideMap['XP_EASTSEA'].replaces_economy_v2_base_xp -ne 900 -or [int]$overrideMap['XP_CHAPTER_CLEAR'].base_xp -ne 1145 -or [int]$overrideMap['XP_CHAPTER_CLEAR'].replaces_economy_v2_base_xp -ne 1735) {
+    Add-Issue $script:errors 'invalid_economy_v3_xp_overrides' 'economy-v3 may override only the two reviewed Huaguoshan XP rows.' $path
+  }
+  $newRows = @(Get-Items $Overlay.progression_delta.new_design_route_rows)
+  if ($newRows.Count -ne 1 -or [string]$newRows[0].source_key -ne 'XP_HG_CRACK_DISCOVERY' -or [int]$newRows[0].base_xp -ne 500 -or $null -ne $newRows[0].runtime_mapping) {
+    Add-Issue $script:errors 'invalid_economy_v3_crack_row' 'economy-v3 must contain one non-runtime 500 XP crack-discovery route row.' $path
+  }
+  $semanticBindingMap = @{}
+  foreach ($binding in @(Get-Items $Overlay.progression_delta.future_route_semantic_bindings)) { $semanticBindingMap[[string]$binding.source_key] = $binding }
+  $expectedSemanticBindings = @{
+    'XP_PEACH' = @{ historical_kind = 'side_quest'; node_id = 'HG_PEACH_GROVE_PUBLIC_MAINLINE'; node_name = '桃林公共主路线' }
+    'XP_CAVE' = @{ historical_kind = 'solo_instance'; node_id = 'HG_BAT_CAVE_PUBLIC_MAINLINE'; node_name = '蝙蝠窟公共主路线' }
+  }
+  if ($semanticBindingMap.Count -ne 2 -or $null -eq $semanticBindingMap['XP_PEACH'] -or $null -eq $semanticBindingMap['XP_CAVE']) {
+    Add-Issue $script:errors 'invalid_economy_v3_route_semantic_binding_set' 'economy-v3 must bind exactly XP_PEACH and XP_CAVE to the reviewed future public-mainline semantics.' $path
+  }
+  foreach ($sourceKey in $expectedSemanticBindings.Keys) {
+    $binding = $semanticBindingMap[$sourceKey]
+    $expected = $expectedSemanticBindings[$sourceKey]
+    if ($null -eq $binding -or [string]$binding.historical_economy_v2_source_kind -ne [string]$expected.historical_kind -or [string]$binding.future_route_node_id -ne [string]$expected.node_id -or [string]$binding.future_route_node_name -ne [string]$expected.node_name -or [string]$binding.future_route_semantics -ne 'mandatory_public_mainline' -or -not (Test-StrictBoolean $binding.required_for_regular_mainline_closure $true) -or -not (Test-StrictBoolean $binding.creates_solo_instance $false) -or -not (Test-StrictBoolean $binding.is_optional_content $false) -or $null -ne $binding.source_profile_mapping -or $null -ne $binding.runtime_mapping -or -not (Test-StrictBoolean $binding.historical_receipt_mutation $false)) {
+      Add-Issue $script:errors 'invalid_economy_v3_route_semantic_binding' "economy-v3 future semantic binding for $sourceKey must preserve its historic kind while declaring only a non-runtime mandatory public-mainline route node." $path
+      continue
+    }
+    $forbiddenSubstitutes = @($binding.forbidden_substitutes | ForEach-Object { [string]$_ } | Sort-Object -Unique)
+    $expectedSubstitutes = @('HG_E_DRAGON_OLD_TIDE', 'team_instance', 'rare_award', 'tower' | Sort-Object -Unique)
+    if ((Compare-Object -ReferenceObject $expectedSubstitutes -DifferenceObject $forbiddenSubstitutes).Count -ne 0) {
+      Add-Issue $script:errors 'invalid_economy_v3_route_semantic_substitutes' "economy-v3 future semantic binding for $sourceKey must reject Dragon Old Tide, team, rare, and tower substitutes." $path
+    }
+  }
+  $choice = $Overlay.progression_delta.route_choice
+  if ([string]$choice.choice_id -ne 'HG_ROUTE_PENG_OR_CRACK_V3' -or [int]$choice.selection_cardinality.minimum -ne 1 -or [int]$choice.selection_cardinality.maximum -ne 1 -or @(Get-Items $choice.anti_double_claim.prohibited_source_key_pairs).Count -ne 1 -or [string]$choice.no_boss_path_rule -notmatch 'must remain available without defeating Peng Demon King') {
+    Add-Issue $script:errors 'invalid_economy_v3_route_choice' 'economy-v3 must freeze the exact one-of-two Peng-or-crack route and anti-double-claim boundary.' $path
+  }
+  $math = $Overlay.progression_delta.route_math
+  if ([int]$math.pre_clear_xp -ne 8340 -or [int]$math.chapter_clear_xp -ne 1145 -or [int]$math.final_xp -ne 9485 -or [int]$Overlay.preserved_route_invariants.huaguoshan_target_active_minutes_at_cap -ne 55 -or -not (Test-StrictBoolean $Overlay.preserved_route_invariants.no_legacy_receipt_recalculation $true)) {
+    Add-Issue $script:errors 'invalid_economy_v3_route_math' 'economy-v3 must preserve the reviewed Lv19/Lv20 and 55-minute anchors without historical receipt mutation.' $path
+  }
+  if ($null -ne $Overlay.non_production_boundary.source_profile_mapping -or -not (Test-StrictBoolean $Overlay.non_production_boundary.actual_receipt_creation $false) -or -not (Test-StrictBoolean $Overlay.non_production_boundary.actual_economic_execution $false) -or $null -ne $Overlay.non_production_boundary.runtime_keys) {
+    Add-Issue $script:errors 'economy_v3_production_boundary_open' 'economy-v3 must not create source profiles, receipts, economic execution, or runtime keys.' $path
+  }
+
+  if ($null -eq $Register -or [string]$Register.current_future_route_overlay_version -ne 'economy-v3') {
+    Add-Issue $script:errors 'economy_v3_not_registered_current_overlay' 'decision-register.json must name economy-v3 as the current future-route overlay while retaining economy-v2 as the only full resource table.' 'decision-register.json'
+  }
+  $registeredOverlay = $null
+  foreach ($entry in (Get-Items $Register.adopted_route_overlays)) {
+    if ([string]$entry.resource_table_version -eq 'economy-v3') { $registeredOverlay = $entry; break }
+  }
+  if ($null -eq $registeredOverlay -or [string]$registeredOverlay.path -ne $path -or [string]$registeredOverlay.base_resource_table_version -ne 'economy-v2' -or [string]$registeredOverlay.decision_id -ne 'ECO-XP-ROUTE-V3-001' -or [string]$registeredOverlay.decision_status -ne 'accepted-baseline' -or -not (Test-StrictBoolean $registeredOverlay.current $true) -or [string]$registeredOverlay.lifecycle_status -ne 'current-future-route-overlay' -or [string]$registeredOverlay.scope -ne 'future-huaguoshan-lv1-lv20-route-xp-and-semantic-bindings-only' -or -not (Test-StrictBoolean $registeredOverlay.runtime_handoff $false) -or [string]$registeredOverlay.production_gate -ne 'closed') {
+    Add-Issue $script:errors 'invalid_economy_v3_register_entry' 'decision-register.json must register the exact runtime-closed economy-v3 route overlay.' 'decision-register.json.adopted_route_overlays'
+  } else {
+    $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $script:Root $path)).Hash
+    if ($actualHash -ine [string]$registeredOverlay.content_hash_sha256 -or [string]$registeredOverlay.base_content_hash_sha256 -ne [string]$Overlay.inherits.content_hash_sha256) {
+      Add-Issue $script:errors 'economy_v3_register_hash_mismatch' 'decision-register.json must bind exact economy-v3 and economy-v2 hashes.' 'decision-register.json.adopted_route_overlays'
+    }
+  }
+  if (-not $script:DecisionMap.ContainsKey('ECO-XP-ROUTE-V3-001')) {
+    Add-Issue $script:errors 'economy_v3_decision_missing' 'The economy-v3 route overlay requires an accepted decision-register entry.' 'decision-register.json'
+  } else {
+    $decision = $script:DecisionMap['ECO-XP-ROUTE-V3-001']
+    $decisionSemanticKeys = @($decision.effective_value.future_route_semantic_binding_source_keys | ForEach-Object { [string]$_ } | Sort-Object -Unique)
+    $expectedDecisionSemanticKeys = @('XP_CAVE', 'XP_PEACH')
+    if ([string]$decision.decision_status -ne 'accepted-baseline' -or -not (Test-StrictBoolean $decision.current $true) -or -not (Test-StrictBoolean $decision.runtime_handoff $false) -or [string]$decision.effective_value.base_resource_table_version -ne 'economy-v2' -or [string]$decision.effective_value.overlay_table_path -ne $path -or [string]$decision.effective_value.route_choice_id -ne 'HG_ROUTE_PENG_OR_CRACK_V3' -or [string]$decision.effective_value.scope -ne 'future-huaguoshan-lv1-lv20-route-xp-and-semantic-bindings-only' -or @(Compare-Object -ReferenceObject $expectedDecisionSemanticKeys -DifferenceObject $decisionSemanticKeys).Count -ne 0 -or -not (Test-StrictBoolean $decision.effective_value.historical_receipt_mutation $false)) {
+      Add-Issue $script:errors 'invalid_economy_v3_decision' 'The registered economy-v3 decision must retain its base, overlay, choice, and no-history-mutation boundary.' 'decision-register.json'
+    }
+  }
+}
+
 function Test-CalibrationCandidates {
   param($Candidates)
   if ($null -eq $Candidates) { return }
@@ -1241,6 +1332,7 @@ $drop = Read-JsonFile 'tables/drop-and-pity.json'
 $tower = Read-JsonFile 'tables/tower-reward.json'
 $economyV1Historical = Read-JsonFile 'tables/economy-v1-resource-table.json'
 $economyV2 = Read-JsonFile 'tables/economy-v2-resource-table.json'
+$economyV3 = Read-JsonFile 'tables/economy-v3-resource-table.json'
 $calibration = Read-JsonFile 'calibration/calibration-candidates.json'
 
 $script:DecisionMap = @{}
@@ -1284,6 +1376,7 @@ foreach ($node in @(
   $currency,
   $drop,
   $tower,
+  $economyV3,
   $calibration
 )) {
   Test-GovernedNode $node ''
@@ -1291,6 +1384,7 @@ foreach ($node in @(
 
 Test-OfflineSimulationBoundary $register
 Test-EconomyV2Adoption $economyV2 $register
+Test-EconomyV3RouteOverlay $economyV3 $register
 Test-CalibrationCandidates $calibration
 
 if ($null -ne $currency) {
@@ -1421,6 +1515,7 @@ foreach ($relativePath in @(
   'tables/tower-reward.json',
   'tables/economy-v1-resource-table.json',
   'tables/economy-v2-resource-table.json',
+  'tables/economy-v3-resource-table.json',
   'calibration/calibration-candidates.json'
 )) {
   $raw = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $script:Root $relativePath)
@@ -1431,6 +1526,7 @@ foreach ($relativePath in @(
 
 if ($errors.Count -eq 0) {
   Add-Issue $info 'economy_v2_adopted_design_baseline' 'economy-v2 is frozen as an accepted design baseline; legacy drafts and calibration candidates remain non-effective.' 'package'
+  Add-Issue $info 'economy_v3_future_route_overlay' 'economy-v3 is a hash-bound, runtime-closed future Huaguoshan route overlay; it cannot mutate economy-v2 or historical receipts.' 'package'
   Add-Issue $info 'production_gate_closed' 'The package is structurally and semantically review-ready, not production-ready.' 'package'
 }
 
@@ -1441,6 +1537,7 @@ $summary = [pscustomobject]@{
   dropProfiles = if ($null -ne $drop) { (Get-Items $drop.drop_profiles).Count } else { 0 }
   historicalEconomyV1 = if ($null -ne $economyV1Historical) { [string]$economyV1Historical.resource_table_version } else { $null }
   adoptedEconomyV2 = if ($null -ne $economyV2) { [string]$economyV2.resource_table_version } else { $null }
+  futureRouteOverlayEconomyV3 = if ($null -ne $economyV3) { [string]$economyV3.resource_table_version } else { $null }
   calibrationScenarios = if ($null -ne $calibration) { (Get-Items $calibration.scenarios).Count } else { 0 }
   errors = $errors.Count
   warnings = $warnings.Count

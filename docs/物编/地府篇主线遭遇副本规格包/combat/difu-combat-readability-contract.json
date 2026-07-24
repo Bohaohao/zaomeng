@@ -1,0 +1,336 @@
+{
+  "version": 1,
+  "package_status": "offline-design-spec",
+  "production_gate": "closed",
+  "identity": {
+    "spec_id": "DF_SPEC_COMBAT_READABILITY",
+    "display_name": "地府战斗机制与可读性合同",
+    "scope": "difu_mainline_side_solo_and_team_readability_only",
+    "runtime_key": null
+  },
+  "source_artifacts": [
+    "../README.md",
+    "../mainline-route.md",
+    "../difu-mainline-encounter-contract.json",
+    "../../地府篇前置接口包/cross-chapter-interface.json",
+    "地府战斗机制与可读性规格.md"
+  ],
+  "combat_identity": {
+    "core_loop": [
+      "fate_record_or_soul_mark_evidence",
+      "judgment_priority_under_pressure",
+      "visible_order_restoration",
+      "failure_review_for_next_judgment"
+    ],
+    "difference_from_huaguoshan": "does_not_use_public_contribution_trace_or_output_race_as_judgment_truth",
+    "difference_from_tianting": "does_not_use_stellar_rotation_or_fixed_constellation_choreography_as_primary_solution",
+    "runtime_key": null
+  },
+  "hard_boundaries": {
+    "party_cap": {
+      "minimum_players": 1,
+      "maximum_players": 4,
+      "rule": "every encounter provides a one-to-four-player completion path; cooperation can parallelize observation or protection but cannot create a fifth-player-only solution",
+      "runtime_key": null
+    },
+    "authority_rule": "combat readability only describes visible pressure, player judgment, counterplay and review; it cannot write progression, mutate membership, issue a receipt, settle a reward, or alter cleanup semantics",
+    "yanluo_rule": {
+      "encounter_key": "DF_E_YANLUO_HALL",
+      "is_only_normal_completion_producer": true,
+      "progression_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+      "combat_spec_can_write_progression": false,
+      "runtime_key": null
+    },
+    "zhuanlun_rule": {
+      "encounter_key": "DF_E_ZHUANLUN_HALL",
+      "writes_yanluo_progression": false,
+      "may_replace_yanluo_normal_completion": false,
+      "uses_existing_team_cleanup_contract": true,
+      "runtime_key": null
+    },
+    "side_instance_rule": {
+      "spec_id": "DF_SIDE_BAIGU_SECRET_REALM",
+      "is_optional_parallel_nonblocking": true,
+      "writes_yanluo_progression": false,
+      "consumes_yanluo_progression": false,
+      "is_mainline_entry_prerequisite": false,
+      "runtime_key": null
+    },
+    "team_entry_rule": {
+      "zhuanlun_is_mainline_entry_prerequisite": false,
+      "runtime_key": null
+    },
+    "runtime_asset_rule": "no map, terrain, unit, ability, item, buff, projectile, UI control, Lua, storage, timer, resource key, Y3 object or actual runtime state is created",
+    "economy_rule": "no XP, currency, material, equipment, artifact, drop, pity, qualification, receipt or reward value is defined or emitted",
+    "runtime_key": null
+  },
+  "readability_grammar": {
+    "spec_id": "DF_SPEC_COMBAT_READABILITY_GRAMMAR",
+    "required_fields_per_encounter": [
+      "warning",
+      "player_decision",
+      "visible_restoration",
+      "failure_meaning",
+      "review",
+      "player_scaling",
+      "accessibility"
+    ],
+    "dual_channel_rule": "critical truth, priority, route, target and restoration state require a visual_or_spatial channel plus an independent audio_or_ui_or_state_change channel; color alone is forbidden",
+    "failure_rule": "failure must identify a missed, misread, mistimed or wrongly prioritized evidence decision; unexplained instant loss is forbidden",
+    "numeric_values": {
+      "duration": null,
+      "health": null,
+      "damage": null,
+      "cooldown": null,
+      "cast_time": null,
+      "movement": null,
+      "timeout": null,
+      "revive": null,
+      "runtime_key": null
+    },
+    "runtime_key": null
+  },
+  "encounters": [
+    {
+      "spec_id": "DF_SPEC_COMBAT_WUCHANG_ALLEY",
+      "display_name": "无常巷：双目标优先级",
+      "chapter_role": "mainline_public_route_or_elite_theme",
+      "mechanic_grammar": "dual_soul_record_priority_and_verification",
+      "warning": {
+        "visual_or_spatial": "two distinguishable soul-mark states and route projections",
+        "audio_or_ui_or_state_change": "directional cue or priority UI state"
+      },
+      "player_decision": "verify which soul-mark is forged, choose which pressure may be deferred, and return the confirmed target to the guiding chain",
+      "visible_restoration": "the forged pull is rejected and the confirmed target gains a readable guiding route",
+      "failure_meaning": "the player treated apparent threat as proof or discarded the second record before verification",
+      "review": "show the misread soul-mark, missed priority clue and an alternative order of verification",
+      "player_scaling": {
+        "minimum_players": 1,
+        "maximum_players": 4,
+        "one_player_path": "verify_then_defer_then_return_in_sequence",
+        "multi_player_path": "players may observe_or_escort_in_parallel_but_each_judgment_remains_individually_completable"
+      },
+      "accessibility": {
+        "visual_or_spatial": "silhouette_and_route_projection",
+        "audio_or_ui_or_state_change": "directional_audio_or_priority_icon",
+        "color_only_forbidden": true
+      },
+      "runtime_key": null
+    },
+    {
+      "spec_id": "DF_SPEC_COMBAT_GHOST_GATE",
+      "display_name": "鬼门关：通行与守门压力",
+      "chapter_role": "mainline_public_route_gate_conflict",
+      "mechanic_grammar": "lawful_passage_protection_and_false_escort_interception",
+      "warning": {
+        "visual_or_spatial": "blocked lawful passage, false escort direction and guard formation are separately readable",
+        "audio_or_ui_or_state_change": "gate command, lock state or passage UI cue"
+      },
+      "player_decision": "protect a lawful route, intercept a false escort, defer pressure, or recover a verifiable gate credential",
+      "visible_restoration": "the lawful passage becomes readable and the false escort loses its transit basis",
+      "failure_meaning": "the player only fought guards or forced a gate while the wrong passage continued to consume the route",
+      "review": "show the misjudged passage, unaddressed closure and a recoverable retreat_or_review route",
+      "player_scaling": {
+        "minimum_players": 1,
+        "maximum_players": 4,
+        "one_player_path": "verify_and_hold_routes_in_sequence_with_deferral",
+        "multi_player_path": "players may protect_and_intercept_in_parallel_without_extra_mandatory_occupancy"
+      },
+      "accessibility": {
+        "visual_or_spatial": "gate_posture_and_ground_passage",
+        "audio_or_ui_or_state_change": "guard_command_or_passage_state",
+        "color_only_forbidden": true
+      },
+      "runtime_key": null
+    },
+    {
+      "spec_id": "DF_SPEC_COMBAT_GUIDING_COURT",
+      "display_name": "接引院：魂印识别",
+      "chapter_role": "mainline_story_checkpoint",
+      "mechanic_grammar": "identity_provenance_and_rightful_guidance",
+      "warning": {
+        "visual_or_spatial": "soul-mark origin, absence or conflict relation",
+        "audio_or_ui_or_state_change": "narrated_record_fragment_or_identity_UI"
+      },
+      "player_decision": "compare an origin, temporarily hold a contested soul, submit a verified guidance, or refuse forged ownership",
+      "visible_restoration": "matching soul-marks gain correct guidance while conflicting records remain visibly available for correction",
+      "failure_meaning": "the player substituted appearance, distance or threat for identity verification",
+      "review": "show the missing comparison, wrong submission and the source that should have been checked first",
+      "player_scaling": {
+        "minimum_players": 1,
+        "maximum_players": 4,
+        "one_player_path": "recheck_and_submit_in_a_repeatable_order",
+        "multi_player_path": "players may observe_or_sort_in_parallel_but_no_final_judgment_requires_simultaneous_confirmation"
+      },
+      "accessibility": {
+        "visual_or_spatial": "soul-mark_shape_or_outline",
+        "audio_or_ui_or_state_change": "voice_or_textual_identity_state",
+        "color_only_forbidden": true
+      },
+      "runtime_key": null
+    },
+    {
+      "spec_id": "DF_SPEC_COMBAT_JUDGE_HALL",
+      "display_name": "判官殿：命册校勘",
+      "chapter_role": "mainline_story_checkpoint_and_encounter_theme",
+      "mechanic_grammar": "conflicting_fate_record_proofreading",
+      "warning": {
+        "visual_or_spatial": "rewritten entries, contradictory evidence and forced judgment chain",
+        "audio_or_ui_or_state_change": "page_sound, verdict voice or evidence summary"
+      },
+      "player_decision": "choose a causal chain to proofread, defer a judgment, submit a verified entry, or protect an unaltered record",
+      "visible_restoration": "false entries lose coercive effect and the verified causal chain persists for the next decision",
+      "failure_meaning": "the player affirmed a forged entry before proof or ignored a contradiction that later overwrote the record",
+      "review": "show the false entry accepted, omitted contradiction and a better proofreading order",
+      "player_scaling": {
+        "minimum_players": 1,
+        "maximum_players": 4,
+        "one_player_path": "page_by_page_verification_with_safe_deferral",
+        "multi_player_path": "players may read_separate_entries_but_simultaneous_clicks_are_not_a_required_solution"
+      },
+      "accessibility": {
+        "visual_or_spatial": "entry_shape_and_causal_link",
+        "audio_or_ui_or_state_change": "page_or_verdict_audio_and_evidence_UI",
+        "color_only_forbidden": true
+      },
+      "runtime_key": null
+    },
+    {
+      "spec_id": "DF_SPEC_COMBAT_BAIGU_SECRET_REALM",
+      "display_name": "白骨秘境：单人多形态识别",
+      "chapter_role": "optional_parallel_solo_instance",
+      "mechanic_grammar": "persistent_evidence_across_multiple_forms",
+      "warning": {
+        "visual_or_spatial": "shared soul-mark, behavior trace or scene residue persists before a form changes",
+        "audio_or_ui_or_state_change": "form-shift cue or form-history UI"
+      },
+      "player_decision": "identify whether a form conceals, lures or exposes evidence; observe, evade, interrupt, retain evidence or submit during restoration",
+      "visible_restoration": "the same-source evidence remains continuous across forms and reveals the next readable clue",
+      "failure_meaning": "the player treated a form change as a new target or submitted judgment during concealment",
+      "review": "show recognized and missed same-source clues in a form sequence",
+      "player_scaling": {
+        "minimum_players": 1,
+        "maximum_players": 1,
+        "one_player_path": "solo_self_sufficient_observe_and_restore_chain",
+        "multi_player_path": "not_applicable_solo_only"
+      },
+      "accessibility": {
+        "visual_or_spatial": "form_outline_and_shared_source_marker",
+        "audio_or_ui_or_state_change": "distinct_audio_pattern_or_form_history_UI",
+        "color_only_forbidden": true
+      },
+      "entry_boundary": {
+        "is_mainline_entry_prerequisite": false,
+        "is_team_entry_prerequisite": false,
+        "writes_yanluo_progression": false,
+        "consumes_yanluo_progression": false
+      },
+      "runtime_key": null
+    },
+    {
+      "spec_id": "DF_SPEC_COMBAT_YANLUO_HALL",
+      "display_name": "阎罗殿：证据与裁决的常规最终",
+      "chapter_role": "non_team_normal_final",
+      "mechanic_grammar": "preserve_evidence_judge_conflict_restore_fate_record",
+      "warning": {
+        "visual_or_spatial": "overwriting fate-record entries, provenance paths and contested judgment zones",
+        "audio_or_ui_or_state_change": "verdict cadence, bell or judgment summary"
+      },
+      "player_decision": "preserve a verifiable entry, defer a false judgment, choose an evidence-backed verdict and reject a forged final archive",
+      "visible_restoration": "a verified record persists, false coercion loses effect and the fate record visibly returns to a coherent order",
+      "failure_meaning": "the player misread proof, chose a wrong priority or missed a restoration opportunity rather than merely lacking output",
+      "review": "replay the final truth-versus-forgery divergence and the omitted preservation_or_restoration action",
+      "phases": [
+        "evidence_preservation",
+        "judgment_confrontation",
+        "fate_record_restoration"
+      ],
+      "player_scaling": {
+        "minimum_players": 1,
+        "maximum_players": 4,
+        "one_player_path": "preserve_then_verify_then_restore_in_sequence",
+        "multi_player_path": "players may observe_protect_and_absorb_short_pressure_in_parallel_but_every_judgment_has_a_single_player path"
+      },
+      "accessibility": {
+        "visual_or_spatial": "record_order_causal_links_and_scene_state",
+        "audio_or_ui_or_state_change": "verdict_voice_bell_or_judgment_summary",
+        "color_only_forbidden": true
+      },
+      "progression_boundary": {
+        "combat_spec_writes_progression": false,
+        "only_authoritative_success_event_may_write": "DF_E_YANLUO_HALL"
+      },
+      "runtime_key": null
+    },
+    {
+      "spec_id": "DF_SPEC_COMBAT_ZHUANLUN_HALL",
+      "display_name": "转轮殿：记忆与轮回协作",
+      "chapter_role": "team_instance",
+      "mechanic_grammar": "memory_evidence_mutual_verification_and_rebirth_chain_restoration",
+      "warning": {
+        "visual_or_spatial": "memory chains, false member categorization and rebirth direction are readable on the scene",
+        "audio_or_ui_or_state_change": "distinct memory cues, responsibility UI or narration"
+      },
+      "player_decision": "assign observation, protection, memory recovery and restoration roles; decide when to aggregate evidence and when to defer a chain",
+      "visible_restoration": "mutually verified memory chains resist reset and a false rebirth push loses its basis",
+      "failure_meaning": "the group chose speed over verification, erased a chain by misclassification, or mistook deferral for abandonment",
+      "review": "show omitted evidence, premature restoration and a recoverable cooperation order by responsibility",
+      "player_scaling": {
+        "minimum_players": 1,
+        "maximum_players": 4,
+        "one_player_path": "sequential_preservation_review_and_chain_restoration",
+        "multi_player_path": "players may hold_and_handoff_distinct_evidence_but_no_fixed_fifth_role_exists"
+      },
+      "accessibility": {
+        "visual_or_spatial": "memory_chain_shape_and_route",
+        "audio_or_ui_or_state_change": "distinct_audio_pattern_or_responsibility_state",
+        "color_only_forbidden": true
+      },
+      "progression_boundary": {
+        "writes_yanluo_progression": false,
+        "may_replace_yanluo_normal_completion": false,
+        "is_mainline_entry_prerequisite": false,
+        "uses_existing_team_cleanup_contract": true
+      },
+      "runtime_key": null
+    }
+  ],
+  "handoff_boundaries": {
+    "terrain": "future terrain must expose evidence origin, deferral space, handoff route, restoration window and retreat/review sightline; coordinates and map bindings remain deferred",
+    "object_config": "future assets need soul-mark, fate-record, gate-credential and memory-chain silhouettes plus dual-channel telegraph roles; object IDs and properties remain deferred",
+    "lua": "future runtime may consume authoritative encounter outcomes but cannot derive admission, completion, membership, reconnect, cleanup, receipt or settlement from this contract",
+    "ui": "future UI may display evidence priority, judgment state and failure review; it cannot decide truth, entry, member state, progression or settlement",
+    "economy": "no economy handoff is authorized",
+    "runtime_key": null
+  },
+  "deferred": {
+    "duration": null,
+    "health": null,
+    "damage": null,
+    "map": null,
+    "terrain": null,
+    "object_records": null,
+    "runtime_implementation": null,
+    "reward": null,
+    "drop": null,
+    "currency": null,
+    "xp": null,
+    "qualification": null,
+    "receipt": null,
+    "runtime_key": null
+  },
+  "acceptance_ids": [
+    "DF-COMBAT-ACC-001",
+    "DF-COMBAT-ACC-002",
+    "DF-COMBAT-ACC-003",
+    "DF-COMBAT-ACC-004",
+    "DF-COMBAT-ACC-005",
+    "DF-COMBAT-ACC-006",
+    "DF-COMBAT-ACC-007",
+    "DF-COMBAT-ACC-008",
+    "DF-COMBAT-ACC-009",
+    "DF-COMBAT-ACC-010",
+    "DF-COMBAT-ACC-011",
+    "DF-COMBAT-ACC-012"
+  ]
+}

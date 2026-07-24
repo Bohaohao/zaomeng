@@ -26,8 +26,10 @@
     "docs/10-项目统一世界观总纲.md:81-89,125-129,204-212",
     "docs/02-公共野外与副本规则.md:77-104,106-134",
     "docs/全局设计基线.md:71-72,107-113",
-    "docs/物编/18-成长系统进度、掉落与长期目标契约.md:23-58,162-167,220-225",
-    "docs/物编/地府篇前置接口包/cross-chapter-interface.json:32-177"
+                        "docs/物编/18-成长系统进度、掉落与长期目标契约.md:23-59,160-168,220-225",
+                        "docs/物编/地府篇前置接口包/cross-chapter-interface.json:32-177",
+                        "docs/物编/地府篇前置接口包/chapter-entry-contract.json",
+                        "docs/物编/地府篇主线遭遇副本规格包/combat/difu-combat-readability-contract.json"
   ],
   "contract_sync": {
     "preflight_contract_path": "docs/物编/地府篇前置接口包/cross-chapter-interface.json",
@@ -457,7 +459,7 @@
     ],
     "production_economy_output": false,
     "decision_source": "docs/物编/成长数值与经济裁决包/README.md",
-    "rule": "本包只描述来源类别；economy-v2 已冻结全局设计基线，但未为地府分配 source_profile。资格、物品、货币、经验、掉落、概率、保底、数量与资源吞吐不得在本包推断或产生生产结算。"
+    "rule": "本包只描述来源类别；三篇成长谱系已冻结非运行时的可达路径与预算，但未为地府接入真实 source_profile 或权威结算。资格、物品、货币、经验、掉落、概率、保底、数量与资源吞吐不得在本包推断或产生生产结算。"
   },
   "deferred": {
     "real_map_root": null,

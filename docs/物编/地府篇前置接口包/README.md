@@ -13,6 +13,8 @@
 3. `DF_PROGRESS_YANLUO_HALL_CLEARED` 是角色级持久化进度键。只有阎罗殿的受信任完成事件能按 `(actor_id, event_id)` 幂等写入它；`event_id` 沿用现有权威事件口径，不另建第二套完成事件 ID。
 4. 花果山 `HG_E_DRAGON_REVERSE_TIDE` 只可通过受信任进度查询，在角色等级至少 `38` 且持有该键时放行。旧的泛化 `underworld_late` 不能作为替代输入。
 5. 团队成员被权威证明死亡后先复活并返回所属篇章的 `initial_spawn`，但保持 `dead` 与重入锁；只有匹配同一 `raid_instance_id + session_epoch + cleanup_token` 的 `cleanup_ack` 才能解除。`left` 不复活、不回传；全灭不得向已经死亡的成员再次回传；超时只回传当时仍为 `active` 的成员。
+6. [花果山常规收束证明生产者合同](huaguoshan-mainline-closure-proof-contract.json) 是 `HG_SPEC_MAINLINE_CLOSURE_SUCCESS_V1` 的唯一详细来源：同一角色、同一**来源生命周期**内的未来必经公共路线确认 → `HG_E_SHARK_KING` 权威逐人有效参与 → 熔脉裂口发现，才可按 `(actor_id,event_id)` 生成或重放不透明证明；该来源生命周期作为不可变审计 claim 保存。蛟魔单独参与、鹏魔、龙宫、牛魔、队友、稀有、收集和塔均不能替代。
+7. [花果山→地府入章合同](chapter-entry-contract.json) 是该证明的唯一详细消费者：入章只接受同一角色的权威 `Lv20` 与来自非团队、逐人花果山主线收束成功的不可伪造交接证明。来源生命周期只作不可变审计，不要求等于当前入章请求生命周期；当前请求生命周期仍须由受信任角色权威独立校验，因此同角色重连后可消费或幂等重放，而旧／伪造请求仍被拒绝。它仅写入或重放 spec-local 逻辑结果，不新增实际运行时键。`Lv21-40` 是地府成长带，不是入口硬门槛。既有 [cross-chapter-interface.json](cross-chapter-interface.json) 仍只负责其中已冻结的阎罗殿、转轮殿、逆潮和团队清理边界，不能替代或平行定义本入章资格。
 
 ## 明确不包含
 
@@ -27,9 +29,13 @@
 | 工件 | 用途 |
 |---|---|
 | [cross-chapter-interface.json](cross-chapter-interface.json) | 唯一机器可读接口契约与非生产证据协议 |
+| [huaguoshan-mainline-closure-proof-contract.json](huaguoshan-mainline-closure-proof-contract.json) | 花果山→地府不透明常规收束证明的唯一生产者、鲨魔→裂口顺序、重放与拒绝来源边界 |
+| [chapter-entry-contract.json](chapter-entry-contract.json) | 花果山→地府入章的唯一详细、纯离线资格与幂等合同；既有跨篇接口只作非重叠边界 |
 | [design-spec.json](design-spec.json) | Y3 规划层交接视图；不替代接口契约 |
 | [validate-underworld-preflight.ps1](validate-underworld-preflight.ps1) | 严格验证固定决策、非生产边界、来源与负例 |
 | [validate-difu-huaguoshan-contract.ps1](validate-difu-huaguoshan-contract.ps1) | 通过受信任、离线、执行式 Node/Fengari Lua 表投影比对地府接口与花果山 manifest、绑定和有效 Lua 配置字段；不替代行为回归 |
+| [validate-difu-chapter-entry-contract.ps1](validate-difu-chapter-entry-contract.ps1) | 严格验证入章资格、同角色绑定、来源生命周期审计与当前请求生命周期独立校验、重连幂等重放、拒绝来源与全量 `null/deferred` 边界，并执行负例 |
+| [validate-huaguoshan-mainline-closure-proof-contract.ps1](validate-huaguoshan-mainline-closure-proof-contract.ps1) | 严格验证鲨魔逐人参与→熔脉裂口→唯一证明生产者、来源生命周期仅限签发证据、路线选择交错、精确重放、拒绝替代来源、交接消费者对齐与全量 `null/deferred` 边界，并执行负例 |
 | [validation-report.md](validation-report.md) | 本包最新离线验证记录 |
 
 ### 跨篇 Lua 投影的信任边界
@@ -47,6 +53,8 @@
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\地府篇前置接口包\validate-underworld-preflight.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\地府篇前置接口包\validate-difu-huaguoshan-contract.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\地府篇前置接口包\validate-huaguoshan-mainline-closure-proof-contract.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\地府篇前置接口包\validate-difu-chapter-entry-contract.ps1
 ```
 
 随后使用 `y3-design-spec-normalizer` 的 `validate-design-spec.ps1` 与 `score-spec-completeness.ps1` 检查规划视图。其完整度分数只说明结构可交接，不解除任何生产门禁。

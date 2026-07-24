@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "package": "difu-chapter-entry-contract",
+  "artifact_status": "non-production-interface-contract",
+  "status": "offline-interface-ready",
+  "production_gate": "closed",
+  "implementation_handoff": false,
+  "scope": {
+    "includes": [
+      "same_actor_entry_authorization_and_handoff_proof_boundary",
+      "spec_local_difu_chapter_entry_write_or_replay_only",
+      "entry_gate_separated_from_lv21_to_lv40_growth_band"
+    ],
+    "excludes": [
+      "actual_runtime_or_persistent_key_or_save_write",
+      "map_coordinate_y3_object_unit_skill_encounter_or_session_implementation",
+      "xp_drop_probability_pity_currency_item_reward_economy_receipt_or_value"
+    ]
+  },
+  "source_refs": [
+    {
+      "role": "global_baseline",
+      "path": "docs/全局设计基线.md"
+    },
+    {
+      "role": "worldview_master",
+      "path": "docs/10-项目统一世界观总纲.md"
+    },
+    {
+      "role": "growth_contract",
+      "path": "docs/物编/18-成长系统进度、掉落与长期目标契约.md"
+    },
+    {
+      "role": "existing_interface_boundary",
+      "path": "docs/物编/地府篇前置接口包/cross-chapter-interface.json"
+    },
+    {
+      "role": "huaguoshan_mainline_producer_contract",
+      "path": "docs/物编/地府篇前置接口包/huaguoshan-mainline-closure-proof-contract.json"
+    }
+  ],
+  "chapter_band": {
+    "chapter": "difu",
+    "growth_level_range": {
+      "minimum": 21,
+      "maximum": 40,
+      "semantic": "growth_band_not_entry_hard_gate"
+    },
+    "entry_hard_gate": {
+      "minimum_authoritative_level": 20,
+      "level_source": "trusted_character_authority",
+      "client_reported_level_accepted": false
+    }
+  },
+  "semantic_identifiers": {
+    "identifier_scope": "spec_local_semantic_only",
+    "hg_mainline_closure_event": "HG_SPEC_MAINLINE_CLOSURE_SUCCESS_V1",
+    "difu_chapter_entry_result": "DF_SPEC_CHAPTER_ENTERED_V1",
+    "semantic_identifier_not_runtime_key": true,
+    "actual_runtime_event_key": null,
+    "actual_runtime_progression_key": null,
+    "actual_storage_key": null
+  },
+  "entry_authorization": {
+    "same_actor_required": true,
+    "current_request_lifecycle_required": true,
+    "current_request_lifecycle_source": "trusted_character_authority",
+    "minimum_authoritative_level": 20,
+    "authoritative_level_source": "trusted_character_authority",
+    "required_handoff_proof": {
+      "required": true,
+      "proof_type": "opaque_authoritative_handoff_proof",
+      "issuer_chapter": "huaguoshan",
+      "source_event_semantic_id": "HG_SPEC_MAINLINE_CLOSURE_SUCCESS_V1",
+      "source_event_scope": "non_team_per_actor_mainline_closure_success",
+      "same_actor_binding": "required",
+      "source_actor_lifecycle_claim": "required_immutable_audit_only",
+      "source_actor_lifecycle_equals_current_request": false,
+      "authority_proof_required": true,
+      "client_constructible": false,
+      "producer_contract_path": "docs/物编/地府篇前置接口包/huaguoshan-mainline-closure-proof-contract.json",
+      "actual_runtime_proof_key": null
+    },
+    "required_claim_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "event_id",
+      "source_event_semantic_id",
+      "opaque_handoff_proof_ref",
+      "completed_tick",
+      "authority_proof_ref",
+      "schema_version"
+    ]
+  },
+  "logical_result_contract": {
+    "result_semantic_id": "DF_SPEC_CHAPTER_ENTERED_V1",
+    "result_scope": "spec_local_logical_only",
+    "write_authority": "trusted_chapter_authority",
+    "idempotency_key_fields": [
+      "actor_id",
+      "event_id"
+    ],
+    "first_accept_outcome": "write_spec_local_logical_result_only",
+    "exact_replay_outcome": "return_existing_spec_local_logical_result_without_second_write",
+    "replay_current_request_lifecycle_policy": "allow_after_trusted_current_lifecycle_revalidation",
+    "actual_runtime_progression_key": null,
+    "actual_storage_key": null
+  },
+  "rejection_contract": {
+    "foreign_actor": "denied",
+    "stale_or_untrusted_current_request_lifecycle": "denied",
+    "missing_or_altered_source_actor_lifecycle_claim": "denied",
+    "missing_invalid_or_foreign_proof": "denied",
+    "replay_with_invalid_current_lifecycle_or_proof": "denied",
+    "teammate_leader_or_party_result": "denied",
+    "client_reported_level_proof_or_progress": "denied",
+    "collection_progress_or_checklist": "denied",
+    "rare_drop_or_rare_completion": "denied",
+    "dragon_palace_encounter_completion": "denied",
+    "ox_demon_team_instance_completion": "denied"
+  },
+  "evidence_protocol": {
+    "artifact_status": "non-production",
+    "evidence_only": true,
+    "permitted_outcomes": [
+      "write_spec_local_logical_result_only",
+      "return_existing_spec_local_logical_result_without_second_write"
+    ],
+    "forbidden_outcomes": [
+      "grant_reward",
+      "grant_currency",
+      "grant_item",
+      "grant_xp",
+      "set_probability",
+      "set_pity",
+      "open_map_session",
+      "write_runtime_key"
+    ],
+    "production_value": null,
+    "candidate_value": null
+  },
+  "deferred": {
+    "runtime_event_key": null,
+    "runtime_progression_key": null,
+    "persistent_storage_key": null,
+    "map_key": null,
+    "map_id": null,
+    "map_coordinates": null,
+    "y3_object_ids": null,
+    "reward_values": null,
+    "xp_values": null,
+    "currency_values": null,
+    "item_values": null,
+    "drop_tables": null,
+    "probability_values": null,
+    "pity_values": null,
+    "economy_receipt": null
+  },
+  "validation_contract": {
+    "validator": "validate-difu-chapter-entry-contract.ps1",
+    "strict_schema": true,
+    "source_refs_must_resolve": true,
+    "negative_tests_required": true,
+    "production_value": null,
+    "candidate_value": null
+  }
+}
