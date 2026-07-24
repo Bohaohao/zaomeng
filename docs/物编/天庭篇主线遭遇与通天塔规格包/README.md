@@ -2,7 +2,7 @@
 
 ## 状态
 
-offline-design-spec / content-expanded / authority-contract-specified / authority-vertical-slice-offline-tested / seven-star-session-reference-offline-tested / mansion-session-reference-offline-tested / mainline-narrative-presentation-specified / combat-readability-specified / combat-numeric-unit-baseline-specified / cross-profession-calibration-protocol-specified / enemy-ecology-specified / mainline-boss-deepened / map-scale-aligned / terrain-layout-dry-run-specified / ui-information-specified / object-art-vfx-blueprint-specified / y3-construction-preflight-specified / surface-construction-discovery-specified / tower-economy-full-run-candidate-pending-global-adoption / economy-v2-input-handoff-specified / production-gate-closed
+offline-design-spec / content-expanded / authority-contract-specified / authority-vertical-slice-offline-tested / seven-star-session-reference-offline-tested / mansion-session-reference-offline-tested / mansion-encounter-choreography-specified / mainline-narrative-presentation-specified / combat-readability-specified / combat-numeric-unit-baseline-specified / cross-profession-calibration-protocol-specified / enemy-ecology-specified / mainline-boss-deepened / map-scale-aligned / terrain-layout-dry-run-specified / ui-information-specified / object-art-vfx-blueprint-specified / y3-construction-preflight-specified / surface-construction-discovery-specified / tower-economy-full-run-candidate-pending-global-adoption / economy-v2-input-handoff-specified / production-gate-closed
 
 本包已从“边界已冻结、内容待定”扩展为可复审的纯离线内容规格：
 
@@ -12,6 +12,7 @@ offline-design-spec / content-expanded / authority-contract-specified / authorit
 - 长期复用：七星与二十八星宿进入唯一全局通天塔的小 Boss 内容池；四十层、八段五拍、每五层 Boss 槽与每十层大 Boss 是待上位全局塔合同采纳的天庭侧离线候选。
 - 权威边界：入章、三段逻辑进度、主线终局、七星/星宿会话、时辰快照和噩梦逐人资格均已有纯离线合同语义。
 - 战斗可读性：主线、七星、四方七宿与四圣噩梦已补齐“预警 → 决策 → 反制 → 可复盘失败”的施工前机制规格，且所有机制都保留 1–4 人可完成路径。
+- 星宿遭遇编排：普通四象的 `双宿 → 双宿 → 双宿 → 单宿`、28 张星官的读线/提交/反制/恢复卡，以及四圣噩梦固定 `2+2+2+1` 七链、净宿援护与核心回正均已细化；它们只消费会话权威事实，不能改写 `phase_id`、`revision` 或 `cleanup_token`。
 - 战斗数值与单位基线：四职业 Lv41/45/50/55/60 裸装属性形成可核查参照；小怪、精英、主线 Boss、七星、二十八星官与四圣统一冻结为无量纲耐久、压力、节拍、P0/反制和 1–4 人缩放，原始对象字段与秒数仍等待实机标定。
 - 跨职业绝对标定（P0）：`implementation/combat-calibration` 已冻结 12 个 Lv41/55/60 裸装锚点、固定构筑声明账本、D90/B10、动作/移速、场地碰撞和 1–4 人回放的证据接口；新增 [实证采集与采纳包](../../../implementation/combat-calibration/evidence-adoption/README.md) 固定“真实只读采集 → 摘要/哈希 → 独立复核 → 外部采纳 → 另行投影复审”链路。当前无可信采集方、真实工程、账本或采纳决定，七道绝对投影门禁仍为 `0/7`。
 - 敌人生态：受控天兵、四门守备机关、失控云兽、泛称监星使及命令/阵眼/星历/共鸣回响均已有非塔职责、双通道预警、反制与首领身份护栏。
@@ -30,6 +31,8 @@ offline-design-spec / content-expanded / authority-contract-specified / authorit
 
 本轮离线施工收口、P0 外部实证接入边界、复审与验收证据见[天庭离线施工收口与 P0 外部实证接入归档](../../归档/物编施工/08-天庭离线施工收口与P0外部实证接入归档.md)；早期主线、遭遇、副本与权威合同冻结记录仍见[第 06 号归档](../../归档/物编施工/06-天庭篇主线遭遇副本与权威合同归档.md)。
 
+二十八星官普通四段、二十八张机制卡、四圣噩梦七链、成员权威元组与只读终局候选的细化及终审证据见[天庭星宿机制编排与状态图归档](../../归档/物编施工/09-天庭星宿机制编排与状态图归档.md)；该归档不使离线语义图成为运行时状态机。
+
 后续 economy-v2 零价值收据输入交接的复审与归档见[economy-v2 权威结算内核与天庭收据输入交接归档](../../归档/物编施工/07-economy-v2权威结算内核与天庭收据输入交接归档.md)；它不改变本包的生产门禁。
 
 ## 本轮用户定向规则
@@ -44,6 +47,7 @@ offline-design-spec / content-expanded / authority-contract-specified / authorit
 | 七星与团队会话 | `TT_SPEC_SESSION_SEVEN_STAR`、`TT_SPEC_SESSION_MANSION_NORMAL` 与 `TT_SPEC_SESSION_MANSION_NIGHTMARE` 固定身份、版本、成员快照、失败、清理与幂等语义；死亡、超时、断线或生命周期失效进入清理，确认前不可重入。 | 真实会话服务、锁、复活、断线恢复或状态机实现。 |
 | 二十八星宿 | 四象各七宿；`TT_SPEC_TIME_BASIS_ASIA_SHANGHAI_SHICHEN` 按服务器 `Asia/Shanghai` 时辰四槽循环三次，首次成功创建会话时冻结不可变轮换快照。 | 权威时间服务、时辰边界计算、快照存储与实例实现。 |
 | 团本普通/噩梦 | 普通和噩梦均逐人要求天庭常规主线完成；噩梦还逐人验证 `TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL` 的同方位不透明资格，且普通完成、凭证和本次噩梦快照三方位必须相同。 | 钥匙形态、消耗、奖励、Buff 数值和收据。 |
+| 星宿机制编排 | 普通本固定四段和二十八张星官编排卡；噩梦四圣固定同方位 `2+2+2+1` 链序，单读线仅一个主 P0，净宿集合只增不减。所有遭遇转场未来只绑定既有会话身份与成员/轮换快照。 | 真实遭遇状态机、权威机制事件、Y3/Lua、计时、对象、地图、同步、会话完成证明与任何结算。 |
 | 战斗可读性 | 主线、七星、普通星宿与四圣噩梦均冻结预警、决策、反制、失败复盘、场地职责和 1–4 人适配；颜色不是唯一关键信息载体。 | 技能、单位、原始数值/计时、AI、实际 UI、同步和战斗运行时。 |
 | 战斗数值与单位基线 | 四职业 Lv41/45/50/55/60 裸装包络、`H0/A0/M0/I0/R0/B0/O0/S0` 相对标尺、既有单位全覆盖、相对共鸣与 1–4 人缩放已冻结。 | `hp_max`、攻击/双防、移速字段、攻击间隔秒数、技能伤害、冷却、仇恨、AI、波次、对象/资源键与实机战斗运行时。 |
 | 跨职业绝对标定（P0） | 12 个裸装锚点、12 份固定构筑声明、D90/B10、60Hz 设计夹具、动作/移速、碰撞与 1–4 人回放证据接口，以及独立实证采集/采纳链和 `TT_CAL_ABSOLUTE_OBJECT_FIELDS_V1` 的 fail-closed 投影已冻结。 | 受信任采集提供方、真实工程、逐门证据账本与采纳决定；泛用伤害/双防穿透、命中/暴击/控制公式，实机帧/碰撞/回放、稳定对象键；全部天庭绝对字段仍为 `null`。 |
@@ -84,6 +88,7 @@ offline-design-spec / content-expanded / authority-contract-specified / authorit
 | [mainline-route.md](mainline-route.md) | 主线因果弧、公共遭遇和副本职责关系。 |
 | [instances/七星单人本规格.md](instances/七星单人本规格.md) | 七个单人试炼、称号、毕业法宝和学习闭环。 |
 | [instances/二十八星宿团队本规格.md](instances/二十八星宿团队本规格.md) | 十二时辰轮换、二十八星官签名动作、普通/噩梦与四圣称号。 |
+| [mansion-orchestration/二十八星官与四圣机制编排](mansion-orchestration/README.md) | 普通严格四段 `2+2+2+1`、28 星官读线/提交/反制/恢复、权威成员元组降级、普通/噩梦只读终局候选、四圣固定七链与不可跳段/倒退的离线语义编排；不生成状态机。 |
 | [combat/天庭战斗机制与可读性规格.md](combat/天庭战斗机制与可读性规格.md) | 主线、七星、普通星宿与四圣噩梦的预警、决策、反制、复盘、1–4 人适配和下游施工信息需求。 |
 | [combat/tianting-combat-readability-contract.json](combat/tianting-combat-readability-contract.json) | 战斗可读性验收、经济隔离和权威边界的机器可读合同。 |
 | [combat-baseline/天庭战斗数值与单位基线裁决.md](combat-baseline/天庭战斗数值与单位基线裁决.md) | 四职业裸装包络、相对单位/首领标尺、四圣共鸣与 1–4 人缩放的唯一数值裁决；不含原始物编字段。 |

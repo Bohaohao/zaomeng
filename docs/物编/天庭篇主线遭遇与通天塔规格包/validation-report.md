@@ -2,13 +2,13 @@
 
 ## 结论
 
-验证日期：2026-07-24。天庭地图口径对齐与白盒前置裁决、UI 与无障碍信息架构、物编／美术／特效需求蓝图、物编字段预占、非通天塔敌人生态、五组主线首领级遭遇、主线叙事与表现深化、战斗数值与单位相对基线、跨职业绝对标定协议及其独立实证采集与采纳控制面、Node/Fengari 主线纵切、七星与星宿会话进程内参考模型、Y3 施工预检、地图/UI/资产发现清单，以及全局通天塔候选边界已与既有主线、权威会话和 economy-v2 输入边界完成一致性校验。
+验证日期：2026-07-24。天庭地图口径对齐与白盒前置裁决、UI 与无障碍信息架构、物编／美术／特效需求蓝图、物编字段预占、非通天塔敌人生态、五组主线首领级遭遇、主线叙事与表现深化、二十八星官与四圣机制编排、战斗数值与单位相对基线、跨职业绝对标定协议及其独立实证采集与采纳控制面、Node/Fengari 主线纵切、七星与星宿会话进程内参考模型、Y3 施工预检、地图/UI/资产发现清单，以及全局通天塔候选边界已与既有主线、权威会话和 economy-v2 输入边界完成一致性校验。
 
 结果只证明纯离线规格、候选布局、字段边界和交接条件自洽；不代表任何 Y3 地图、对象、Lua、UI、时间服务、多人、存档、经济结算或奖励已经实现。
 
 | 校验 | 命令结果 | 结论 |
 |---|---|---|
-| 包内合同与交接校验 | `VALIDATION PASSED: 7183 checks` | 原有等级、跨篇、经济、首轮五节拍和运行时键边界继续通过；P0 额外受检父合同 SHA-256、完整七门唯一真源、空的外部采集族、独立采纳模板、来源—预检证明的合同/runner 摘要、全角色隔离、manifest 单向审阅边界，以及物编交接中的空采集/账本/采纳/投影边界。主校验会直接运行 P0 实证采集包与接入前置包的 fail-closed 回归并验证物编子包快照；递归检查继续覆盖 `runtime_key` 与 `runtimeKey`，主线 Boss 阶段必填字段与生态身份映射也已锁定。 |
+| 包内合同与交接校验 | `VALIDATION PASSED: 7687 checks` | 原有等级、跨篇、经济、首轮五节拍和运行时键边界继续通过；P0 额外受检父合同 SHA-256、完整七门唯一真源、空的外部采集族、独立采纳模板、来源—预检证明的合同/runner 摘要、全角色隔离、manifest 单向审阅边界，以及物编交接中的空采集/账本/采纳/投影边界。主校验会直接运行 P0 实证采集包、接入前置包、物编字段预占和星宿机制编排的 fail-closed 回归，并对后两者验证稳定快照；普通 `2+2+2+1`、四圣固定链、权威成员元组、只读终局候选和不可跳段／倒退的语义边也已锁定。 |
 | 天庭纵切执行边界 | `PASS: 10` 执行边界断言；`PASS: 70` 权威核心断言 | 受信任 Node/Fengari 边界拒绝 `NODE_PATH` 等注入；当前生命周期、完整收据字段幂等、逐人凌霄完成和清理锁语义通过。 |
 | P0 跨职业绝对标定协议 | `PASS: 37` 参考断言；执行边界通过 | 12 个 Lv41/55/60 锚点、D90/B10、窄域旧物理夹具和 fail-closed 投影通过；七道绝对投影门禁为 `0/7`，不产生任何天庭原始对象字段。 |
 | P0 实证采集与采纳 | `PASS: 65` 拒绝断言；执行边界通过 | 父 P0 合同 SHA-256、七门顺序、空源快照、精确 envelope、静态门级 scope/覆盖预览、采集/采纳模板和外部引用形状均通过；假证据、自由文本摘要、非法时间、重复 run/队伍规模、混版本、对象键/目标选择器/嵌套投影字段注入、伪造合同扩展/拒绝词表/采集链/采纳态、scope 漂移、模板隐藏采纳/投影字段、原型链/不可枚举/getter/symbol 隐藏字段与自我采纳均被拒绝。当前没有可信采集方、真实工程、证据账本或采纳决定，因此门禁仍为 `0/7`。 |
@@ -17,11 +17,12 @@
 | P1 并行地图/UI/资产发现 | `PASS: 347` 合同断言；`PASS: 18` 回归断言 | 五组主线白盒、三项最小 HUD/复盘面和五项 P0 资产批次都保持无写入；所有实项目、资源、对象与绝对字段均为空。 |
 | 七星单人会话参考（P2） | `PASS: 94` Node 断言；执行边界通过 | owner、观台准入、七路线、失败清理、完成保留、重入锁与幂等都只在进程内验证；没有真实进度、掉落、称号、资格、收据或 economy-v2 输入。 |
 | 星宿会话、时辰与资格参考（P3） | `PASS: 24` 边界断言；`PASS: 71` 状态机断言 | 注入 `Asia/Shanghai` 时辰、逐人主线/噩梦资格、三方位、`left`、清理与重放都受测；创建事件重放会返回首次冻结结果，资格 fixture 通过显式 crosswalk 服从上位 `TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL`，不形成平行 schema。 |
+| 二十八星官与四圣机制编排（P3） | `PASS: 707` PowerShell 断言 | 普通四象精确 `2+2+2+1`、28 张读线/提交/反制/恢复卡、权威成员元组降级、普通与噩梦只读终局候选、四圣固定七链、净宿单调以及不可跳段／倒退的语义状态图均受测；不创建实际状态机、会话完成、资格、奖励或经济。 |
 | 五组主线叙事与表现深化 | `PASS: 266` PowerShell 断言 | 五组 Boss 各有入场引导、三段锚点、双通道预警、失败复盘、非经济确认与 L0–L4 表现职责；不写权威状态、资产、数值、进度或经济。 |
 | 天庭物编字段预占 | `PASS: 4901` PowerShell 断言 | 十一类生态、五组主线、七星、二十八星官与四圣共 55 张逻辑卡均具有三语义槽、P0、第二通道、反制与全空字段预占；精确文件白名单、来源路径／身份／内容 SHA-256、P0 七门、直接 P0 实证采纳合同追溯、字段类型、逻辑卡语义快照与子包入口均 fail-closed，不生成 `assets`、`mode`、插件或对象。 |
-| 天庭施工就绪聚合回归 | `PASS: TianTing construction-readiness offline verification.` | 顺序运行 P0、P1 结构预检、主线纵切、表面发现、七星参考、星宿参考、主线表现与物编字段预占测试；通过不改变任何生产门禁。 |
+| 天庭施工就绪聚合回归 | `PASS: TianTing construction-readiness offline verification.` | 顺序运行 P0、P1 结构预检、主线纵切、表面发现、七星参考、星宿会话参考、星宿机制编排、主线表现与物编字段预占测试；通过不改变任何生产门禁。 |
 | economy-v2 全量离线回归 | `PASS: 225` 结算断言；`PASS: 395` 天庭权威交接断言；`PASS: 83` 潮汐 Trace 适配断言 | 受信任 Node/Fengari 边界、天庭来源事实原子绑定与经济隔离继续通过；当前仍只有凌霄主线成功可进入既有零价值来源事实候选。 |
-| 设计规格结构校验 | `ok: true`；无 errors | 16 个系统、5 个单局流程、9 项风险和 8 项未决均结构有效；`targetDurationMinutes=0` 继续是预期提示。 |
+| 设计规格结构校验 | `ok: true`；无 errors | 17 个系统、5 个单局流程、9 项风险和 8 项未决均结构有效；`targetDurationMinutes=0` 继续是预期提示。 |
 | 设计完整度校验 | `100/100`；`ready` | Y3 2.5D、1–4 人会话、MVP、交接和验收字段完整；不会将 deferred 内容提升为生产资产。 |
 | 主候选布局校验 | `0 errors`；10 条预期未决 warning | `terrain-layout/layout.json` 保持 `mode=preview`；640×416 只作图解，资源/地图/入口/传送/逻辑资源均未创建。 |
 | 地图口径白盒校验 | `0 errors`；5 条预期未决 warning | 两张 96×64 公共白盒候选与 8 格非连通章节边界适配 224×80 天界带状容量；不暗示现有道路、地图邻接或传送。 |
@@ -46,6 +47,7 @@
 - `TT-ACC-042` 修复了天权称号的单人一致性：七星称号保留单人完整效用，组队语义不能反向变成多人硬门槛。
 - `TT-ACC-043` 将七星参考模型限定为进程内 owner/观台/七路线/失败/清理/幂等夹具；完成仅为本地记录，禁止进度、掉落、称号、资格、收据与经济输出。
 - `TT-ACC-044` 将星宿参考模型限定为注入上海时辰与逐人资格夹具；创建重放返回首次冻结结果，噩梦 fixture 明确映射到上位唯一资格 schema，`left` 仍不能重连或领取当前实例完成资格。
+- `TT-MANSION-CHOREO-ACC-001..009` 固定普通四象严格 `2+2+2+1`、28 张星官读线/提交/反制/恢复卡、成员状态只读权威元组、普通/噩梦只读终局候选、四圣固定七链和净宿单调；`transition_index` 只允许沿声明边前进，恢复不能跳段、倒退、重抽或写入会话／资格／经济。
 - `TT-ACC-045` 覆盖五组主线 Boss 的叙事和表现深化：每组恰好三段锚点，预警具有结构与独立通道/无障碍替代，所有表现绑定和非经济确认字段为空。
 - `TT-OBJRES-ACC-001..008` 与 `TT-ACC-046` 覆盖 55 张物编逻辑卡、P0 七道门快照、全空对象／资源／绝对字段／运行时预占、主线／七星／二十八星官／四圣身份完整性及权威经济只读边界；它们不是 `y3-object-config` 的 `assets` 输入。
 - 纵切的三个逻辑进度必须使用当前 `actor_lifecycle_id`；同一 `(actor_id,event_id)` 只有在会话、epoch、完成时刻、证明和 schema 等所有绑定字段未漂移时才可重放既有结果。
@@ -60,6 +62,7 @@
 - P0 的七道绝对投影门禁当前均未采纳；`PASS` 只证明拒绝越权投影正确，绝不表示天庭单位已经有可施工的绝对 HP、攻击、双防、攻速或技能秒数。未来必须先有受信任的外部只读采集方、真实工程和逐门证据账本，再完成独立采纳与单独投影复审。
 - 当前仓库没有 map-local `script/y3/{meta,game}` 或 `ui` 根；施工预检的失败关闭是预期结果，不是可通过补造目录规避的缺陷。
 - 七星/星宿参考模型的通过不代表真实会话服务、权威时间、凭证、断线传输、复活出生点、持久化或团本施工已完成；它们只能在未来可信提供方接入后作为回归语义参考。
+- 星宿机制编排的通过不代表真实团本战斗状态机已开始；它只冻结未来实现必须遵守的语义边、成员状态来源和终局交接边界。
 - 主线叙事与表现规格不授权 UI、镜头、音频、VFX、对象、地图或资源写入；所有实际绑定继续等待现场读取与施工确认。
 - 物编字段预占不授权生成插件、Y3 对象、`copyFrom`、模板、资源 ID 或绝对属性；P0 七道门、真实对象／资源盘点、稳定键／模板审定和写入授权缺一不可。
 - 四个全局塔大 Boss 只保留创意身份；必须在上位全局塔采纳后另起资产蓝图，不能借当前天庭主线／副本蓝图直接施工。
@@ -80,6 +83,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\tianting-y3
 powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\tianting-surface-construction-manifest\tests\run-all.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\tianting-seven-star-session-reference\tests\run-all.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\tianting-mansion-session-reference\tests\run-all.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\天庭篇主线遭遇与通天塔规格包\mansion-orchestration\tests\run-all.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\天庭篇主线遭遇与通天塔规格包\mainline-presentation\tests\run-all.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\物编\天庭篇主线遭遇与通天塔规格包\object-preallocation\tests\run-all.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\run-all-tianting-construction-readiness.ps1

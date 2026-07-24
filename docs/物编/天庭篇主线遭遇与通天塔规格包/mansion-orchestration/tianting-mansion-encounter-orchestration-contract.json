@@ -1,0 +1,344 @@
+{
+  "version": 1,
+  "package_status": "offline-encounter-choreography-spec",
+  "production_gate": "closed",
+  "runtime_handoff": false,
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_MANSION_ENCOUNTER_ORCHESTRATION",
+    "display_name": "二十八星官与四圣机制编排离线合同",
+    "scope": "mansion_normal_and_same_quadrant_nightmare_semantic_choreography_only",
+    "runtime_key": null,
+    "map_key": null,
+    "object_id": null,
+    "ability_id": null,
+    "ui_node_id": null,
+    "resource_id": null
+  },
+  "source_contracts": [
+    {
+      "spec_id": "TT_SPEC_TIANTING_CONTENT_EXPANSION",
+      "path": "../tianting-content-expansion-contract.json",
+      "use": "二十八星官 canonical 身份、四象、签名动作与四圣对应关系"
+    },
+    {
+      "spec_id": "TT_SPEC_TIANTING_COMBAT_READABILITY",
+      "path": "../combat/tianting-combat-readability-contract.json",
+      "use": "预警、决策、反制、复盘与一至四人可完成路径"
+    },
+    {
+      "spec_id": "TT_SPEC_TIANTING_COMBAT_NUMERIC_UNIT_BASELINE",
+      "path": "../combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+      "use": "同屏仅一个主 P0 与附属压力预算；不引用绝对属性"
+    },
+    {
+      "spec_id": "TT_SPEC_TIANTING_PROGRESSION_AND_INSTANCE_AUTHORITY",
+      "path": "../authority/tianting-progression-and-instance-authority-contract.json",
+      "use": "团队会话身份、成员快照、轮换快照、生命周期、断线与清理的唯一权威"
+    },
+    {
+      "spec_id": "TT_SPEC_TIANTING_OBJECT_FIELD_RESERVATION",
+      "path": "../object-preallocation/tianting-object-field-reservation-contract.json",
+      "use": "已有星官、方位与四圣逻辑卡；不新建物编对象"
+    },
+    {
+      "path": "../instances/二十八星宿团队本规格.md",
+      "use": "普通四段与噩梦总循环的人类可读来源"
+    },
+    {
+      "path": "../construction-readiness-ledger.md",
+      "use": "P3 真实施工仍受 P0、P1、时间、成员与场地门禁约束"
+    }
+  ],
+  "hard_boundaries": {
+    "authority_ownership": {
+      "session_owner": "existing_authority_contract_only",
+      "session_lifecycle": "active_to_cleanup_pending_to_closed_is_not_an_encounter_state_machine",
+      "encounter_scope": "may_only_describe_semantic_beats_inside_an_authority_confirmed_active_session",
+      "forbidden_mutations": [
+        "admission",
+        "frozen_membership",
+        "member_status",
+        "rotation_snapshot",
+        "quadrant",
+        "difficulty",
+        "phase_id",
+        "revision",
+        "session_lifecycle",
+        "cleanup_token",
+        "progression",
+        "nightmare_credential",
+        "reward",
+        "receipt",
+        "economy_input"
+      ],
+      "cleanup_token_rule": "cleanup_token remains an authority-only cleanup confirmation secret and is never a player mechanism input.",
+      "completion_rule": "an encounter terminal candidate is not a session completion write and cannot create qualification, settlement, reward or receipt."
+    },
+    "transition_binding": {
+      "future_authority_binding_fields": [
+        "raid_instance_id",
+        "boss_instance_id",
+        "session_epoch",
+        "phase_id",
+        "revision",
+        "rotation_snapshot_id",
+        "quadrant",
+        "difficulty",
+        "actor_id",
+        "actor_lifecycle_id",
+        "membership_snapshot_id",
+        "member_status"
+      ],
+      "encounter_local_semantic_fields": [
+        "encounter_beat_spec_id",
+        "encounter_state_spec_id",
+        "transition_index"
+      ],
+      "forbidden_transition_inputs": [
+        "cleanup_token",
+        "client_clock",
+        "client_timezone",
+        "client_quadrant",
+        "local_timer",
+        "damage_meter",
+        "local_ui_state",
+        "unfrozen_member",
+        "client_reported_member_status",
+        "left_member",
+        "dead_member",
+        "stale_lifecycle"
+      ],
+      "replay_drift_policy": "reject",
+      "authority_member_snapshot_rule": "每次未来机制操作只可读取既有权威快照中的 actor_id、actor_lifecycle_id、membership_snapshot_id 与 member_status 元组；死亡或 left 只能由该权威状态投影被观察，客户端报告不得作为转场输入。",
+      "idempotency_rule": "未来权威生成的同一机制操作标识只能在全部冻结绑定、精确成员快照元组、前置语义状态和处理者集合一致时重放首次结果；任一漂移必须拒绝。"
+    },
+    "runtime_and_asset_bindings": {
+      "y3_write": null,
+      "lua_write": null,
+      "map_write": null,
+      "object_write": null,
+      "ability_write": null,
+      "buff_write": null,
+      "projectile_write": null,
+      "ui_write": null,
+      "storage_write": null,
+      "actual_event_key": null,
+      "runtime_key": null,
+      "resource_id": null
+    },
+    "numeric_fields": {
+      "health": null,
+      "attack": null,
+      "defense": null,
+      "damage": null,
+      "range": null,
+      "cooldown_seconds": null,
+      "cast_seconds": null,
+      "duration_seconds": null,
+      "threat": null,
+      "wave_count": null
+    },
+    "economy_and_progression": {
+      "progression_write": null,
+      "normal_clear_qualification": null,
+      "nightmare_qualification": null,
+      "night_patrol_key": null,
+      "title": null,
+      "material": null,
+      "reward": null,
+      "receipt": null,
+      "economy_input": null
+    }
+  },
+  "semantic_state_grammar": {
+    "normal_segment_sequence": [
+      "segment_read",
+      "lead_signature_telegraph",
+      "support_relation_commit",
+      "combined_counterplay",
+      "visible_readback",
+      "recover_or_transition"
+    ],
+    "nightmare_state_sequence": [
+      "resonance_visible",
+      "officer_counterplay",
+      "purified_officer_aid",
+      "sacred_core_restoration"
+    ],
+    "state_ownership_rule": "all names in this section are immutable offline semantic labels; they must not reuse, overwrite or derive the authority session phase_id.",
+    "terminal_candidate_rule": "only all required semantic beats may expose an encounter terminal candidate; the candidate remains read-only to the authority session contract.",
+    "transition_graph": {
+      "normal_states": [
+        "TT_SPEC_MANSION_NORMAL_FRONT_PAIR",
+        "TT_SPEC_MANSION_NORMAL_MIDDLE_PAIR",
+        "TT_SPEC_MANSION_NORMAL_REAR_PAIR",
+        "TT_SPEC_MANSION_NORMAL_GUARD_SINGLE",
+        "TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE"
+      ],
+      "normal_forward_edges": [
+        "TT_SPEC_MANSION_NORMAL_FRONT_PAIR -> TT_SPEC_MANSION_NORMAL_MIDDLE_PAIR",
+        "TT_SPEC_MANSION_NORMAL_MIDDLE_PAIR -> TT_SPEC_MANSION_NORMAL_REAR_PAIR",
+        "TT_SPEC_MANSION_NORMAL_REAR_PAIR -> TT_SPEC_MANSION_NORMAL_GUARD_SINGLE",
+        "TT_SPEC_MANSION_NORMAL_GUARD_SINGLE -> TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE"
+      ],
+      "nightmare_states": [
+        "TT_SPEC_MANSION_NIGHTMARE_CHAIN_01",
+        "TT_SPEC_MANSION_NIGHTMARE_CHAIN_02",
+        "TT_SPEC_MANSION_NIGHTMARE_CHAIN_03",
+        "TT_SPEC_MANSION_NIGHTMARE_CHAIN_04",
+        "TT_SPEC_MANSION_NIGHTMARE_SACRED_CORE_RESTORATION",
+        "TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE"
+      ],
+      "nightmare_forward_edges": [
+        "TT_SPEC_MANSION_NIGHTMARE_CHAIN_01 -> TT_SPEC_MANSION_NIGHTMARE_CHAIN_02",
+        "TT_SPEC_MANSION_NIGHTMARE_CHAIN_02 -> TT_SPEC_MANSION_NIGHTMARE_CHAIN_03",
+        "TT_SPEC_MANSION_NIGHTMARE_CHAIN_03 -> TT_SPEC_MANSION_NIGHTMARE_CHAIN_04",
+        "TT_SPEC_MANSION_NIGHTMARE_CHAIN_04 -> TT_SPEC_MANSION_NIGHTMARE_SACRED_CORE_RESTORATION",
+        "TT_SPEC_MANSION_NIGHTMARE_SACRED_CORE_RESTORATION -> TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE"
+      ],
+      "recovery_rule": "a readable failure recovery may remain at the current semantic state only; it cannot increment transition_index, skip a required state, reverse a completed forward edge or recreate a terminal candidate.",
+      "transition_index_rule": "transition_index is strictly monotonic only across the declared forward edges for one authority-bound session identity; duplicate idempotent replay returns the first result, while skip, reversal, altered index or a terminal transition without all declared readbacks is rejected."
+    }
+  },
+  "concurrency_and_member_change": {
+    "pressure_budget": {
+      "one_active_member": "exactly one primary P0 plus at most one auxiliary readable pressure",
+      "two_to_four_active_members": "exactly one primary P0 plus at most two auxiliary readable pressures",
+      "prohibitions": [
+        "two_simultaneous_primary_P0_sources",
+        "permanent_two_location_occupancy",
+        "role_locked_fifth_member_assumption",
+        "more_members_shortens_the_read_line"
+      ]
+    },
+    "member_change_rule": "an authority-confirmed death or left status cancels the affected target, link or occupation at the current beat boundary; the next beat reads only the latest authority member tuple projection and selects its declared serial or substitute branch.",
+    "dead_or_left_rule": "dead and left members cannot advance a beat, reclaim a target, reconnect, receive the encounter terminal candidate or serve as implicit substitutes; client death or disconnect reports never replace the authority member snapshot.",
+    "no_active_member_rule": "the encounter stops issuing beats and delegates failure/cleanup to the existing authority contract; it never resets the raid, recomputes time or reorders chains."
+  },
+  "normal_raid": {
+    "spec_id": "TT_SPEC_MANSION_NORMAL_ENCOUNTER_CHOREOGRAPHY",
+    "segment_shape": ["front_pair", "middle_pair", "rear_pair", "guard_single"],
+    "quadrant_segments": [
+      {
+        "spec_id": "TT_SPEC_MANSION_NORMAL_AZURE_DRAGON_SEGMENTS",
+        "quadrant": "东方青龙",
+        "segments": [
+          {"segment": "front_pair", "officers": ["TT_SPEC_MANSION_JIA_MU_JIAO", "TT_SPEC_MANSION_KANG_JIN_LONG"], "lead": "TT_SPEC_MANSION_JIA_MU_JIAO", "combined_counter": "转向星链并预留穿越线，延迟龙影只能作为已读附属压力。", "carry_forward": "被校正的链向与可穿越路线。"},
+          {"segment": "middle_pair", "officers": ["TT_SPEC_MANSION_DI_TU_HE", "TT_SPEC_MANSION_FANG_RI_TU"], "lead": "TT_SPEC_MANSION_DI_TU_HE", "combined_counter": "在正确日轮扇区内验证真阵眼，不追逐潜遁假点。", "carry_forward": "已验证阵眼与下一扇区方向。"},
+          {"segment": "rear_pair", "officers": ["TT_SPEC_MANSION_XIN_YUE_HU", "TT_SPEC_MANSION_WEI_HUO_HU"], "lead": "TT_SPEC_MANSION_XIN_YUE_HU", "combined_counter": "确认真实动作后把火痕导离保留路线。", "carry_forward": "真实动作证据与未封死的回转线。"},
+          {"segment": "guard_single", "officers": ["TT_SPEC_MANSION_JI_SHUI_BAO"], "lead": "TT_SPEC_MANSION_JI_SHUI_BAO", "combined_counter": "借扇形水压重排已校链，回收错误路线。", "carry_forward": "方位回正的导流路线。"}
+        ]
+      },
+      {
+        "spec_id": "TT_SPEC_MANSION_NORMAL_VERMILION_BIRD_SEGMENTS",
+        "quadrant": "南方朱雀",
+        "segments": [
+          {"segment": "front_pair", "officers": ["TT_SPEC_MANSION_JING_MU_AN", "TT_SPEC_MANSION_GUI_JIN_YANG"], "lead": "TT_SPEC_MANSION_JING_MU_AN", "combined_counter": "截断离群飞扑的拖拽路线，再按可见顺序截铃。", "carry_forward": "已截断的回响顺序。"},
+          {"segment": "middle_pair", "officers": ["TT_SPEC_MANSION_LIU_TU_ZHANG", "TT_SPEC_MANSION_XING_RI_MA"], "lead": "TT_SPEC_MANSION_LIU_TU_ZHANG", "combined_counter": "迁离旧安全区后，引日轨冲锋穿过新留出的空区。", "carry_forward": "新安全区与已消退的旧枝障。"},
+          {"segment": "rear_pair", "officers": ["TT_SPEC_MANSION_ZHANG_YUE_LU", "TT_SPEC_MANSION_YI_HUO_SHE"], "lead": "TT_SPEC_MANSION_ZHANG_YUE_LU", "combined_counter": "先确认远近交换落点，再集中通过火环缺口。", "carry_forward": "已读落点关系与可通缺口。"},
+          {"segment": "guard_single", "officers": ["TT_SPEC_MANSION_ZHEN_SHUI_YIN"], "lead": "TT_SPEC_MANSION_ZHEN_SHUI_YIN", "combined_counter": "从余烬关系识别水脉口，把残火引向可控净化出口。", "carry_forward": "可验证的水脉出口。"}
+        ]
+      },
+      {
+        "spec_id": "TT_SPEC_MANSION_NORMAL_WHITE_TIGER_SEGMENTS",
+        "quadrant": "西方白虎",
+        "segments": [
+          {"segment": "front_pair", "officers": ["TT_SPEC_MANSION_KUI_MU_LANG", "TT_SPEC_MANSION_LOU_JIN_GOU"], "lead": "TT_SPEC_MANSION_KUI_MU_LANG", "combined_counter": "牵引最后离位者回到接应线，再让猎印穿过可读拦截而非硬闯。", "carry_forward": "接应路线与已转向的猎印。"},
+          {"segment": "middle_pair", "officers": ["TT_SPEC_MANSION_WEI_TU_ZHI", "TT_SPEC_MANSION_MAO_RI_JI"], "lead": "TT_SPEC_MANSION_WEI_TU_ZHI", "combined_counter": "借土翎保留正确明暗路线，不把遮挡当作永久掩体。", "carry_forward": "可辨明暗边界与通行面。"},
+          {"segment": "rear_pair", "officers": ["TT_SPEC_MANSION_BI_YUE_WU", "TT_SPEC_MANSION_ZI_HUO_HOU"], "lead": "TT_SPEC_MANSION_BI_YUE_WU", "combined_counter": "以可串行的先后关系拆网与敲点，避免同时双目标硬锁。", "carry_forward": "已断网口与未触发的连锁点。"},
+          {"segment": "guard_single", "officers": ["TT_SPEC_MANSION_SHEN_SHUI_YUAN"], "lead": "TT_SPEC_MANSION_SHEN_SHUI_YUAN", "combined_counter": "把回卷水瀑改造成接应回路，而不是继续放大追猎。", "carry_forward": "可回收的追猎路线。"}
+        ]
+      },
+      {
+        "spec_id": "TT_SPEC_MANSION_NORMAL_BLACK_TORTOISE_SEGMENTS",
+        "quadrant": "北方玄武",
+        "segments": [
+          {"segment": "front_pair", "officers": ["TT_SPEC_MANSION_DOU_MU_XIE", "TT_SPEC_MANSION_NIU_JIN_NIU"], "lead": "TT_SPEC_MANSION_DOU_MU_XIE", "combined_counter": "校平双侧承压并保留中路，镇桩只作可绕行的附属关系。", "carry_forward": "平衡证据与中路。"},
+          {"segment": "middle_pair", "officers": ["TT_SPEC_MANSION_NV_TU_FU", "TT_SPEC_MANSION_XU_RI_SHU"], "lead": "TT_SPEC_MANSION_NV_TU_FU", "combined_counter": "先以静止窗口校正回声，再在可读入口/出口间选择路线。", "carry_forward": "已确认出口与回声静止证据。"},
+          {"segment": "rear_pair", "officers": ["TT_SPEC_MANSION_WEI_YUE_YAN", "TT_SPEC_MANSION_SHI_HUO_ZHU"], "lead": "TT_SPEC_MANSION_WEI_YUE_YAN", "combined_counter": "读出延迟落点，再以可交接的开墙与守点处理城垒。", "carry_forward": "已开启墙口与下一处守点。"},
+          {"segment": "guard_single", "officers": ["TT_SPEC_MANSION_BI_SHUI_YU"], "lead": "TT_SPEC_MANSION_BI_SHUI_YU", "combined_counter": "把水壁反射角转成正确路线条件，保留可读退路。", "carry_forward": "可验证反射路线。"}
+        ]
+      }
+    ],
+    "officer_choreography_profiles": [
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_JIA_MU_JIAO","source_officer_spec_id":"TT_SPEC_MANSION_JIA_MU_JIAO","full_name":"角木蛟","quadrant":"东方青龙","segment":"front_pair","signature_action":"角梁缠星","read":"两端星链与可转向锚点同屏显现；文本提示“链向待校”。","commit":"选定一条链向后，亢金龙的延迟龙影才进入附属位。","counter":"将链引离主通路并留下一条穿越线。","failure_recovery":"错误转向留下单一可见错链；回到锚点可重新校向，不叠加第二主 P0。","adaptation":{"one":"同一角色依次读两端再转向。","two":"一人定锚、一人确认通路。","three":"第三人只标记退路。","four":"可分观察与转向两组，但只一条链进入主反制。","member_loss":"取消失去成员一端的绑定，改为单锚串行校向。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_KANG_JIN_LONG","source_officer_spec_id":"TT_SPEC_MANSION_KANG_JIN_LONG","full_name":"亢金龙","quadrant":"东方青龙","segment":"front_pair","signature_action":"亢龙升势","read":"标记列与延迟龙影落点分开呈现；文本提示“影后回落”。","commit":"只在角链已读后，龙影才封锁旧链方向。","counter":"沿保留穿越线通过，不能用输出消除落影。","failure_recovery":"落错路线留下可绕行残影；角链重校后残影退出主阅读面。","adaptation":{"one":"先看列再走线。","two":"一人报落点、一人保持链向。","three":"第三人保留回退线。","four":"多人可并行观察，不增加第二落影主解。","member_loss":"取消点名并改为最近 active 成员的单线提示。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_DI_TU_HE","source_officer_spec_id":"TT_SPEC_MANSION_DI_TU_HE","full_name":"氐土貉","quadrant":"东方青龙","segment":"middle_pair","signature_action":"地脉潜遁","read":"真阵眼与错误站位以轮廓和地脉回响区分；文本提示“阵眼待验”。","commit":"潜遁只在玩家选择验证点后针对错误站位显现。","counter":"在房日兔正确扇区内确认真阵眼。","failure_recovery":"误点留下可读地脉裂纹并退回验证态，真阵眼不换位。","adaptation":{"one":"依次比对扇区与阵眼。","two":"一人守扇区、一人验阵眼。","three":"第三人观察潜遁出口。","four":"可分线观察但验证提交仍单点。","member_loss":"取消失去成员的观察面，保留最近已读扇区。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_FANG_RI_TU","source_officer_spec_id":"TT_SPEC_MANSION_FANG_RI_TU","full_name":"房日兔","quadrant":"东方青龙","segment":"middle_pair","signature_action":"日房映界","read":"日轮扇区以方向和形状区别；文本提示“安全扇区轮换”。","commit":"扇区轮换在真阵眼可见时才压缩旧区。","counter":"随验证结果迁入正确扇区，再处理潜遁关系。","failure_recovery":"错入旧区只留下失效边界提示，下一轮仍给出新扇区。","adaptation":{"one":"串行迁位后验证。","two":"一人读日轮、一人执行验证。","three":"第三人留在回退线。","four":"可先后迁位，禁止永久分守多扇区。","member_loss":"当前扇区保持，下一读线用剩余成员重分。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_XIN_YUE_HU","source_officer_spec_id":"TT_SPEC_MANSION_XIN_YUE_HU","full_name":"心月狐","quadrant":"东方青龙","segment":"rear_pair","signature_action":"心月惑影","read":"真实动作与复制影保留不同来源轨迹；文本提示“复核上一动作”。","commit":"复制只复现最近一个已预警关键动作，不能凭空追加。","counter":"以来源和历史轨迹确认真影。","failure_recovery":"误认影子只让错误火痕可见，不覆盖真实历史。","adaptation":{"one":"停顿复看来源后选择。","two":"一人报历史、一人确认当前影。","three":"第三人标记回转线。","four":"可交叉确认，但真伪判断仍统一。","member_loss":"取消失去成员的复制目标，转为公共历史读屏。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_WEI_HUO_HU","source_officer_spec_id":"TT_SPEC_MANSION_WEI_HUO_HU","full_name":"尾火虎","quadrant":"东方青龙","segment":"rear_pair","signature_action":"虎尾燎轨","read":"尾扫弧线与火痕追踪方向同时可见；文本提示“旧路将燃”。","commit":"火痕只追随已确认的错误路径。","counter":"利用真影证据把火痕导离回转线。","failure_recovery":"错误导向形成一条可绕火线，重读后会收缩而非累加。","adaptation":{"one":"先辨真影再切回转。","two":"一人引火、一人守回路。","three":"第三人确认出口。","four":"可轮换引火，不要求固定诱饵职业。","member_loss":"火痕解除对失去成员的追随，转为公共路线压力。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_JI_SHUI_BAO","source_officer_spec_id":"TT_SPEC_MANSION_JI_SHUI_BAO","full_name":"箕水豹","quadrant":"东方青龙","segment":"guard_single","signature_action":"箕风泼雨","read":"扇形水压、推送方向与会被重排的链同时可见；文本提示“借势回链”。","commit":"水压只重排前段已留下的链向证据。","counter":"借推送回收错链并保持可读退路。","failure_recovery":"错位后保留一条显性回流线，不能封死全部出口。","adaptation":{"one":"沿回流线串行校正。","two":"一人借势、一人核验链序。","three":"第三人保留退路。","four":"多人可分观察面，只有一条重排进入主 P0。","member_loss":"移除失去成员的链端并按单线回流。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_JING_MU_AN","source_officer_spec_id":"TT_SPEC_MANSION_JING_MU_AN","full_name":"井木犴","quadrant":"南方朱雀","segment":"front_pair","signature_action":"井木擒猎","read":"离群标记、飞扑线与火井方向共显；文本提示“勿离接应线”。","commit":"飞扑只锁一名已读离群目标，鬼铃只作后续关系。","counter":"把飞扑线引回接应路线，不让目标被拖入火井。","failure_recovery":"误走留下可打断的拖拽线，回到队形即可回收。","adaptation":{"one":"自己先后读飞扑与回铃。","two":"一人被标、一人截线。","three":"第三人留火井外侧。","four":"可设接应组但不要求固定坦职。","member_loss":"解除对失去成员的飞扑，改为公共接应线。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_GUI_JIN_YANG","source_officer_spec_id":"TT_SPEC_MANSION_GUI_JIN_YANG","full_name":"鬼金羊","quadrant":"南方朱雀","segment":"front_pair","signature_action":"鬼铃反响","read":"铃源、回声次序与截断点同屏；文本提示“按序断铃”。","commit":"回声只能在井木犴飞扑关系已显后传递。","counter":"按可读次序截断回铃，避免反向追逐。","failure_recovery":"顺序错时回到上一枚可见铃源，不新增隐藏回声。","adaptation":{"one":"逐枚串行截断。","two":"一人读序、一人执行。","three":"第三人确认回退点。","four":"可分报铃源，提交顺序保持唯一。","member_loss":"移除失去成员身上的铃，回声从最近 active 节点续接。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_LIU_TU_ZHANG","source_officer_spec_id":"TT_SPEC_MANSION_LIU_TU_ZHANG","full_name":"柳土獐","quadrant":"南方朱雀","segment":"middle_pair","signature_action":"柳障封庭","read":"土枝生长方向与旧安全区边界可见；文本提示“旧区将封”。","commit":"枝障封的是已标为旧区的路径，星日马尚未冲锋。","counter":"先迁出旧区，再利用新空区处理日轨。","failure_recovery":"误留旧区时枝障留出一条可读撤线，下一轮不堆叠封墙。","adaptation":{"one":"先后迁位与确认。","two":"一人报新空区、一人带路。","three":"第三人守撤线。","four":"可分观察，禁止多点长期站岗。","member_loss":"取消失去成员的封锁目标，保留最近撤线。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_XING_RI_MA","source_officer_spec_id":"TT_SPEC_MANSION_XING_RI_MA","full_name":"星日马","quadrant":"南方朱雀","segment":"middle_pair","signature_action":"日驭长驱","read":"日轨、冲锋箭头与会点燃的旧格位并列；文本提示“引其穿空”。","commit":"冲锋只沿柳障迁移后的旧区路径展开。","counter":"由新空区引导冲锋穿过已弃旧区。","failure_recovery":"冲锋误导留下可绕行余烬，撤线仍可见。","adaptation":{"one":"读轨后单人引冲。","two":"一人引轨、一人确认空区。","three":"第三人保留回撤。","four":"可轮换引导，不能堆叠多条冲锋线。","member_loss":"冲锋目标转为最近 active 路线，不追击 left。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_ZHANG_YUE_LU","source_officer_spec_id":"TT_SPEC_MANSION_ZHANG_YUE_LU","full_name":"张月鹿","quadrant":"南方朱雀","segment":"rear_pair","signature_action":"月鹿开张","read":"远近分组与交换落点以连线和距离标签呈现；文本提示“落点待换”。","commit":"交换只重排站位关系，不使玩家失去火环缺口信息。","counter":"确认落点后再选择集合路线。","failure_recovery":"误认分组时保留原/新两组标记，允许重新汇合。","adaptation":{"one":"以自身前后位置串行处理。","two":"互相确认交换关系。","three":"第三人作为可替代集合点。","four":"可两组同步观察，最终缺口只需一次通过。","member_loss":"失去成员的组自动并入最近 active 组。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_YI_HUO_SHE","source_officer_spec_id":"TT_SPEC_MANSION_YI_HUO_SHE","full_name":"翼火蛇","quadrant":"南方朱雀","segment":"rear_pair","signature_action":"火翼环锁","read":"火环收束层级与唯一缺口以轮廓/方向展示；文本提示“缺口可通”。","commit":"火环在月鹿落点关系稳定后才收束。","counter":"沿已确认集合路线通过唯一缺口。","failure_recovery":"错过缺口时火环停留在可回看的层级，下一次给出同一阅读规则。","adaptation":{"one":"串行走向缺口。","two":"一人读缺口、一人确认落点。","three":"第三人保留回转提示。","four":"可先后通过，不要求同步四人穿环。","member_loss":"不把缺口绑定到死者或 left 成员的位置。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_ZHEN_SHUI_YIN","source_officer_spec_id":"TT_SPEC_MANSION_ZHEN_SHUI_YIN","full_name":"轸水蚓","quadrant":"南方朱雀","segment":"guard_single","signature_action":"轸渊潜行","read":"余烬与水脉口以不同形态和文本“脉口待验”呈现。","commit":"爆发只来自被忽略的水脉口，不从无提示位置出现。","counter":"利用水脉出口导走残火并完成净化读回。","failure_recovery":"误判只使一处余烬复燃，可重新验证出口。","adaptation":{"one":"逐口验证。","two":"一人看余烬、一人验脉口。","three":"第三人标回退线。","four":"可分口观察，实际净化提交单口进行。","member_loss":"撤销失去成员对应的假口，保留单口验证。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_KUI_MU_LANG","source_officer_spec_id":"TT_SPEC_MANSION_KUI_MU_LANG","full_name":"奎木狼","quadrant":"西方白虎","segment":"front_pair","signature_action":"奎狼逐月","read":"最后离位者、月影跃迁与接应线同时标识；文本提示“回接应线”。","commit":"追猎只盯已读离位者，娄金狗随后设置拦截关系。","counter":"将追猎引回接应路线。","failure_recovery":"晚回线时月影停在可绕位置，给予一次可见接应重组。","adaptation":{"one":"自己离位后立即沿线回接。","two":"一人被追、一人守接应。","three":"第三人看猎印转移。","four":"可轮换接应，无固定被追职业。","member_loss":"取消对失去成员的跃迁，猎印改为公共可见。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_LOU_JIN_GOU","source_officer_spec_id":"TT_SPEC_MANSION_LOU_JIN_GOU","full_name":"娄金狗","quadrant":"西方白虎","segment":"front_pair","signature_action":"娄关守嗅","read":"猎印携带者与拦截线分开标出；文本提示“勿硬闯”。","commit":"拦截线仅在奎狼接应线明确后出现。","counter":"让猎印沿已读接应线穿越拦截条件。","failure_recovery":"硬闯只留下可回撤标记，猎印不转移给不可见目标。","adaptation":{"one":"先调猎印再过线。","two":"一人携印、一人引线。","three":"第三人保留替代线。","four":"可多角度观察，穿线提交仍唯一。","member_loss":"被标成员死亡/left 时猎印转为公共路线而非随机点名。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_WEI_TU_ZHI","source_officer_spec_id":"TT_SPEC_MANSION_WEI_TU_ZHI","full_name":"胃土雉","quadrant":"西方白虎","segment":"middle_pair","signature_action":"胃土啄阵","read":"土翎可遮挡/困住的两种边界以形态和文本区分。","commit":"地表改变先于昴日鸡明暗检查，且只占附属位。","counter":"借可移动土翎保留正确明暗路线。","failure_recovery":"错误摆放形成可拆回的单片障碍，不能封死全场。","adaptation":{"one":"移动一片再读明暗。","two":"一人摆翎、一人校线。","three":"第三人看撤退面。","four":"可分区观察，只有一片承担主关系。","member_loss":"解除对失去成员的困住关系。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_MAO_RI_JI","source_officer_spec_id":"TT_SPEC_MANSION_MAO_RI_JI","full_name":"昴日鸡","quadrant":"西方白虎","segment":"middle_pair","signature_action":"昴日鸣晓","read":"明暗区域、驱散方向和可用土翎边缘可辨；文本提示“明暗待校”。","commit":"鸣晓只检验胃土雉已提供的路线关系。","counter":"沿正确明暗边界移动，不将隐蔽当成唯一解。","failure_recovery":"曝光后留下可读遮蔽边界，下一读线恢复选择。","adaptation":{"one":"串行选择明暗路线。","two":"一人报明暗、一人移动。","three":"第三人确认土翎边缘。","four":"可多面确认，不要求同时占两种明暗区。","member_loss":"被曝光成员不再作为强制目标，压力回收至路线。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_BI_YUE_WU","source_officer_spec_id":"TT_SPEC_MANSION_BI_YUE_WU","full_name":"毕月乌","quadrant":"西方白虎","segment":"rear_pair","signature_action":"毕月罗网","read":"网的两端、可断顺序与串行替代线同时可见；文本提示“先断一端”。","commit":"两端不是必须同步按压；觜火猴只在第一端读明后接续。","counter":"先后拆开网端，保持一个主反制。","failure_recovery":"错误顺序使已拆端复现为可读虚网，仍可转回串行解。","adaptation":{"one":"一端后另一端。","two":"分别看端但按先后处理。","three":"第三人标替代线。","four":"可并行观察，禁止双端同步硬锁。","member_loss":"被失去成员占用的网端改为延后可处理端。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_ZI_HUO_HOU","source_officer_spec_id":"TT_SPEC_MANSION_ZI_HUO_HOU","full_name":"觜火猴","quadrant":"西方白虎","segment":"rear_pair","signature_action":"觜火裂点","read":"连击点的先后序号与毕网开口同时可见；文本提示“勿错位”。","commit":"连击仅在网端已读后敲向一个星点。","counter":"按确认顺序敲点，避免连锁误触。","failure_recovery":"错点保留一枚可见裂点并回到先后提示，不叠加爆点。","adaptation":{"one":"逐点顺序。","two":"一人报序、一人执行。","three":"第三人回看网口。","four":"可轮换执行者，无职业锁。","member_loss":"未完成点回归公共序列，不能由 left 角色占有。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_SHEN_SHUI_YUAN","source_officer_spec_id":"TT_SPEC_MANSION_SHEN_SHUI_YUAN","full_name":"参水猿","quadrant":"西方白虎","segment":"guard_single","signature_action":"参猿翻瀑","read":"跃点、回卷瀑布和被改变的追猎路线共同显现；文本提示“借瀑回接”。","commit":"回卷只改变前段已读猎印路线。","counter":"把瀑布变成接应回路。","failure_recovery":"错误穿瀑后保留一条回流撤线，避免追猎死局。","adaptation":{"one":"沿回流线自接应。","two":"一人引瀑、一人核猎印。","three":"第三人标回撤。","four":"可分观察，唯一回路进入主反制。","member_loss":"失去成员的追猎标记被回收，不把瀑布封为死路。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_DOU_MU_XIE","source_officer_spec_id":"TT_SPEC_MANSION_DOU_MU_XIE","full_name":"斗木獬","quadrant":"北方玄武","segment":"front_pair","signature_action":"斗角裁衡","read":"双侧承压、中心线和失衡方向以位置与文字“左右待衡”呈现。","commit":"裁衡只判读可见双侧关系，牛金牛镇桩随后作为附属。","counter":"校平两侧且保留中路。","failure_recovery":"失衡击退后给出中路回归线，不要求同步双人承压。","adaptation":{"one":"依次校两侧。","two":"可各读一侧再会合。","three":"第三人守中路。","four":"可分观察，平衡提交是单一关系。","member_loss":"失去成员一侧转为串行可校，中心线不消失。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_NIU_JIN_NIU","source_officer_spec_id":"TT_SPEC_MANSION_NIU_JIN_NIU","full_name":"牛金牛","quadrant":"北方玄武","segment":"front_pair","signature_action":"金牛镇桩","read":"冲撞线、镇桩位置和中路绕行面同时可读；文本提示“留中路”。","commit":"镇桩只强化已读取的裁衡关系。","counter":"绕过或利用镇桩，保持双侧与中路可交换。","failure_recovery":"错位镇桩保留一侧绕行口，下一读线可重校。","adaptation":{"one":"串行绕桩校边。","two":"一人报桩、一人校衡。","three":"第三人标中路。","four":"可交替移动，禁止永久双边驻守。","member_loss":"撤销失去成员关联的冲撞点，桩转成公共障碍。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_NV_TU_FU","source_officer_spec_id":"TT_SPEC_MANSION_NV_TU_FU","full_name":"女土蝠","quadrant":"北方玄武","segment":"middle_pair","signature_action":"蝠影回声","read":"动作过快标记、回声源与静止窗口用轮廓/文本“静听”区分。","commit":"回声先于虚日鼠入口重排出现。","counter":"在静止窗口确认回声源。","failure_recovery":"误动留下可消退的回声轨迹，仍能重新静听。","adaptation":{"one":"停顿后逐步移动。","two":"一人静听、一人验证。","three":"第三人确认出口方向。","four":"可分观察，静止判断不要求全员同时停。","member_loss":"取消失去成员的回声目标，保留公共静听窗口。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_XU_RI_SHU","source_officer_spec_id":"TT_SPEC_MANSION_XU_RI_SHU","full_name":"虚日鼠","quadrant":"北方玄武","segment":"middle_pair","signature_action":"虚穴蚀界","read":"入口、出口和暂失地面均有不同形态；文本提示“出口待验”。","commit":"虚穴只在女土蝠静听结果可见后重连。","counter":"按已确认回声选择正确出口。","failure_recovery":"误入出口时回到可读入口边缘，不随机换口。","adaptation":{"one":"依次验入口出口。","two":"一人报声、一人选口。","three":"第三人守回退边缘。","four":"可多口观察，实际穿越单线完成。","member_loss":"失去成员关联的口关闭为可读边缘，不留无主占位。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_WEI_YUE_YAN","source_officer_spec_id":"TT_SPEC_MANSION_WEI_YUE_YAN","full_name":"危月燕","quadrant":"北方玄武","segment":"rear_pair","signature_action":"危月折返","read":"月相、折返轨迹和延迟落点以形态/文本“月相延迟”呈现。","commit":"俯冲落点只基于已读月相，室火猪不抢占主 P0。","counter":"先读延迟后选择开墙/守点的安全路线。","failure_recovery":"误判落点留下短暂可见落印，下一次仍可按月相重读。","adaptation":{"one":"串行读相再移动。","two":"一人读相、一人标路线。","three":"第三人保留回退。","four":"可分观察，落点反制单线进行。","member_loss":"不把延迟点名转移给 left 或死者。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_SHI_HUO_ZHU","source_officer_spec_id":"TT_SPEC_MANSION_SHI_HUO_ZHU","full_name":"室火猪","quadrant":"北方玄武","segment":"rear_pair","signature_action":"室火筑城","read":"墙口、守点和火甲关系分别标识；文本提示“开墙留点”。","commit":"筑城在危月燕落点已读后建立，不要求同步双点占位。","counter":"用可交接的开墙—守点顺序建立通路。","failure_recovery":"错误开墙留下一处可再利用缺口，不能锁死场地。","adaptation":{"one":"自己先开后守。","two":"一人开墙、一人确认守点。","three":"第三人作为可替补守点。","four":"可并行观察，开/守仍可串行完成。","member_loss":"占点者死亡/left 时立即释放点并转为最近 active 的串行守点。"},"runtime_binding":null},
+      {"spec_id":"TT_SPEC_MANSION_CHOREO_BI_SHUI_YU","source_officer_spec_id":"TT_SPEC_MANSION_BI_SHUI_YU","full_name":"壁水貐","quadrant":"北方玄武","segment":"guard_single","signature_action":"壁水回廊","read":"水壁法线、反射方向与安全回廊同时可辨；文本提示“借壁转向”。","commit":"反射只引用前段已开的墙口与守点路线。","counter":"以正确反射角抵达可验证路线条件。","failure_recovery":"错角形成一面可回看的水壁，仍留回廊。","adaptation":{"one":"逐壁读角。","two":"一人读法线、一人走回廊。","three":"第三人确认退路。","four":"可分壁观察，只有一面进入主反制。","member_loss":"解除对失去成员的反射目标，回廊转为公共路线。"},"runtime_binding":null}
+    ],
+    "terminal_candidate": {
+      "precondition": "exactly the four ordered 2+2+2+1 segments of the frozen normal quadrant have visible readback and all seven source officer identities completed their declared segment semantics.",
+      "result": "TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE",
+      "session_completion_write": null,
+      "qualification_write": null,
+      "credential_write": null,
+      "reward": null,
+      "receipt": null,
+      "economy_input": null
+    }
+  },
+  "nightmare_four_sacred": {
+    "spec_id": "TT_SPEC_MANSION_NIGHTMARE_ENCOUNTER_CHOREOGRAPHY",
+    "same_quadrant_rule": "the frozen nightmare quadrant, sacred beast and all seven officers must be one exact quadrant; no retry, client time or cross-quadrant credential can replace it.",
+    "active_chain_rule": "each round may reveal one primary counterplay chain and at most one preview-only auxiliary chain; a preview chain cannot commit a second primary P0.",
+    "purification_rule": "purified_officer_source_ids is monotonic, exact-once and may only grow after that officer's readable counterplay; it may not be reordered, removed or regenerated by cleanup/retry.",
+    "quadrant_profiles": [
+      {"spec_id":"TT_SPEC_MANSION_NIGHTMARE_AZURE_DRAGON","quadrant":"东方青龙","sacred_beast":"青龙","chain_rounds":[["TT_SPEC_MANSION_JIA_MU_JIAO","TT_SPEC_MANSION_KANG_JIN_LONG"],["TT_SPEC_MANSION_DI_TU_HE","TT_SPEC_MANSION_FANG_RI_TU"],["TT_SPEC_MANSION_XIN_YUE_HU","TT_SPEC_MANSION_WEI_HUO_HU"],["TT_SPEC_MANSION_JI_SHUI_BAO"]],"purified_aid":"净宿星链转为导流路径；主链校正后引导龙轨、风潮离开主战区。","sacred_response":"龙轨与风潮只压缩已显路线，正确导流把压场转为下一链的可读通路。","failure_recovery":"误导留下单一回流残线；同一链可重新读向，不能重抽方位或换链。","core_restoration":"七链净宿后，以已校导流路线限制核心并暴露终局候选。"},
+      {"spec_id":"TT_SPEC_MANSION_NIGHTMARE_VERMILION_BIRD","quadrant":"南方朱雀","sacred_beast":"朱雀","chain_rounds":[["TT_SPEC_MANSION_JING_MU_AN","TT_SPEC_MANSION_GUI_JIN_YANG"],["TT_SPEC_MANSION_LIU_TU_ZHANG","TT_SPEC_MANSION_XING_RI_MA"],["TT_SPEC_MANSION_ZHANG_YUE_LU","TT_SPEC_MANSION_YI_HUO_SHE"],["TT_SPEC_MANSION_ZHEN_SHUI_YIN"]],"purified_aid":"净宿余烬成为短暂庇护读线；主链反制后可保留一个可见庇护区。","sacred_response":"火场重置与火环只检验已读庇护关系，不能用无提示复燃封死退路。","failure_recovery":"失误复燃为单处可辨余烬；从同一水脉/缺口逻辑恢复，不重置链序。","core_restoration":"七链净宿后，庇护区与缺口共同限制浴火核心并形成终局候选。"},
+      {"spec_id":"TT_SPEC_MANSION_NIGHTMARE_WHITE_TIGER","quadrant":"西方白虎","sacred_beast":"白虎","chain_rounds":[["TT_SPEC_MANSION_KUI_MU_LANG","TT_SPEC_MANSION_LOU_JIN_GOU"],["TT_SPEC_MANSION_WEI_TU_ZHI","TT_SPEC_MANSION_MAO_RI_JI"],["TT_SPEC_MANSION_BI_YUE_WU","TT_SPEC_MANSION_ZI_HUO_HOU"],["TT_SPEC_MANSION_SHEN_SHUI_YUAN"]],"purified_aid":"净宿轨迹转为反猎方向；主链完成后给出可读接应与破甲窗口。","sacred_response":"猎印冲刺只跟随已显目标关系，正确反猎把冲刺转入可见破绽。","failure_recovery":"误接应保留一条撤回线与未消失的猎印来源，不能随机转标。","core_restoration":"七链净宿后，以全部反猎路线共同压制肃杀核心并形成终局候选。"},
+      {"spec_id":"TT_SPEC_MANSION_NIGHTMARE_BLACK_TORTOISE","quadrant":"北方玄武","sacred_beast":"玄武","chain_rounds":[["TT_SPEC_MANSION_DOU_MU_XIE","TT_SPEC_MANSION_NIU_JIN_NIU"],["TT_SPEC_MANSION_NV_TU_FU","TT_SPEC_MANSION_XU_RI_SHU"],["TT_SPEC_MANSION_WEI_YUE_YAN","TT_SPEC_MANSION_SHI_HUO_ZHU"],["TT_SPEC_MANSION_BI_SHUI_YU"]],"purified_aid":"净宿打开共守与破壁读线；主链完成后可把一处水壁/墙口变为可验证入口。","sacred_response":"甲壁、冥水与护壳只重组已读入口关系，不能让双地点同步驻守成为硬门槛。","failure_recovery":"错壁保留同一入口的退回线；下一次仍以原方位和原链序读解。","core_restoration":"七链净宿后，以正确破壁路线限制护壳核心并形成终局候选。"}
+    ],
+    "terminal_candidate": {
+      "precondition": "exactly the seven source officer identities of the frozen quadrant are in purified_officer_source_ids and the sacred_core_restoration beat has visible readback.",
+      "result": "TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE",
+      "session_completion_write": null,
+      "qualification_write": null,
+      "credential_write": null,
+      "reward": null,
+      "receipt": null,
+      "economy_input": null
+    }
+  },
+  "acceptance": [
+    {"id":"TT-MANSION-CHOREO-ACC-001","requirement":"普通四象均精确为前阵双宿、中阵双宿、后阵双宿、守位单宿，即严格 2+2+2+1；二十八个 canonical 星官恰好出现一次。"},
+    {"id":"TT-MANSION-CHOREO-ACC-002","requirement":"每名星官都有读线、提交、反制、可见失误/恢复与一至四人及成员流失处理；不把签名动作降格为纯输出。"},
+    {"id":"TT-MANSION-CHOREO-ACC-003","requirement":"每个读线至多一个主 P0，单人至多一个附属压力，二至四人至多两个附属压力；人数不能缩短读线或制造同步硬锁。"},
+    {"id":"TT-MANSION-CHOREO-ACC-004","requirement":"死亡或 left 只能由权威 actor/lifecycle/membership_snapshot/status 元组确认，在当前节拍边界取消其目标并在下一节拍按权威 active 投影串行/补位；不允许重连、无主连线、客户端状态替代或死锁占位。"},
+    {"id":"TT-MANSION-CHOREO-ACC-005","requirement":"四圣均精确绑定本方位七宿、固定 2+2+2+1 链序，并保持一条主链加至多一条预告附属链。"},
+    {"id":"TT-MANSION-CHOREO-ACC-006","requirement":"普通本仅四段严格读回后、噩梦仅净宿集合七链齐备且核心回正后可形成只读遭遇终局候选；两者均不得写完成、资格、奖励、收据或经济。"},
+    {"id":"TT-MANSION-CHOREO-ACC-007","requirement":"遇错可恢复但只能留在当前语义状态，不能增加 transition_index、跳段、倒退、重抽方位、链序、成员快照或时辰；错误清理确认或重放不得回滚已接受终局候选。"},
+    {"id":"TT-MANSION-CHOREO-ACC-008","requirement":"所有机制转场只引用既有会话身份和权威事实；不得改写 phase_id、revision、cleanup_token、成员、会话生命周期、进度、资格或经济。"},
+    {"id":"TT-MANSION-CHOREO-ACC-009","requirement":"所有运行时键、对象/技能/Buff/投射物、计时、绝对数值、奖励和收据字段保持 null/deferred。"}
+  ],
+  "deferred": [
+    "真实 Y3/Lua 遭遇状态机、权威机制事件、战斗终局证明验证器与会话完成接口。",
+    "真实成员、死亡、left、时钟、轮换、资格、清理和重放提供方。",
+    "对象、单位、技能、Buff、投射物、AI、波次、地图、碰撞、出生点、镜头、UI、资源和资产。",
+    "HP、攻击、防御、伤害、范围、前摇、冷却、持续、仇恨、波次与所有绝对数值。",
+    "夜巡钥、称号、材料、掉落、概率、保底、货币、经验、收据和 economy-v2 结算。"
+  ]
+}

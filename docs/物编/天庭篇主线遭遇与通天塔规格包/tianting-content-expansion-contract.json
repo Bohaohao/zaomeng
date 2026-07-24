@@ -69,6 +69,12 @@
       "rule": "只将五组既有主线首领的权威已确认事实转写为入场引导、三段叙事锚点、双通道预警、失败复盘和 L0–L4 表现职责；不得裁决会话、进度、资格、完成、奖励或经济。",
       "runtime_key": null
     },
+    "mansion_encounter_orchestration": {
+      "artifact": "mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json",
+      "status": "offline_encounter_choreography_spec",
+      "rule": "只将二十八星官和四圣既有机制细化为读线、提交、反制、恢复、固定链序与 1–4 人降级；不得重用或改写会话 phase_id/revision/cleanup_token，不得裁决会话、进度、资格、奖励或经济。",
+      "runtime_key": null
+    },
     "seven_star_session_reference": {
       "artifact": "../../../implementation/tianting-seven-star-session-reference/package-contract.json",
       "status": "offline_reference_model_only",

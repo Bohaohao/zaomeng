@@ -95,6 +95,16 @@
     "abilityIds": null,
     "resourceId": null
   },
+  "mansionEncounterOrchestrationSource": {
+    "artifact": "../mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json",
+    "status": "offline_encounter_choreography_spec",
+    "role": "为二十八星官与四圣逻辑卡补充读线、提交、反制、恢复、固定链序与成员流失降级的组装顺序；不生成对象、技能、Buff、投射物、计时、状态机或字段。",
+    "runtimeKey": null,
+    "objectId": null,
+    "abilityIds": null,
+    "stateMachine": null,
+    "numericValues": null
+  },
   "globalTowerCandidateBoundary": {
     "upstreamAuthority": "../../成长系统规格包/design-spec.json",
     "status": "offline_design_candidate_pending_global_tower_adoption",
@@ -161,7 +171,7 @@
     "所有对象、技能、物品、材料、称号和特效 ID 均留空，待专项物编裁决。",
     "全局塔四个大 Boss 的对象／美术／特效不属于本蓝图，须在上位全局塔显式采纳后另起独立蓝图；候选不得生成 runtime key、resource ID 或经济／奖励值。"
   ],
-  "handoffNotes": "此文件是物编施工前的请求简报；战斗语法见 ../combat/天庭战斗机制与可读性规格.md，相对数值基线见 ../combat-baseline/天庭战斗数值与单位基线裁决.md，P0 绝对标定见 ../../../../implementation/combat-calibration/README.md，P0 实证采集与采纳见 ../../../../implementation/combat-calibration/evidence-adoption/README.md，敌人职责见 ../enemy-ecology/天庭敌人生态与精英单位规格.md，主线首领阶段语法见 ../mainline-boss/天庭主线Boss深化规格.md，资产要求见 ../object-blueprint/天庭物编美术与特效需求蓝图.md，字段预占见 ../object-preallocation/天庭物编字段预占规格.md，候选空间职责见 ../terrain-layout/天庭地图口径对齐与白盒前置裁决.md。逻辑卡先冻结声音／投射物／表现状态、技能壳、单位／机制体与遭遇组装的依赖顺序；它们都不生成对象、技能、材料或绝对数值。四十层／八段／五层 Boss／四个大 Boss 仅为天庭候选，必须先获 ../../成长系统规格包/design-spec.json 所属全局塔显式采纳；届时四个大 Boss 另走独立蓝图。",
+  "handoffNotes": "此文件是物编施工前的请求简报；战斗语法见 ../combat/天庭战斗机制与可读性规格.md，相对数值基线见 ../combat-baseline/天庭战斗数值与单位基线裁决.md，P0 绝对标定见 ../../../../implementation/combat-calibration/README.md，P0 实证采集与采纳见 ../../../../implementation/combat-calibration/evidence-adoption/README.md，敌人职责见 ../enemy-ecology/天庭敌人生态与精英单位规格.md，主线首领阶段语法见 ../mainline-boss/天庭主线Boss深化规格.md，星宿遭遇组装语义见 ../mansion-orchestration/天庭二十八星官与四圣机制编排规格.md，资产要求见 ../object-blueprint/天庭物编美术与特效需求蓝图.md，字段预占见 ../object-preallocation/天庭物编字段预占规格.md，候选空间职责见 ../terrain-layout/天庭地图口径对齐与白盒前置裁决.md。逻辑卡先冻结声音／投射物／表现状态、技能壳、单位／机制体与遭遇组装的依赖顺序；它们都不生成对象、技能、材料或绝对数值。四十层／八段／五层 Boss／四个大 Boss 仅为天庭候选，必须先获 ../../成长系统规格包/design-spec.json 所属全局塔显式采纳；届时四个大 Boss 另走独立蓝图。",
   "unresolved": [
     "敌人生态与五组主线首领级遭遇的对象 ID、模型、动画、施法前摇、绝对对象字段、AI、Buff、波次、刷新、掉落和资源表绑定；相对数值不得绕过标定门禁。字段预占的五十五张逻辑卡不等于五十五个对象承诺。",
     "七星/四圣称号的实际效果、展示资产、作用域与持久化。",

@@ -23,6 +23,9 @@ $MainlinePresentationRoot = Join-Path $PackageRoot 'mainline-presentation'
 $ObjectFieldReservationRoot = Join-Path $PackageRoot 'object-preallocation'
 $ObjectFieldReservationContractPath = Join-Path $ObjectFieldReservationRoot 'tianting-object-field-reservation-contract.json'
 $ObjectFieldReservationRunner = Join-Path $ObjectFieldReservationRoot 'tests\run-all.ps1'
+$MansionEncounterOrchestrationRoot = Join-Path $PackageRoot 'mansion-orchestration'
+$MansionEncounterOrchestrationContractPath = Join-Path $MansionEncounterOrchestrationRoot 'tianting-mansion-encounter-orchestration-contract.json'
+$MansionEncounterOrchestrationRunner = Join-Path $MansionEncounterOrchestrationRoot 'tests\run-all.ps1'
 $ConstructionReadinessRunner = Join-Path $WorkspaceRoot 'implementation\run-all-tianting-construction-readiness.ps1'
 
 function Test-HasProperty {
@@ -171,6 +174,11 @@ try {
     'mainline-presentation/tianting-mainline-presentation-contract.json',
     'mainline-presentation/tests/Test-MainlinePresentation.ps1',
     'mainline-presentation/tests/run-all.ps1',
+    'mansion-orchestration/README.md',
+    'mansion-orchestration/天庭二十八星官与四圣机制编排规格.md',
+    'mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json',
+    'mansion-orchestration/tests/Test-MansionEncounterOrchestration.ps1',
+    'mansion-orchestration/tests/run-all.ps1',
     'object-preallocation/README.md',
     'object-preallocation/天庭物编字段预占规格.md',
     'object-preallocation/tianting-object-field-reservation-contract.json',
@@ -357,6 +365,32 @@ try {
   }
   Assert-Condition ($ObjectFieldReservationSnapshotDigest -eq $ObjectFieldReservationValidatedDigest) 'object field reservation master snapshot exactly matches the child-validated contract'
 
+  # Mechanism choreography is likewise a closed offline package.  Its child
+  # runner owns the detailed semantic state and replay assertions; the master
+  # validates the exact snapshot it certified before joining it to this package.
+  $MansionEncounterOrchestrationOutput = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $MansionEncounterOrchestrationRunner 2>&1)
+  $MansionEncounterOrchestrationExitCode = $LASTEXITCODE
+  if ($MansionEncounterOrchestrationExitCode -ne 0) {
+    throw "mansion encounter choreography subpackage validation failed (exit $MansionEncounterOrchestrationExitCode): $($MansionEncounterOrchestrationOutput -join [Environment]::NewLine)"
+  }
+  Assert-Condition (($MansionEncounterOrchestrationOutput -join [Environment]::NewLine) -match 'PASS: \d+ assertions passed for the mansion encounter choreography package\.') 'mansion encounter choreography subpackage runner passes fail-closed validation'
+  $MansionEncounterOrchestrationOutputText = $MansionEncounterOrchestrationOutput -join [Environment]::NewLine
+  $MansionEncounterOrchestrationDigestMatch = [regex]::Match($MansionEncounterOrchestrationOutputText, 'contract_sha256=([0-9a-f]{64})')
+  if (-not $MansionEncounterOrchestrationDigestMatch.Success) {
+    throw 'mansion encounter choreography subpackage runner must report the validated contract SHA-256'
+  }
+  $MansionEncounterOrchestrationValidatedDigest = $MansionEncounterOrchestrationDigestMatch.Groups[1].Value
+  $MansionEncounterOrchestrationSnapshotBytes = [System.IO.File]::ReadAllBytes($MansionEncounterOrchestrationContractPath)
+  $MansionEncounterOrchestrationSnapshotDigest = Get-Sha256Hex -Bytes $MansionEncounterOrchestrationSnapshotBytes
+  if ($MansionEncounterOrchestrationSnapshotDigest -ne $MansionEncounterOrchestrationValidatedDigest) {
+    throw 'mansion encounter choreography contract changed after subpackage validation; retry from a stable snapshot'
+  }
+  $MansionEncounterOrchestrationSnapshotJson = [System.Text.UTF8Encoding]::new($false).GetString($MansionEncounterOrchestrationSnapshotBytes)
+  if ($MansionEncounterOrchestrationSnapshotJson.Length -gt 0 -and $MansionEncounterOrchestrationSnapshotJson[0] -eq [char]0xFEFF) {
+    $MansionEncounterOrchestrationSnapshotJson = $MansionEncounterOrchestrationSnapshotJson.Substring(1)
+  }
+  Assert-Condition ($MansionEncounterOrchestrationSnapshotDigest -eq $MansionEncounterOrchestrationValidatedDigest) 'mansion encounter choreography master snapshot exactly matches the child-validated contract'
+
   $Contract = Read-JsonFile (Join-Path $PackageRoot 'tianting-mainline-tower-contract.json')
   $Expansion = Read-JsonFile (Join-Path $PackageRoot 'tianting-content-expansion-contract.json')
   $Authority = Read-JsonFile (Join-Path $PackageRoot 'authority/tianting-progression-and-instance-authority-contract.json')
@@ -376,6 +410,7 @@ try {
   $TowerEconomy = Read-JsonFile (Join-Path $PackageRoot 'tower-economy/mansion-economy-global-tower-run-season-contract.json')
   $MainlinePresentation = Read-JsonFile (Join-Path $MainlinePresentationRoot 'tianting-mainline-presentation-contract.json')
   $ObjectFieldReservation = $ObjectFieldReservationSnapshotJson | ConvertFrom-Json
+  $MansionEncounterOrchestration = $MansionEncounterOrchestrationSnapshotJson | ConvertFrom-Json
   $VerticalPackage = Read-JsonFile (Join-Path $VerticalSliceRoot 'package-contract.json')
   $CalibrationPackage = Read-JsonFile (Join-Path $CombatCalibrationRoot 'package-contract.json')
   $Calibration = Read-JsonFile (Join-Path $CombatCalibrationRoot 'contract/cross-profession-combat-calibration-contract.json')
@@ -404,6 +439,7 @@ try {
   $MainlineBossMarkdown = Get-Content -LiteralPath (Join-Path $PackageRoot 'mainline-boss/天庭主线Boss深化规格.md') -Raw -Encoding UTF8
   $MainlinePresentationMarkdown = Get-Content -LiteralPath (Join-Path $MainlinePresentationRoot '天庭主线Boss叙事与表现深化规格.md') -Raw -Encoding UTF8
   $ObjectFieldReservationMarkdown = Get-Content -LiteralPath (Join-Path $ObjectFieldReservationRoot '天庭物编字段预占规格.md') -Raw -Encoding UTF8
+  $MansionEncounterOrchestrationMarkdown = Get-Content -LiteralPath (Join-Path $MansionEncounterOrchestrationRoot '天庭二十八星官与四圣机制编排规格.md') -Raw -Encoding UTF8
   $MapAlignmentMarkdown = Get-Content -LiteralPath (Join-Path $PackageRoot 'terrain-layout/天庭地图口径对齐与白盒前置裁决.md') -Raw -Encoding UTF8
   $UiMarkdown = Get-Content -LiteralPath (Join-Path $PackageRoot 'ui/天庭UI与无障碍信息架构规格.md') -Raw -Encoding UTF8
   $BlueprintMarkdown = Get-Content -LiteralPath (Join-Path $PackageRoot 'object-blueprint/天庭物编美术与特效需求蓝图.md') -Raw -Encoding UTF8
@@ -484,6 +520,7 @@ try {
     'enemy-ecology/tianting-enemy-ecology-contract.json',
     'mainline-boss/tianting-mainline-boss-contract.json',
     'mainline-presentation/tianting-mainline-presentation-contract.json',
+    'mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json',
     '../../../implementation/tianting-seven-star-session-reference/package-contract.json',
     '../../../implementation/tianting-mansion-session-reference/contract/mansion-session-time-qualification-reference-contract.json',
     'tower-economy/mansion-economy-global-tower-run-season-contract.json'
@@ -512,6 +549,8 @@ try {
   Assert-Equal $DerivedContractsByName['tianting_mainline_boss_deepening'].status 'offline_design_requirements_only' 'main contract mainline-Boss derivative status'
   Assert-Equal $DerivedContractsByName['tianting_mainline_narrative_presentation'].artifact 'mainline-presentation/tianting-mainline-presentation-contract.json' 'main contract mainline-presentation derivative artifact'
   Assert-Equal $DerivedContractsByName['tianting_mainline_narrative_presentation'].status 'offline_narrative_presentation_spec' 'main contract mainline-presentation derivative status'
+  Assert-Equal $DerivedContractsByName['tianting_mansion_encounter_orchestration'].artifact 'mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json' 'main contract mansion encounter choreography derivative artifact'
+  Assert-Equal $DerivedContractsByName['tianting_mansion_encounter_orchestration'].status 'offline_encounter_choreography_spec' 'main contract mansion encounter choreography derivative status'
   Assert-Equal $DerivedContractsByName['tianting_authority_vertical_slice'].artifact '../../../implementation/tianting-authority-vertical-slice/package-contract.json' 'main contract vertical-slice artifact'
   Assert-Equal $DerivedContractsByName['tianting_authority_vertical_slice'].status 'offline_tested_reference_only' 'main contract vertical-slice status'
   Assert-Equal $DerivedContractsByName['tianting_seven_star_session_reference'].artifact '../../../implementation/tianting-seven-star-session-reference/package-contract.json' 'main contract seven-star reference artifact'
@@ -1191,6 +1230,9 @@ try {
   Assert-Equal $Expansion.derivative_offline_specs.mainline_narrative_presentation.artifact 'mainline-presentation/tianting-mainline-presentation-contract.json' 'content expansion mainline-presentation derivative artifact'
   Assert-Equal $Expansion.derivative_offline_specs.mainline_narrative_presentation.status 'offline_narrative_presentation_spec' 'content expansion mainline-presentation derivative status'
   Assert-Null $Expansion.derivative_offline_specs.mainline_narrative_presentation.runtime_key 'content expansion mainline-presentation runtime key'
+  Assert-Equal $Expansion.derivative_offline_specs.mansion_encounter_orchestration.artifact 'mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json' 'content expansion mansion encounter choreography derivative artifact'
+  Assert-Equal $Expansion.derivative_offline_specs.mansion_encounter_orchestration.status 'offline_encounter_choreography_spec' 'content expansion mansion encounter choreography derivative status'
+  Assert-Null $Expansion.derivative_offline_specs.mansion_encounter_orchestration.runtime_key 'content expansion mansion encounter choreography derivative runtime key'
   Assert-Equal $Expansion.derivative_offline_specs.seven_star_session_reference.artifact '../../../implementation/tianting-seven-star-session-reference/package-contract.json' 'content expansion seven-star reference artifact'
   Assert-Equal $Expansion.derivative_offline_specs.seven_star_session_reference.status 'offline_reference_model_only' 'content expansion seven-star reference status'
   Assert-Null $Expansion.derivative_offline_specs.seven_star_session_reference.runtime_key 'content expansion seven-star reference runtime key'
@@ -2298,6 +2340,111 @@ try {
   Assert-AllRuntimeKeysNull $MansionSessionReferencePackage 'P3 mansion reference package'
   Assert-AllRuntimeKeysNull $MansionSessionReference 'P3 mansion reference contract'
 
+  # P3's choreography is a semantic state graph over an already-authoritative
+  # session.  It must never become a parallel owner of session, member or
+  # completion state, even though it defines the future encounter sequencing.
+  Assert-Equal $MansionEncounterOrchestration.version 1 'mansion encounter choreography version'
+  Assert-Equal $MansionEncounterOrchestration.package_status 'offline-encounter-choreography-spec' 'mansion encounter choreography package status'
+  Assert-Equal $MansionEncounterOrchestration.production_gate 'closed' 'mansion encounter choreography production gate'
+  Assert-Condition ($MansionEncounterOrchestration.runtime_handoff -eq $false) 'mansion encounter choreography has no runtime handoff'
+  Assert-Equal $MansionEncounterOrchestration.identity.spec_id 'TT_SPEC_TIANTING_MANSION_ENCOUNTER_ORCHESTRATION' 'mansion encounter choreography spec id'
+  Assert-Equal $MansionEncounterOrchestration.identity.scope 'mansion_normal_and_same_quadrant_nightmare_semantic_choreography_only' 'mansion encounter choreography scope'
+  foreach ($FieldName in @('runtime_key', 'map_key', 'object_id', 'ability_id', 'ui_node_id', 'resource_id')) {
+    Assert-Null $MansionEncounterOrchestration.identity.PSObject.Properties[$FieldName].Value "mansion encounter choreography identity remains null: $FieldName"
+  }
+  Assert-Equal @($MansionEncounterOrchestration.source_contracts).Count 7 'mansion encounter choreography source-contract count'
+  foreach ($Source in @($MansionEncounterOrchestration.source_contracts)) {
+    Assert-Condition (Test-Path -LiteralPath (Join-Path $MansionEncounterOrchestrationRoot $Source.path) -PathType Leaf) "mansion encounter choreography source exists: $($Source.path)"
+  }
+  $MansionBoundaries = $MansionEncounterOrchestration.hard_boundaries
+  Assert-Equal $MansionBoundaries.authority_ownership.session_owner 'existing_authority_contract_only' 'mansion encounter choreography retains authority session owner'
+  Assert-Equal $MansionBoundaries.authority_ownership.session_lifecycle 'active_to_cleanup_pending_to_closed_is_not_an_encounter_state_machine' 'mansion encounter choreography cannot replace session lifecycle'
+  foreach ($ForbiddenMutation in @('phase_id', 'revision', 'cleanup_token', 'member_status', 'progression', 'nightmare_credential', 'reward', 'receipt', 'economy_input')) {
+    Assert-Condition (@($MansionBoundaries.authority_ownership.forbidden_mutations) -contains $ForbiddenMutation) "mansion encounter choreography forbids authority mutation: $ForbiddenMutation"
+  }
+  Assert-Condition ([string]$MansionBoundaries.authority_ownership.cleanup_token_rule -match 'never a player mechanism input') 'mansion encounter choreography protects cleanup token'
+  Assert-Condition ([string]$MansionBoundaries.authority_ownership.completion_rule -match 'not a session completion write') 'mansion encounter choreography cannot write completion'
+  Assert-ExactArray $MansionBoundaries.transition_binding.future_authority_binding_fields @('raid_instance_id', 'boss_instance_id', 'session_epoch', 'phase_id', 'revision', 'rotation_snapshot_id', 'quadrant', 'difficulty', 'actor_id', 'actor_lifecycle_id', 'membership_snapshot_id', 'member_status') 'mansion encounter choreography authority transition binding'
+  Assert-ExactArray $MansionBoundaries.transition_binding.encounter_local_semantic_fields @('encounter_beat_spec_id', 'encounter_state_spec_id', 'transition_index') 'mansion encounter choreography local semantic fields'
+  foreach ($ForbiddenInput in @('cleanup_token', 'client_clock', 'client_timezone', 'client_quadrant', 'local_timer', 'damage_meter', 'local_ui_state', 'unfrozen_member', 'client_reported_member_status', 'left_member', 'dead_member', 'stale_lifecycle')) {
+    Assert-Condition (@($MansionBoundaries.transition_binding.forbidden_transition_inputs) -contains $ForbiddenInput) "mansion encounter choreography forbids mechanism input: $ForbiddenInput"
+  }
+  Assert-Equal $MansionBoundaries.transition_binding.replay_drift_policy 'reject' 'mansion encounter choreography replay drift policy'
+  Assert-Condition ([string]$MansionBoundaries.transition_binding.authority_member_snapshot_rule -match 'membership_snapshot_id') 'mansion encounter choreography binds authority member snapshot identity'
+  foreach ($Property in $MansionBoundaries.runtime_and_asset_bindings.PSObject.Properties) {
+    Assert-Null $Property.Value "mansion encounter choreography runtime or asset field remains null: $($Property.Name)"
+  }
+  foreach ($Property in $MansionBoundaries.numeric_fields.PSObject.Properties) {
+    Assert-Null $Property.Value "mansion encounter choreography numeric field remains null: $($Property.Name)"
+  }
+  foreach ($Property in $MansionBoundaries.economy_and_progression.PSObject.Properties) {
+    Assert-Null $Property.Value "mansion encounter choreography economy or progression field remains null: $($Property.Name)"
+  }
+  $MansionGrammar = $MansionEncounterOrchestration.semantic_state_grammar
+  Assert-ExactArray $MansionGrammar.normal_segment_sequence @('segment_read', 'lead_signature_telegraph', 'support_relation_commit', 'combined_counterplay', 'visible_readback', 'recover_or_transition') 'mansion encounter normal semantic sequence'
+  Assert-ExactArray $MansionGrammar.nightmare_state_sequence @('resonance_visible', 'officer_counterplay', 'purified_officer_aid', 'sacred_core_restoration') 'mansion encounter nightmare semantic sequence'
+  Assert-Condition ([string]$MansionGrammar.state_ownership_rule -match 'must not reuse') 'mansion encounter semantic states cannot reuse phase_id'
+  Assert-Condition ([string]$MansionGrammar.terminal_candidate_rule -match 'read-only') 'mansion encounter terminal candidate remains read-only'
+  $MansionTransitionGraph = $MansionGrammar.transition_graph
+  Assert-ExactArray $MansionTransitionGraph.normal_states @('TT_SPEC_MANSION_NORMAL_FRONT_PAIR', 'TT_SPEC_MANSION_NORMAL_MIDDLE_PAIR', 'TT_SPEC_MANSION_NORMAL_REAR_PAIR', 'TT_SPEC_MANSION_NORMAL_GUARD_SINGLE', 'TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE') 'mansion encounter normal state graph'
+  Assert-ExactArray $MansionTransitionGraph.nightmare_states @('TT_SPEC_MANSION_NIGHTMARE_CHAIN_01', 'TT_SPEC_MANSION_NIGHTMARE_CHAIN_02', 'TT_SPEC_MANSION_NIGHTMARE_CHAIN_03', 'TT_SPEC_MANSION_NIGHTMARE_CHAIN_04', 'TT_SPEC_MANSION_NIGHTMARE_SACRED_CORE_RESTORATION', 'TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE') 'mansion encounter nightmare state graph'
+  Assert-Condition ([string]$MansionTransitionGraph.recovery_rule -match 'cannot increment transition_index') 'mansion encounter recovery cannot increment transition index'
+  Assert-Condition ([string]$MansionTransitionGraph.transition_index_rule -match 'strictly monotonic') 'mansion encounter transition index is monotonic'
+  Assert-Condition ([string]$MansionTransitionGraph.transition_index_rule -match 'skip, reversal') 'mansion encounter transition graph rejects skips and reversals'
+  $MansionMemberChange = $MansionEncounterOrchestration.concurrency_and_member_change
+  Assert-Condition ([string]$MansionMemberChange.pressure_budget.one_active_member -match 'one primary P0') 'mansion encounter single-member pressure has one P0'
+  Assert-Condition ([string]$MansionMemberChange.pressure_budget.two_to_four_active_members -match 'one primary P0') 'mansion encounter multiplayer pressure has one P0'
+  Assert-Condition ([string]$MansionMemberChange.member_change_rule -match 'authority-confirmed') 'mansion encounter member changes require authority confirmation'
+  Assert-Condition ([string]$MansionMemberChange.dead_or_left_rule -match 'cannot advance') 'mansion encounter dead or left member cannot advance a beat'
+  $ExpectedMansionQuadrants = @('东方青龙', '南方朱雀', '西方白虎', '北方玄武')
+  $MansionNormal = $MansionEncounterOrchestration.normal_raid
+  Assert-Equal $MansionNormal.spec_id 'TT_SPEC_MANSION_NORMAL_ENCOUNTER_CHOREOGRAPHY' 'mansion encounter normal identity'
+  Assert-ExactArray $MansionNormal.segment_shape @('front_pair', 'middle_pair', 'rear_pair', 'guard_single') 'mansion encounter normal segment shape'
+  Assert-ExactArray (@($MansionNormal.quadrant_segments | ForEach-Object { [string]$_.quadrant })) $ExpectedMansionQuadrants 'mansion encounter normal quadrant order'
+  foreach ($QuadrantProfile in @($MansionNormal.quadrant_segments)) {
+    Assert-ExactArray (@($QuadrantProfile.segments | ForEach-Object { [string]$_.segment })) @('front_pair', 'middle_pair', 'rear_pair', 'guard_single') "mansion encounter normal segment order: $($QuadrantProfile.quadrant)"
+    Assert-ExactNumericArray (@($QuadrantProfile.segments | ForEach-Object { [double](@($_.officers).Count) })) @(2, 2, 2, 1) "mansion encounter normal segment size: $($QuadrantProfile.quadrant)"
+  }
+  Assert-Equal @($MansionNormal.officer_choreography_profiles).Count 28 'mansion encounter officer choreography profile count'
+  foreach ($Profile in @($MansionNormal.officer_choreography_profiles)) {
+    foreach ($FieldName in @('read', 'commit', 'counter', 'failure_recovery')) {
+      Assert-Condition (-not [string]::IsNullOrWhiteSpace([string]$Profile.PSObject.Properties[$FieldName].Value)) "mansion encounter officer profile field: $($Profile.spec_id)/$FieldName"
+    }
+    foreach ($FieldName in @('one', 'two', 'three', 'four', 'member_loss')) {
+      Assert-Condition (-not [string]::IsNullOrWhiteSpace([string]$Profile.adaptation.PSObject.Properties[$FieldName].Value)) "mansion encounter officer profile adaptation: $($Profile.spec_id)/$FieldName"
+    }
+    Assert-Null $Profile.runtime_binding "mansion encounter officer profile runtime binding: $($Profile.spec_id)"
+  }
+  Assert-Condition ([string]$MansionNormal.terminal_candidate.precondition -match 'four ordered 2\+2\+2\+1') 'mansion encounter normal terminal requires exact segments'
+  Assert-Equal $MansionNormal.terminal_candidate.result 'TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE' 'mansion encounter normal terminal identity'
+  foreach ($FieldName in @('session_completion_write', 'qualification_write', 'credential_write', 'reward', 'receipt', 'economy_input')) {
+    Assert-Null $MansionNormal.terminal_candidate.PSObject.Properties[$FieldName].Value "mansion encounter normal terminal output remains null: $FieldName"
+  }
+  $MansionNightmare = $MansionEncounterOrchestration.nightmare_four_sacred
+  Assert-Equal $MansionNightmare.spec_id 'TT_SPEC_MANSION_NIGHTMARE_ENCOUNTER_CHOREOGRAPHY' 'mansion encounter nightmare identity'
+  Assert-Condition ([string]$MansionNightmare.same_quadrant_rule -match 'one exact quadrant') 'mansion encounter nightmare remains same-quadrant only'
+  Assert-Condition ([string]$MansionNightmare.active_chain_rule -match 'one primary') 'mansion encounter nightmare retains one primary chain'
+  Assert-Condition ([string]$MansionNightmare.purification_rule -match 'monotonic') 'mansion encounter nightmare purification is monotonic'
+  Assert-ExactArray (@($MansionNightmare.quadrant_profiles | ForEach-Object { [string]$_.quadrant })) $ExpectedMansionQuadrants 'mansion encounter nightmare quadrant order'
+  foreach ($QuadrantProfile in @($MansionNightmare.quadrant_profiles)) {
+    Assert-ExactNumericArray (@($QuadrantProfile.chain_rounds | ForEach-Object { [double](@($_).Count) })) @(2, 2, 2, 1) "mansion encounter nightmare chain sizes: $($QuadrantProfile.quadrant)"
+    foreach ($FieldName in @('purified_aid', 'sacred_response', 'failure_recovery', 'core_restoration')) {
+      Assert-Condition (-not [string]::IsNullOrWhiteSpace([string]$QuadrantProfile.PSObject.Properties[$FieldName].Value)) "mansion encounter nightmare profile field: $($QuadrantProfile.spec_id)/$FieldName"
+    }
+  }
+  Assert-Condition ([string]$MansionNightmare.terminal_candidate.precondition -match 'exactly the seven') 'mansion encounter nightmare terminal requires all seven officers'
+  Assert-Equal $MansionNightmare.terminal_candidate.result 'TT_SPEC_MANSION_ENCOUNTER_TERMINAL_CANDIDATE' 'mansion encounter nightmare terminal identity'
+  foreach ($FieldName in @('session_completion_write', 'qualification_write', 'credential_write', 'reward', 'receipt', 'economy_input')) {
+    Assert-Null $MansionNightmare.terminal_candidate.PSObject.Properties[$FieldName].Value "mansion encounter nightmare terminal output remains null: $FieldName"
+  }
+  Assert-ExactArray (@($MansionEncounterOrchestration.acceptance | ForEach-Object { [string]$_.id })) @('TT-MANSION-CHOREO-ACC-001', 'TT-MANSION-CHOREO-ACC-002', 'TT-MANSION-CHOREO-ACC-003', 'TT-MANSION-CHOREO-ACC-004', 'TT-MANSION-CHOREO-ACC-005', 'TT-MANSION-CHOREO-ACC-006', 'TT-MANSION-CHOREO-ACC-007', 'TT-MANSION-CHOREO-ACC-008', 'TT-MANSION-CHOREO-ACC-009') 'mansion encounter choreography acceptance ids'
+  Assert-Condition ($MansionEncounterOrchestrationMarkdown -match 'production_gate = closed') 'mansion encounter choreography Markdown states closed production gate'
+  Assert-Condition ($MansionEncounterOrchestrationMarkdown -match 'membership_snapshot_id') 'mansion encounter choreography Markdown names authority membership snapshot'
+  Assert-Condition ($MansionEncounterOrchestrationMarkdown -match 'transition_index') 'mansion encounter choreography Markdown documents transition index'
+  Assert-Condition ($MansionEncounterOrchestrationMarkdown -match '2 \+ 2 \+ 2 \+ 1') 'mansion encounter choreography Markdown documents fixed chain shape'
+  Assert-Condition ($MansionEncounterOrchestrationMarkdown -match 'null/deferred') 'mansion encounter choreography Markdown documents deferred implementation surface'
+  Assert-AllRuntimeKeysNull $MansionEncounterOrchestration 'mansion encounter choreography contract'
+
   # 五组主线表现只组织可读叙事，所有权威、资产、数值与经济字段仍然关闭。
   Assert-Equal $MainlinePresentation.version 1 'mainline presentation contract version'
   Assert-Equal $MainlinePresentation.package_status 'offline-narrative-presentation-spec' 'mainline presentation package status'
@@ -2609,7 +2756,7 @@ try {
     Assert-Null $Node.runtime_key "contract runtime key: $($Node.spec_id)"
   }
 
-  $RequiredDesignTop = @('version', 'project', 'sourceMaterials', 'worldview', 'playerExperience', 'coreLoop', 'sessionFlow', 'systems', 'content', 'mvp', 'handoffs', 'risks', 'unresolved', 'acceptanceCriteria', 'crossChapterBoundary', 'towerFirstCycleContract', 'contentExpansionContract', 'authorityProgressionAndInstanceContract', 'combatReadabilityContract', 'terrainLayoutDryRun', 'mapScaleAlignmentContract', 'uiAccessibilityInformationContract', 'objectArtVfxBlueprintContract', 'objectFieldReservationContract', 'enemyEcologyContract', 'mainlineBossDeepeningContract', 'authorityRuntimeVerticalSlice', 'sevenStarSessionReference', 'mansionSessionReference', 'mainlineNarrativePresentationContract', 'towerEconomyFullRunContract', 'economyV2AuthorityReceiptInputHandoff')
+  $RequiredDesignTop = @('version', 'project', 'sourceMaterials', 'worldview', 'playerExperience', 'coreLoop', 'sessionFlow', 'systems', 'content', 'mvp', 'handoffs', 'risks', 'unresolved', 'acceptanceCriteria', 'crossChapterBoundary', 'towerFirstCycleContract', 'contentExpansionContract', 'authorityProgressionAndInstanceContract', 'combatReadabilityContract', 'terrainLayoutDryRun', 'mapScaleAlignmentContract', 'uiAccessibilityInformationContract', 'objectArtVfxBlueprintContract', 'objectFieldReservationContract', 'enemyEcologyContract', 'mainlineBossDeepeningContract', 'authorityRuntimeVerticalSlice', 'sevenStarSessionReference', 'mansionSessionReference', 'mansionEncounterOrchestrationContract', 'mainlineNarrativePresentationContract', 'towerEconomyFullRunContract', 'economyV2AuthorityReceiptInputHandoff')
   foreach ($Name in $RequiredDesignTop) {
     Assert-Condition (Test-HasProperty $Design $Name) "design top-level field: $Name"
   }
@@ -2714,6 +2861,16 @@ try {
   Assert-Null $Design.mansionSessionReference.economyOutputs 'design mansion reference has no economy outputs'
   Assert-Equal $Design.mansionSessionReference.acceptanceRange 'TT-ACC-044' 'design mansion reference acceptance range'
 
+  Assert-Equal $Design.mansionEncounterOrchestrationContract.artifact 'mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json' 'design mansion encounter choreography artifact'
+  Assert-Equal $Design.mansionEncounterOrchestrationContract.status 'offline_encounter_choreography_spec' 'design mansion encounter choreography status'
+  Assert-Null $Design.mansionEncounterOrchestrationContract.runtimeKey 'design mansion encounter choreography runtime key'
+  Assert-Equal $Design.mansionEncounterOrchestrationContract.productionGate 'closed' 'design mansion encounter choreography production gate'
+  Assert-Condition ($Design.mansionEncounterOrchestrationContract.y3Integration -eq $false) 'design mansion encounter choreography has no Y3 integration'
+  Assert-Null $Design.mansionEncounterOrchestrationContract.encounterStateMachine 'design mansion encounter choreography state machine'
+  Assert-Null $Design.mansionEncounterOrchestrationContract.completionWrite 'design mansion encounter choreography completion write'
+  Assert-Null $Design.mansionEncounterOrchestrationContract.economyOutputs 'design mansion encounter choreography economy outputs'
+  Assert-Equal $Design.mansionEncounterOrchestrationContract.acceptanceRange 'TT-MANSION-CHOREO-ACC-001..009' 'design mansion encounter choreography acceptance range'
+
   Assert-Equal $Design.mainlineNarrativePresentationContract.artifact 'mainline-presentation/tianting-mainline-presentation-contract.json' 'design mainline-presentation artifact'
   Assert-Equal $Design.mainlineNarrativePresentationContract.status 'offline_narrative_presentation_spec' 'design mainline-presentation status'
   Assert-Null $Design.mainlineNarrativePresentationContract.runtimeKey 'design mainline-presentation runtime key'
@@ -2753,11 +2910,14 @@ try {
   Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'implementation/tianting-seven-star-session-reference/package-contract.json' }).Count -eq 1) 'design source material includes seven-star reference'
   Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'implementation/tianting-mansion-session-reference/contract/mansion-session-time-qualification-reference-contract.json' }).Count -eq 1) 'design source material includes mansion reference'
   Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'docs/物编/天庭篇主线遭遇与通天塔规格包/mainline-presentation/tianting-mainline-presentation-contract.json' }).Count -eq 1) 'design source material includes mainline presentation contract'
+  Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'docs/物编/天庭篇主线遭遇与通天塔规格包/mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json' }).Count -eq 1) 'design source material includes mansion encounter choreography contract'
   Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'docs/物编/天庭篇主线遭遇与通天塔规格包/object-preallocation/tianting-object-field-reservation-contract.json' }).Count -eq 1) 'design source material includes object field reservation contract'
   Assert-Condition (@($Design.systems | Where-Object { $_.name -eq '天庭敌人生态与精英职责' -and $_.owner -eq 'enemy-ecology/tianting-enemy-ecology-contract.json' }).Count -eq 1) 'design system includes enemy ecology'
   Assert-Condition (@($Design.systems | Where-Object { $_.name -eq '天庭主线 Boss 深化' -and $_.owner -eq 'mainline-boss/tianting-mainline-boss-contract.json' }).Count -eq 1) 'design system includes mainline Boss deepening'
   Assert-Condition (@($Design.systems | Where-Object { $_.name -eq '天庭战斗数值与单位基线' -and $_.owner -eq 'combat-baseline/tianting-combat-numeric-unit-baseline-contract.json' }).Count -eq 1) 'design system includes combat numeric baseline'
   Assert-Condition (@($Design.systems | Where-Object { $_.name -eq '天庭物编字段预占' -and $_.owner -eq 'object-preallocation/tianting-object-field-reservation-contract.json' }).Count -eq 1) 'design system includes object field reservation'
+  Assert-Condition (@($Design.systems | Where-Object { $_.name -eq '二十八星官与四圣机制编排' -and $_.owner -eq 'mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json' }).Count -eq 1) 'design system includes mansion encounter choreography'
+  Assert-Condition ((@($Design.acceptanceCriteria) -join "`n") -match '二十八星官与四圣机制编排') 'design acceptance includes mansion encounter choreography'
   foreach ($MvpName in @('mustHave', 'shouldHave', 'later')) {
     $Collection = $Design.mvp.PSObject.Properties[$MvpName].Value
     Assert-Array $Collection "design MVP collection: $MvpName"
@@ -2772,6 +2932,9 @@ try {
   Assert-Condition ((@($Design.handoffs.objectConfig) -join "`n") -match 'object-preallocation') 'design object handoff names field reservation package'
   Assert-Condition ((@($Design.handoffs.uiPipeline) -join "`n") -match 'mainline-presentation') 'design UI handoff names mainline presentation'
   Assert-Condition ((@($Design.handoffs.reviewPanel) -join "`n") -match '七星/星宿会话离线回归') 'design review handoff names session-reference review'
+  foreach ($HandoffName in @('objectConfig', 'terrainLayout', 'luaLogic', 'uiPipeline', 'reviewPanel')) {
+    Assert-Condition ((@($Design.handoffs.PSObject.Properties[$HandoffName].Value) -join "`n") -match 'mansion-orchestration') "design handoff names mansion encounter choreography: $HandoffName"
+  }
   foreach ($Bucket in @('heroes', 'abilities', 'monsters', 'bosses', 'items', 'maps', 'ui', 'economy', 'progression', 'waves')) {
     Assert-Condition (Test-HasProperty $Design.content $Bucket) "design content bucket: $Bucket"
     $Items = $Design.content.PSObject.Properties[$Bucket].Value
@@ -2828,6 +2991,13 @@ try {
   Assert-Condition ($ObjectBrief.objectFieldReservationSource.pluginGeneration -eq $false) 'object handoff field reservation disables plugin generation'
   Assert-Null $ObjectBrief.objectFieldReservationSource.absoluteObjectFields 'object handoff field reservation absolute object fields'
   Assert-Equal $ObjectBrief.objectFieldReservationSource.productionGate 'closed' 'object handoff field reservation production gate'
+  Assert-Equal $ObjectBrief.mansionEncounterOrchestrationSource.artifact '../mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json' 'object handoff mansion encounter choreography artifact'
+  Assert-Equal $ObjectBrief.mansionEncounterOrchestrationSource.status 'offline_encounter_choreography_spec' 'object handoff mansion encounter choreography status'
+  Assert-Null $ObjectBrief.mansionEncounterOrchestrationSource.runtimeKey 'object handoff mansion encounter choreography runtime key'
+  Assert-Null $ObjectBrief.mansionEncounterOrchestrationSource.objectId 'object handoff mansion encounter choreography object id'
+  Assert-Null $ObjectBrief.mansionEncounterOrchestrationSource.abilityIds 'object handoff mansion encounter choreography ability ids'
+  Assert-Null $ObjectBrief.mansionEncounterOrchestrationSource.stateMachine 'object handoff mansion encounter choreography state machine'
+  Assert-Null $ObjectBrief.mansionEncounterOrchestrationSource.numericValues 'object handoff mansion encounter choreography numeric values'
   Assert-Equal $ObjectBrief.enemyEcologySource.artifact '../enemy-ecology/tianting-enemy-ecology-contract.json' 'object handoff enemy-ecology source'
   Assert-Equal $ObjectBrief.enemyEcologySource.status 'offline_design_requirements_only' 'object handoff enemy-ecology status'
   Assert-Null $ObjectBrief.enemyEcologySource.runtimeKey 'object handoff enemy-ecology runtime key'
@@ -2859,6 +3029,12 @@ try {
   Assert-Equal $TerrainBrief.mainlineBossDeepeningSource.artifact '../mainline-boss/tianting-mainline-boss-contract.json' 'terrain handoff mainline-Boss source'
   Assert-Equal $TerrainBrief.mainlineBossDeepeningSource.status 'offline_design_requirements_only' 'terrain handoff mainline-Boss status'
   Assert-Null $TerrainBrief.mainlineBossDeepeningSource.runtimeKey 'terrain handoff mainline-Boss runtime key'
+  Assert-Equal $TerrainBrief.mansionEncounterOrchestrationSource.artifact '../mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json' 'terrain handoff mansion encounter choreography artifact'
+  Assert-Equal $TerrainBrief.mansionEncounterOrchestrationSource.status 'offline_encounter_choreography_spec' 'terrain handoff mansion encounter choreography status'
+  Assert-Null $TerrainBrief.mansionEncounterOrchestrationSource.runtimeKey 'terrain handoff mansion encounter choreography runtime key'
+  Assert-Null $TerrainBrief.mansionEncounterOrchestrationSource.actualMapKey 'terrain handoff mansion encounter choreography map key'
+  Assert-Null $TerrainBrief.mansionEncounterOrchestrationSource.coordinates 'terrain handoff mansion encounter choreography coordinates'
+  Assert-Null $TerrainBrief.mansionEncounterOrchestrationSource.collision 'terrain handoff mansion encounter choreography collision'
   Assert-Equal $TerrainBrief.y3ConstructionPreflightSource.artifact '../../../../implementation/tianting-y3-construction-preflight/package-contract.json' 'terrain handoff construction-preflight artifact'
   Assert-Equal $TerrainBrief.y3ConstructionPreflightSource.status 'structural-preflight-only' 'terrain handoff construction-preflight status'
   Assert-Null $TerrainBrief.y3ConstructionPreflightSource.runtimeKey 'terrain handoff construction-preflight runtime key'
@@ -2889,6 +3065,7 @@ try {
   Assert-Condition ($MasterReadmeText -match 'implementation/tianting-seven-star-session-reference') 'master README links seven-star reference package'
   Assert-Condition ($MasterReadmeText -match 'implementation/tianting-mansion-session-reference') 'master README links mansion reference package'
   Assert-Condition ($MasterReadmeText -match 'mainline-presentation') 'master README links mainline presentation package'
+  Assert-Condition ($MasterReadmeText -match 'mansion-orchestration') 'master README links mansion encounter choreography package'
   Assert-Condition ($MasterReadmeText -match 'object-preallocation') 'master README links object field reservation package'
   Assert-Condition ($MasterReadmeText -match 'construction-readiness-ledger.md') 'master README links construction-readiness ledger'
   Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-039') 'acceptance matrix includes P0 calibration row'
@@ -2901,6 +3078,7 @@ try {
   Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-044') 'acceptance matrix includes mansion reference row'
   Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-045') 'acceptance matrix includes mainline presentation row'
   Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-046') 'acceptance matrix includes object field reservation row'
+  Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-049') 'acceptance matrix includes mansion encounter choreography row'
   Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-022') 'decision register includes P0 calibration decision'
   Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-027') 'decision register includes P0 evidence-adoption decision'
   Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-028') 'decision register includes P0 external-capture-onboarding decision'
@@ -2910,11 +3088,13 @@ try {
   Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-026') 'decision register includes object field reservation decision'
   Assert-Condition ($DecisionRegisterText -match 'TT-AUTH-010') 'decision register includes seven-star reference decision'
   Assert-Condition ($DecisionRegisterText -match 'TT-AUTH-011') 'decision register includes mansion reference decision'
+  Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-029') 'decision register includes mansion encounter choreography decision'
   Assert-Condition ($ConstructionLedgerText -match 'tianting-seven-star-session-reference') 'construction ledger includes seven-star reference fixture'
   Assert-Condition ($ConstructionLedgerText -match 'implementation/combat-calibration/evidence-adoption') 'construction ledger includes P0 evidence-adoption fixture'
   Assert-Condition ($ConstructionLedgerText -match 'implementation/combat-calibration/external-capture-onboarding') 'construction ledger includes P0 external-capture-onboarding fixture'
   Assert-Condition ($ConstructionLedgerText -match 'tianting-mansion-session-reference') 'construction ledger includes mansion reference fixture'
   Assert-Condition ($ConstructionLedgerText -match 'mainline-presentation') 'construction ledger includes mainline presentation fixture'
+  Assert-Condition ($ConstructionLedgerText -match 'mansion-orchestration') 'construction ledger includes mansion encounter choreography package'
   Assert-Condition ($ConstructionLedgerText -match 'object-preallocation') 'construction ledger includes object field reservation fixture'
   Assert-Condition ($ValidationReportText -match 'P0 跨职业绝对标定协议') 'validation report includes P0 calibration evidence'
   Assert-Condition ($ValidationReportText -match 'P0 实证采集与采纳') 'validation report includes P0 evidence-adoption evidence'
@@ -2922,6 +3102,7 @@ try {
   Assert-Condition ($ValidationReportText -match 'P1 Y3 施工预检') 'validation report includes construction-preflight evidence'
   Assert-Condition ($ValidationReportText -match '七星单人会话参考（P2）') 'validation report includes seven-star reference evidence'
   Assert-Condition ($ValidationReportText -match '星宿会话、时辰与资格参考（P3）') 'validation report includes mansion reference evidence'
+  Assert-Condition ($ValidationReportText -match '二十八星官与四圣机制编排') 'validation report includes mansion encounter choreography evidence'
   Assert-Condition ($ValidationReportText -match '五组主线叙事与表现深化') 'validation report includes mainline presentation evidence'
   Assert-Condition ($ValidationReportText -match '天庭物编字段预占') 'validation report includes object field reservation evidence'
   Assert-Condition ($ValidationReportText -notmatch 'final-count-pending') 'validation report records a fresh final package-check count'

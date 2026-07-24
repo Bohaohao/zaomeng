@@ -12,6 +12,13 @@ if ($MainlinePresentationContracts.Count -ne 1) {
   throw "Expected exactly one mainline-presentation contract below docs, found $($MainlinePresentationContracts.Count)."
 }
 $MainlinePresentationTest = Join-Path (Split-Path -Parent $MainlinePresentationContracts[0].FullName) 'tests\run-all.ps1'
+$MansionEncounterOrchestrationContracts = @(
+  Get-ChildItem -LiteralPath (Join-Path $WorkspaceRoot 'docs') -Recurse -File -Filter 'tianting-mansion-encounter-orchestration-contract.json'
+)
+if ($MansionEncounterOrchestrationContracts.Count -ne 1) {
+  throw "Expected exactly one mansion encounter choreography contract below docs, found $($MansionEncounterOrchestrationContracts.Count)."
+}
+$MansionEncounterOrchestrationTest = Join-Path (Split-Path -Parent $MansionEncounterOrchestrationContracts[0].FullName) 'tests\run-all.ps1'
 $ObjectFieldReservationContracts = @(
   Get-ChildItem -LiteralPath (Join-Path $WorkspaceRoot 'docs') -Recurse -File -Filter 'tianting-object-field-reservation-contract.json'
 )
@@ -43,6 +50,10 @@ $VerificationStages = @(
   [pscustomobject]@{
     Name = 'P3 mansion session time and qualification offline reference'
     Script = Join-Path $ImplementationRoot 'tianting-mansion-session-reference\tests\run-all.ps1'
+  },
+  [pscustomobject]@{
+    Name = 'P3 mansion encounter choreography offline contract'
+    Script = $MansionEncounterOrchestrationTest
   },
   [pscustomobject]@{
     Name = 'parallel mainline narrative and presentation contract'

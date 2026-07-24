@@ -27,6 +27,15 @@
     "role": "只向南天门、断虹阵、四门、周天观台与凌霄候选区域交接 P0、关系线、观察线、反制和复盘阅读职责；不交接地图、碰撞、出生点或会话入口。",
     "runtimeKey": null
   },
+  "mansionEncounterOrchestrationSource": {
+    "artifact": "../mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json",
+    "status": "offline_encounter_choreography_spec",
+    "role": "只交接星官读线、单主 P0、可见恢复、成员流失后的串行/补位和四圣固定链序所需的观察面、退路与转场阅读职责；不交接坐标、碰撞、出生点、地图或运行时状态。",
+    "runtimeKey": null,
+    "actualMapKey": null,
+    "coordinates": null,
+    "collision": null
+  },
   "maps": {
     "specId": "TT_SPEC_TIANTING_LOGICAL_MAPS",
     "status": "offline_design",
@@ -83,8 +92,8 @@
   "layoutRequirements": [
     "南天门、天宫道、天王殿、周天观台和凌霄外庭的路径要支持主线因果，而非仅作为视觉串场。",
     "七星场地各自只突出一个核心空间规则，避免七张同构圆形竞技场。",
-    "四象阵台必须预留最多四人完成的站位、路径、反制窗口和 Boss 读条空间。",
-    "噩梦场地必须同时容纳四圣兽、七宿共鸣和净宿路线，但不把双向关系藏在装饰后。",
+    "四象阵台必须预留最多四人完成的站位、路径、反制窗口和 Boss 读条空间；每条读线只允许一个主 P0，成员流失后须仍能串行或补位。",
+    "噩梦场地必须同时容纳四圣兽、固定 2+2+2+1 七链、净宿路线和核心回正阅读面，但不把双向关系藏在装饰后。",
     "主线附属压力只能位于不遮挡 P0 来源、关系线、可净化节点、回退路和安全转换线的候选阅读面；它们不产生刷怪点、波次或小怪出生数据。",
     "候选坐标只可从 ../terrain-layout/layout.json 与 ../terrain-layout/scale-alignment/layout.json 读取为 dry-run 输入；不得把它们写入地图根、传送点、地形、装饰物、刷怪、区域等级、资源路径或逻辑资源。"
   ],

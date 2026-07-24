@@ -50,9 +50,10 @@
 - `{"name":"地图口径与白盒前置裁决","category":"map","designIntent":"把章节关系图解与可施工白盒容量分离，避免 640×416 图解被误写为地形格或运行时地图。","requiredData":["384×320 全局推理基线","224×80 天界容量","两张 96×64 公共白盒","独立会话包络","图解单位隔离"],"runtimeBehavior":"offline_preconstruction_decision；无地图、入口、传送、出生点、坐标、资源或编辑器写入。","owner":"terrain-layout/tianting-map-scale-alignment-contract.json"}`
 - `{"name":"天庭 UI 与无障碍信息架构","category":"ui","designIntent":"把双通道预警、轮换快照、队伍状态、失败复盘和称号展示组织为只能展示权威结果的信息层。","requiredData":["权威预警事实","rotation_snapshot","成员状态","清理与失败原因","称号展示身份","非颜色唯一替代"],"runtimeBehavior":"offline_design；无 UI 节点、资产、音效、特效、事件、本地状态机或本地裁决。","owner":"ui/tianting-ui-accessibility-information-contract.json"}`
 - `{"name":"天庭物编／美术／特效需求蓝图","category":"asset_requirements","designIntent":"在施工前把 Boss 轮廓、前摇、特效优先级和场地交互统一成跨战斗与地图的资产需求。","requiredData":["主线/七星/二十八星官/四圣覆盖","P0–P2","L0–L4","双通道前摇","场地交互职责"],"runtimeBehavior":"offline_design_requirements_only；无对象/资源 ID、单位、技能、Buff、模型、动画、特效或数值。","owner":"object-blueprint/tianting-object-art-vfx-blueprint-contract.json"}`
-- `{"name":"天庭物编字段预占","category":"object_preallocation","designIntent":"将十一类敌人生态、五组主线、七星、二十八星官和四圣收束为五十五张逻辑卡，先冻结声音／投射物／表现状态、技能壳、单位／机制体和遭遇组装的依赖。","requiredData":["五十五张来源身份卡","三个语义技能槽","P0 空间信号","独立第二通道","反制结果","全空字段预占","P0 七道门与真实对象资源盘点"],"runtimeBehavior":"offline_field_reservation_only；无 assets、mode、稳定对象键、copyFrom、模板、资源 ID、字段映射、绝对数值、对象或插件。","owner":"object-preallocation/tianting-object-field-reservation-contract.json"}`
+- `{"name":"天庭物编字段预占","category":"object_preallocation","designIntent":"将既有敌人生态、主线、七星、二十八星官与四圣细化为逻辑单位、技能壳、表现状态、投射物和声音卡，在稳定对象键与数值到位前冻结可读性和复用边界。","requiredData":["五十五张来源身份卡","三个语义技能槽","P0 空间信号","独立第二通道","反制结果","全空字段预占","P0 七道门与真实对象资源盘点"],"runtimeBehavior":"offline_field_reservation_only；没有 assets、mode、稳定对象键、copyFrom、模板、资源 ID、字段映射、绝对数值、对象、插件或运行时写入。","owner":"object-preallocation/tianting-object-field-reservation-contract.json"}`
 - `{"name":"天庭敌人生态与精英职责","category":"enemy_ecology","designIntent":"把主线、七星、星宿与四圣周围的附属压力限定为可读的秩序错误、观察、净化、路线和共鸣职责，而非清场或奖励容器。","requiredData":["受保护首领身份","双通道预警","可见反制","1–4 人交接","场地阅读职责","权威与经济隔离"],"runtimeBehavior":"offline_design_requirements_only；只定义 11 类非通天塔生态身份，所有单位/对象、技能、AI、数值、波次、掉落、进度、资格和收据为空。","owner":"enemy-ecology/tianting-enemy-ecology-contract.json"}`
 - `{"name":"天庭主线 Boss 深化","category":"boss_design","designIntent":"将南天门、断虹阵、四门失衡、周天观台与凌霄外庭深化为来源/关系预警、读图决策、可见反制和可复盘失败的五组首领级遭遇。","requiredData":["P0 来源与关系","独立第二通道","串行单人解","1–4 人适配","附属压力接口","既有权威会话边界"],"runtimeBehavior":"offline_design_requirements_only；不创建 Boss 单位、技能、Buff、AI、数值、波次、地图、会话写入、奖励或经济输入。","owner":"mainline-boss/tianting-mainline-boss-contract.json"}`
+- `{"name":"二十八星官与四圣机制编排","category":"encounter_choreography","designIntent":"把既有星宿机制收束为普通四段、逐星官读线/提交/反制/恢复、成员流失降级与四圣固定七链的可施工语义节拍。","requiredData":["28 个 canonical 星官身份","四象 2+2+2+1","单主 P0 预算","1–4 人与 member-loss 分支","冻结会话/轮换/成员快照","净宿单调集合","核心回正候选"],"runtimeBehavior":"offline_encounter_choreography_spec；不创建 Y3/Lua 状态机、实际机制事件、phase_id/revision/cleanup_token 写入、会话完成、资格、奖励或经济。","owner":"mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json"}`
 - `{"name":"主线权威运行时纵切（离线）","category":"authority_runtime_probe","designIntent":"用独立纯 Lua 白盒模型回归入章、观台、凌霄的当前生命周期、逐人、幂等和清理边界。","requiredData":["受信任 authority_provider fixture","完整绑定收据字段","1–4 人冻结成员快照","cleanup identity","Node/Fengari 注入拒绝"],"runtimeBehavior":"offline_tested_reference_only；无 Y3 API、地图根 Lua、持久化、网络、证明服务或 economy-v2 调用。","owner":"../../../implementation/tianting-authority-vertical-slice/package-contract.json"}`
 - `{"name":"经济与奖励收据依赖","category":"economy","designIntent":"只登记奖励类别和用户固定的称号配方倍率，拒绝把候选内容写成运行时资源。","requiredData":["resource_table_version","owner_id","qualification_snapshot_id","encounter_instance_id","event_id","reward_slot_key","receipt_id","award_plan_hash"],"runtimeBehavior":"accepted_design_reference_runtime_not_integrated；economy-v2 可被设计引用，不能被本包调用、编译或扩容；当前只有凌霄主线成功可形成既有零价值来源事实候选，七星/星宿/噩梦仍不得进入 handoff 或结算。","owner":"成长数值与经济裁决的独立运行时实施"}`
 
@@ -286,6 +287,7 @@
                      "二十八星宿四象各七宿、十二时辰三轮轮换和权威快照边界。",
                      "普通到噩梦路径，以及七宿强化四圣、四圣庇护七宿的双向关系。",
                      "七星、主线终局、二十八星宿普通/噩梦的会话身份、清理确认、严格不重连和逐人资格合同。",
+                     "二十八星官与四圣机制编排：普通四象精确 2+2+2+1、28 张读线/提交/反制/恢复卡、成员流失节拍降级与四圣同方位固定七链；机制层不改写会话、进度、资格、奖励或经济。",
                      "主线、七星、星宿与四圣的预警、决策、反制、可复盘失败、双通道可读性和 1–4 人适配。",
                      "四职业 Lv41/45/50/55/60 裸装包络、相对单位基线、共鸣系数和 1–4 人缩放，以及绝对对象字段的标定门禁。",
                      "公共路线与独立会话图的候选分布、场地职责和 dry-run 预览，同时保持无 Y3 写入。",
@@ -314,19 +316,19 @@
 ```json
 {
     "objectConfig":  [
-                         "handoff/object-config-brief.json、object-blueprint/tianting-object-art-vfx-blueprint-contract.json、enemy-ecology/tianting-enemy-ecology-contract.json、mainline-boss/tianting-mainline-boss-contract.json、combat-baseline/tianting-combat-numeric-unit-baseline-contract.json 与 implementation/combat-calibration：以首领轮廓/前摇/P0–P2/L0–L4、11 类生态职责、五组主线首领和相对数值标尺为未来资产请求；未具备稳定对象键及 P0 七道绝对投影门禁逐项采纳时不得生成物编。"
+                         "handoff/object-config-brief.json、object-blueprint/tianting-object-art-vfx-blueprint-contract.json、object-preallocation/tianting-object-field-reservation-contract.json、mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json、enemy-ecology/tianting-enemy-ecology-contract.json、mainline-boss/tianting-mainline-boss-contract.json、combat-baseline/tianting-combat-numeric-unit-baseline-contract.json 与 implementation/combat-calibration：先用五十五张逻辑卡冻结声音／投射物／表现状态、技能壳、单位／机制体和遭遇组装，再等待稳定对象键、模板、真实字段盘点与 P0 七道绝对投影门禁逐项采纳；当前不得生成 assets、mode、插件或实际物编。"
                      ],
     "terrainLayout":  [
-                          "handoff/terrain-layout-brief.json、terrain-layout/layout.json、scale-alignment/、enemy-ecology/、mainline-boss/、implementation/tianting-y3-construction-preflight 与 implementation/tianting-surface-construction-manifest：提供公共路线、五组主线首领级遭遇、七星星盘、四象阵台和四圣兽场地的读线职责；640×416 图解与 224×80/96×64 白盒口径均只供 dry-run，先经真实项目读取与结构预检，不含实际地图写入。"
+                          "handoff/terrain-layout-brief.json、terrain-layout/layout.json、scale-alignment/、mansion-orchestration/、enemy-ecology/、mainline-boss/、implementation/tianting-y3-construction-preflight 与 implementation/tianting-surface-construction-manifest：提供公共路线、五组主线首领级遭遇、七星星盘、四象阵台和四圣兽场地的读线职责；640×416 图解与 224×80/96×64 白盒口径均只供 dry-run，先经真实项目读取与结构预检，不含实际地图写入。"
                       ],
     "luaLogic":  [
-                     "authority/tianting-progression-and-instance-authority-contract.json、主线纵切离线包、七星/星宿会话离线参考包、implementation/tianting-y3-construction-preflight、combat/、combat-baseline/、implementation/combat-calibration、enemy-ecology/、mainline-boss/ 与 handoff/lua-logic-brief.md：明确权威进度、当前生命周期、字段漂移、会话/清理、注入时辰、表现职责、P0 绝对字段门禁和真实 Y3 根预检；参考包只作进程内测试，不含 Y3 地图根 Lua 或绝对属性写入。"
+                     "authority/tianting-progression-and-instance-authority-contract.json、主线纵切离线包、七星/星宿会话离线参考包、mansion-orchestration/、implementation/tianting-y3-construction-preflight、combat/、combat-baseline/、implementation/combat-calibration、enemy-ecology/、mainline-boss/ 与 handoff/lua-logic-brief.md：明确权威进度、当前生命周期、字段漂移、会话/清理、注入时辰、表现职责、P0 绝对字段门禁和真实 Y3 根预检；参考包只作进程内测试，不含 Y3 地图根 Lua 或绝对属性写入。"
                  ],
     "uiPipeline":  [
-                       "handoff/ui-brief.md、ui/tianting-ui-accessibility-information-contract.json、mainline-presentation/ 与 implementation/tianting-surface-construction-manifest：描述轮换、队伍状态、失败复盘、称号收藏、双通道预警、五组主线表现职责、权威展示边界和未来 UI 根读取项；不含 UI 资产、节点或运行时命令写入。"
+                       "handoff/ui-brief.md、ui/tianting-ui-accessibility-information-contract.json、mansion-orchestration/、mainline-presentation/ 与 implementation/tianting-surface-construction-manifest：描述轮换、队伍状态、失败复盘、称号收藏、双通道预警、星宿机制编排、五组主线表现职责、权威展示边界和未来 UI 根读取项；不含 UI 资产、节点或运行时命令写入。"
                    ],
     "reviewPanel":  [
-                        "handoff/review-brief.md：复审用户固定内容、跨篇禁令、经济隔离、时间/赛季快照、战斗可读性、相对数值基线、P0 绝对标定协议、敌人生态、主线 Boss 深化、七星/星宿会话离线回归、主线叙事表现、白盒口径、纵切回归、Y3 结构预检、表面发现清单与施工门禁。"
+                        "handoff/review-brief.md、mansion-orchestration/：复审用户固定内容、跨篇禁令、经济隔离、时间/赛季快照、战斗可读性、相对数值基线、P0 绝对标定协议、敌人生态、主线 Boss 深化、二十八星官/四圣机制编排、七星/星宿会话离线回归、主线叙事表现、白盒口径、纵切回归、Y3 结构预检、表面发现清单与施工门禁。"
                     ]
 }
 ```
@@ -405,6 +407,7 @@
 - 七星名称、残片名称、星君称号、十枚同星配方倍率和七称号自动聚合关系完整。
 - 七星的机制语法与展示方向彼此不同，集合称号不会与单称号重复叠加。
 - 二十八星官正好四象各七名，均有签名动作、预警和反制方向。
+- 二十八星官与四圣机制编排精确覆盖普通四象 2+2+2+1、28 张读线/提交/反制/恢复卡、权威成员元组降级、普通/噩梦只读终局候选及不可跳段、不可倒退的语义允许边；机制层不得改写会话、进度、资格、奖励或经济。
 - 十二时辰精确覆盖三轮四象，Asia/Shanghai 权威快照锁定方位，客户端时间、方位与重试不可改写实例。
 - 普通通关到噩梦钥候选的路径明确；噩梦中七宿强化四圣、四圣庇护七宿，并以逐链净宿建立终局窗口。
 - 二十八星宿普通与噩梦逐人校验常规完成；噩梦逐人校验同方位资格，断线成员不可重连或领奖。

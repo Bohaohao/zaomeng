@@ -26,6 +26,7 @@
       "enemy-ecology/tianting-enemy-ecology-contract.json",
       "mainline-boss/tianting-mainline-boss-contract.json",
       "mainline-presentation/tianting-mainline-presentation-contract.json",
+      "mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json",
       "../../../implementation/tianting-seven-star-session-reference/package-contract.json",
       "../../../implementation/tianting-mansion-session-reference/contract/mansion-session-time-qualification-reference-contract.json",
       "tower-economy/mansion-economy-global-tower-run-season-contract.json"
@@ -414,6 +415,16 @@
         "five non-tower mainline Boss entry guidance, three narrative anchors, dual-channel warnings and failure debrief skeletons",
         "non-economic narrative confirmation and L0-L4 camera, audio and VFX responsibility layers",
         "no authority adjudication, progression, reward, receipt, economy, asset, object, map or runtime binding"
+      ]
+    },
+    {
+      "contract": "tianting_mansion_encounter_orchestration",
+      "artifact": "mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json",
+      "status": "offline_encounter_choreography_spec",
+      "covers": [
+        "normal four-segment choreography, exact officer action cycles, recovery and one-to-four-member adaptation",
+        "same-quadrant nightmare two-plus-two-plus-two-plus-one chain order, purified aid and sacred-core restoration",
+        "read-only authority-session binding with no runtime state machine, progress, qualification, reward, receipt or economy write"
       ]
     },
     {
