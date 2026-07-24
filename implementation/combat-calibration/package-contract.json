@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "package": "cross-profession-combat-calibration",
+  "package_status": "offline-calibration-reference-only",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "primary_contract": "contract/cross-profession-combat-calibration-contract.json",
+  "reference_model": "reference/calibration-core.js",
+  "test_entry": "tests/run-all.ps1",
+  "evidence_adoption_package": {
+    "artifact": "evidence-adoption/p0-evidence-collection-and-adoption-contract.json",
+    "status": "offline-evidence-collection-plan-only",
+    "test_entry": "evidence-adoption/tests/run-all.ps1",
+    "production_gate": "closed",
+    "runtime_handoff": false,
+    "actual_capture_provider": null,
+    "accepted_evidence_ledger": null,
+    "adoption_decision": null,
+    "absolute_projection_payload": null
+  },
+  "external_capture_onboarding_package": {
+    "artifact": "external-capture-onboarding/package-contract.json",
+    "status": "offline-external-capture-onboarding-only",
+    "test_entry": "external-capture-onboarding/tests/run-all.ps1",
+    "production_gate": "closed",
+    "runtime_handoff": false,
+    "actual_capture_provider": null,
+    "actual_y3_project_ref": null,
+    "actual_source_origin_preflight_attestation": null,
+    "actual_environment_attestation": null,
+    "actual_external_artifact_manifest": null,
+    "actual_independent_review_handoff": null,
+    "actual_adoption_decision": null,
+    "absolute_projection_payload": null
+  },
+  "boundaries": {
+    "creates_y3_objects": false,
+    "creates_map_or_terrain": false,
+    "writes_lua_runtime": false,
+    "writes_progress_or_economy": false,
+    "assigns_absolute_tianting_object_fields": false
+  }
+}

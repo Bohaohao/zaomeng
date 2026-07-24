@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_EXTERNAL_CAPTURE_INDEPENDENT_REVIEW_HANDOFF_TEMPLATE_V1",
+    "status": "not_created",
+    "review_handoff_ref": null,
+    "reviewer_principal_ref": null,
+    "adoption_authority_ref": null
+  },
+  "manifest_binding": {
+    "external_manifest_ref": null,
+    "external_manifest_digest": null,
+    "environment_attestation_ref": null,
+    "environment_family_digest": null
+  },
+  "review_requirements": [
+    "provider qualification and role separation",
+    "real map-local structural preflight, bound runner/report and external source-origin attestation",
+    "frozen environment, toolchain and authority-clock basis",
+    "immutable raw/canonical artifact relation and digest consistency",
+    "gate-specific completeness including G01 twelve-by-three and G06 one-to-four coverage",
+    "rejection of client claims, local templates, synthetic fixtures, drift and post-capture rewriting"
+  ],
+  "gate_review_requests": [
+    {"gate_id": "P0-GATE-01-all-12-fixed-builds-declared-and-replayed", "external_manifest_entry_refs": null, "review_outcome": null, "review_reason": null},
+    {"gate_id": "P0-GATE-02-general-physical-magical-defense-formulas-adopted", "external_manifest_entry_refs": null, "review_outcome": null, "review_reason": null},
+    {"gate_id": "P0-GATE-03-hit-crit-control-formulas-adopted", "external_manifest_entry_refs": null, "review_outcome": null, "review_reason": null},
+    {"gate_id": "P0-GATE-04-engine-action-frame-and-speed-readback", "external_manifest_entry_refs": null, "review_outcome": null, "review_reason": null},
+    {"gate_id": "P0-GATE-05-terrain-collision-and-camera-fixture", "external_manifest_entry_refs": null, "review_outcome": null, "review_reason": null},
+    {"gate_id": "P0-GATE-06-authoritative-one-to-four-member-replays", "external_manifest_entry_refs": null, "review_outcome": null, "review_reason": null},
+    {"gate_id": "P0-GATE-07-stable-object-keys-and-template-readback", "external_manifest_entry_refs": null, "review_outcome": null, "review_reason": null}
+  ],
+  "handoff_rule": "独立审阅交接只能单向引用已冻结的外部 manifest 并向外部采纳机关请求进一步裁决；本地模板与审阅结论均不采纳门禁，不生成绝对字段投影，也不得反向写入或预先引用采纳决定。"
+}

@@ -1,0 +1,383 @@
+{
+  "schema_version": 1,
+  "contract_id": "CAL_SPEC_CROSS_PROFESSION_ABSOLUTE_COMBAT_V1",
+  "package": "cross-profession-combat-calibration",
+  "package_status": "offline-calibration-reference-only",
+  "non_production": true,
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "purpose": "Freeze the reproducible calibration protocol that may eventually turn the TianTing relative combat baseline into reviewed object-field candidates. This contract records proven naked-stat anchors and a narrow legacy physical fixture, while explicitly blocking unproven global combat formulas and all runtime projection.",
+  "scope": {
+    "included": [
+      "four-profession Lv41/Lv55/Lv60 naked-stat anchors",
+      "fixed-build declaration ledger and missing-evidence gate",
+      "D90 and canonical B10 log metrics",
+      "legacy static-target physical-damage formula boundary",
+      "action-clock and design-space motion conversion interface",
+      "terrain/collision observation fixture schema",
+      "one-to-four member replay fixture schema",
+      "TianTing absolute-object-field projection gate"
+    ],
+    "excluded": [
+      "Y3 runtime, Lua, object-editor writes, map writes, UI, AI or network service",
+      "real combat logs, real engine readbacks, stable object IDs or template IDs",
+      "equipment, artifact, pet, collection, title or consumable numeric effects",
+      "experience, currency, materials, drops, pity, source profiles, receipts or settlement",
+      "chapter progress, encounter authority, party admission, cleanup or reconnect implementation"
+    ]
+  },
+  "source_references": [
+    {
+      "source_id": "SRC_GLOBAL_BASELINE",
+      "path": "../../docs/全局设计基线.md",
+      "role": "current project and four-profession baseline"
+    },
+    {
+      "source_id": "SRC_GROWTH_CONTRACT",
+      "path": "../../docs/物编/18-成长系统进度、掉落与长期目标契约.md",
+      "role": "rounding, level range, build budget and idempotent stat order"
+    },
+    {
+      "source_id": "SRC_C01_STATS",
+      "path": "../../docs/物编/02-破妄英雄单位与基础属性规格.md",
+      "role": "C01 naked attributes and fixed combat attributes"
+    },
+    {
+      "source_id": "SRC_C02_STATS",
+      "path": "../../docs/物编/06-镇界英雄单位与基础属性规格.md",
+      "role": "C02 naked attributes and fixed combat attributes"
+    },
+    {
+      "source_id": "SRC_C03_STATS",
+      "path": "../../docs/物编/09-持明英雄单位与基础属性规格.md",
+      "role": "C03 naked attributes and fixed combat attributes"
+    },
+    {
+      "source_id": "SRC_C04_STATS",
+      "path": "../../docs/物编/12-巡猎英雄单位与基础属性规格.md",
+      "role": "C04 naked attributes and fixed combat attributes"
+    },
+    {
+      "source_id": "SRC_LEGACY_STATIC_FIXTURE",
+      "path": "../../docs/归档/职业设计/12-跨职业白盒战斗夹具.md",
+      "role": "narrow C01/C04 Lv60 static-target formula and D90/D10 fixture"
+    },
+    {
+      "source_id": "SRC_TIANTING_RELATIVE_BASELINE",
+      "path": "../../docs/物编/天庭篇主线遭遇与通天塔规格包/combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+      "role": "relative-only TianTing units and absolute-projection gate target"
+    }
+  ],
+  "baseline_clock": {
+    "fixture_timebase_hz": 60,
+    "fixture_tick_type": "non_negative_integer",
+    "offline_motion_plane": "design-space only; it is not a Y3 coordinate or map scale",
+    "engine_frame_projection": null
+  },
+  "rounding_policy": {
+    "stat_formula": "round_half_up_nonnegative",
+    "stat_formula_expression": "floor(value + 0.5)",
+    "damage_formula": "formula-specific; the legacy physical fixture rounds once with floor at final damage",
+    "forbidden": [
+      "per-level additive mutation",
+      "implicit truncation of naked stats",
+      "using the legacy final-damage floor as a general stat-rounding rule"
+    ]
+  },
+  "combatant_baselines": [
+    {
+      "profession_id": "C01",
+      "profession_name": "破妄",
+      "primary_damage_channel": "physical",
+      "naked_stat_formula": {
+        "hp_max": { "base": 620, "per_level": 68 },
+        "attack_phy": { "base": 48, "per_level": 5.7 },
+        "attack_mag": { "base": 0, "per_level": 0 },
+        "defense_phy": { "base": 22, "per_level": 1.9 },
+        "defense_mag": { "base": 16, "per_level": 1.5 }
+      },
+      "fixed_combat_attributes": {
+        "critical_chance": 0.05,
+        "critical_damage": 1.5,
+        "hit_rate": 1.0,
+        "dodge_rate": 0.0,
+        "cooldown_reduction": 0.0,
+        "move_speed_design_units_per_second": 3.8,
+        "attack_speed_display": 100,
+        "attack_interval_seconds": 1.05
+      },
+      "level_anchors": [
+        { "level": 41, "hp_max": 3340, "attack_phy": 276, "attack_mag": 0, "defense_phy": 98, "defense_mag": 76 },
+        { "level": 55, "hp_max": 4292, "attack_phy": 356, "attack_mag": 0, "defense_phy": 125, "defense_mag": 97 },
+        { "level": 60, "hp_max": 4632, "attack_phy": 384, "attack_mag": 0, "defense_phy": 134, "defense_mag": 105 }
+      ]
+    },
+    {
+      "profession_id": "C02",
+      "profession_name": "镇界",
+      "primary_damage_channel": "physical",
+      "naked_stat_formula": {
+        "hp_max": { "base": 720, "per_level": 80 },
+        "attack_phy": { "base": 42, "per_level": 4.7 },
+        "attack_mag": { "base": 0, "per_level": 0 },
+        "defense_phy": { "base": 28, "per_level": 2.3 },
+        "defense_mag": { "base": 20, "per_level": 1.8 }
+      },
+      "fixed_combat_attributes": {
+        "critical_chance": 0.04,
+        "critical_damage": 1.45,
+        "hit_rate": 1.0,
+        "dodge_rate": 0.0,
+        "cooldown_reduction": 0.0,
+        "move_speed_design_units_per_second": 3.55,
+        "attack_speed_display": 92,
+        "attack_interval_seconds": 1.15
+      },
+      "level_anchors": [
+        { "level": 41, "hp_max": 3920, "attack_phy": 230, "attack_mag": 0, "defense_phy": 120, "defense_mag": 92 },
+        { "level": 55, "hp_max": 5040, "attack_phy": 296, "attack_mag": 0, "defense_phy": 152, "defense_mag": 117 },
+        { "level": 60, "hp_max": 5440, "attack_phy": 319, "attack_mag": 0, "defense_phy": 164, "defense_mag": 126 }
+      ]
+    },
+    {
+      "profession_id": "C03",
+      "profession_name": "持明",
+      "primary_damage_channel": "magical",
+      "naked_stat_formula": {
+        "hp_max": { "base": 590, "per_level": 64 },
+        "attack_phy": { "base": 24, "per_level": 2.2 },
+        "attack_mag": { "base": 52, "per_level": 6.1 },
+        "defense_phy": { "base": 18, "per_level": 1.6 },
+        "defense_mag": { "base": 22, "per_level": 1.8 }
+      },
+      "fixed_combat_attributes": {
+        "critical_chance": 0.05,
+        "critical_damage": 1.5,
+        "hit_rate": 1.0,
+        "dodge_rate": 0.0,
+        "cooldown_reduction": 0.0,
+        "move_speed_design_units_per_second": 3.65,
+        "attack_speed_display": 96,
+        "attack_interval_seconds": 1.1
+      },
+      "level_anchors": [
+        { "level": 41, "hp_max": 3150, "attack_phy": 112, "attack_mag": 296, "defense_phy": 82, "defense_mag": 94 },
+        { "level": 55, "hp_max": 4046, "attack_phy": 143, "attack_mag": 381, "defense_phy": 104, "defense_mag": 119 },
+        { "level": 60, "hp_max": 4366, "attack_phy": 154, "attack_mag": 412, "defense_phy": 112, "defense_mag": 128 }
+      ]
+    },
+    {
+      "profession_id": "C04",
+      "profession_name": "巡猎",
+      "primary_damage_channel": "physical",
+      "naked_stat_formula": {
+        "hp_max": { "base": 560, "per_level": 58 },
+        "attack_phy": { "base": 46, "per_level": 5.45 },
+        "attack_mag": { "base": 0, "per_level": 0 },
+        "defense_phy": { "base": 17, "per_level": 1.55 },
+        "defense_mag": { "base": 18, "per_level": 1.65 }
+      },
+      "fixed_combat_attributes": {
+        "critical_chance": 0.05,
+        "critical_damage": 1.5,
+        "hit_rate": 1.0,
+        "dodge_rate": 0.0,
+        "cooldown_reduction": 0.0,
+        "move_speed_design_units_per_second": 3.85,
+        "attack_speed_display": 104,
+        "attack_interval_seconds": 1.0
+      },
+      "level_anchors": [
+        { "level": 41, "hp_max": 2880, "attack_phy": 264, "attack_mag": 0, "defense_phy": 79, "defense_mag": 84 },
+        { "level": 55, "hp_max": 3692, "attack_phy": 340, "attack_mag": 0, "defense_phy": 101, "defense_mag": 107 },
+        { "level": 60, "hp_max": 3982, "attack_phy": 368, "attack_mag": 0, "defense_phy": 108, "defense_mag": 115 }
+      ]
+    }
+  ],
+  "fixed_build_declaration_ledger": {
+    "required_levels": [41, 55, 60],
+    "common_required_fields": [
+      "five_active_slots_in_order",
+      "all_learned_active_ranks",
+      "all_learned_passive_ranks",
+      "ultimate_tier",
+      "equipment_artifact_pet_collection_baseline",
+      "initial_resources_and_cooldowns",
+      "input_priority_or_script",
+      "action_frame_profile_id"
+    ],
+    "profiles": [
+      { "profile_id": "CAL-C01-L41-v1", "profession_id": "C01", "level": 41, "status": "blocked_missing_declared_loadout", "declaration": null },
+      { "profile_id": "CAL-C01-L55-v1", "profession_id": "C01", "level": 55, "status": "blocked_missing_declared_loadout", "declaration": null },
+      {
+        "profile_id": "CAL-C01-L60-v1",
+        "profession_id": "C01",
+        "level": 60,
+        "status": "partially_declared_static_target_only",
+        "declaration": {
+          "source_fixture": "COMBAT_REF_L60_BOSS_01",
+          "five_active_slots_in_order": ["开锋式", "贯心式", "叠锋三破", "踏虚行", "断岳裁"],
+          "listed_slot_rank": 5,
+          "equipment_artifact_pet_collection_baseline": "REF_EQUIP_NONE / no artifact active / no pet active / no external buff",
+          "initial_resources_and_cooldowns": "all zero resources; cooldown ready; no temporary effects",
+          "input_priority_or_script": "ultimate full -> momentum>=80 spender -> momentum>=40 spender -> combo -> generator -> normal attack",
+          "action_frame_profile_id": "legacy-static-fixture-zero-windup-only"
+        },
+        "missing_before_cross_profession_comparison": ["complete learned-rank manifest digest", "engine-frame readback", "three replay logs"]
+      },
+      { "profile_id": "CAL-C02-L41-v1", "profession_id": "C02", "level": 41, "status": "blocked_missing_declared_loadout", "declaration": null },
+      { "profile_id": "CAL-C02-L55-v1", "profession_id": "C02", "level": 55, "status": "blocked_missing_declared_loadout", "declaration": null },
+      { "profile_id": "CAL-C02-L60-v1", "profession_id": "C02", "level": 60, "status": "blocked_missing_declared_loadout", "declaration": null },
+      { "profile_id": "CAL-C03-L41-v1", "profession_id": "C03", "level": 41, "status": "blocked_missing_declared_loadout", "declaration": null },
+      { "profile_id": "CAL-C03-L55-v1", "profession_id": "C03", "level": 55, "status": "blocked_missing_declared_loadout", "declaration": null },
+      {
+        "profile_id": "CAL-C03-L60-v1",
+        "profession_id": "C03",
+        "level": 60,
+        "status": "partially_declared_slot_recipe_only",
+        "declaration": {
+          "source_fixture": "C03-BAL-001",
+          "five_active_slots_in_order": ["明烛引", "澄波回环", "照影三折", "澄心障", "明鉴裁断"],
+          "declared_output_budget": "D90 is 88%-92% of C01 under equivalent logged conditions; legacy B10 <=92%; R90 is 70%-78%",
+          "action_frame_profile_id": null
+        },
+        "missing_before_cross_profession_comparison": ["rank manifest", "exact burst window declaration", "target formula", "three replay logs"]
+      },
+      { "profile_id": "CAL-C04-L41-v1", "profession_id": "C04", "level": 41, "status": "blocked_missing_declared_loadout", "declaration": null },
+      { "profile_id": "CAL-C04-L55-v1", "profession_id": "C04", "level": 55, "status": "blocked_missing_declared_loadout", "declaration": null },
+      {
+        "profile_id": "CAL-C04-L60-v1",
+        "profession_id": "C04",
+        "level": 60,
+        "status": "partially_declared_static_target_only",
+        "declaration": {
+          "source_fixture": "C04-BAL-003-S01 / COMBAT_REF_L60_BOSS_01",
+          "five_active_slots_in_order": ["A01", "A02", "A03", "A04", "A06"],
+          "all_learned_active_ranks": "A01-A08 each rank 5",
+          "all_learned_passive_ranks": "P01-P04 each rank 5",
+          "ultimate_tier": 3,
+          "equipment_artifact_pet_collection_baseline": "REF_EQUIP_NONE / no artifact active / no pet active / no external buff",
+          "initial_resources_and_cooldowns": "all zero resources; cooldown ready; no temporary effects",
+          "input_priority_or_script": "frozen in C04-BAL-003-S01; static target does not auto-cast A04",
+          "action_frame_profile_id": "legacy-static-fixture-zero-windup-only"
+        },
+        "missing_before_cross_profession_comparison": ["engine-frame readback", "three replay logs"]
+      }
+    ],
+    "completion_rule": "All twelve profiles must be status=declared_and_replayed before a TianTing absolute projection may be proposed. A partially declared Lv60 profile is evidence only, never a substitute for the missing Lv41/Lv55 profiles."
+  },
+  "metric_contract": {
+    "eligible_damage_event": "An event must be accepted final damage, have a finite non-negative final_damage value, lie in the fixture scope and target lifecycle, and have a non-negative integer tick. Healing, would_hit, rejected events, target-external damage, post-death events and private-session events are excluded unless a future fixture expressly adopts them.",
+    "D90": {
+      "duration_ticks": 5400,
+      "window": "[0, 5400)",
+      "aggregation": "sum eligible final_damage"
+    },
+    "B10": {
+      "duration_ticks": 600,
+      "candidate_start_ticks": "integer s from 0 through 4800 inclusive",
+      "window": "[s, s + 600)",
+      "aggregation": "max sum eligible final_damage; ties choose the smallest s",
+      "legacy_alias": "A legacy D10_peak is comparable only when it used the identical max-600-tick policy and event predicate. A named or manually selected 10-second window must declare its start tick and cannot silently claim B10 equivalence."
+    },
+    "replay_determinism": "A profile needs three independent records with equal fixture digest, equal input digest and byte-identical canonical event log before its output can be used as calibration evidence."
+  },
+  "formula_registry": {
+    "legacy_physical_static_target_v1": {
+      "status": "accepted_only_for_named_legacy_fixture",
+      "allowed_fixture_id": "COMBAT_REF_L60_BOSS_01",
+      "allowed_damage_channel": "physical",
+      "raw_damage": "final_attack_phy * skill_coefficient * explicit_same_source_multiplier",
+      "mitigation": "raw_damage * 100 / (100 + target_physical_defense)",
+      "final_rounding": "floor once after all multipliers and mitigation",
+      "target_physical_defense": 180,
+      "target_magic_defense": 180,
+      "disabled_inputs": ["crit", "random_damage", "dodge", "random_hit", "penetration", "break_state", "damage_reduction", "heal", "summon", "invulnerability", "transition"],
+      "forbidden_extensions": ["magic damage", "general monster defense", "TianTing unit values", "real map collision", "unrecorded skills or actions"]
+    },
+    "general_physical_damage": null,
+    "general_magical_damage": null,
+    "defense_penetration_order": null,
+    "critical_order_and_caps": null,
+    "hit_dodge_formula": null,
+    "control_duration_resistance_formula": null,
+    "formula_resolution_rule": "Missing formula branches fail closed: a caller may record the missing evidence but cannot synthesize damage, hit, control duration, mitigation or an object-field candidate."
+  },
+  "hit_and_control_boundary": {
+    "legacy_static_fixture": "Direct hits are confirmed at accepted begin_cast tick. Random hit/dodge/crit are disabled. This is a deterministic test rule, not a general hit formula.",
+    "general_rule": "Every damage or control event needs an accepted action identity, actor lifecycle, target lifecycle, scope, target-rank snapshot and formula revision. Unknown rank, missing hit formula, missing control-resistance formula or stale lifecycle produces no calibration result.",
+    "forbidden": ["using UI or client hit claims", "borrowing a target rank from another actor", "treating boss control conversion as a generic duration formula", "inferring control resistance from a relative TianTing pressure coefficient"]
+  },
+  "action_and_motion_interface": {
+    "fixture_motion_rule": "design_distance = move_speed_design_units_per_second * elapsed_ticks / 60. This is valid only inside a declared offline fixture plane.",
+    "required_engine_readback_fields": ["actor_template_id", "engine_move_speed_field", "observed_distance", "start_tick", "end_tick", "input_vector", "action_start_tick", "action_begin_tick", "action_close_tick", "action_lock_end_tick", "map_collision_fixture_id"],
+    "required_frame_fields": ["windup_ticks", "active_ticks", "backswing_ticks", "cancel_window_ticks", "interruptibility", "attack_interval_ticks"],
+    "engine_conversion": null,
+    "forbidden": ["copying design-space speed into ori_speed", "deriving frames from attack_interval text", "assuming zero windup outside the named legacy fixture"]
+  },
+  "terrain_collision_fixture": {
+    "status": "schema_only_pending_real_whitebox",
+    "required_fields": ["fixture_id", "map_revision", "camera_profile_id", "actor_template_id", "target_template_id", "collision_shapes", "walkable_segments", "blocked_segments", "slope_or_height_policy", "line_of_sight_policy", "measured_positions", "recorded_inputs", "recorded_outcomes"],
+    "required_cases": ["straight traversal", "wall rejection", "corner slide or rejection", "skill safe-landing", "target-range boundary", "camera readability capture"],
+    "real_fixture": null,
+    "rule": "Candidate terrain diagrams and design-body coordinates are not collision evidence."
+  },
+  "party_replay_fixture": {
+    "status": "schema_only_pending_authoritative_replays",
+    "allowed_member_counts": [1, 2, 3, 4],
+    "required_fields": ["fixture_id", "member_snapshot_digest", "encounter_snapshot_digest", "authority_time_basis_id", "member_actor_lifecycle_pairs", "accepted_action_log_digest", "damage_log_digest", "disconnect_or_left_events", "cleanup_result", "fixture_version"],
+    "invariants": ["member count is captured before replay", "no client-provided party size", "each actor/lifecycle pair is unique", "left or stale members cannot rejoin the same fixture", "cleanup observations never rewrite an already accepted final-damage log", "the fixture observes existing authority semantics and does not implement or alter them"],
+    "real_fixtures": []
+  },
+  "absolute_projection_gate": {
+    "status": "blocked_pending_evidence",
+    "required_gate_ids": [
+      "P0-GATE-01-all-12-fixed-builds-declared-and-replayed",
+      "P0-GATE-02-general-physical-magical-defense-formulas-adopted",
+      "P0-GATE-03-hit-crit-control-formulas-adopted",
+      "P0-GATE-04-engine-action-frame-and-speed-readback",
+      "P0-GATE-05-terrain-collision-and-camera-fixture",
+      "P0-GATE-06-authoritative-one-to-four-member-replays",
+      "P0-GATE-07-stable-object-keys-and-template-readback"
+    ],
+    "current_satisfied_gate_ids": [],
+    "rule": "Every required gate must be independently recorded as accepted in a later review. This offline contract cannot self-promote any gate.",
+    "candidate": {
+      "candidate_id": "TT_CAL_ABSOLUTE_OBJECT_FIELDS_V1",
+      "source_relative_contract": "../../docs/物编/天庭篇主线遭遇与通天塔规格包/combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+      "target_object_or_unit_id": null,
+      "target_selector": "future reviewed mapping from a relative TianTing combat identity",
+      "hp_max": null,
+      "attack_phy": null,
+      "attack_mag": null,
+      "defense_phy": null,
+      "defense_mag": null,
+      "attack_speed": null,
+      "attack_interval_seconds": null,
+      "move_speed_field": null,
+      "skill_damage": null,
+      "skill_duration_seconds": null,
+      "status": "blocked"
+    }
+  },
+  "acceptance": [
+    { "id": "CAL-ACC-001", "condition": "package is offline-only with runtime_handoff=false and production_gate=closed" },
+    { "id": "CAL-ACC-002", "condition": "all four careers expose exact Lv41/Lv55/Lv60 formula-derived anchors" },
+    { "id": "CAL-ACC-003", "condition": "positive stat rounding uses floor(value + 0.5), never truncation" },
+    { "id": "CAL-ACC-004", "condition": "the fixed-build ledger covers exactly C01-C04 at Lv41/Lv55/Lv60 and preserves missing declarations" },
+    { "id": "CAL-ACC-005", "condition": "D90 and B10 use accepted final-damage event predicates and exact tick windows" },
+    { "id": "CAL-ACC-006", "condition": "legacy D10 comparison cannot silently claim canonical B10 equivalence" },
+    { "id": "CAL-ACC-007", "condition": "the legacy physical formula rejects magic, changed defense and enabled random inputs" },
+    { "id": "CAL-ACC-008", "condition": "general physical, magical, hit, crit, defense-penetration and control formulas remain null until adopted" },
+    { "id": "CAL-ACC-009", "condition": "the action/motion interface distinguishes design-space movement from engine fields" },
+    { "id": "CAL-ACC-010", "condition": "zero-windup legacy behavior cannot escape its named fixture" },
+    { "id": "CAL-ACC-011", "condition": "collision schema requires real whitebox observations and rejects diagram-only proof" },
+    { "id": "CAL-ACC-012", "condition": "party replay fixture accepts only one through four captured members and does not alter authority semantics" },
+    { "id": "CAL-ACC-013", "condition": "left, stale or cleanup events cannot rewrite accepted final-damage evidence" },
+    { "id": "CAL-ACC-014", "condition": "all absolute TianTing object fields and target IDs remain null and blocked" },
+    { "id": "CAL-ACC-015", "condition": "relative TianTing coefficients cannot be converted to absolute values before every gate is separately accepted" },
+    { "id": "CAL-ACC-016", "condition": "no currency, drop, pity, receipt, source-profile or reward field is created" },
+    { "id": "CAL-ACC-017", "condition": "no Y3 object, map, Lua, UI or runtime write is performed" },
+    { "id": "CAL-ACC-018", "condition": "reference tests prove calculations and fail-closed boundaries without claiming real combat evidence" }
+  ]
+}

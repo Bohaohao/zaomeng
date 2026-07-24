@@ -1,0 +1,419 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_P0_EVIDENCE_COLLECTION_AND_ADOPTION_V1",
+    "display_name": "P0 跨职业绝对标定实证采集与采纳包",
+    "package_status": "offline-evidence-collection-plan-only",
+    "production_gate": "closed",
+    "runtime_handoff": false,
+    "actual_capture_provider": null,
+    "actual_y3_project_ref": null,
+    "accepted_evidence_ledger": null,
+    "adoption_decision": null,
+    "absolute_projection_payload": null
+  },
+  "source_calibration_contract": {
+    "artifact": "../contract/cross-profession-combat-calibration-contract.json",
+    "contract_id": "CAL_SPEC_CROSS_PROFESSION_ABSOLUTE_COMBAT_V1",
+    "content_sha256": "72405ee76ed8841ff067eb3bb691db6dd29702d1635dc8103adc27d6a3f6f2a8",
+    "required_gate_ids": [
+      "P0-GATE-01-all-12-fixed-builds-declared-and-replayed",
+      "P0-GATE-02-general-physical-magical-defense-formulas-adopted",
+      "P0-GATE-03-hit-crit-control-formulas-adopted",
+      "P0-GATE-04-engine-action-frame-and-speed-readback",
+      "P0-GATE-05-terrain-collision-and-camera-fixture",
+      "P0-GATE-06-authoritative-one-to-four-member-replays",
+      "P0-GATE-07-stable-object-keys-and-template-readback"
+    ]
+  },
+  "capture_chain": {
+    "chain_status": "external_evidence_not_collected",
+    "collector_may_read_but_not_write": true,
+    "submission_is_not_adoption": true,
+    "canonicalization_rule": "Raw evidence is preserved outside this package, canonically serialized by the approved external collector, digested, then submitted only by immutable reference.",
+    "stages": [
+      {
+        "stage_id": "CAL-EVID-STAGE-01-environment-attestation",
+        "purpose": "Bind every later observation to a real Y3 build, map or fixture revision, object inventory snapshot and read-only capture basis.",
+        "output": "external_environment_attestation_reference"
+      },
+      {
+        "stage_id": "CAL-EVID-STAGE-02-readonly-capture",
+        "purpose": "Collect source observations without object, map, Lua, UI, progress, economy or authority writes.",
+        "output": "external_raw_capture_reference"
+      },
+      {
+        "stage_id": "CAL-EVID-STAGE-03-canonicalization",
+        "purpose": "Produce a canonical artifact digest and a capture-basis digest that make replay, tamper and source drift checks possible.",
+        "output": "external_canonical_artifact_reference"
+      },
+      {
+        "stage_id": "CAL-EVID-STAGE-04-independent-review",
+        "purpose": "Require a reviewer distinct from the collector to check completeness, provenance, determinism and rejection conditions.",
+        "output": "external_independent_review_reference"
+      },
+      {
+        "stage_id": "CAL-EVID-STAGE-05-gate-adoption",
+        "purpose": "Allow a separately authorized adoption authority to record a gate decision only after every gate-specific requirement is externally verified.",
+        "output": "external_adoption_decision_reference"
+      }
+    ],
+    "required_environment_snapshot_fields": [
+      "engine_build_digest",
+      "real_project_revision",
+      "map_or_fixture_revision",
+      "object_inventory_snapshot_digest",
+      "template_readback_basis_digest",
+      "capture_clock_basis",
+      "collector_toolchain_digest"
+    ]
+  },
+  "support_artifacts": {
+    "source_snapshot": "source-snapshots.json",
+    "collection_templates": "templates/evidence-collection-templates.json",
+    "adoption_template": "templates/adoption-decision-template.json",
+    "rule": "These are empty offline templates and source fingerprints. They are not an evidence ledger, a capture provider, an adoption decision or an absolute-field projection."
+  },
+  "submission_envelope": {
+    "required_fields": [
+      "evidence_id",
+      "gate_id",
+      "evidence_kind",
+      "source_capture_session_id",
+      "capture_run_id",
+      "capture_provider_proof_ref",
+      "engine_build_digest",
+      "real_project_revision",
+      "map_or_fixture_revision",
+      "object_inventory_snapshot_digest",
+      "template_readback_basis_digest",
+      "canonical_artifact_digest",
+      "capture_basis_digest",
+      "input_trace_digest",
+      "recorded_authoritative_instant",
+      "collector_identity_ref",
+      "reviewer_identity_ref",
+      "external_artifact_ref",
+      "gate_scope"
+    ],
+    "evidence_kind": "real_y3_readonly_capture",
+    "digest_fields": [
+      "engine_build_digest",
+      "object_inventory_snapshot_digest",
+      "template_readback_basis_digest",
+      "canonical_artifact_digest",
+      "capture_basis_digest",
+      "input_trace_digest"
+    ],
+    "immutable_reference_scheme": "external://",
+    "disallowed_reference_tokens": [
+      "synthetic",
+      "schema-test",
+      "test-only",
+      "preflight",
+      "not-a-map-write",
+      "deferred",
+      "client://"
+    ],
+    "forbidden_fields": [
+      "target_object_or_unit_id",
+      "hp_max",
+      "attack_phy",
+      "attack_mag",
+      "defense_phy",
+      "defense_mag",
+      "attack_speed",
+      "attack_interval_seconds",
+      "move_speed_field",
+      "skill_damage",
+      "skill_duration_seconds",
+      "stable_object_key",
+      "source_template_id",
+      "field_reference",
+      "resource_id",
+      "object_id",
+      "unit_id",
+      "object_binding",
+      "template_binding",
+      "target_selector",
+      "object_field_binding",
+      "resource_binding",
+      "gate_promotion",
+      "adoption_decision",
+      "reward",
+      "receipt",
+      "economy_input"
+    ],
+    "collector_reviewer_must_differ": true,
+    "client_claims_are_not_evidence": true,
+    "external_artifact_must_be_immutable_reference": true
+  },
+  "gate_scope_contract": {
+    "rule": "A submission has one exact, non-projecting gate_scope. It may classify external coverage but never carries raw logs, object keys, field bindings, values, rewards, receipts or an adoption decision.",
+    "exact_fields": [
+      "scope_kind",
+      "profile_id",
+      "deterministic_run_index",
+      "party_member_count",
+      "formula_family",
+      "readback_class"
+    ],
+    "fixed_build_profile_ids": [
+      "CAL-C01-L41-v1",
+      "CAL-C01-L55-v1",
+      "CAL-C01-L60-v1",
+      "CAL-C02-L41-v1",
+      "CAL-C02-L55-v1",
+      "CAL-C02-L60-v1",
+      "CAL-C03-L41-v1",
+      "CAL-C03-L55-v1",
+      "CAL-C03-L60-v1",
+      "CAL-C04-L41-v1",
+      "CAL-C04-L55-v1",
+      "CAL-C04-L60-v1"
+    ],
+    "per_gate": [
+      { "gate_id": "P0-GATE-01-all-12-fixed-builds-declared-and-replayed", "scope_kind": "fixed_build_replay", "profile_id": "required_canonical_profile", "deterministic_run_index": "required_1_to_3", "party_member_count": null, "formula_family": null, "readback_class": null },
+      { "gate_id": "P0-GATE-02-general-physical-magical-defense-formulas-adopted", "scope_kind": "formula_observation", "profile_id": null, "deterministic_run_index": null, "party_member_count": null, "formula_family": "physical_magical_defense_penetration", "readback_class": null },
+      { "gate_id": "P0-GATE-03-hit-crit-control-formulas-adopted", "scope_kind": "formula_observation", "profile_id": null, "deterministic_run_index": null, "party_member_count": null, "formula_family": "hit_crit_control", "readback_class": null },
+      { "gate_id": "P0-GATE-04-engine-action-frame-and-speed-readback", "scope_kind": "engine_readback", "profile_id": null, "deterministic_run_index": null, "party_member_count": null, "formula_family": null, "readback_class": "engine_action_frame_speed" },
+      { "gate_id": "P0-GATE-05-terrain-collision-and-camera-fixture", "scope_kind": "terrain_camera_fixture", "profile_id": null, "deterministic_run_index": null, "party_member_count": null, "formula_family": null, "readback_class": "terrain_collision_camera" },
+      { "gate_id": "P0-GATE-06-authoritative-one-to-four-member-replays", "scope_kind": "authority_party_replay", "profile_id": null, "deterministic_run_index": null, "party_member_count": "required_1_to_4", "formula_family": null, "readback_class": null },
+      { "gate_id": "P0-GATE-07-stable-object-keys-and-template-readback", "scope_kind": "object_template_readback", "profile_id": null, "deterministic_run_index": null, "party_member_count": null, "formula_family": null, "readback_class": "object_template_inventory" }
+    ],
+    "coverage_preview_rule": "A frozen preview bundle contains exactly one gate and one engine/project/map/template/capture-basis family. Gate 01 can report coverage only when all 12 canonical profiles each carry run indices 1, 2 and 3 with matching input and canonical-log digests per profile. Gate 06 can report coverage only when member counts 1, 2, 3 and 4 are all present. Even a structurally complete preview remains blocked_provider_unavailable and is never an adoption decision."
+  },
+  "gate_collection_plans": [
+    {
+      "gate_id": "P0-GATE-01-all-12-fixed-builds-declared-and-replayed",
+      "collection_status": "blocked_pending_external_evidence",
+      "required_evidence_classes": [
+        "twelve complete fixed-build declarations for C01-C04 at Lv41/Lv55/Lv60",
+        "three distinct capture-run deterministic canonical action logs for every declared profile",
+        "equal fixture, input and canonical-log digests within each three-log set"
+      ],
+      "read_only_capture_focus": [
+        "profession and level identity",
+        "complete learned-rank manifest",
+        "five active slots in order",
+        "baseline equipment, artifact, pet, collection and external-buff state",
+        "fixture and action-log digests"
+      ],
+      "rejection_conditions": [
+        "partial loadout or inferred learned ranks",
+        "fewer than three deterministic logs",
+        "mixed fixture, input or canonical-log digests",
+        "client-only combat claim",
+        "synthetic fixture presented as real evidence"
+      ],
+      "accepted_evidence_refs": null,
+      "adoption_status": "blocked_pending_external_evidence"
+    },
+    {
+      "gate_id": "P0-GATE-02-general-physical-magical-defense-formulas-adopted",
+      "collection_status": "blocked_pending_external_evidence",
+      "required_evidence_classes": [
+        "real read-only physical damage observations",
+        "real read-only magical damage observations",
+        "defense, mitigation and penetration ordering observations",
+        "formula revision, independent hold-out vectors and boundary counterexamples"
+      ],
+      "read_only_capture_focus": [
+        "accepted action identity",
+        "actor and target lifecycle identity",
+        "target defense snapshot",
+        "formula revision basis",
+        "canonical event-log digest"
+      ],
+      "rejection_conditions": [
+        "using the named legacy physical fixture as a generic formula",
+        "missing magical or defense-order evidence",
+        "formula inferred from relative TianTing pressure",
+        "unknown formula branch"
+      ],
+      "accepted_evidence_refs": null,
+      "adoption_status": "blocked_pending_external_evidence"
+    },
+    {
+      "gate_id": "P0-GATE-03-hit-crit-control-formulas-adopted",
+      "collection_status": "blocked_pending_external_evidence",
+      "required_evidence_classes": [
+        "hit and dodge outcome observations",
+        "critical ordering and cap observations",
+        "control duration and resistance observations",
+        "target-rank and lifecycle basis plus independent hold-out vectors for every observation"
+      ],
+      "read_only_capture_focus": [
+        "accepted begin-cast identity",
+        "target rank snapshot",
+        "hit, crit and control formula revision",
+        "post-death exclusion basis"
+      ],
+      "rejection_conditions": [
+        "UI or client outcome claim",
+        "borrowed target rank or lifecycle",
+        "generic control rule inferred from boss conversion",
+        "missing hit or control-resistance formula"
+      ],
+      "accepted_evidence_refs": null,
+      "adoption_status": "blocked_pending_external_evidence"
+    },
+    {
+      "gate_id": "P0-GATE-04-engine-action-frame-and-speed-readback",
+      "collection_status": "blocked_pending_external_evidence",
+      "required_evidence_classes": [
+        "engine action-frame readback",
+        "attack-speed and move-speed field readback",
+        "action start, begin, close and lock-end observations",
+        "explicit engine-to-design conversion review"
+      ],
+      "read_only_capture_focus": [
+        "actor template identity",
+        "engine move-speed field",
+        "windup, active, backswing, cancel and interval fields",
+        "observed distance and integer tick interval",
+        "map collision fixture identity"
+      ],
+      "rejection_conditions": [
+        "copying design-space speed into an engine field",
+        "deriving frames from descriptive interval text",
+        "assuming zero windup outside the named legacy fixture",
+        "missing stable template readback"
+      ],
+      "accepted_evidence_refs": null,
+      "adoption_status": "blocked_pending_external_evidence"
+    },
+    {
+      "gate_id": "P0-GATE-05-terrain-collision-and-camera-fixture",
+      "collection_status": "blocked_pending_external_evidence",
+      "required_evidence_classes": [
+        "real whitebox collision capture",
+        "walkable and blocked segment observations",
+        "safe landing, target-range and camera readability observations",
+        "recorded inputs, positions and outcomes"
+      ],
+      "read_only_capture_focus": [
+        "map revision",
+        "camera profile identity",
+        "collision shapes",
+        "line-of-sight policy",
+        "recorded positions and outcomes"
+      ],
+      "rejection_conditions": [
+        "diagram-only coordinate claim",
+        "candidate whitebox presented as real map evidence",
+        "missing camera or pathing record",
+        "captured result without source input trace"
+      ],
+      "accepted_evidence_refs": null,
+      "adoption_status": "blocked_pending_external_evidence"
+    },
+    {
+      "gate_id": "P0-GATE-06-authoritative-one-to-four-member-replays",
+      "collection_status": "blocked_pending_external_evidence",
+      "required_evidence_classes": [
+        "one, two, three and four member authoritative replay captures",
+        "frozen member and encounter snapshot digests",
+        "accepted action and damage log digests",
+        "disconnect, left and cleanup observations"
+      ],
+      "read_only_capture_focus": [
+        "member actor and lifecycle pairs",
+        "authority time basis",
+        "encounter snapshot",
+        "left or stale member handling",
+        "cleanup result"
+      ],
+      "rejection_conditions": [
+        "client-provided party size",
+        "duplicate actor lifecycle pair",
+        "rejoin after left or stale lifecycle",
+        "cleanup rewriting accepted final-damage evidence",
+        "fixture that implements or changes authority semantics"
+      ],
+      "accepted_evidence_refs": null,
+      "adoption_status": "blocked_pending_external_evidence"
+    },
+    {
+      "gate_id": "P0-GATE-07-stable-object-keys-and-template-readback",
+      "collection_status": "blocked_pending_external_evidence",
+      "required_evidence_classes": [
+        "real object inventory snapshot",
+        "stable object-key readback",
+        "approved source-template readback",
+        "field-reference and model, animation, effect and sound inventory readback"
+      ],
+      "read_only_capture_focus": [
+        "object table identity",
+        "stable object key",
+        "source template identity",
+        "field reference digest",
+        "resource inventory digest"
+      ],
+      "rejection_conditions": [
+        "guessed object or template key",
+        "candidate diagram identifier presented as object key",
+        "resource name without inventory readback",
+        "object or resource write during collection"
+      ],
+      "accepted_evidence_refs": null,
+      "adoption_status": "blocked_pending_external_evidence"
+    }
+  ],
+  "synthetic_fixture_policy": {
+    "test_fixture_label": "synthetic-schema-test-only",
+    "may_validate_schema": true,
+    "may_count_as_external_evidence": false,
+    "may_change_gate_status": false,
+    "may_create_adoption": false,
+    "may_produce_absolute_projection": false
+  },
+  "adoption_controls": {
+    "current_adoption_state": "closed",
+    "automatic_gate_promotion": false,
+    "requires_external_trusted_capture_provider": true,
+    "requires_independent_reviewer": true,
+    "requires_authorized_adoption_authority": true,
+    "requires_all_seven_gate_decisions_before_projection_review": true,
+    "current_satisfied_gate_ids": [],
+    "projection_review_is_separate_from_gate_adoption": true
+  },
+  "deferred_outputs": {
+    "accepted_evidence_ledger": null,
+    "adoption_decision": null,
+    "target_object_or_unit_id": null,
+    "hp_max": null,
+    "attack_phy": null,
+    "attack_mag": null,
+    "defense_phy": null,
+    "defense_mag": null,
+    "attack_speed": null,
+    "attack_interval_seconds": null,
+    "move_speed_field": null,
+    "skill_damage": null,
+    "skill_duration_seconds": null,
+    "y3_object_write": null,
+    "plugin_script": null,
+    "lua_write": null,
+    "map_write": null,
+    "ui_write": null,
+    "reward": null,
+    "receipt": null,
+    "economy_input": null
+  },
+  "acceptance": [
+    { "id": "CAL-EVID-ACC-001", "rule": "The package remains offline-only, production-gated closed and has no actual capture provider, project reference, ledger, adoption or projection payload." },
+    { "id": "CAL-EVID-ACC-002", "rule": "The seven canonical P0 gates exactly match the parent calibration contract and all remain blocked pending external evidence." },
+    { "id": "CAL-EVID-ACC-003", "rule": "Every collection plan uses a read-only capture focus, immutable external artifact reference and explicit rejection conditions." },
+    { "id": "CAL-EVID-ACC-004", "rule": "A collector and reviewer must differ; client claims, synthetic fixtures and guessed identifiers never count as evidence." },
+    { "id": "CAL-EVID-ACC-005", "rule": "Fixed-build evidence requires all twelve profiles and three deterministic canonical logs per profile before review may consider the gate." },
+    { "id": "CAL-EVID-ACC-006", "rule": "Formula, frame, collision, replay and object-readback evidence cannot be inferred from relative TianTing values, diagrams or prose." },
+    { "id": "CAL-EVID-ACC-007", "rule": "No submission may carry an object-field projection, gate-promotion decision, reward, receipt or economy input." },
+    { "id": "CAL-EVID-ACC-008", "rule": "The offline reference model can reject malformed or untrusted submissions but cannot adopt a gate or create an absolute projection." },
+    { "id": "CAL-EVID-ACC-009", "rule": "All absolute object fields, writes and economic outputs remain null until external evidence and a separate projection review are explicitly authorized." },
+    { "id": "CAL-EVID-ACC-010", "rule": "The parent P0 contract is bound by byte-level SHA-256 and is the only canonical source of the ordered seven-gate taxonomy." },
+    { "id": "CAL-EVID-ACC-011", "rule": "Submission previews require immutable external references, SHA-256-shaped digests, separate collector/reviewer identities and an external capture-provider proof; repeated runs and mixed revision families are rejected before any review outcome is considered." },
+    { "id": "CAL-EVID-ACC-012", "rule": "Source fingerprints and collection/adoption templates remain empty offline scaffolds; no local template, schema test, construction preflight or discovery manifest can become an accepted evidence record." },
+    { "id": "CAL-EVID-ACC-013", "rule": "Every preview submission has an exact allow-listed envelope and exact non-projecting gate scope; Gate 01 and Gate 06 coverage can be summarized structurally, but no preview result can become evidence, adoption or an absolute projection." }
+  ]
+}

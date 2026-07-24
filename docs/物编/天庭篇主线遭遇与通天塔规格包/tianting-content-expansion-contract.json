@@ -8,6 +8,86 @@
     "literary_reference_role": "《西游记》星官叙事和形象只用于灵感与全名校对；技能、关卡和美术方案均为本项目原创设计，不复制外部资产或文本。",
     "runtime_rule": "所有 spec_id 仅是离线身份；runtime_key、运行时物品键、进度键、地图键和对象键均为 null。"
   },
+  "derivative_offline_specs": {
+    "combat_readability": {
+      "artifact": "combat/tianting-combat-readability-contract.json",
+      "status": "offline_design",
+      "rule": "只细化预警、决策、反制、复盘和 1–4 人可读性；不得修改内容准入、进度、时辰、会话、奖励或结算。",
+      "runtime_key": null
+    },
+    "combat_numeric_unit_baseline": {
+      "artifact": "combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+      "status": "accepted_relative_balance_baseline_offline_only",
+      "rule": "以四职业裸装包络和无量纲相对系数覆盖已登记小怪、首领、七星、二十八星官与四圣；不得填入原始对象字段、会话/资格裁决、奖励、结算或塔值。",
+      "runtime_key": null
+    },
+    "terrain_layout": {
+      "artifact": "terrain-layout/layout.json",
+      "status": "offline_dry_run_candidate",
+      "rule": "候选尺寸、坐标、区域、路径和会话门廊只用于布局预览；不得创建或替代 Y3 地图、入口、传送、资源或逻辑资源。",
+      "runtime_key": null
+    },
+    "map_scale_alignment": {
+      "artifact": "terrain-layout/tianting-map-scale-alignment-contract.json",
+      "status": "offline_preconstruction_decision",
+      "rule": "640x416 与历史会话尺寸仅为图解单位；224x80 天界容量、两张 96x64 白盒和独立会话包络均不创建地图、坐标或资源。",
+      "runtime_key": null
+    },
+    "ui_accessibility_information": {
+      "artifact": "ui/tianting-ui-accessibility-information-contract.json",
+      "status": "offline_design",
+      "rule": "只定义双通道预警、轮换快照、队伍状态、失败复盘和称号展示；UI 只消费权威事实，不做本地裁决或写入。",
+      "runtime_key": null
+    },
+    "object_art_vfx_blueprint": {
+      "artifact": "object-blueprint/tianting-object-art-vfx-blueprint-contract.json",
+      "status": "offline_design",
+      "rule": "只定义轮廓、前摇、特效层级和场地交互资产需求；不得生成对象、资源 ID、技能、Buff、数值或运行时效果。",
+      "runtime_key": null
+    },
+    "object_field_reservation": {
+      "artifact": "object-preallocation/tianting-object-field-reservation-contract.json",
+      "status": "offline_field_reservation_only",
+      "rule": "只将既有敌人生态、主线、七星、二十八星官与四圣身份细化为逻辑单位、技能壳、表现状态、投射物与声音卡；没有 assets、mode、稳定对象键、copyFrom、资源、字段映射、数值、插件或运行时效果。",
+      "runtime_key": null
+    },
+    "enemy_ecology": {
+      "artifact": "enemy-ecology/tianting-enemy-ecology-contract.json",
+      "status": "offline_design_requirements_only",
+      "rule": "只定义非通天塔小怪、精英、机制和支援状态的职责、预警、反制与首领身份护栏；不得生成单位、对象、AI、波次、掉落、资格、进度或经济。",
+      "runtime_key": null
+    },
+    "mainline_boss_deepening": {
+      "artifact": "mainline-boss/tianting-mainline-boss-contract.json",
+      "status": "offline_design_requirements_only",
+      "rule": "只深化五组非通天塔主线首领级遭遇的 P0、决策、反制、复盘与附属压力接口；不得生成 Boss 对象、技能、AI、数值、地图、会话、奖励或经济。",
+      "runtime_key": null
+    },
+    "mainline_narrative_presentation": {
+      "artifact": "mainline-presentation/tianting-mainline-presentation-contract.json",
+      "status": "offline_narrative_presentation_spec",
+      "rule": "只将五组既有主线首领的权威已确认事实转写为入场引导、三段叙事锚点、双通道预警、失败复盘和 L0–L4 表现职责；不得裁决会话、进度、资格、完成、奖励或经济。",
+      "runtime_key": null
+    },
+    "seven_star_session_reference": {
+      "artifact": "../../../implementation/tianting-seven-star-session-reference/package-contract.json",
+      "status": "offline_reference_model_only",
+      "rule": "只以进程内注入夹具复核既有七星 owner、观台进度、会话、失败、清理和幂等语义；不得创建真实进度、会话、掉落、称号、资格、收据或 economy-v2 输入。",
+      "runtime_key": null
+    },
+    "mansion_session_reference": {
+      "artifact": "../../../implementation/tianting-mansion-session-reference/contract/mansion-session-time-qualification-reference-contract.json",
+      "status": "offline_reference_model_only",
+      "rule": "只以注入的上海时辰和成员/资格夹具复核既有普通/噩梦星宿准入、快照、断线、清理和重放语义；不得读取真实时钟、创建团本、持久化资格或产生经济效果。",
+      "runtime_key": null
+    },
+    "tower_economy_full_run": {
+      "artifact": "tower-economy/mansion-economy-global-tower-run-season-contract.json",
+      "status": "tianting_offline_candidate_pending_global_tower_adoption",
+      "rule": "只提出完整 run 编排、Boss 槽、创意身份和赛季快照语义，待上位全局塔合同采纳；奖励、来源事件、profile、slot、资格和收据保持 null/deferred。",
+      "runtime_key": null
+    }
+  },
   "hard_boundaries": {
     "level_band": {
       "min_level": 41,
@@ -39,6 +119,7 @@
         "material_drop_count"
       ],
       "user_fixed_offline_recipe_exception": "同一种七星残片十枚兑换对应星君称号，是用户明确指定的离线配方倍率；它不是掉落量、货币值或已接入的运行时物品配方。",
+      "current_handoff_route_rule": "当前只有既有凌霄主线成功可形成零价值来源事实候选；七星、普通星宿和噩梦星宿成功仍不得成为 handoff candidate、资格或结算输入。",
       "runtime_key": null
     },
     "tower_identity": {
@@ -122,6 +203,7 @@
       "decision_status": "fixed-user-requirement",
       "effect_delivery": "每个已获得称号提供一个非数值化的收藏增益标签；七曜集合称号解锁后作为唯一生效的七曜效果集合，不能与单称号重复叠加。展示位可单独选择，具体属性、PvP/PvE边界与持久化均 deferred。",
       "effect_scope": "deferred_to_future_combat_and_title_contract",
+      "solo_origin_rule": "七星称号源自单人本；每个效果方向必须对单人完整可用，组队语义最多扩展展示或可选协同，不能形成获取后或使用时的多人硬依赖。",
       "unique_visual_rule": "每个称号拥有独立星轨、武器拖光或头顶星图的展示方向；真实特效资产不在本包创建。",
       "runtime_item_key": null
     },
@@ -213,7 +295,7 @@
         "title_name": "天权星君",
         "title_runtime_key": null,
         "title_tag": "裁衡",
-        "effect_direction": "团队共同打断响应",
+        "effect_direction": "打断响应（单人完整生效；组队只扩展协同展示）",
         "boss_direction": "衡律天官：执法尺与浮空天秤的裁决者。",
         "mechanic_direction": "以双侧承压、裁决条与打断窗口为核心；玩家必须在过度偏移前修回平衡。",
         "display_direction": "悬衡、律尺与金色裁断线。",
@@ -510,24 +592,39 @@
   "tower_reuse_interface": {
     "spec_id": "TT_SPEC_TOWER_TIANTING_CONTENT_REUSE",
     "decision_status": "fixed-user-requirement",
-    "rule": "七星与二十八星宿可在未来全局通天塔作为小 Boss 池复用；具体抽取、波次、词缀、难度、掉落、记录和实现均不在本包决定。",
+    "rule": "七星与二十八星宿可在唯一全局通天塔作为小 Boss 池复用；完整 run 的槽位编排是待上位全局塔合同采纳的天庭侧候选，具体星君/星官抽取、波次、词缀、难度、掉落、记录和实现均不在本包决定。",
+    "full_run_contract": {
+      "artifact": "tower-economy/mansion-economy-global-tower-run-season-contract.json",
+      "status": "tianting_offline_candidate_pending_global_tower_adoption",
+      "candidate_full_run_floor_count": 40,
+      "candidate_cycle_count": 8,
+      "candidate_ten_floor_arc_count": 4,
+      "runtime_key": null
+    },
     "mini_boss_cadence": {
-      "candidate_options": [3, 5],
-      "selected_value": null,
-      "status": "deferred_by_user"
+      "candidate_value": 5,
+      "status": "tianting_offline_candidate_pending_global_tower_adoption",
+      "rule": "候选为每五层一个 Boss 槽；第十、二十、三十、四十层候选升级为大 Boss，取代该槽的小 Boss 而不叠放。"
     },
     "major_boss_cadence": {
-      "every_floors": 10,
-      "major_boss_design": "deferred_by_user",
+      "candidate_every_floors": 10,
+      "major_boss_design": "offline_creative_candidate_pending_global_tower_adoption",
+      "major_boss_spec_ids": [
+        "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_10",
+        "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_20",
+        "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_30",
+        "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_40"
+      ],
       "runtime_key": null
     },
     "first_cycle_isolation": {
-      "rule": "content_pool_only; no binding to the existing five abstract beats",
-      "must_not_bind_existing_beats": true,
+      "rule": "content_pool_only; outer orchestration may label each segment fifth beat as a content slot and use NEXT_CYCLE_HANDOFF between cycles 1 through 7, but must not rename states, alter transitions, assign runtime floor keys or otherwise mutate existing abstract beats",
+      "must_not_bind_existing_beats": false,
+      "allowed_outer_beat_annotation": "fifth_beat_content_slot_only",
       "existing_beat_bindings": [],
       "runtime_key": null
     },
-    "reward_rule": "通天塔掉落材料待天庭主线与副本设计完成后的独立经济裁决；本接口不增加材料、数量、掉率或奖励表。",
+    "reward_rule": "通天塔掉落材料、来源事件、source_profile、reward_slot、资格、收据、数量、掉率、保底与奖励表均待独立经济裁决；本接口不增加任何经济输入或值。",
     "runtime_key": null
   },
   "remaining_deferred": [
@@ -535,6 +632,6 @@
     "七星、二十八星宿与四圣兽的真实地图、对象、技能、数值、AI、波次、检查点、失败清理和多人同步。",
     "所有材料、钥匙、装备、法宝、称号的运行时 ID、持久化、收据、发放概率、数量、保底、属性与兑换规则。",
     "可信时间提供方的真实部署、维护窗口、异常回退与跨服务时钟对账。",
-    "通天塔的小 Boss 间隔在每三层或每五层之间的最终选择，以及十层大 Boss 名单和所有塔奖励。"
+    "通天塔真实运行、地图/实例、记录、词缀、失败恢复、季节服务、掉落来源、资格、收据和所有塔奖励。"
   ]
 }

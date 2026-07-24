@@ -1,0 +1,414 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_OBJECT_ART_VFX_BLUEPRINT",
+    "display_name": "天庭物编、美术与特效需求蓝图",
+    "status": "offline_design_requirements_only",
+    "production_gate": "closed",
+    "runtime_key": null,
+    "object_id": null,
+    "resource_id": null
+  },
+  "scope": {
+    "included": [
+      "天庭主线公共教学链与凌霄外庭",
+      "七星单人试炼",
+      "二十八星宿普通团本四方七宿",
+      "四圣噩梦团本"
+    ],
+    "excluded": [
+      "Y3对象、物编插件、Y3 JSON、Lua、地图或逻辑资源",
+      "单位、技能、Buff、投射物、物品、模型、特效、音效的实际ID或资源",
+      "伤害、生命、冷却、前摇时长、范围、频率、掉落、概率、保底和全部数值",
+      "进度、资格、会话、轮换、清理、存档、奖励、收据或经济结算"
+    ]
+  },
+  "source_contracts": [
+    {
+      "path": "../combat/天庭战斗机制与可读性规格.md",
+      "role": "战斗可读性、场地职责、双通道表达和1至4人适配",
+      "runtime_key": null
+    },
+    {
+      "path": "../tianting-content-expansion-contract.json",
+      "role": "内容身份、星官全名和签名动作",
+      "runtime_key": null
+    },
+    {
+      "path": "../terrain-layout/layout.json",
+      "role": "候选空间的阅读职责，不是地图绑定",
+      "runtime_key": null
+    },
+    {
+      "path": "../authority/tianting-progression-and-instance-authority-contract.json",
+      "role": "表现只能消费的权威状态边界",
+      "runtime_key": null
+    },
+    {
+      "path": "../handoff/ui-brief.md",
+      "role": "UI的第二通道信息需求",
+      "runtime_key": null
+    }
+  ],
+  "runtime_binding": {
+    "unit_object_id": null,
+    "ability_object_id": null,
+    "buff_object_id": null,
+    "projectile_object_id": null,
+    "effect_resource_id": null,
+    "sound_resource_id": null,
+    "map_resource_id": null,
+    "ui_control_id": null,
+    "lua_module": null,
+    "runtime_key": null
+  },
+  "visual_grammar": {
+    "priority_levels": [
+      {
+        "level": "P0",
+        "meaning": "生存与反制",
+        "must_show": ["轮廓", "前摇", "目标归属", "路径", "可交互状态", "反制结果"],
+        "must_not_be_occluded_by": ["环境粒子", "屏幕装饰", "仅颜色差异", "仅聊天文本"]
+      },
+      {
+        "level": "P1",
+        "meaning": "阶段与协作",
+        "must_show": ["阶段", "队友处理方向", "净宿援护", "可用退路"],
+        "must_not_share_shape_with": ["P0前摇", "P0路径", "P0可交互状态"]
+      },
+      {
+        "level": "P2",
+        "meaning": "氛围与收藏",
+        "may_show": ["云海", "星图", "天律残页", "方位文化纹样", "胜利余韵"],
+        "must_not_masquerade_as": ["P0提示", "P1阶段状态"]
+      }
+    ],
+    "vfx_layers": [
+      {"layer": "L0", "role": "稳定轮廓", "question_answered": "谁在行动、哪里可走"},
+      {"layer": "L1", "role": "前摇", "question_answered": "接下来会发生什么"},
+      {"layer": "L2", "role": "关系", "question_answered": "它指向谁、影响哪里"},
+      {"layer": "L3", "role": "结果", "question_answered": "处理是否生效"},
+      {"layer": "L4", "role": "氛围", "question_answered": "世界感辅助，必须让位给L0至L3"}
+    ],
+    "accessibility_rules": [
+      "颜色不是关键机制的唯一信息通道。",
+      "每项关键预警必须有空间或形状信号，另加声音、文字、状态符号或场地变化之一。",
+      "实际UI只展示权威已确认结果，不得反向决定阶段、资格、方位、会话或清理。",
+      "同一视觉元素不得同时伪装为伤害、可交互和安全区。"
+    ]
+  },
+  "blueprint_groups": [
+    {
+      "blueprint_spec_id": "TT_SPEC_BLUEPRINT_MAINLINE_PUBLIC_TEACHING",
+      "scope": "主线公共教学链",
+      "priority": "P0",
+      "dependencies": ["战斗可读性合同", "候选公共路线阅读职责", "后续UI第二通道"],
+      "profiles": [
+        {
+          "spec_id": "TT_SPEC_BLUEPRINT_PATROL_FALSE_ORDER",
+          "encounter": "巡天误令",
+          "boss_outline": "千里眼的视线扇区与顺风耳的声波环使用不同几何语言。",
+          "anticipation": "从来源方向先行展开扇区或环形传播。",
+          "vfx_layers": {"p0": ["扇区边缘", "声波环", "遮蔽位"], "p1": ["交替安全路线"], "p2": ["云雾与巡天旗帜"]},
+          "arena_interaction": "遮蔽位只消解一种判定，交替安全路线可见。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-004"]
+        },
+        {
+          "spec_id": "TT_SPEC_BLUEPRINT_BROKEN_RAINBOW_NODE",
+          "encounter": "断虹阵眼",
+          "boss_outline": "真伪阵眼与巨灵神锁链关系先于压迫表现可读。",
+          "anticipation": "地脉与链路先显示来源、方向和节点差异。",
+          "vfx_layers": {"p0": ["真伪节点差异", "锁链关系"], "p1": ["错误召回压力"], "p2": ["天兵环境陪衬"]},
+          "arena_interaction": "真阵眼与错误压力显示不同关系线和结果反馈。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-005"]
+        },
+        {
+          "spec_id": "TT_SPEC_BLUEPRINT_FOUR_GATE_ECHO",
+          "encounter": "四门回响",
+          "boss_outline": "四向命令以朝向与状态形态区分。",
+          "anticipation": "切换前出现对应方向的来源动作。",
+          "vfx_layers": {"p0": ["四向命令轮廓", "方向状态"], "p1": ["已安静或冲突的回响"], "p2": ["天宫方向纹样"]},
+          "arena_interaction": "正确顺序使一条回响安静，错误顺序保留可复盘痕迹。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-006"]
+        },
+        {
+          "spec_id": "TT_SPEC_BLUEPRINT_STAR_CALENDAR_RIFT",
+          "encounter": "星历裂缝",
+          "boss_outline": "星点、链路、变化方向和可净化状态具有连续历史。",
+          "anticipation": "链路变化在实际交互前可辨。",
+          "vfx_layers": {"p0": ["可净化链路", "错误链路", "变化方向"], "p1": ["校星结果"], "p2": ["背景星空"]},
+          "arena_interaction": "正确校星打开可见通路或预告，背景星空不得与可交互星点同层同形。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-007"]
+        }
+      ]
+    },
+    {
+      "blueprint_spec_id": "TT_SPEC_BLUEPRINT_LINGXIAO_OUTER_COURT",
+      "scope": "凌霄外庭裂律观台主线终局",
+      "priority": "P0",
+      "dependencies": ["主线阶段已确认结果", "裂律观台候选中央阅读职责", "后续UI第二通道"],
+      "profiles": [
+        {
+          "spec_id": "TT_SPEC_BLUEPRINT_DISCIPLINE_GENERAL",
+          "encounter": "监律天将与裂律观台",
+          "boss_outline": "法尺、文书、裂律符构成执行错误命令的清楚轮廓；首领、命令节点和裂律核心不得混淆。",
+          "anticipation": [
+            "断令识别前法尺指向命令来源。",
+            "执令压场前文书或符印向受影响区域展开。",
+            "回正裁决前核心重组真节点与伪节点的可追溯历史。"
+          ],
+          "vfx_layers": {
+            "p0": ["命令来源", "作用区", "安全转移线", "可净化标记"],
+            "p1": ["被暂停的旧令", "队友当前处理类型"],
+            "p2": ["残页", "天宫云雾", "远景法阵"]
+          },
+          "arena_interaction": "错误命令链失效时节点转为可净化形态；正确净化将限制转成临时可用路线；真伪节点转段后持续可追溯。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-008", "TT-BLUEPRINT-ACC-009", "TT-BLUEPRINT-ACC-010"]
+        }
+      ]
+    },
+    {
+      "blueprint_spec_id": "TT_SPEC_BLUEPRINT_SEVEN_STAR_SOLO",
+      "scope": "七星单人试炼",
+      "priority": "P0",
+      "dependencies": ["七星单人场地阅读职责", "单人顺序反制规则", "后续UI第二通道"],
+      "single_player_constraint": "不得要求第二名玩家的同时站位、打断、承伤或长期占位。",
+      "profiles": [
+        {
+          "spec_id": "TT_SPEC_SOLO_TIANSHU",
+          "full_name": "天枢·镇枢天将",
+          "boss_outline": "中轴、外圈、稳定锚与方向翻转围绕同一轮盘语义。",
+          "anticipation": "推动前先显露方向。",
+          "vfx_layers": {"p0": ["中轴", "稳定锚", "回归路径"], "p1": ["外圈调整"], "p2": ["星盘星尘"]},
+          "arena_interaction": "稳定锚抵消错误位移，回正后中心恢复。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-011"]
+        },
+        {
+          "spec_id": "TT_SPEC_SOLO_TIANXUAN",
+          "full_name": "天璇·回轮天女",
+          "boss_outline": "内外双轨、旧轨残留与下一落点同时可读。",
+          "anticipation": "复制前显示旧轨来源。",
+          "vfx_layers": {"p0": ["内外双轨", "旧轨来源", "下一落点"], "p1": ["回环通路"], "p2": ["轨迹余辉"]},
+          "arena_interaction": "旧轨被反转为可穿越回环。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-012"]
+        },
+        {
+          "spec_id": "TT_SPEC_SOLO_TIANJI",
+          "full_name": "天玑·匿曜监星使",
+          "boss_outline": "真伪星标在轮廓、动态或交互反馈至少一项不同。",
+          "anticipation": "首领借假标误导前，反照关系可见。",
+          "vfx_layers": {"p0": ["真伪差异", "反照来源"], "p1": ["暴露窗口"], "p2": ["观察位星尘"]},
+          "arena_interaction": "真星确认后假象反照首领。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-013"]
+        },
+        {
+          "spec_id": "TT_SPEC_SOLO_TIANQUAN",
+          "full_name": "天权·衡律天官",
+          "boss_outline": "双侧承压、裁决条与失衡趋势位于同一阅读面。",
+          "anticipation": "归位打断前出现可辨识征兆。",
+          "vfx_layers": {"p0": ["双侧趋势", "裁决条", "归位信号"], "p1": ["通行恢复"], "p2": ["衡律纹样"]},
+          "arena_interaction": "正确打断让双侧归位，单人能按顺序处理。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-014"]
+        },
+        {
+          "spec_id": "TT_SPEC_SOLO_YUHENG",
+          "full_name": "玉衡·玉衡灵卫",
+          "boss_outline": "两类安全位与灵息回流方向具有不同形态。",
+          "anticipation": "过用前可看见堆积趋势。",
+          "vfx_layers": {"p0": ["安全位差异", "回流方向", "过用趋势"], "p1": ["护持区"], "p2": ["灵息背景"]},
+          "arena_interaction": "过量回流改为护持区，恢复与耗竭状态可区分。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-015"]
+        },
+        {
+          "spec_id": "TT_SPEC_SOLO_KAIYANG",
+          "full_name": "开阳·开阙神将",
+          "boss_outline": "门的开闭、冲锋起点与短暂窗口有明确几何形态。",
+          "anticipation": "冲锋方向和可通过窗口先行。",
+          "vfx_layers": {"p0": ["门阵状态", "冲锋线", "窗口"], "p1": ["反制机会"], "p2": ["门阙纹样"]},
+          "arena_interaction": "正确窗口形成穿越和反制机会，保留观察与回退区。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-016"]
+        },
+        {
+          "spec_id": "TT_SPEC_SOLO_YAOGUANG",
+          "full_name": "瑶光·曳光天将",
+          "boss_outline": "当前轨迹、残影来源和回溯收束点构成连续时间线。",
+          "anticipation": "收束点在回溯前持续可读。",
+          "vfx_layers": {"p0": ["当前轨迹", "残影来源", "收束点"], "p1": ["旧路径失效结果"], "p2": ["轨迹余辉"]},
+          "arena_interaction": "截断收束点后，旧路径明确失去二次攻击意义。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-017"]
+        }
+      ]
+    },
+    {
+      "blueprint_spec_id": "TT_SPEC_BLUEPRINT_MANSION_NORMAL_AZURE_DRAGON",
+      "quadrant_spec_id": "TT_SPEC_RAID_AZURE_DRAGON",
+      "quadrant": "东方青龙",
+      "priority": "P0",
+      "dependencies": ["青龙候选场地阅读职责", "星链与推拉的双通道表达"],
+      "quadrant_grammar": "星链方向、龙影延迟、真阵眼、火痕与风潮推拉。",
+      "vfx_layers": {"p0": ["星链方向", "龙影延迟", "真阵眼", "推拉方向"], "p1": ["火痕", "导流结果"], "p2": ["云海", "东方星图"]},
+      "officers": [
+        {"spec_id": "TT_SPEC_MANSION_JIA_MU_JIAO", "full_name": "角木蛟", "signature_action": "角梁缠星", "boss_outline": "星链起点、转向关节和来源清晰", "anticipation": "链路先显示方向", "arena_interaction": "改线后成为导流或通路"},
+        {"spec_id": "TT_SPEC_MANSION_KANG_JIN_LONG", "full_name": "亢金龙", "signature_action": "亢龙升势", "boss_outline": "标记列、升腾路线和延迟龙影分层", "anticipation": "起跳与落影的先后可追溯", "arena_interaction": "旧影不遮挡当前链路"},
+        {"spec_id": "TT_SPEC_MANSION_DI_TU_HE", "full_name": "氐土貉", "signature_action": "地脉潜遁", "boss_outline": "真阵眼与错误地脉纹路不同", "anticipation": "潜入前显示阵眼关系", "arena_interaction": "错误龙脉被切断"},
+        {"spec_id": "TT_SPEC_MANSION_FANG_RI_TU", "full_name": "房日兔", "signature_action": "日房映界", "boss_outline": "日轮切分可见与不可见扇区", "anticipation": "扇区轮换方向可见", "arena_interaction": "背景光不伪装为安全扇区"},
+        {"spec_id": "TT_SPEC_MANSION_XIN_YUE_HU", "full_name": "心月狐", "signature_action": "心月惑影", "boss_outline": "复制体保留来源与真假差异", "anticipation": "关键动作复制前显示来源", "arena_interaction": "确认后暴露伪像"},
+        {"spec_id": "TT_SPEC_MANSION_WEI_HUO_HU", "full_name": "尾火虎", "signature_action": "虎尾燎轨", "boss_outline": "尾扫方向与火痕路线连续", "anticipation": "火痕延续路径先可读", "arena_interaction": "主路可被导离并恢复"},
+        {"spec_id": "TT_SPEC_MANSION_JI_SHUI_BAO", "full_name": "箕水豹", "signature_action": "箕风泼雨", "boss_outline": "风雨扇面与推拉方向清晰", "anticipation": "重排前保留逆推位置", "arena_interaction": "重排形成纠错机会"}
+      ],
+      "acceptance_ids": ["TT-BLUEPRINT-ACC-018"]
+    },
+    {
+      "blueprint_spec_id": "TT_SPEC_BLUEPRINT_MANSION_NORMAL_VERMILION_BIRD",
+      "quadrant_spec_id": "TT_SPEC_RAID_VERMILION_BIRD",
+      "quadrant": "南方朱雀",
+      "priority": "P0",
+      "dependencies": ["朱雀候选场地阅读职责", "火种与水脉的双通道表达"],
+      "quadrant_grammar": "火种、余烬、回响、缺口和水脉。",
+      "vfx_layers": {"p0": ["火种", "余烬", "回响顺序", "缺口", "水脉"], "p1": ["接力", "交换", "净化出口"], "p2": ["赤羽", "远景余烬"]},
+      "officers": [
+        {"spec_id": "TT_SPEC_MANSION_JING_MU_AN", "full_name": "井木犴", "signature_action": "井木擒猎", "boss_outline": "离群目标、飞扑起点和火井方向同时可见", "anticipation": "点名与拖拽方向先行", "arena_interaction": "队友可见接应线不被火效覆盖"},
+        {"spec_id": "TT_SPEC_MANSION_GUI_JIN_YANG", "full_name": "鬼金羊", "signature_action": "鬼铃反响", "boss_outline": "金铃起始、传递顺序和待截断链路可读", "anticipation": "回响顺序先显示", "arena_interaction": "截断后铃链明确静止"},
+        {"spec_id": "TT_SPEC_MANSION_LIU_TU_ZHANG", "full_name": "柳土獐", "signature_action": "柳障封庭", "boss_outline": "土枝交叉和封路趋势清晰", "anticipation": "新旧通路差异先可读", "arena_interaction": "保留可控出口"},
+        {"spec_id": "TT_SPEC_MANSION_XING_RI_MA", "full_name": "星日马", "signature_action": "日驭长驱", "boss_outline": "日轨冲锋和点燃趋势连续", "anticipation": "冲锋轨与将点燃区域可见", "arena_interaction": "地表装饰不伪装为火场"},
+        {"spec_id": "TT_SPEC_MANSION_ZHANG_YUE_LU", "full_name": "张月鹿", "signature_action": "月鹿开张", "boss_outline": "月弦两端与远近组关系明确", "anticipation": "交换前显示连接对", "arena_interaction": "交换后显示可接应位置"},
+        {"spec_id": "TT_SPEC_MANSION_YI_HUO_SHE", "full_name": "翼火蛇", "signature_action": "火翼环锁", "boss_outline": "火环收束和唯一缺口不同形", "anticipation": "收束方向与缺口先可读", "arena_interaction": "通过后余烬显示可用性"},
+        {"spec_id": "TT_SPEC_MANSION_ZHEN_SHUI_YIN", "full_name": "轸水蚓", "signature_action": "轸渊潜行", "boss_outline": "余烬下潜来源与水脉口同时标注", "anticipation": "潜行出口先可读", "arena_interaction": "净化出口不与背景水面混淆"}
+      ],
+      "acceptance_ids": ["TT-BLUEPRINT-ACC-019"]
+    },
+    {
+      "blueprint_spec_id": "TT_SPEC_BLUEPRINT_MANSION_NORMAL_WHITE_TIGER",
+      "quadrant_spec_id": "TT_SPEC_RAID_WHITE_TIGER",
+      "quadrant": "西方白虎",
+      "priority": "P0",
+      "dependencies": ["白虎候选场地阅读职责", "猎印和拦截的双通道表达"],
+      "quadrant_grammar": "猎印、拦截线、明暗、破网和连锁顺序。",
+      "vfx_layers": {"p0": ["猎印", "拦截线", "明暗", "网端", "连锁顺序"], "p1": ["接应", "反猎结果"], "p2": ["白金爪痕", "月相背景"]},
+      "officers": [
+        {"spec_id": "TT_SPEC_MANSION_KUI_MU_LANG", "full_name": "奎木狼", "signature_action": "奎狼逐月", "boss_outline": "月影跃迁、最后离阵者和落点方向可读", "anticipation": "追猎归属与落点先行", "arena_interaction": "牵引成功后围猎线松开"},
+        {"spec_id": "TT_SPEC_MANSION_LOU_JIN_GOU", "full_name": "娄金狗", "signature_action": "娄关守嗅", "boss_outline": "猎印、嗅迹和拦截线稳定关联", "anticipation": "目标归属先可读", "arena_interaction": "接应后出现破绽"},
+        {"spec_id": "TT_SPEC_MANSION_WEI_TU_ZHI", "full_name": "胃土雉", "signature_action": "胃土啄阵", "boss_outline": "可遮蔽与受困地表形态不同", "anticipation": "土翎掀起趋势可读", "arena_interaction": "土尘不可仅作氛围"},
+        {"spec_id": "TT_SPEC_MANSION_MAO_RI_JI", "full_name": "昴日鸡", "signature_action": "昴日鸣晓", "boss_outline": "鸣叫扩散和明暗站位变化范围可读", "anticipation": "暴露条件先可读", "arena_interaction": "正确阴影选择保留出口"},
+        {"spec_id": "TT_SPEC_MANSION_BI_YUE_WU", "full_name": "毕月乌", "signature_action": "毕月罗网", "boss_outline": "月羽罗网双端与收紧方向可读", "anticipation": "协作窗口先显示", "arena_interaction": "撕开后网口可通过"},
+        {"spec_id": "TT_SPEC_MANSION_ZI_HUO_HOU", "full_name": "觜火猴", "signature_action": "觜火裂点", "boss_outline": "单点连击次序与当前目标可读", "anticipation": "错位风险提前显露", "arena_interaction": "正确承接消除连锁"},
+        {"spec_id": "TT_SPEC_MANSION_SHEN_SHUI_YUAN", "full_name": "参水猿", "signature_action": "参猿翻瀑", "boss_outline": "回卷水瀑的跃迁路径和边界可读", "anticipation": "重塑追猎路线先行", "arena_interaction": "环境反用形成接应线"}
+      ],
+      "acceptance_ids": ["TT-BLUEPRINT-ACC-020"]
+    },
+    {
+      "blueprint_spec_id": "TT_SPEC_BLUEPRINT_MANSION_NORMAL_BLACK_TORTOISE",
+      "quadrant_spec_id": "TT_SPEC_RAID_BLACK_TORTOISE",
+      "quadrant": "北方玄武",
+      "priority": "P0",
+      "dependencies": ["玄武候选场地阅读职责", "壁障和反射的双通道表达"],
+      "quadrant_grammar": "裁衡、镇桩、回声、虚穴、开墙和反射。",
+      "vfx_layers": {"p0": ["双侧压力", "镇桩", "回声", "入口出口", "开墙点", "反射角度"], "p1": ["稳定通路"], "p2": ["玄甲水纹"]},
+      "officers": [
+        {"spec_id": "TT_SPEC_MANSION_DOU_MU_XIE", "full_name": "斗木獬", "signature_action": "斗角裁衡", "boss_outline": "双侧承压和独角指向明确", "anticipation": "即将击退的一侧可读", "arena_interaction": "正确裁衡后通路稳定"},
+        {"spec_id": "TT_SPEC_MANSION_NIU_JIN_NIU", "full_name": "牛金牛", "signature_action": "金牛镇桩", "boss_outline": "冲撞路径和镇桩落点先行", "anticipation": "阻塞边界可读", "arena_interaction": "镇桩可转为利用节点"},
+        {"spec_id": "TT_SPEC_MANSION_NV_TU_FU", "full_name": "女土蝠", "signature_action": "蝠影回声", "boss_outline": "回声的动作来源和影响对象可追溯", "anticipation": "状态先于惩罚可读", "arena_interaction": "纠正后回声消退"},
+        {"spec_id": "TT_SPEC_MANSION_XU_RI_SHU", "full_name": "虚日鼠", "signature_action": "虚穴蚀界", "boss_outline": "吞没入口和吐回出口同时可读", "anticipation": "入口出口关系先行", "arena_interaction": "不得无提示制造死路"},
+        {"spec_id": "TT_SPEC_MANSION_WEI_YUE_YAN", "full_name": "危月燕", "signature_action": "危月折返", "boss_outline": "月相延迟、折返路径和俯冲落点连续", "anticipation": "延迟标记可读", "arena_interaction": "正确规避后保留通路"},
+        {"spec_id": "TT_SPEC_MANSION_SHI_HUO_ZHU", "full_name": "室火猪", "signature_action": "室火筑城", "boss_outline": "火甲城垒的开墙点、守点面和推进方向明确", "anticipation": "职责区域先可读", "arena_interaction": "换手后形成稳定通路"},
+        {"spec_id": "TT_SPEC_MANSION_BI_SHUI_YU", "full_name": "壁水貐", "signature_action": "壁水回廊", "boss_outline": "水壁边缘和反射角度可读", "anticipation": "回廊将改变的路线先行", "arena_interaction": "反射转为机关角度"}
+      ],
+      "acceptance_ids": ["TT-BLUEPRINT-ACC-021"]
+    },
+    {
+      "blueprint_spec_id": "TT_SPEC_BLUEPRINT_MANSION_NIGHTMARE_RESONANCE",
+      "scope": "四圣噩梦共享七链共鸣",
+      "priority": "P0",
+      "dependencies": ["已确认的方位快照", "已确认的星官状态", "四圣候选场地阅读职责", "后续UI第二通道"],
+      "state_profiles": [
+        {"state": "共鸣显现", "anticipation": "当前一至两条星链、对应星官和贡辉关系可辨", "result": "链路进入可反制状态", "acceptance_id": "TT-BLUEPRINT-ACC-022"},
+        {"state": "星官反制", "anticipation": "星官签名语法不被圣兽本体遮挡", "result": "贡辉转为净宿", "acceptance_id": "TT-BLUEPRINT-ACC-023"},
+        {"state": "净宿援护", "anticipation": "援护范围和用途清楚", "result": "圣兽庇护减弱，核心出现缺口", "acceptance_id": "TT-BLUEPRINT-ACC-024"},
+        {"state": "核心回正", "anticipation": "已有通路聚合而非重置方位语言", "result": "仅表现既有权威阶段结果", "acceptance_id": "TT-BLUEPRINT-ACC-025"}
+      ],
+      "sacred_beasts": [
+        {
+          "spec_id": "TT_SPEC_SACRED_BEAST_AZURE_DRAGON",
+          "full_name": "青龙",
+          "boss_outline": "长距离龙轨、风潮推拉、星链改道和导流路径同时可读。",
+          "anticipation": "龙轨方向、推拉方向和可用导流路径先行。",
+          "vfx_layers": {"p0": ["龙轨", "风潮方向", "星链改道", "导流路径"], "p1": ["净宿结果"], "p2": ["云海"]},
+          "arena_interaction": "净宿链转为导流，错误龙轨离开主战区。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-026"]
+        },
+        {
+          "spec_id": "TT_SPEC_SACRED_BEAST_VERMILION_BIRD",
+          "full_name": "朱雀",
+          "boss_outline": "火种过热、余烬复燃、火环缺口和护持区形态不同。",
+          "anticipation": "火环收束、余烬变化和缺口先行。",
+          "vfx_layers": {"p0": ["伤害火焰", "可净化余烬", "护持区", "火环缺口"], "p1": ["净宿庇护"], "p2": ["赤羽余烬"]},
+          "arena_interaction": "净宿余烬转为跨越火场的庇护机会。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-027"]
+        },
+        {
+          "spec_id": "TT_SPEC_SACRED_BEAST_WHITE_TIGER",
+          "full_name": "白虎",
+          "boss_outline": "猎印归属、冲刺线、接应区和反猎方向同时可读。",
+          "anticipation": "点名目标、冲刺方向和接应区先行。",
+          "vfx_layers": {"p0": ["猎印", "冲刺线", "接应区", "反猎方向"], "p1": ["净宿破绽"], "p2": ["白金爪痕"]},
+          "arena_interaction": "净宿轨迹形成反猎或破绽方向。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-028"]
+        },
+        {
+          "spec_id": "TT_SPEC_SACRED_BEAST_BLACK_TORTOISE",
+          "full_name": "玄武",
+          "boss_outline": "甲壁推进、冥水切割、护壳轮换和可破壁点可预判。",
+          "anticipation": "墙体推进、水幕反射和破壁点先行。",
+          "vfx_layers": {"p0": ["甲壁", "冥水切割", "破壁点", "退路"], "p1": ["净宿开口"], "p2": ["玄甲水纹"]},
+          "arena_interaction": "净宿打开可验证破壁点，保留连续退路。",
+          "acceptance_ids": ["TT-BLUEPRINT-ACC-029"]
+        }
+      ]
+    }
+  ],
+  "authority_and_economy_boundaries": {
+    "presentation_only": true,
+    "forbidden_authority_mutations": ["progression", "admission", "member_snapshot", "rotation_snapshot", "cleanup", "qualification"],
+    "forbidden_economic_outputs": ["success_event", "source_profile", "reward_slot", "qualification_snapshot", "receipt", "settlement", "reward_value"],
+    "rule": "表现层只消费权威已确认结果；七星、普通星宿和噩梦星宿不得由本蓝图产生hand-off candidate、资格或结算输入。"
+  },
+  "acceptance": [
+    {"id": "TT-BLUEPRINT-ACC-001", "rule": "仅离线需求；不产生对象、资源、插件、Y3 JSON、Lua、地图、资源ID、对象ID或数值。"},
+    {"id": "TT-BLUEPRINT-ACC-002", "rule": "全部身份为设计spec；全部运行时和资源绑定为null或deferred。"},
+    {"id": "TT-BLUEPRINT-ACC-003", "rule": "P0至P2和L0至L4明确，L4不遮挡L0至L3。"},
+    {"id": "TT-BLUEPRINT-ACC-004", "rule": "巡天误令的扇区与声波环具有不同非颜色阅读方式。"},
+    {"id": "TT-BLUEPRINT-ACC-005", "rule": "断虹阵眼的真伪节点和锁链关系在压力前可读。"},
+    {"id": "TT-BLUEPRINT-ACC-006", "rule": "四门回响的方向、轮廓和处理结果可复盘。"},
+    {"id": "TT-BLUEPRINT-ACC-007", "rule": "星历裂缝保留连续的星点、链路和变化历史。"},
+    {"id": "TT-BLUEPRINT-ACC-008", "rule": "裂律观台的首领、命令节点和核心轮廓不混淆。"},
+    {"id": "TT-BLUEPRINT-ACC-009", "rule": "裂律观台三段均有前摇、可净化状态和可见反制结果。"},
+    {"id": "TT-BLUEPRINT-ACC-010", "rule": "裂律观台满足一至四人的可读性，不要求第五人。"},
+    {"id": "TT-BLUEPRINT-ACC-011", "rule": "天枢的中轴、稳定锚和回归路径可读。"},
+    {"id": "TT-BLUEPRINT-ACC-012", "rule": "天璇的双轨、旧轨来源和回环结果可读。"},
+    {"id": "TT-BLUEPRINT-ACC-013", "rule": "天玑的真伪星标不只依赖颜色。"},
+    {"id": "TT-BLUEPRINT-ACC-014", "rule": "天权的双侧失衡和归位可由单人顺序处理。"},
+    {"id": "TT-BLUEPRINT-ACC-015", "rule": "玉衡的安全位、回流和护持区形态不同。"},
+    {"id": "TT-BLUEPRINT-ACC-016", "rule": "开阳的门阵、冲锋线和窗口可读。"},
+    {"id": "TT-BLUEPRINT-ACC-017", "rule": "瑶光的轨迹历史、残影来源和收束点可读。"},
+    {"id": "TT-BLUEPRINT-ACC-018", "rule": "青龙七宿的连线、延迟、阵眼、火痕和风潮语法完整。"},
+    {"id": "TT-BLUEPRINT-ACC-019", "rule": "朱雀七宿的火种、回响、缺口和水脉不共用不可区分火效。"},
+    {"id": "TT-BLUEPRINT-ACC-020", "rule": "白虎七宿的猎印、拦截、明暗、破网和连锁顺序可读。"},
+    {"id": "TT-BLUEPRINT-ACC-021", "rule": "玄武七宿不以隐藏出口或无预警封场制造失败。"},
+    {"id": "TT-BLUEPRINT-ACC-022", "rule": "噩梦共鸣显现可辨认当前链、星官和贡辉关系。"},
+    {"id": "TT-BLUEPRINT-ACC-023", "rule": "星官反制后贡辉到净宿变化可见。"},
+    {"id": "TT-BLUEPRINT-ACC-024", "rule": "净宿援护的用途和作用关系可见。"},
+    {"id": "TT-BLUEPRINT-ACC-025", "rule": "核心回正不重算方位、不越权决定会话或经济结果。"},
+    {"id": "TT-BLUEPRINT-ACC-026", "rule": "青龙噩梦的龙轨、风潮、导流和星链关系可读。"},
+    {"id": "TT-BLUEPRINT-ACC-027", "rule": "朱雀噩梦的伤害火焰、可净化余烬和护持区形态不同。"},
+    {"id": "TT-BLUEPRINT-ACC-028", "rule": "白虎噩梦的猎印、冲刺、接应和反猎方向可读。"},
+    {"id": "TT-BLUEPRINT-ACC-029", "rule": "玄武噩梦的甲壁、冥水、破壁点和退路可预判。"},
+    {"id": "TT-BLUEPRINT-ACC-030", "rule": "表现层不写入进度、资格、轮换、成员、清理、奖励或收据。"},
+    {"id": "TT-BLUEPRINT-ACC-031", "rule": "蓝图不为七星、普通星宿或噩梦星宿新增经济成功事件、资格、source profile、slot或结算输入。"}
+  ],
+  "deferred": [
+    "所有真实模型、骨骼、动画、贴图、材质、特效、音效、资源包和资源ID。",
+    "所有对象ID、单位、技能、Buff、投射物、物品、模板、属性和数值。",
+    "所有地图、坐标、入口、出生点、碰撞、寻路、刷怪、逻辑资源、UI控件、Lua、同步和存档。",
+    "所有材料、钥匙、称号、法宝、货币、掉率、保底、资格、收据、奖励和经济结算。"
+  ]
+}

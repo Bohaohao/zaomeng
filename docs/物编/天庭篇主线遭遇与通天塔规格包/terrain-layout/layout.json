@@ -1,0 +1,634 @@
+{
+  "version": 1,
+  "mode": "preview",
+  "documentStatus": "offline-dry-run-candidate",
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_TERRAIN_LAYOUT_DRY_RUN",
+    "runtime_key": null,
+    "rule": "TT_MAP_, TT_R_, TT_ROUTE_, TT_ZONE_, TT_SESSION_ and TT_LOGIC_CANDIDATE_ identifiers below are layout-only candidate labels, never runtime map, resource or persistence keys."
+  },
+  "coordinateSemantics": {
+    "diagram_canvas_id": "TT_LAYOUT_CANVAS_640X416",
+    "coordinate_unit": "diagram-unit",
+    "is_terrain_cell": false,
+    "is_world_coordinate": false,
+    "is_runtime_map_dimension": false,
+    "alignment_contract": "tianting-map-scale-alignment-contract.json",
+    "rule": "The 640x416 public-route atlas and every size in candidateMapSizes/sessionMapCandidates are spatial design diagrams only. They must not be copied, linearly scaled, or converted into Y3 terrain cells, editor coordinates, map sizes, entrances, teleports, spawns, collisions or logic resources."
+  },
+  "referenceSources": [
+    "specified: docs/物编/天庭篇主线遭遇与通天塔规格包/mainline-route.md",
+    "specified: docs/物编/天庭篇主线遭遇与通天塔规格包/topology-whitebox.md",
+    "specified: docs/物编/天庭篇主线遭遇与通天塔规格包/encounters/天庭公共遭遇规格.md",
+    "specified: docs/物编/天庭篇主线遭遇与通天塔规格包/instances/七星单人本规格.md",
+    "specified: docs/物编/天庭篇主线遭遇与通天塔规格包/instances/二十八星宿团队本规格.md",
+    "specified: docs/物编/天庭篇主线遭遇与通天塔规格包/handoff/terrain-layout-brief.json",
+    "specified: docs/物编/天庭篇主线遭遇与通天塔规格包/references/西游记与造梦参考.md"
+  ],
+  "worldview": {
+    "theme": "裂律污染下的西游天庭：云海、金玉台、断虹、裂律符文、周天星盘与四象会廊共同承担从错误天律到星历净化的叙事推进。",
+    "hardRules": [
+      "所有尺寸、坐标、路径、区域和场地形态均为纯离线候选；不是现有 Y3 地图、地图根、传送、出生点或碰撞数据。",
+      "公共路线图的 640×416 与所有会话候选尺寸使用 diagram-unit，不是 terrain cell；物理白盒必须以 tianting-map-scale-alignment-contract.json 为准。",
+      "公共路线必须让玩家读出“回查南天门后转入内廷”的因果，不把主线做成单向直走走廊。",
+      "每个战斗空间优先保障 2.5D 俯视角下的预警、路线、净化节点和最多四人站位可读性，不以装饰遮挡机制。",
+      "七星、凌霄外庭和二十八星宿均为独立会话地图候选；公共枢纽只展示候选会话门廊，不实现入口、传送或会话创建。",
+      "不创建或猜测 Y3 资源 ID、单位 ID、地图键、逻辑资源 ID、技能 ID、掉落、经济值或运行时状态。",
+      "通天塔候选入口只展示待上位全局塔采纳的天庭侧四十层离线内容编排方向；不创建楼层地图、实例、抽取、奖励、记录、赛季值或独立塔地图。"
+    ]
+  },
+  "map": {
+    "id": "TT_MAP_CANDIDATE_PUBLIC_ROUTE_ATLAS",
+    "width": 640,
+    "height": 416,
+    "coordinateUnit": "diagram-unit",
+    "isTerrainCell": false,
+    "isRuntimeMapDimension": false,
+    "status": "diagram-only-not-editor-map",
+    "actualMapKey": null,
+    "reason": "640×416 仅是章节关系图解，用于把临时天庭、回查南天门、断虹阵、四门失衡、周天观台和凌霄外庭放进一张可读的叙事分布图；它不是公共地图尺寸。物理白盒采用独立的 224×80 天界预算与两张 96×64 公共场景候选，见 tianting-map-scale-alignment-contract.json。"
+  },
+  "candidateSizeSemantics": {
+    "unit": "diagram-unit",
+    "isTerrainCell": false,
+    "isRuntimeMapDimension": false,
+    "physicalWhiteboxContract": "tianting-map-scale-alignment-contract.json",
+    "rule": "candidateMapSizes and sessionMapCandidates remain mechanism/layout diagrams; physical dimensions require separate whitebox acceptance."
+  },
+  "candidateMapSizes": [
+    {
+      "id": "TT_MAP_CANDIDATE_PUBLIC_ROUTE_ATLAS",
+      "role": "临时天庭公共枢纽与主线路径分布",
+      "width": 640,
+      "height": 416,
+      "status": "candidate-only",
+      "actualMapKey": null
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_LINGXIAO_MAINLINE",
+      "role": "凌霄外庭·裂律观台私有 1–4 人主线终局会话",
+      "width": 256,
+      "height": 192,
+      "status": "candidate-only",
+      "actualMapKey": null
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_SEVEN_STAR_SERIES",
+      "role": "七张独立单人星盘会话图的尺寸族",
+      "width": null,
+      "height": null,
+      "status": "see-sessionMapCandidates",
+      "actualMapKey": null
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_NORMAL_SERIES",
+      "role": "四方七宿普通团队会话图的尺寸族",
+      "width": 288,
+      "height": 224,
+      "status": "candidate-only",
+      "actualMapKey": null
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_NIGHTMARE_SERIES",
+      "role": "四圣兽 + 七宿共鸣的噩梦团队会话图尺寸族",
+      "width": 320,
+      "height": 288,
+      "status": "candidate-only",
+      "actualMapKey": null
+    },
+    {
+      "id": "TT_CONTENT_POOL_CANDIDATE_GLOBAL_TOWER",
+      "role": "唯一全局通天塔的天庭主题内容池接口",
+      "width": null,
+      "height": null,
+      "status": "not-designed-by-this-package",
+      "actualMapKey": null
+    }
+  ],
+  "regions": [
+    {
+      "id": "TT_R_PUBLIC_TEMPORARY_CELESTIAL_HUB",
+      "name": "临时天庭公共枢纽",
+      "type": "safe",
+      "bounds": { "x": 24, "z": 242, "width": 156, "height": 142 },
+      "worldviewTag": "秩序尚存的安置云台",
+      "purpose": "安全锚点、调查许可、命令校验与星图告警的候选承载区；由南侧出口引导玩家回查南天门。",
+      "terrainIntent": "平整玉白台地，以低矮云海边缘和高辨识度告示台框出中心；不放置实际 NPC、商店或传送点。"
+    },
+    {
+      "id": "TT_R_MAIN_ROUTE_GATE_APPROACH",
+      "name": "南天门回查云阶",
+      "type": "main-route",
+      "bounds": { "x": 32, "z": 92, "width": 132, "height": 122 },
+      "worldviewTag": "云阶回查与巡天预警",
+      "purpose": "从枢纽向下折返，提前暴露遮蔽位与双重预警的空间语法，避免南天门仅成为视觉门头。",
+      "terrainIntent": "窄而不拥塞的云阶与两侧断栏形成视线遮蔽候选；中心保持连续通路，不以装饰制造盲角。"
+    },
+    {
+      "id": "TT_R_BOSS_SPLIT_SOUTH_GATE",
+      "name": "裂云南天门",
+      "type": "boss",
+      "bounds": { "x": 188, "z": 58, "width": 124, "height": 136 },
+      "worldviewTag": "错误巡天命令的门禁现场",
+      "purpose": "千里眼/顺风耳巡天误令的候选战斗区；以可见的遮蔽柱、声波空隙与门内回转路支撑两种预警。",
+      "terrainIntent": "残裂门框与横向回廊围出非对称矩形场地；门内外留出周转带，视觉焦点是裂律符文与两组可辨识遮蔽物。"
+    },
+    {
+      "id": "TT_R_MAIN_ROUTE_BROKEN_RAINBOW_FORMATION",
+      "name": "天宫道·断虹阵",
+      "type": "main-route",
+      "bounds": { "x": 332, "z": 56, "width": 112, "height": 100 },
+      "worldviewTag": "阵眼与受控天兵的断虹云桥",
+      "purpose": "让玩家从门禁回查转入内廷，利用两条可见支线与一个居中阵眼候选表达“先拆阵、后压制巨灵神”。",
+      "terrainIntent": "双弧云桥夹住低位断层，阵眼候选位居视觉中心；边缘只作云海落差提示，不在此阶段定义真实可跌落区。"
+    },
+    {
+      "id": "TT_R_BOSS_TIANWANG_OUTER",
+      "name": "天王殿外缘·四门失衡",
+      "type": "boss",
+      "bounds": { "x": 468, "z": 40, "width": 142, "height": 166 },
+      "worldviewTag": "四方守备信号互斥",
+      "purpose": "四门回响的候选战斗区；四个朝向清晰的门龛与中场汇流区让最多四人能分流、交接并保留回撤路线。",
+      "terrainIntent": "四个门龛围绕开放中场，禁止用高密度柱林遮住机关状态；各门以不同轮廓/地材分区，但不预设颜色资源。"
+    },
+    {
+      "id": "TT_R_SIDE_ROUTE_INNER_CLOUD_REENTRY",
+      "name": "内廷折返云廊",
+      "type": "side-route",
+      "bounds": { "x": 208, "z": 218, "width": 98, "height": 84 },
+      "worldviewTag": "回查后转入内廷的叙事折返",
+      "purpose": "把南天门→断虹阵→天王殿的调查方向折回周天观台，避免玩家误读为不合理的倒走主路。",
+      "terrainIntent": "高差缓坡与向内弯折的云桥候选；采用远景星盘作为导航锚点，保持路径宽度一致。"
+    },
+    {
+      "id": "TT_R_PUBLIC_CELESTIAL_OBSERVATORY",
+      "name": "朝会殿·周天观台",
+      "type": "public",
+      "bounds": { "x": 326, "z": 214, "width": 152, "height": 146 },
+      "worldviewTag": "星历裂缝与校星枢纽",
+      "purpose": "星历裂缝公共遭遇、七星系列候选会话门廊、星宿轮换预告与主线终局前的叙事枢纽。",
+      "terrainIntent": "中心星盘、外环步道和三个不遮挡视线的台阶层次；星盘外缘承载七星/四象候选门廊标识，而不是实际入口或传送。"
+    },
+    {
+      "id": "TT_R_BOSS_LINGXIAO_OUTER",
+      "name": "凌霄外庭·裂律观台",
+      "type": "boss",
+      "bounds": { "x": 500, "z": 236, "width": 116, "height": 148 },
+      "worldviewTag": "旧天律覆盖战场的常规收束门面",
+      "purpose": "公共图中的主线终局前庭与会话视觉门面；真正的私有 1–4 人战斗发生在独立候选会话图。",
+      "terrainIntent": "高台前庭、可读的裂律文书立面与两条侧向撤离廊；不放置真实入口、触发器或首领对象。"
+    },
+    {
+      "id": "TT_R_TRANSITION_SESSION_GALLERY",
+      "name": "校星与四象会话门廊",
+      "type": "transition",
+      "bounds": { "x": 200, "z": 370, "width": 282, "height": 26 },
+      "worldviewTag": "周天观台外缘的候选会话选择面",
+      "purpose": "把七星、当前方位星宿和噩梦资格的展示面集中在周天观台北缘；仅承载空间阅读，不实施传送、会话创建或资格判断。",
+      "terrainIntent": "低矮弧形门廊与星盘刻线沿主视线排布；留出足够空白，确保未来 UI、资格提示或队伍集合不会遮挡路径。"
+    },
+    {
+      "id": "TT_R_TRANSITION_GLOBAL_TOWER_GALLERY",
+      "name": "通天塔候选入口台",
+      "type": "transition",
+      "bounds": { "x": 24, "z": 26, "width": 128, "height": 42 },
+      "worldviewTag": "唯一全局通天塔的天庭主题门面",
+      "purpose": "只留出 Lv55 后全局塔内容的视觉接入位置；四十层离线编排见 tower-economy 合同，但不决定实际会话、地图、奖励、赛季值或进入方式。",
+      "terrainIntent": "以玲珑塔远景/云阶轮廓作导航端点候选，不绑定模型或装饰资源。"
+    }
+  ],
+  "routes": [
+    {
+      "id": "TT_ROUTE_MAIN_INVESTIGATE_GATE",
+      "name": "枢纽至南天门回查",
+      "purpose": "先把玩家带回错误命令最可见的门禁，再转入内廷。",
+      "points": [
+        { "x": 102, "z": 242 },
+        { "x": 100, "z": 214 },
+        { "x": 100, "z": 176 },
+        { "x": 164, "z": 146 },
+        { "x": 188, "z": 126 }
+      ]
+    },
+    {
+      "id": "TT_ROUTE_MAIN_GATE_TO_TIANWANG",
+      "name": "南天门经断虹阵至天王殿",
+      "purpose": "让门禁调查、阵眼拆解和四门失衡形成连续的空间升级。",
+      "points": [
+        { "x": 312, "z": 126 },
+        { "x": 332, "z": 106 },
+        { "x": 444, "z": 106 },
+        { "x": 468, "z": 120 },
+        { "x": 536, "z": 150 }
+      ]
+    },
+    {
+      "id": "TT_ROUTE_MAIN_REENTER_OBSERVATORY",
+      "name": "四门失衡至周天观台",
+      "purpose": "用内廷折返把四象证据自然收束到星历污染源。",
+      "points": [
+        { "x": 536, "z": 206 },
+        { "x": 500, "z": 218 },
+        { "x": 470, "z": 244 },
+        { "x": 430, "z": 280 }
+      ]
+    },
+    {
+      "id": "TT_ROUTE_MAIN_OBSERVATORY_TO_LINGXIAO",
+      "name": "周天观台至凌霄外庭",
+      "purpose": "从校星揭示转向常规主线的裂律收束。",
+      "points": [
+        { "x": 478, "z": 290 },
+        { "x": 500, "z": 300 },
+        { "x": 558, "z": 310 }
+      ]
+    },
+    {
+      "id": "TT_ROUTE_OBSERVATORY_TO_SESSION_GALLERY",
+      "name": "周天观台至会话门廊",
+      "purpose": "让七星与星宿作为被清晰标出的后续会话候选，而非公共地图内的实际副本门。",
+      "points": [
+        { "x": 404, "z": 360 },
+        { "x": 404, "z": 370 }
+      ]
+    },
+    {
+      "id": "TT_ROUTE_HUB_TO_TOWER_GALLERY",
+      "name": "枢纽至通天塔候选入口台",
+      "purpose": "保留天庭主题内容池的可见去向，不暗示已存在独立塔。",
+      "points": [
+        { "x": 102, "z": 242 },
+        { "x": 72, "z": 214 },
+        { "x": 72, "z": 100 },
+        { "x": 86, "z": 68 }
+      ]
+    }
+  ],
+  "spawns": [],
+  "bossZones": [
+    {
+      "id": "TT_ZONE_CANDIDATE_SPLIT_SOUTH_GATE",
+      "name": "裂云南天门机制区",
+      "bounds": { "x": 204, "z": 76, "width": 92, "height": 100 },
+      "status": "candidate-only",
+      "readabilityIntent": "两组预警、遮蔽位与中央回转路彼此可见。"
+    },
+    {
+      "id": "TT_ZONE_CANDIDATE_TIANWANG_FOUR_GATES",
+      "name": "四门回响机制区",
+      "bounds": { "x": 484, "z": 58, "width": 110, "height": 130 },
+      "status": "candidate-only",
+      "readabilityIntent": "四向机关可辨、中心可汇合、边缘有回撤空间。"
+    },
+    {
+      "id": "TT_ZONE_CANDIDATE_OBSERVATORY_RIFT",
+      "name": "星历裂缝机制区",
+      "bounds": { "x": 344, "z": 232, "width": 116, "height": 110 },
+      "status": "candidate-only",
+      "readabilityIntent": "星点连线、净化链路和玩家绕行路径不能被高物遮住。"
+    },
+    {
+      "id": "TT_ZONE_CANDIDATE_LINGXIAO_FORECOURT",
+      "name": "凌霄外庭前庭",
+      "bounds": { "x": 516, "z": 254, "width": 84, "height": 112 },
+      "status": "candidate-only",
+      "readabilityIntent": "只承担前庭和会话门面；真正的首领战斗图为独立会话候选。"
+    }
+  ],
+  "publicAreas": [
+    {
+      "id": "TT_PUBLIC_CANDIDATE_HUB",
+      "name": "临时天庭公共枢纽",
+      "bounds": { "x": 24, "z": 242, "width": 156, "height": 142 },
+      "status": "candidate-only"
+    },
+    {
+      "id": "TT_PUBLIC_CANDIDATE_OBSERVATORY",
+      "name": "周天观台公共枢纽",
+      "bounds": { "x": 326, "z": 214, "width": 152, "height": 146 },
+      "status": "candidate-only"
+    }
+  ],
+  "hiddenAreas": [],
+  "npcPoints": [],
+  "terrainLayers": [
+    {
+      "layer": "map",
+      "status": "diagram-only-not-editor-map",
+      "handoff": "640×416 只服务公共路线图解；物理白盒以 224×80 天界预算和两张 96×64 候选场景为准。任何地图创建或尺寸调整均需要未来读取当前地图与明确确认。"
+    },
+    {
+      "layer": "terrain",
+      "status": "candidate-only",
+      "handoff": "使用云台高低差、断虹断层、内廷缓坡、四门台阶与凌霄前庭高台来导向；不写入高度或碰撞。"
+    },
+    {
+      "layer": "water",
+      "status": "candidate-only",
+      "handoff": "云海承担视觉边界，不定义真实水体、坠落、伤害或寻路。"
+    },
+    {
+      "layer": "road",
+      "status": "candidate-only",
+      "handoff": "以玉白主路、断虹桥、内廷云廊和星盘外环区分主线、折返与会话门廊；不生成路径资源。"
+    },
+    {
+      "layer": "texture",
+      "status": "unresolved-resource-binding",
+      "handoff": "仅定义金玉、云白、裂律暗纹、星盘冷光和四象差异地材的功能方向；所有纹理资源 ID 为 null。"
+    },
+    {
+      "layer": "vegetation",
+      "status": "candidate-only",
+      "handoff": "只在云台边缘与非战斗视线外使用低密度仙植候选；战斗和路径中心不使用可遮挡预警的密集植被。"
+    },
+    {
+      "layer": "decoration-entities",
+      "status": "unresolved-resource-binding",
+      "handoff": "候选类别为门框、断桥、文书碑、星盘柱、四象门龛和云海远景；不绑定任何模型、装饰或对象 ID。"
+    },
+    {
+      "layer": "logic-points-paths-areas",
+      "status": "no-write",
+      "handoff": "未来可按本布局补候选出生、Boss、入口、镜头、机关、区域和路径逻辑资源；本 dry-run 不创建名称、ID 或实际编辑器资源。"
+    }
+  ],
+  "decorations": [],
+  "logicResources": [],
+  "assetSearchPlan": [
+    {
+      "category": "terrain-texture",
+      "resourceId": null,
+      "searchKeywords": ["云台", "玉石", "金纹", "裂纹", "星盘"],
+      "styleConstraint": "只选可区分路径、边缘和机关的低噪声地材。"
+    },
+    {
+      "category": "decoration",
+      "resourceId": null,
+      "searchKeywords": ["天门", "云桥", "宫阙", "星盘", "石碑", "云海"],
+      "styleConstraint": "大轮廓优先；不得遮挡星链、火环、猎印、甲壁或安全缺口。"
+    },
+    {
+      "category": "vegetation",
+      "resourceId": null,
+      "searchKeywords": ["仙草", "云松", "玉树"],
+      "styleConstraint": "仅作边缘框景，不进入战斗主读线。"
+    }
+  ],
+  "logicResourceCandidates": [
+    {
+      "candidateId": "TT_LOGIC_CANDIDATE_HUB_CENTER",
+      "type": "point",
+      "scope": "public-route-atlas",
+      "status": "not-created",
+      "editorResourceId": null,
+      "runtimeKey": null,
+      "purpose": "未来公共枢纽的导航锚点候选，不代表出生点或 NPC。"
+    },
+    {
+      "candidateId": "TT_LOGIC_CANDIDATE_OBSERVATORY_RING",
+      "type": "circleArea",
+      "scope": "public-route-atlas",
+      "status": "not-created",
+      "editorResourceId": null,
+      "runtimeKey": null,
+      "purpose": "未来星历裂缝与会话门廊可读范围候选，不代表副本入口。"
+    },
+    {
+      "candidateId": "TT_LOGIC_CANDIDATE_FOUR_GATE_ARENA",
+      "type": "rectArea",
+      "scope": "public-route-atlas",
+      "status": "not-created",
+      "editorResourceId": null,
+      "runtimeKey": null,
+      "purpose": "未来四门回响场地范围候选，不定义机关、单位或事件。"
+    },
+    {
+      "candidateId": "TT_LOGIC_CANDIDATE_MAINLINE_ROUTE",
+      "type": "path",
+      "scope": "public-route-atlas",
+      "status": "not-created",
+      "editorResourceId": null,
+      "runtimeKey": null,
+      "purpose": "未来主线导航/巡逻审查的路径候选，不代表现有寻路数据。"
+    }
+  ],
+  "sessionMapCandidates": [
+    {
+      "id": "TT_SESSION_CANDIDATE_LINGXIAO_MAINLINE",
+      "sessionKind": "private-mainline-1-to-4",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 256, "height": 192 },
+      "layoutPattern": "前庭确认带 → 可净化节点环 → 裂律观台主场 → 回正出口带",
+      "spaceRules": ["首领压场与净化节点必须同时可读", "侧向回转路不能成为跳过机制的死角", "实际会话、失败、清理和进度写入仍以权威合同为准"],
+      "terrainIntent": "方形外庭中嵌不完整星盘，四角留下短撤离廊；裂律文书立面作为方向锚点，而非可交互对象。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_SEVEN_STAR_TIANSHU",
+      "sessionKind": "solo-seven-star",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 160, "height": 160 },
+      "layoutPattern": "中轴圆盘 + 外推环 + 三个稳定锚候选",
+      "coreRule": "方向翻转与中心安全区",
+      "terrainIntent": "北极中轴和重戟推力方向应被场地刻线直观强化，避免同构圆形斗兽场。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_SEVEN_STAR_TIANXUAN",
+      "sessionKind": "solo-seven-star",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 192, "height": 160 },
+      "layoutPattern": "内外双环 + 两个切换桥 + 镜轨回返带",
+      "coreRule": "双轨轮转与预判下一落点",
+      "terrainIntent": "以不重合的双环和镜面断点表达切换，不靠密集特效区分轨道。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_SEVEN_STAR_TIANJI",
+      "sessionKind": "solo-seven-star",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 176, "height": 176 },
+      "layoutPattern": "三角观测台 + 遮蔽弧廊 + 真伪星标候选位",
+      "coreRule": "显隐、真伪辨认与反照",
+      "terrainIntent": "每个候选星标都要有不同可读轮廓，避免把真假判断藏在 UI 或后台数值。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_SEVEN_STAR_TIANQUAN",
+      "sessionKind": "solo-seven-star",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 192, "height": 160 },
+      "layoutPattern": "双侧衡台 + 中央法尺廊 + 回正断点",
+      "coreRule": "双侧承压与一次正确打断",
+      "terrainIntent": "左右场地体量和视线相对等，确保偏衡来自玩家行为而不是视觉误导。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_SEVEN_STAR_YUHENG",
+      "sessionKind": "solo-seven-star",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 176, "height": 176 },
+      "layoutPattern": "四瓣灵息庭 + 交替外环 + 中央调和池候选",
+      "coreRule": "轮替安全区与资源调和",
+      "terrainIntent": "四瓣安全位须用场地材质和高低差分开，不能只用颜色给出轮替信息。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_SEVEN_STAR_KAIYANG",
+      "sessionKind": "solo-seven-star",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 208, "height": 144 },
+      "layoutPattern": "三道门阵 + 纵向冲锋线 + 侧翼反制窗",
+      "coreRule": "开门/封门与抢占窗口",
+      "terrainIntent": "门阵分层而不重叠，入口、冲锋线和反制窗口从俯视角可一眼区分。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_SEVEN_STAR_YAOGUANG",
+      "sessionKind": "solo-seven-star",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 208, "height": 176 },
+      "layoutPattern": "弧形追迹道 + 残影回溯岔路 + 收束截断台",
+      "coreRule": "拖光轨迹、回溯残影与终结窗口",
+      "terrainIntent": "长弧路线应留下可绕行边带，早前路径的第二次攻击不能遮断所有退路。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_AZURE_DRAGON_NORMAL",
+      "sessionKind": "raid-normal-1-to-4",
+      "quadrant": "东方青龙",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 288, "height": 224 },
+      "layoutPattern": "弯曲云潮主线 + 前中后双宿湾 + 守位单宿台",
+      "coreRule": "星链、腾挪、风潮与路线重排",
+      "terrainIntent": "曲线主路提供改道空间，侧翼留出切断错误龙脉的交叉窗口。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_VERMILION_BIRD_NORMAL",
+      "sessionKind": "raid-normal-1-to-4",
+      "quadrant": "南方朱雀",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 288, "height": 224 },
+      "layoutPattern": "环形火庭 + 交替避火瓣区 + 双宿接力桥",
+      "coreRule": "火种、传导、过热与余烬复燃",
+      "terrainIntent": "环形场地必须保持至少一条完整外环回转带，使安全区轮换不变成纯跑圈。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_WHITE_TIGER_NORMAL",
+      "sessionKind": "raid-normal-1-to-4",
+      "quadrant": "西方白虎",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 288, "height": 224 },
+      "layoutPattern": "锯齿猎道 + 可接应口袋区 + 双端破网台",
+      "coreRule": "猎印、围猎、反击与爆发窗口",
+      "terrainIntent": "被点名者的牵引线和队友接应点不可被岩体或装饰切断。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_BLACK_TORTOISE_NORMAL",
+      "sessionKind": "raid-normal-1-to-4",
+      "quadrant": "北方玄武",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 288, "height": 224 },
+      "layoutPattern": "格栅甲壁庭 + 双侧守点 + 可开合中场",
+      "coreRule": "封镇、壁障、潮汐与护甲拆解",
+      "terrainIntent": "墙体推进后的最小通路必须可读，避免天然地形与机制甲壁叠加封死战场。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_AZURE_DRAGON_NIGHTMARE",
+      "sessionKind": "raid-nightmare-1-to-4",
+      "quadrant": "东方青龙",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 320, "height": 288 },
+      "layoutPattern": "环形云海龙轨 + 七宿侧台 + 青龙核心空区",
+      "coreRule": "净宿星链改道与长距离风潮预警",
+      "terrainIntent": "七宿侧台、龙轨和核心空区必须同时进入镜头阅读范围，不能由装饰遮挡双向共鸣。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_VERMILION_BIRD_NIGHTMARE",
+      "sessionKind": "raid-nightmare-1-to-4",
+      "quadrant": "南方朱雀",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 320, "height": 288 },
+      "layoutPattern": "同心火环庭 + 七宿余烬台 + 朱雀核心岛",
+      "coreRule": "净宿余烬转为短暂庇护与火场重置反制",
+      "terrainIntent": "火环缺口、庇护区和剩余撤离路须具备不同轮廓，不能仅依靠粒子颜色。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_WHITE_TIGER_NIGHTMARE",
+      "sessionKind": "raid-nightmare-1-to-4",
+      "quadrant": "西方白虎",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 320, "height": 288 },
+      "layoutPattern": "四向猎径 + 七宿反制台 + 白虎核心坡地",
+      "coreRule": "猎印引导、净宿轨迹反转与破甲窗口",
+      "terrainIntent": "每条猎径都保留可接应横切线；核心坡地不得遮挡点名、冲刺与反击读条。"
+    },
+    {
+      "id": "TT_SESSION_CANDIDATE_MANSION_BLACK_TORTOISE_NIGHTMARE",
+      "sessionKind": "raid-nightmare-1-to-4",
+      "quadrant": "北方玄武",
+      "actualMapKey": null,
+      "actualEntrance": null,
+      "actualTeleport": null,
+      "candidateSize": { "width": 320, "height": 288 },
+      "layoutPattern": "环壁水庭 + 七宿共守台 + 玄武核心甲壳区",
+      "coreRule": "净宿开墙、共守窗口与正确破壁点",
+      "terrainIntent": "静态地形不与动态甲壁重叠成不可通行死区，慢速墙体推进要有前后景对照。"
+    }
+  ],
+  "constructionHandoff": {
+    "writePolicy": "no Y3Maker/Y3 MCP write in this package; every layer remains a future confirmation-required construction candidate.",
+    "publicMap": "先验证公共路线候选图能在 2.5D 镜头下连续读出主线，再决定是否拆成多张实际地图。",
+    "sessionMaps": "先按独立会话地图建设；不得把七星或星宿塞进公共路线图，也不得把候选门廊解释为已接入传送。",
+    "terrain": "先铺道路、台阶、云海边界和大地形，再验证战斗读线，最后才考虑植被和装饰。",
+    "logic": "未来必须把实际区域、入口、Boss、镜头、出生、机关、导航分别建立为编辑器逻辑资源，并接入权威会话合同；本文件未创建任何资源。",
+    "assetPolicy": "所有资源 ID、模型、纹理、单位、能力和特效均 unresolved；施工时从当前项目和官方资源读取后再绑定。"
+  },
+  "preview": {
+    "status": "rendered",
+    "htmlPath": "layout-preview.html",
+    "imagePath": "layout-preview.png",
+    "metaPath": "layout-preview.meta.json",
+    "renderer": "y3-terrain-layout render-layout-preview.ps1",
+    "notes": [
+      "预览只渲染公共路线候选图的逻辑分区、路线和候选 Boss 区。",
+      "独立会话地图以 sessionMapCandidates 表表达，不被误渲染成公共地图实体。",
+      "不代表已存在 Y3 地图、入口、传送、坐标、资源或运行时场景。"
+    ]
+  },
+  "unresolved": [
+    "当前项目是否已有地图工程、地图根、现有尺寸、已放置资源或可复用公共区域；本次未接入 Y3Maker MCP 读取。",
+    "640×416 公共图与每张会话候选图均为 diagram-unit；它们的物理白盒尺寸、性能、镜头、寻路和碰撞验证由 tianting-map-scale-alignment-contract.json 单独裁决。",
+    "真实地图拆分、邻接、加载、地图键、入口、出口、传送、出生、复活和检查点均未设计或实现。",
+    "七星、凌霄外庭和二十八星宿会话的创建、成员锁、失败、断线、清理、重连限制和进度写入仍以既有权威合同为准，尚无运行时服务。",
+    "二十八星宿的 Asia/Shanghai 时辰快照、普通/噩梦同方位资格与轮换展示不得由本布局实现或重算。",
+    "通天塔只保留待上位全局塔采纳的天庭侧四十层、五层 Boss 槽与十层大 Boss 离线候选；抽取、楼层地图/实例、奖励、记录和赛季值仍未决，见 tower-economy/mansion-economy-global-tower-run-season-contract.json。",
+    "所有地形纹理、建筑、门框、植被、远景、单位、Boss、机关和特效资源 ID 都为 null，须在施工前从当前项目/官方资源检索。",
+    "单位、技能、Boss 读条、伤害、血量、波次、掉落、经验、货币、钥匙、材料、称号、资格凭证与经济收据不属于本布局。",
+    "镜头高度、缩放、可视区域、无障碍颜色/形状方案、音效和性能预算尚未建立。",
+    "公共路线中的候选坐标只服务预览布局；实际坐标、区域、道路、地形、装饰或逻辑资源需要重新确认后才能写入。"
+  ]
+}

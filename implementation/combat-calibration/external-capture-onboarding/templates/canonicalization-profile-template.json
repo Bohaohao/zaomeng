@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_EXTERNAL_CAPTURE_CANONICALIZATION_PROFILE_TEMPLATE_V1",
+    "status": "not_created",
+    "profile_instance_ref": null,
+    "toolchain_version_ref": null
+  },
+  "deterministic_rules": {
+    "canonical_encoding": "utf-8-no-bom",
+    "field_order": "lexicographic-by-UTF-8-key-bytes",
+    "hash_algorithm": "sha256-lowercase-hex",
+    "time_format": "UTC RFC3339 seconds",
+    "raw_artifact_relation": "raw external artifact is retained outside this repository; canonical artifact references raw artifact immutably",
+    "forbidden_non_determinism": [
+      "local wall-clock substitution",
+      "unordered map serialization",
+      "unbound client-side outcome",
+      "mutable file path as artifact identity",
+      "post-capture log rewriting"
+    ]
+  },
+  "future_external_bindings": {
+    "raw_artifact_ref": null,
+    "canonical_artifact_ref": null,
+    "canonical_artifact_digest": null,
+    "capture_basis_digest": null,
+    "input_trace_digest": null
+  }
+}

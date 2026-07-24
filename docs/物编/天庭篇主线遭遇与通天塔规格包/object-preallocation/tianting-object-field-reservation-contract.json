@@ -1,0 +1,373 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_OBJECT_FIELD_RESERVATION",
+    "display_name": "天庭物编字段预占包",
+    "package_status": "offline_field_reservation_only",
+    "production_gate": "closed",
+    "runtime_key": null,
+    "plugin_generation": false,
+    "normalized_design_input": null,
+    "generated_plugin": null
+  },
+  "scope": {
+    "included": [
+      "天庭敌人生态的逻辑卡",
+      "五组非通天塔主线遭遇的逻辑卡",
+      "七星单人首领的逻辑卡",
+      "二十八星官的方位语法与签名覆写卡",
+      "四圣噩梦终局的逻辑卡"
+    ],
+    "excluded": [
+      "Y3-Helper normalized design 的 assets 和 mode",
+      "Y3 对象、Y3 JSON、插件、Lua、地图、UI 或运行时资源",
+      "稳定对象键、copyFrom、模板、对象字段映射或资源 ID",
+      "HP、攻击、双防、攻速、移速、伤害、范围、秒数、冷却或概率",
+      "AI、波次、出生、碰撞、会话、进度、时辰、资格、清理、奖励、收据或经济"
+    ]
+  },
+  "source_contracts": [
+    {
+      "artifact": "../object-blueprint/tianting-object-art-vfx-blueprint-contract.json",
+      "spec_id": "TT_SPEC_TIANTING_OBJECT_ART_VFX_BLUEPRINT",
+      "role": "P0-P2、L0-L4、轮廓、前摇与场地交互的唯一资产语义来源",
+      "source_content_sha256": "5444473c68e951832775fdf8ea491e9ead4ae4a55fd4c1cbcb59566e09d20a15",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../enemy-ecology/tianting-enemy-ecology-contract.json",
+      "spec_id": "TT_SPEC_TIANTING_ENEMY_ECOLOGY",
+      "role": "小怪、精英、机制实体与噩梦支援的职责来源",
+      "source_content_sha256": "925e4ce3392f2f6218b511f260b4b54fa02cf7eb602bc78ec2446e57f3583fc5",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../mainline-boss/tianting-mainline-boss-contract.json",
+      "spec_id": "TT_SPEC_TIANTING_MAINLINE_BOSS_DEEPENING",
+      "role": "五组主线首领、角色与三段机制语法来源",
+      "source_content_sha256": "45ad7962512ce67317a30c952fc03f6899528c725da897d574a5cb96a8af5c78",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../tianting-content-expansion-contract.json",
+      "source_spec_ids": [
+        "TT_SPEC_MAINLINE_CONTENT_EXPANSION",
+        "TT_SPEC_SEVEN_STAR_SOLO_SERIES",
+        "TT_SPEC_TWENTY_EIGHT_MANSIONS_RAID",
+        "TT_SPEC_MANSION_NIGHTMARE_MODE"
+      ],
+      "role": "七星、二十八星官、四圣名称与签名动作来源",
+      "source_content_sha256": "b9c037edd3531917451d979b22bb483472d3076df51a4460c8e14b8448f67667",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../combat/tianting-combat-readability-contract.json",
+      "spec_id": "TT_SPEC_TIANTING_COMBAT_READABILITY",
+      "role": "双通道预警、反制与复盘可读性来源",
+      "source_content_sha256": "8ec1e322659bcb4e3360ecebe426010a84f856ff92a6e10e39d8f9b7530cff94",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../../../../implementation/combat-calibration/contract/cross-profession-combat-calibration-contract.json",
+      "contract_id": "CAL_SPEC_CROSS_PROFESSION_ABSOLUTE_COMBAT_V1",
+      "role": "绝对对象字段投影的 P0 门禁来源",
+      "source_content_sha256": "72405ee76ed8841ff067eb3bb691db6dd29702d1635dc8103adc27d6a3f6f2a8",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../../../../implementation/combat-calibration/evidence-adoption/p0-evidence-collection-and-adoption-contract.json",
+      "spec_id": "CAL_SPEC_P0_EVIDENCE_COLLECTION_AND_ADOPTION_V1",
+      "role": "P0 外部实证采集、独立复核与采纳关闭态的直接追溯来源",
+      "source_content_sha256": "2d3cbffd7233e75ef554e8febd9f152ba81153419fd4edcb5ddc5ed2f921dfec",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../../../../implementation/tianting-surface-construction-manifest/surface-construction-manifest.json",
+      "spec_id": "TT_SPEC_SURFACE_CONSTRUCTION_DISCOVERY_MANIFEST",
+      "role": "真实项目对象与资源盘点的无写入发现来源",
+      "source_content_sha256": "9c37da713e0a5487c06ea9b0b1378b03b95de17aad3b547226aa719cd61d0e9e",
+      "runtime_key": null
+    }
+  ],
+  "gate_snapshot": {
+    "absolute_projection_candidate_id": "TT_CAL_ABSOLUTE_OBJECT_FIELDS_V1",
+    "required_gate_ids": [
+      "P0-GATE-01-all-12-fixed-builds-declared-and-replayed",
+      "P0-GATE-02-general-physical-magical-defense-formulas-adopted",
+      "P0-GATE-03-hit-crit-control-formulas-adopted",
+      "P0-GATE-04-engine-action-frame-and-speed-readback",
+      "P0-GATE-05-terrain-collision-and-camera-fixture",
+      "P0-GATE-06-authoritative-one-to-four-member-replays",
+      "P0-GATE-07-stable-object-keys-and-template-readback"
+    ],
+    "currently_satisfied_gate_ids": [],
+    "object_resource_inventory": {
+      "source_spec_id": "TT_DISCOVERY_OBJECT_AND_RESOURCE_INVENTORY",
+      "status": "not_read_from_real_y3_project",
+      "write_authorization": false,
+      "stable_object_keys": null,
+      "approved_templates": null,
+      "field_reference": null,
+      "model_animation_vfx_sfx_resources": null
+    },
+    "evidence_adoption_source": {
+      "artifact": "../../../../implementation/combat-calibration/evidence-adoption/p0-evidence-collection-and-adoption-contract.json",
+      "spec_id": "CAL_SPEC_P0_EVIDENCE_COLLECTION_AND_ADOPTION_V1",
+      "source_content_sha256": "2d3cbffd7233e75ef554e8febd9f152ba81153419fd4edcb5ddc5ed2f921dfec",
+      "current_adoption_state": "closed",
+      "currently_satisfied_gate_ids": [],
+      "actual_capture_provider": null,
+      "actual_y3_project_ref": null,
+      "accepted_evidence_ledger": null,
+      "adoption_decision": null,
+      "absolute_projection_payload": null
+    },
+    "generation_requires": [
+      "all P0 required_gate_ids adopted",
+      "real Y3 object and resource inventory read",
+      "stable object keys and source templates approved",
+      "explicit real-project write authorization"
+    ]
+  },
+  "card_schema": {
+    "logical_asset_contract": true,
+    "must_not_be_treated_as_y3_object": true,
+    "binding_order": [
+      "声音、投射物语义与表现型状态",
+      "技能壳",
+      "单位或机制体",
+      "遭遇组装"
+    ],
+    "required_card_fields": [
+      "reservation_id",
+      "source_selector",
+      "display_name",
+      "role_class",
+      "encounter_scope",
+      "semantic_skill_slots",
+      "p0_spatial_signals",
+      "independent_channel",
+      "counterplay_result",
+      "readability_adaptation",
+      "future_binding_profile_ref",
+      "runtime_key"
+    ],
+    "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS"
+  },
+  "field_reservation_profiles": [
+    {
+      "spec_id": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS",
+      "purpose": "所有逻辑卡共享的未来字段预占；不允许在本包填写或推断实际物编数据。",
+      "future_object_binding": {
+        "object_table_type": null,
+        "stable_object_key": null,
+        "copyFrom": null,
+        "source_template_key": null,
+        "editor_field_mapping": null,
+        "unit_object_id": null,
+        "ability_object_ids": null,
+        "buff_object_ids": null,
+        "projectile_object_ids": null
+      },
+      "future_resource_binding": {
+        "model_resource_id": null,
+        "animation_resource_id": null,
+        "vfx_resource_id": null,
+        "sound_resource_id": null,
+        "material_resource_id": null,
+        "icon_resource_id": null
+      },
+      "absolute_projection": {
+        "health": null,
+        "physical_attack": null,
+        "magical_attack": null,
+        "physical_defense": null,
+        "magical_defense": null,
+        "attack_speed": null,
+        "attack_range": null,
+        "movement_speed": null,
+        "damage": null,
+        "area": null,
+        "cooldown": null,
+        "cast_seconds": null,
+        "duration_seconds": null,
+        "frequency": null
+      },
+      "future_runtime_binding": {
+        "ai_behavior": null,
+        "wave_definition": null,
+        "spawn_point": null,
+        "collision": null,
+        "map_binding": null,
+        "lua_module": null,
+        "session_command": null,
+        "progression_write": null,
+        "authority_event": null,
+        "rotation_source": null,
+        "qualification_source": null,
+        "cleanup_command": null,
+        "reward": null,
+        "receipt": null,
+        "economy_input": null
+      }
+    }
+  ],
+  "shared_semantic_families": {
+    "projection_and_area": [
+      {"spec_id": "TT_SPEC_OBJRES_SHAPE_SECTOR", "meaning": "扇区或锥形的来源、边界与方向", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_SHAPE_RING", "meaning": "环形或脉冲的传播与缺口", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_SHAPE_LINE", "meaning": "直线、冲锋或路径轨迹", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_SHAPE_LINK", "meaning": "链路、归属与关系线", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_SHAPE_BOUNDARY", "meaning": "区域边界、安全位、开口或破壁点", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_SHAPE_ARC", "meaning": "弧线、折返、回放或反射", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_SHAPE_MARKER", "meaning": "标记、残影、历史锚点或交互状态", "runtime_key": null}
+    ],
+    "presentation_state": [
+      {"spec_id": "TT_SPEC_OBJRES_P0_SOURCE_PATH_BOUNDARY", "meaning": "来源、路径、边界与可交互状态", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_P1_RELATION_PHASE", "meaning": "关系、阶段、协作方向与退路", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_L3_COUNTER_RESULT", "meaning": "反制、净化、改道、开口与回正结果", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_DEBRIEF_TRACE", "meaning": "失败复盘所需的可追溯痕迹", "runtime_key": null}
+    ],
+    "sound_semantics": [
+      {"spec_id": "TT_SPEC_OBJRES_SOUND_ORIGIN", "meaning": "起手来源提示，不能成为唯一判定", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_SOUND_DIRECTION", "meaning": "路径或方向持续提示，必须有几何替代", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_SOUND_COUNTER", "meaning": "反制成功或关系变化确认", "runtime_key": null},
+      {"spec_id": "TT_SPEC_OBJRES_SOUND_DEBRIEF", "meaning": "失败原因提示，必须能回溯到 P0 痕迹", "runtime_key": null}
+    ]
+  },
+  "logical_asset_groups": [
+    {
+      "group_id": "TT_SPEC_OBJRES_GROUP_ENEMY_ECOLOGY",
+      "source_spec_id": "TT_SPEC_TIANTING_ENEMY_ECOLOGY",
+      "source_artifact": "../enemy-ecology/tianting-enemy-ecology-contract.json",
+      "batch_status": "future_mainline_p0_candidate_only",
+      "cards": [
+        {"reservation_id": "TT_SPEC_OBJRES_CONTROLLED_CELESTIAL_SOLDIER", "source_selector": "TT_SPEC_ENEMY_CONTROLLED_CELESTIAL_SOLDIER", "display_name": "受控天兵", "role_class": "common_enemy_unit", "encounter_scope": "断虹阵及主线压力接口", "semantic_skill_slots": ["误令执行", "关系脱控", "净化后撤"], "p0_spatial_signals": ["受控标志", "错误阵眼连线", "可撤路线"], "independent_channel": "状态符号或来源音", "counterplay_result": "净化后撤并暴露关系变化", "readability_adaptation": "不以清场、击杀数或掉落驱动", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_FOUR_GATE_GUARD_MECHANISM", "source_selector": "TT_SPEC_ELITE_FOUR_GATE_GUARD_MECHANISM", "display_name": "四方门卫机关", "role_class": "elite_mechanism_unit", "encounter_scope": "四门失衡", "semantic_skill_slots": ["门态切换", "方向回响", "顺序静默"], "p0_spatial_signals": ["四向轮廓", "门态", "受影响路线"], "independent_channel": "方向文字或门态音", "counterplay_result": "正确顺序使回响安静", "readability_adaptation": "不能决定真实地图门或会话入口", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_UNCONTROLLED_CLOUD_BEAST", "source_selector": "TT_SPEC_ELITE_UNCONTROLLED_CLOUD_BEAST", "display_name": "失控云兽", "role_class": "elite_enemy_unit", "encounter_scope": "四门失衡路线压力", "semantic_skill_slots": ["轨迹冲行", "路线挤压", "导离结果"], "p0_spatial_signals": ["起跳轮廓", "冲行轨迹", "落点与退路"], "independent_channel": "起手音或状态符号", "counterplay_result": "导离后释放可读路线", "readability_adaptation": "不得以无预警位移封死路线", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_GENERIC_STAR_OBSERVER", "source_selector": "TT_SPEC_ELITE_GENERIC_STAR_OBSERVER", "display_name": "泛称监星使", "role_class": "elite_enemy_unit", "encounter_scope": "周天观台观察压力", "semantic_skill_slots": ["星链观察", "真伪校验", "短暂校准"], "p0_spatial_signals": ["星点历史", "链路差异", "校验反馈"], "independent_channel": "观察状态符号或校验音", "counterplay_result": "校验后留下可追溯的正确链", "readability_adaptation": "不得与天玑首领共用身份", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_PATROL_SIGNAL_ECHO", "source_selector": "TT_SPEC_ENTITY_PATROL_SIGNAL_ECHO", "display_name": "巡天信号回响", "role_class": "logical_mechanism_entity", "encounter_scope": "裂云南天门", "semantic_skill_slots": ["视线误令", "声波误令", "交替安全路"], "p0_spatial_signals": ["扇区来源", "环形传播", "交替路线"], "independent_channel": "来源音与文字状态", "counterplay_result": "误令失效并保留可走路线", "readability_adaptation": "扇区与环形不可复用为同一可读资产", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_BROKEN_RAINBOW_EYE", "source_selector": "TT_SPEC_ENTITY_BROKEN_RAINBOW_FORMATION_EYE", "display_name": "断虹阵眼", "role_class": "logical_mechanism_entity", "encounter_scope": "断虹阵", "semantic_skill_slots": ["真伪关系", "错误召回", "断链反馈"], "p0_spatial_signals": ["节点形态", "锁链", "真伪差异"], "independent_channel": "节点状态符号或关系音", "counterplay_result": "断链后明确显示正确阵眼", "readability_adaptation": "不预先裁定为单位、目标、Buff、可破坏物或纯表现", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_STAR_CALENDAR_RIFT", "source_selector": "TT_SPEC_ENTITY_STAR_CALENDAR_RIFT", "display_name": "星历裂缝", "role_class": "logical_mechanism_entity", "encounter_scope": "周天观台", "semantic_skill_slots": ["星图历史", "链路变化", "校星反馈"], "p0_spatial_signals": ["星点", "链路", "变化方向", "可净化态"], "independent_channel": "校星文字或音效", "counterplay_result": "正确校星打开可读通路", "readability_adaptation": "背景星空不可与可交互星点同形同层", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_FRACTURED_LAW_COMMAND_NODE", "source_selector": "TT_SPEC_ENTITY_FRACTURED_LAW_COMMAND_NODE", "display_name": "裂律命令节点", "role_class": "logical_mechanism_entity", "encounter_scope": "凌霄外庭", "semantic_skill_slots": ["令源", "作用区", "净化转换"], "p0_spatial_signals": ["命令来源", "符印区域", "安全转移线"], "independent_channel": "令源音或节点状态文字", "counterplay_result": "净化后把限制转为临时路线", "readability_adaptation": "节点不替代主线完成事实", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_SEVEN_STAR_RULE_ECHO", "source_selector": "TT_SPEC_ENTITY_SEVEN_STAR_RULE_ECHO", "display_name": "七星规则回响", "role_class": "logical_mechanism_entity", "encounter_scope": "七星单人本", "semantic_skill_slots": ["规则投影", "反制窗口", "回正结果"], "p0_spatial_signals": ["本星锚点", "本星轨迹", "本星历史"], "independent_channel": "规则文字或提示音", "counterplay_result": "只回显当前 Boss 的回正", "readability_adaptation": "不是第八名敌人或独立通关门", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_MANSION_ORIENTATION_ECHO", "source_selector": "TT_SPEC_ENTITY_MANSION_ORIENTATION_ECHO", "display_name": "方位语法回响", "role_class": "logical_mechanism_entity", "encounter_scope": "二十八星宿", "semantic_skill_slots": ["方位关系", "路线提示", "净化反馈"], "p0_spatial_signals": ["青龙链路", "朱雀缺口", "白虎猎印", "玄武破壁"], "independent_channel": "方位符号或方向音", "counterplay_result": "方位处理结果留存复盘痕迹", "readability_adaptation": "四方必须异形而非仅换色", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_NIGHTMARE_RESONANCE_SUPPORT", "source_selector": "TT_SPEC_ENTITY_NIGHTMARE_RESONANCE_SUPPORT", "display_name": "贡辉、净宿与圣兽庇护回响", "role_class": "logical_mechanism_entity", "encounter_scope": "四圣噩梦", "semantic_skill_slots": ["共鸣显现", "净宿援护", "核心缺口"], "p0_spatial_signals": ["当前链", "对应星官", "指向圣兽的关系"], "independent_channel": "关系状态文字或确认音", "counterplay_result": "庇护削弱并打开可验证缺口", "readability_adaptation": "不能重算时辰、资格、成员、完成或结算", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null}
+      ]
+    },
+    {
+      "group_id": "TT_SPEC_OBJRES_GROUP_MAINLINE",
+      "source_spec_id": "TT_SPEC_TIANTING_MAINLINE_BOSS_DEEPENING",
+      "source_artifact": "../mainline-boss/tianting-mainline-boss-contract.json",
+      "batch_status": "future_mainline_p0_candidate_only",
+      "cards": [
+        {"reservation_id": "TT_SPEC_OBJRES_MAINLINE_SPLIT_SOUTH_GATE", "source_selector": "TT_SPEC_MAINLINE_BOSS_SPLIT_SOUTH_GATE", "display_name": "裂云南天门：千里眼／顺风耳", "role_class": "mainline_boss_encounter", "encounter_scope": "主线公共教学链", "semantic_skill_slots": ["视觉扇区", "声波环", "交替转场与误令失效"], "p0_spatial_signals": ["扇区边缘", "声波环", "遮蔽位", "回程路线"], "independent_channel": "视觉令与声令分别配来源音或状态文字", "counterplay_result": "遮蔽只消解一种判定并保留交替安全路", "readability_adaptation": "扇区与环绝不合并为同一可读资产", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_MAINLINE_BROKEN_RAINBOW", "source_selector": "TT_SPEC_MAINLINE_BOSS_BROKEN_RAINBOW_FORMATION", "display_name": "天宫道·断虹阵：巨灵神与受控阵眼", "role_class": "mainline_boss_encounter", "encounter_scope": "主线公共教学链", "semantic_skill_slots": ["锁链施压", "阵眼校验", "断链与压力释放"], "p0_spatial_signals": ["守卫至阵眼关系", "真伪节点", "锁链方向"], "independent_channel": "节点状态符号或关系音", "counterplay_result": "正确断链显示真阵眼与安全转化", "readability_adaptation": "不能把关系校正改为清场战", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_MAINLINE_FOUR_GATE", "source_selector": "TT_SPEC_MAINLINE_BOSS_FOUR_GATE_IMBALANCE", "display_name": "天王殿外缘：四门失衡", "role_class": "mainline_boss_encounter", "encounter_scope": "主线公共教学链", "semantic_skill_slots": ["四向命令", "顺序静默", "冲行分流与汇合"], "p0_spatial_signals": ["方向来源", "门态", "受影响路线", "回退线"], "independent_channel": "方向文字或门态音", "counterplay_result": "正确处理安静回响并恢复重聚线", "readability_adaptation": "不能要求四人长期同时守点", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_MAINLINE_OBSERVATORY", "source_selector": "TT_SPEC_MAINLINE_BOSS_CELESTIAL_OBSERVATORY", "display_name": "周天观台：监星使与星历裂缝", "role_class": "mainline_boss_encounter", "encounter_scope": "主线观台节点", "semantic_skill_slots": ["观察历史", "伪轨反照", "稳定链校验"], "p0_spatial_signals": ["星点历史", "链路变化", "方向", "净化状态"], "independent_channel": "校验状态文字或确认音", "counterplay_result": "校星后保留正确链与可通行路线", "readability_adaptation": "观察步骤不能被击杀跳过", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_MAINLINE_LINGXIAO", "source_selector": "TT_SPEC_MAINLINE_BOSS_LINGXIAO_OUTER_COURT", "display_name": "凌霄外庭·裂律观台：监律天将与裂律核心", "role_class": "mainline_boss_encounter", "encounter_scope": "主线终局", "semantic_skill_slots": ["令源识别", "作用区压场", "净化转路与证据复核"], "p0_spatial_signals": ["法尺指向", "文书区域", "核心重组历史", "安全转移线"], "independent_channel": "令源音、节点状态文字或复盘标记", "counterplay_result": "真节点可追溯且净化后出现临时路线", "readability_adaptation": "首领、节点与核心不得混淆或代写完成事实", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null}
+      ]
+    },
+    {
+      "group_id": "TT_SPEC_OBJRES_GROUP_SEVEN_STAR",
+      "source_spec_id": "TT_SPEC_SEVEN_STAR_SOLO_SERIES",
+      "source_artifact": "../tianting-content-expansion-contract.json",
+      "batch_status": "future_p2_only",
+      "cards": [
+        {"reservation_id": "TT_SPEC_OBJRES_TIANSHU", "source_selector": "TT_SPEC_SOLO_TIANSHU", "display_name": "天枢·镇枢天将", "role_class": "solo_boss_unit", "encounter_scope": "天枢单人本", "semantic_skill_slots": ["中轴位移", "方向翻转", "稳定锚回正"], "p0_spatial_signals": ["中轴", "外圈", "箭向", "回归路径"], "independent_channel": "方向音或轴向状态符号", "counterplay_result": "稳定锚抵消错误位移并恢复中心", "readability_adaptation": "单人按顺序完成，不能要求第二玩家", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_TIANXUAN", "source_selector": "TT_SPEC_SOLO_TIANXUAN", "display_name": "天璇·回轮天女", "role_class": "solo_boss_unit", "encounter_scope": "天璇单人本", "semantic_skill_slots": ["内外双轨", "旧轨回放", "回环通路"], "p0_spatial_signals": ["双轨", "旧轨来源", "下一落点"], "independent_channel": "轨道状态符号或回环音", "counterplay_result": "旧轨反转为可穿越回环", "readability_adaptation": "单人按顺序完成，不能要求第二玩家", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_TIANJI", "source_selector": "TT_SPEC_SOLO_TIANJI", "display_name": "天玑·匿曜监星使", "role_class": "solo_boss_unit", "encounter_scope": "天玑单人本", "semantic_skill_slots": ["真伪星标", "反照误导", "暴露窗口"], "p0_spatial_signals": ["真伪差异", "反照来源", "暴露位置"], "independent_channel": "验证状态符号或观察音", "counterplay_result": "真星确认后假象反照首领", "readability_adaptation": "真伪至少在轮廓、动态或反馈之一不同", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_TIANQUAN", "source_selector": "TT_SPEC_SOLO_TIANQUAN", "display_name": "天权·衡律天官", "role_class": "solo_boss_unit", "encounter_scope": "天权单人本", "semantic_skill_slots": ["双侧承压", "裁决趋势", "归位打断"], "p0_spatial_signals": ["双侧趋势", "裁决条", "打断征兆"], "independent_channel": "趋势音或平衡状态文字", "counterplay_result": "正确打断使双侧归位", "readability_adaptation": "单人按顺序完成，不能要求第二玩家", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_YUHENG", "source_selector": "TT_SPEC_SOLO_YUHENG", "display_name": "玉衡·玉衡灵卫", "role_class": "solo_boss_unit", "encounter_scope": "玉衡单人本", "semantic_skill_slots": ["安全位轮替", "灵息回流", "护持转化"], "p0_spatial_signals": ["两类安全位", "回流方向", "过用趋势"], "independent_channel": "回流音或安全位状态符号", "counterplay_result": "正确管理回流转为护持", "readability_adaptation": "单人按顺序完成，不能要求第二玩家", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_KAIYANG", "source_selector": "TT_SPEC_SOLO_KAIYANG", "display_name": "开阳·开阙神将", "role_class": "solo_boss_unit", "encounter_scope": "开阳单人本", "semantic_skill_slots": ["门态切换", "冲锋线", "破障窗口"], "p0_spatial_signals": ["门开闭", "起点", "冲锋线", "可穿越窗口"], "independent_channel": "门态音或开口状态文字", "counterplay_result": "窗口产生可验证穿越机会", "readability_adaptation": "单人按顺序完成，不能要求第二玩家", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_YAOGUANG", "source_selector": "TT_SPEC_SOLO_YAOGUANG", "display_name": "瑶光·曳光天将", "role_class": "solo_boss_unit", "encounter_scope": "瑶光单人本", "semantic_skill_slots": ["轨迹留痕", "残影回溯", "收束截断"], "p0_spatial_signals": ["当前轨", "残影来源", "收束点"], "independent_channel": "历史状态文字或残影音", "counterplay_result": "截断后保留可追溯的回正轨迹", "readability_adaptation": "单人按顺序完成，不能要求第二玩家", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null}
+      ]
+    },
+    {
+      "group_id": "TT_SPEC_OBJRES_GROUP_TWENTY_EIGHT_MANSIONS",
+      "source_spec_id": "TT_SPEC_TWENTY_EIGHT_MANSIONS_RAID",
+      "source_artifact": "../tianting-content-expansion-contract.json",
+      "batch_status": "future_p3_only",
+      "cards": [
+        {"reservation_id": "TT_SPEC_OBJRES_JIA_MU_JIAO", "source_selector": "TT_SPEC_MANSION_JIA_MU_JIAO", "display_name": "角木蛟", "role_class": "mansion_officer_unit", "encounter_scope": "东方青龙七宿", "semantic_skill_slots": ["双端星链", "转向关节", "重定向结果"], "p0_spatial_signals": ["链起点", "关节", "方向"], "independent_channel": "链路状态或方向音", "counterplay_result": "重定向后显示安全关系", "readability_adaptation": "单人改为玩家—场地锚关系", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_KANG_JIN_LONG", "source_selector": "TT_SPEC_MANSION_KANG_JIN_LONG", "display_name": "亢金龙", "role_class": "mansion_officer_unit", "encounter_scope": "东方青龙七宿", "semantic_skill_slots": ["标记列升腾", "延迟龙影", "旧影新影分层"], "p0_spatial_signals": ["标记列", "上升路线", "双影差异"], "independent_channel": "升腾音或层级状态", "counterplay_result": "延迟后仍可辨旧影和新影", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_DI_TU_HE", "source_selector": "TT_SPEC_MANSION_DI_TU_HE", "display_name": "氐土貉", "role_class": "mansion_officer_unit", "encounter_scope": "东方青龙七宿", "semantic_skill_slots": ["阵眼潜遁", "错误站位突袭", "真阵眼确认"], "p0_spatial_signals": ["真阵眼关系线", "错误地脉纹", "可确认节点"], "independent_channel": "阵眼状态或地脉音", "counterplay_result": "真阵眼可追溯并拒绝错误站位", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_FANG_RI_TU", "source_selector": "TT_SPEC_MANSION_FANG_RI_TU", "display_name": "房日兔", "role_class": "mansion_officer_unit", "encounter_scope": "东方青龙七宿", "semantic_skill_slots": ["日轮扇区", "切分轮换", "安全扇确认"], "p0_spatial_signals": ["扇区边界", "轮换方向", "可行区域"], "independent_channel": "日轮音或轮换文字", "counterplay_result": "正确扇区保留可走路线", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_XIN_YUE_HU", "source_selector": "TT_SPEC_MANSION_XIN_YUE_HU", "display_name": "心月狐", "role_class": "mansion_officer_unit", "encounter_scope": "东方青龙七宿", "semantic_skill_slots": ["最近动作复制", "真伪反照", "差异反馈"], "p0_spatial_signals": ["复制来源", "真假差异", "反照关系"], "independent_channel": "复制状态或反照音", "counterplay_result": "确认差异后暴露可处理窗口", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_WEI_HUO_HU", "source_selector": "TT_SPEC_MANSION_WEI_HUO_HU", "display_name": "尾火虎", "role_class": "mansion_officer_unit", "encounter_scope": "东方青龙七宿", "semantic_skill_slots": ["尾扫", "火痕追踪", "路线回正"], "p0_spatial_signals": ["尾扫方向", "火痕路径", "退路"], "independent_channel": "尾扫音或火痕状态", "counterplay_result": "安全路线在火痕中持续可见", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_JI_SHUI_BAO", "source_selector": "TT_SPEC_MANSION_JI_SHUI_BAO", "display_name": "箕水豹", "role_class": "mansion_officer_unit", "encounter_scope": "东方青龙七宿", "semantic_skill_slots": ["扇形水压", "星链重排", "推拉改道"], "p0_spatial_signals": ["推拉向量", "重排前后链路", "导流方向"], "independent_channel": "水压音或箭向状态", "counterplay_result": "链路化为可用导流", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_JING_MU_AN", "source_selector": "TT_SPEC_MANSION_JING_MU_AN", "display_name": "井木犴", "role_class": "mansion_officer_unit", "encounter_scope": "南方朱雀七宿", "semantic_skill_slots": ["离群标记", "飞扑", "火井牵引"], "p0_spatial_signals": ["标记归属", "飞扑轨迹", "锚点方向"], "independent_channel": "点名音或牵引状态", "counterplay_result": "牵引转为路线或锚点处理", "readability_adaptation": "单人不得硬要求另一玩家接应", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_GUI_JIN_YANG", "source_selector": "TT_SPEC_MANSION_GUI_JIN_YANG", "display_name": "鬼金羊", "role_class": "mansion_officer_unit", "encounter_scope": "南方朱雀七宿", "semantic_skill_slots": ["金铃回响", "传递次序", "截断"], "p0_spatial_signals": ["起点", "传递链", "待截断段"], "independent_channel": "铃音与链状态", "counterplay_result": "截断点留下明确反馈", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_LIU_TU_ZHANG", "source_selector": "TT_SPEC_MANSION_LIU_TU_ZHANG", "display_name": "柳土獐", "role_class": "mansion_officer_unit", "encounter_scope": "南方朱雀七宿", "semantic_skill_slots": ["土枝交叉", "封路", "出口保留"], "p0_spatial_signals": ["新旧通路", "交叉边界", "可控出口"], "independent_channel": "地面状态或封路音", "counterplay_result": "出口持续可辨", "readability_adaptation": "不产生无预警死路", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_XING_RI_MA", "source_selector": "TT_SPEC_MANSION_XING_RI_MA", "display_name": "星日马", "role_class": "mansion_officer_unit", "encounter_scope": "南方朱雀七宿", "semantic_skill_slots": ["日轨冲锋", "格位点燃", "趋势回避"], "p0_spatial_signals": ["冲锋轨", "点燃趋势", "可走格位"], "independent_channel": "冲锋音或格位状态", "counterplay_result": "趋势清楚地转出安全格位", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_ZHANG_YUE_LU", "source_selector": "TT_SPEC_MANSION_ZHANG_YUE_LU", "display_name": "张月鹿", "role_class": "mansion_officer_unit", "encounter_scope": "南方朱雀七宿", "semantic_skill_slots": ["月弦远近", "关系交换", "空间代理"], "p0_spatial_signals": ["远近关系", "交换方向", "代理位置"], "independent_channel": "月弦音或关系状态", "counterplay_result": "交换后显示正确空间关系", "readability_adaptation": "单人使用空间代理或串行交互", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_YI_HUO_SHE", "source_selector": "TT_SPEC_MANSION_YI_HUO_SHE", "display_name": "翼火蛇", "role_class": "mansion_officer_unit", "encounter_scope": "南方朱雀七宿", "semantic_skill_slots": ["火环收束", "唯一缺口", "缺口通过"], "p0_spatial_signals": ["火环", "缺口", "收束方向"], "independent_channel": "收束音或缺口状态", "counterplay_result": "缺口持续可见并可验证通过", "readability_adaptation": "不能只靠颜色标注缺口", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_ZHEN_SHUI_YIN", "source_selector": "TT_SPEC_MANSION_ZHEN_SHUI_YIN", "display_name": "轸水蚓", "role_class": "mansion_officer_unit", "encounter_scope": "南方朱雀七宿", "semantic_skill_slots": ["余烬潜行", "水脉爆发", "出口净化"], "p0_spatial_signals": ["下潜来源", "水脉出口", "净化反馈"], "independent_channel": "下潜音或出口状态", "counterplay_result": "出口可验证地转为安全处理点", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_KUI_MU_LANG", "source_selector": "TT_SPEC_MANSION_KUI_MU_LANG", "display_name": "奎木狼", "role_class": "mansion_officer_unit", "encounter_scope": "西方白虎七宿", "semantic_skill_slots": ["追猎判定", "月影落点", "追猎回避"], "p0_spatial_signals": ["猎印", "落点", "退路"], "independent_channel": "猎印音或归属状态", "counterplay_result": "追猎后留下可复盘落点", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_LOU_JIN_GOU", "source_selector": "TT_SPEC_MANSION_LOU_JIN_GOU", "display_name": "娄金狗", "role_class": "mansion_officer_unit", "encounter_scope": "西方白虎七宿", "semantic_skill_slots": ["猎印", "嗅迹", "拦截线"], "p0_spatial_signals": ["标记归属", "嗅迹", "不可硬闯线"], "independent_channel": "嗅迹音或拦截状态", "counterplay_result": "可走替代线保持可见", "readability_adaptation": "不产生无预警封路", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_WEI_TU_ZHI", "source_selector": "TT_SPEC_MANSION_WEI_TU_ZHI", "display_name": "胃土雉", "role_class": "mansion_officer_unit", "encounter_scope": "西方白虎七宿", "semantic_skill_slots": ["地表啄裂", "遮蔽区分", "困住回正"], "p0_spatial_signals": ["土翎边界", "遮蔽与困住差异", "出口"], "independent_channel": "地裂音或地表状态", "counterplay_result": "遮蔽与困住结果可区分", "readability_adaptation": "别名只作 alias，不派生第二星官", "alias_policy": {"canonical_full_name": "胃土雉", "aliases": ["胃土鸡"]}, "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_MAO_RI_JI", "source_selector": "TT_SPEC_MANSION_MAO_RI_JI", "display_name": "昴日鸡", "role_class": "mansion_officer_unit", "encounter_scope": "西方白虎七宿", "semantic_skill_slots": ["鸣叫扩散", "明暗暴露", "观察回避"], "p0_spatial_signals": ["鸣叫来源", "扩散边界", "明暗状态"], "independent_channel": "鸣叫音与状态符号", "counterplay_result": "暴露条件清楚可复盘", "readability_adaptation": "明暗不能只用颜色表达", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_BI_YUE_WU", "source_selector": "TT_SPEC_MANSION_BI_YUE_WU", "display_name": "毕月乌", "role_class": "mansion_officer_unit", "encounter_scope": "西方白虎七宿", "semantic_skill_slots": ["月羽双端", "收紧方向", "破网窗口"], "p0_spatial_signals": ["双端", "收紧箭向", "破网点"], "independent_channel": "月羽音或窗口状态", "counterplay_result": "破网点变为明确通路", "readability_adaptation": "单人可以依次松解，不要求同步撕网", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_ZI_HUO_HOU", "source_selector": "TT_SPEC_MANSION_ZI_HUO_HOU", "display_name": "觜火猴", "role_class": "mansion_officer_unit", "encounter_scope": "西方白虎七宿", "semantic_skill_slots": ["单点连击", "次序提示", "错位连锁"], "p0_spatial_signals": ["当前目标", "次序", "连锁方向"], "independent_channel": "连击音或次序状态", "counterplay_result": "正确次序解除连锁", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_SHEN_SHUI_YUAN", "source_selector": "TT_SPEC_MANSION_SHEN_SHUI_YUAN", "display_name": "参水猿", "role_class": "mansion_officer_unit", "encounter_scope": "西方白虎七宿", "semantic_skill_slots": ["回卷水瀑", "追猎路线", "路线改写"], "p0_spatial_signals": ["水瀑来源", "回卷方向", "改写路线"], "independent_channel": "水瀑音或路线状态", "counterplay_result": "改写后显示新的安全路线", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_DOU_MU_XIE", "source_selector": "TT_SPEC_MANSION_DOU_MU_XIE", "display_name": "斗木獬", "role_class": "mansion_officer_unit", "encounter_scope": "北方玄武七宿", "semantic_skill_slots": ["双侧承压", "独角指向", "裁衡回正"], "p0_spatial_signals": ["双侧趋势", "独角方向", "裁衡标记"], "independent_channel": "裁衡音或趋势状态", "counterplay_result": "双侧关系可回正", "readability_adaptation": "单人可串行处理，1–4 人可并行", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_NIU_JIN_NIU", "source_selector": "TT_SPEC_MANSION_NIU_JIN_NIU", "display_name": "牛金牛", "role_class": "mansion_officer_unit", "encounter_scope": "北方玄武七宿", "semantic_skill_slots": ["冲撞轨迹", "镇桩阻塞", "边界绕行"], "p0_spatial_signals": ["冲撞线", "镇桩边界", "退路"], "independent_channel": "冲撞音或阻塞状态", "counterplay_result": "绕行路线保持可见", "readability_adaptation": "不能制造无预警死路", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_NV_TU_FU", "source_selector": "TT_SPEC_MANSION_NV_TU_FU", "display_name": "女土蝠", "role_class": "mansion_officer_unit", "encounter_scope": "北方玄武七宿", "semantic_skill_slots": ["动作回声", "来源回溯", "纠正结果"], "p0_spatial_signals": ["回声来源", "触发动作", "纠正方向"], "independent_channel": "回声音与状态文本", "counterplay_result": "纠正后保留复盘痕迹", "readability_adaptation": "不能以隐藏阈值处罚玩家", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_XU_RI_SHU", "source_selector": "TT_SPEC_MANSION_XU_RI_SHU", "display_name": "虚日鼠", "role_class": "mansion_officer_unit", "encounter_scope": "北方玄武七宿", "semantic_skill_slots": ["吞没入口", "吐回出口", "成对关系"], "p0_spatial_signals": ["入口", "出口", "配对连线"], "independent_channel": "入口出口音或配对状态", "counterplay_result": "出口可验证且可回溯", "readability_adaptation": "不强迫多人同时站位", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_WEI_YUE_YAN", "source_selector": "TT_SPEC_MANSION_WEI_YUE_YAN", "display_name": "危月燕", "role_class": "mansion_officer_unit", "encounter_scope": "北方玄武七宿", "semantic_skill_slots": ["月相延迟", "折返路径", "俯冲落点"], "p0_spatial_signals": ["月相", "折返弧线", "落点"], "independent_channel": "月相音或延迟状态", "counterplay_result": "延迟折返路径持续可读", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_SHI_HUO_ZHU", "source_selector": "TT_SPEC_MANSION_SHI_HUO_ZHU", "display_name": "室火猪", "role_class": "mansion_officer_unit", "encounter_scope": "北方玄武七宿", "semantic_skill_slots": ["火甲城垒", "开墙点", "推进方向"], "p0_spatial_signals": ["城垒墙体", "开墙点", "守点面", "退路"], "independent_channel": "破壁音或开墙状态", "counterplay_result": "开墙点转为可验证路线", "readability_adaptation": "单人可串行处理", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_BI_SHUI_YU", "source_selector": "TT_SPEC_MANSION_BI_SHUI_YU", "display_name": "壁水貐", "role_class": "mansion_officer_unit", "encounter_scope": "北方玄武七宿", "semantic_skill_slots": ["水壁边缘", "反射角度", "回廊改写"], "p0_spatial_signals": ["水壁", "反射弧线", "改写路线"], "independent_channel": "水壁音或反射状态", "counterplay_result": "正确角度产生可走回廊", "readability_adaptation": "1–4 人可并行但不强制", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null}
+      ]
+    },
+    {
+      "group_id": "TT_SPEC_OBJRES_GROUP_FOUR_SACRED",
+      "source_spec_id": "TT_SPEC_MANSION_NIGHTMARE_MODE",
+      "source_artifact": "../tianting-content-expansion-contract.json",
+      "batch_status": "future_p3_only",
+      "cards": [
+        {"reservation_id": "TT_SPEC_OBJRES_AZURE_DRAGON", "source_selector": "TT_SPEC_RAID_AZURE_DRAGON", "display_name": "青龙", "role_class": "nightmare_sacred_boss_unit", "encounter_scope": "东方青龙噩梦终局", "semantic_skill_slots": ["龙轨压场", "风潮推拉", "星链改道"], "p0_spatial_signals": ["龙轨", "推拉向量", "导流路"], "independent_channel": "龙轨音或链路状态", "counterplay_result": "净宿后错误龙轨离场，星链化为导流", "readability_adaptation": "复用青龙七宿档案并叠加共鸣层，不复制强化星官", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_VERMILION_BIRD", "source_selector": "TT_SPEC_RAID_VERMILION_BIRD", "display_name": "朱雀", "role_class": "nightmare_sacred_boss_unit", "encounter_scope": "南方朱雀噩梦终局", "semantic_skill_slots": ["火种过热", "余烬复燃", "火环缺口"], "p0_spatial_signals": ["危险火焰", "可净化余烬", "异形护持区"], "independent_channel": "火种音或余烬状态", "counterplay_result": "净宿余烬转为短暂护持或跨火场机会", "readability_adaptation": "危险、净化与护持不可只换颜色", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_WHITE_TIGER", "source_selector": "TT_SPEC_RAID_WHITE_TIGER", "display_name": "白虎", "role_class": "nightmare_sacred_boss_unit", "encounter_scope": "西方白虎噩梦终局", "semantic_skill_slots": ["猎印", "冲刺", "反猎窗口"], "p0_spatial_signals": ["点名归属", "冲刺线", "接应区", "反猎方向"], "independent_channel": "猎印音或窗口状态", "counterplay_result": "净宿轨迹转成可见破绽方向", "readability_adaptation": "接应有单人空间代理或串行版本", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null},
+        {"reservation_id": "TT_SPEC_OBJRES_BLACK_TORTOISE", "source_selector": "TT_SPEC_RAID_BLACK_TORTOISE", "display_name": "玄武", "role_class": "nightmare_sacred_boss_unit", "encounter_scope": "北方玄武噩梦终局", "semantic_skill_slots": ["甲壁推进", "冥水切割", "护壳轮换与破壁"], "p0_spatial_signals": ["墙体", "冥水", "破壁点", "退路"], "independent_channel": "破壁音或护壳状态", "counterplay_result": "净宿打开可验证破壁口且不封死退路", "readability_adaptation": "复用玄武七宿档案并叠加共鸣层，不复制强化星官", "future_binding_profile_ref": "TT_SPEC_OBJRES_ALL_NULL_BINDINGS", "runtime_key": null}
+      ]
+    }
+  ],
+  "acceptance": [
+    {"id": "TT-OBJRES-ACC-001", "rule": "包保持离线字段预占，plugin_generation 为 false，且不出现 normalized-design 的 assets 或 mode。"},
+    {"id": "TT-OBJRES-ACC-002", "rule": "P0 七道门完整复制且当前满足集合为空；真实对象资源盘点不授权写入。"},
+    {"id": "TT-OBJRES-ACC-003", "rule": "对象、资源、绝对字段和运行时绑定预占全部为 null。"},
+    {"id": "TT-OBJRES-ACC-004", "rule": "十一类敌人生态身份完整覆盖，机制实体不被承诺为真实对象。"},
+    {"id": "TT-OBJRES-ACC-005", "rule": "五组主线遭遇各保留三语义槽、P0、第二通道与反制。"},
+    {"id": "TT-OBJRES-ACC-006", "rule": "七星七卡均保留单人顺序反制，不能要求第二玩家。"},
+    {"id": "TT-OBJRES-ACC-007", "rule": "二十八星官全名唯一，方位覆盖完整，异文只以别名存在。"},
+    {"id": "TT-OBJRES-ACC-008", "rule": "四圣复用本方位星官逻辑档案并仅消费未来权威事实，不产生会话、资格、清理或经济效果。"}
+  ],
+  "hard_boundaries": {
+    "authority_and_economy": {
+      "authority_state_input": "future_authority_confirmed_fact_read_only",
+      "progression_write": null,
+      "session_adjudication": null,
+      "rotation_calculation": null,
+      "qualification_decision": null,
+      "cleanup_decision": null,
+      "reward": null,
+      "receipt": null,
+      "economy_input": null
+    },
+    "current_outputs": {
+      "y3_object_write": null,
+      "plugin_script": null,
+      "lua_write": null,
+      "map_write": null,
+      "ui_write": null,
+      "asset_write": null,
+      "object_config_design": null
+    },
+    "protected_identity_rules": [
+      "主线首领、七星首领、二十八星官和四圣不得降格为小怪、精英或可击杀替代体。",
+      "关系实体、阵眼、裂缝、节点和回响不是独立敌人、掉落容器或胜利条件。",
+      "噩梦复用同方位七宿的逻辑档案，并新增共鸣表现层；不得生成另一套强化七宿。",
+      "同一几何形状可以共用制作管线，不能因为换色而合并不同的可读语义。"
+    ]
+  }
+}

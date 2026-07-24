@@ -1,0 +1,519 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_ENEMY_ECOLOGY",
+    "display_name": "天庭敌人生态与精英单位规格",
+    "status": "offline_design_requirements_only",
+    "production_gate": "closed",
+    "runtimeKey": null,
+    "objectId": null,
+    "unitId": null,
+    "resourceId": null
+  },
+  "scope": {
+    "included": [
+      "主线公共路线的受控天兵、四方门卫机关、失控云兽、泛称监星使与机制实体",
+      "七星单人试炼的非人格校星规则回响",
+      "二十八星宿普通团本的方位语法回响",
+      "四圣噩梦的贡辉、净宿与圣兽庇护可读支援状态",
+      "职责、预警、反制、失败、交互、1至4人适配、首领关系与场地要求"
+    ],
+    "excluded": [
+      "通天塔层、塔Boss、塔地图、塔经济、赛季和内容抽取",
+      "千里眼、顺风耳、巨灵神、监律天将、七星首领、二十八星官和四圣兽的首领规格",
+      "Y3对象、物编插件、Y3 JSON、Lua、地图、UI、网络、存档和实际会话实现",
+      "进度、资格、成员快照、轮换、清理、奖励、掉落、材料、货币、收据和结算"
+    ]
+  },
+  "source_contracts": [
+    {
+      "path": "../mainline-route.md",
+      "role": "公共路线中的受控天兵、断虹阵眼、四门机关、云兽、监星使、星历裂缝与裂律观台定位",
+      "runtimeKey": null
+    },
+    {
+      "path": "../combat/天庭战斗机制与可读性规格.md",
+      "role": "双通道预警、反制、失败、1至4人、场地和权威边界",
+      "runtimeKey": null
+    },
+    {
+      "path": "../instances/七星单人本规格.md",
+      "role": "七星单人校星骨架及七种空间规则",
+      "runtimeKey": null
+    },
+    {
+      "path": "../instances/二十八星宿团队本规格.md",
+      "role": "四方七宿、普通四段联动、噩梦贡辉/净宿与四圣关系",
+      "runtimeKey": null
+    },
+    {
+      "path": "../object-blueprint/天庭物编美术与特效需求蓝图.md",
+      "role": "P0至P2、L0至L4、可读性和表现不遮挡边界",
+      "runtimeKey": null
+    },
+    {
+      "path": "../combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+      "role": "唯一的相对耐久、压力、节拍与P0窗口来源；本生态合同自身的运行时数值字段继续为空。",
+      "runtimeKey": null
+    }
+  ],
+  "runtime_binding": {
+    "runtimeKey": null,
+    "objectId": null,
+    "unitId": null,
+    "abilityIds": null,
+    "buffIds": null,
+    "projectileIds": null,
+    "resourceIds": null,
+    "mapId": null,
+    "uiControlId": null,
+    "luaModule": null,
+    "numericValues": null,
+    "waveDefinition": null,
+    "spawnDefinition": null,
+    "dropDefinition": null,
+    "rewardDefinition": null,
+    "economyReceipt": null
+  },
+  "design_invariants": [
+    "天庭生态以辨认和纠正错误秩序为核心，不把被控制的秩序执行者默认叙述为纯粹敌对目标。",
+    "关键压力必须在生效前提供空间或形状信号，并提供声音、文字、状态符号或UI中的独立辅助；颜色不是唯一通道。",
+    "正确反制必须有可见结果；失败必须可复盘，不以无提示秒杀、隐藏规则或纯数值碾压表达。",
+    "七星始终可由单人顺序处理；主线终局和星宿在1至4人边界内不依赖第五人。",
+    "生态实体只消费既有权威已确认状态的表现结果，不写入进度、资格、轮换、成员、清理、奖励或收据。",
+    "二十八星官和所有既有首领保持独立规格所有权，不能被本包降格为小怪、精英或可替代机制实体。",
+    "本合同只引用独立数值裁决的无量纲系数；不得把它们反写为对象字段、秒数、波次、会话或经济结果。"
+  ],
+  "taxonomy": [
+    {
+      "spec_id": "TT_SPEC_ENEMY_CONTROLLED_CELESTIAL_SOLDIER",
+      "kind": "combat_and_rescue_unit_concept",
+      "tier": "common",
+      "design_identity": "受控天兵",
+      "contexts": ["天宫道·断虹阵", "主线公共教学"],
+      "combat_duty": "使玩家读出压力来自错误阵眼和命令关系，而不是把天兵作为天然敌对的清场目标。",
+      "warning": {
+        "spatial": "阵眼关系线、错误命令来源和受控状态先于压力可读。",
+        "independent_channel": "状态符号、声音或UI提示之一。"
+      },
+      "counterplay": "校验真阵眼、切断错误关系、净化/救援并保留路线。",
+      "failure_result": "只清理受控天兵而不处理阵眼会让错误秩序继续召回或阻断路线。",
+      "allowed_interactions": ["观察关系", "绕行", "校验", "净化", "救援", "短暂分流"],
+      "forbidden_interactions": ["击杀作为唯一通关条件", "经验或掉落容器", "隐藏阵眼", "以持续输出跳过拆阵"],
+      "one_to_four_adaptation": "单人可按识别、拆阵、救援顺序处理；多人可并行观察和保护路线，但职责可交接。",
+      "boss_relationship": "只服务巨灵神守阵的既有叙事与锁链可读性，不复制巨灵神动作、阶段或胜负条件。",
+      "arena_requirements": ["阵眼关系阅读面", "可回退观察位", "净化/救援可达区", "连续撤离通路"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ELITE_FOUR_GATE_GUARD_MECHANISM",
+      "kind": "elite_mechanism_concept",
+      "tier": "elite",
+      "design_identity": "四方门卫机关",
+      "contexts": ["天王殿外缘·四门失衡"],
+      "combat_duty": "把互相否定的四方守备信号表达为方向、门态、相位和路线压力。",
+      "warning": {
+        "spatial": "来源朝向、当前门态、受影响路线和冲突关系在切换前可读。",
+        "independent_channel": "声音、文字、状态符号或UI提示之一。"
+      },
+      "counterplay": "选择开关顺序、保留安全通路、分流观察或等待正确门态。",
+      "failure_result": "将四处机关误作互不相关目标会让路线互相封锁，复盘能指出冲突门态。",
+      "allowed_interactions": ["读取朝向", "观察状态", "顺序切换", "回撤", "交叉确认"],
+      "forbidden_interactions": ["多处长期同时占据", "仅颜色表达", "无提示传送", "实际地图门或会话入口"],
+      "one_to_four_adaptation": "单人有先后处理和重复验证路线；两至四人可并行读图和接力，但不需要第五人。",
+      "boss_relationship": "是四象轮值失衡的公共预演，不是四圣兽或方位星官，也不决定轮换。",
+      "arena_requirements": ["多方状态可比较", "至少一条可回退通路", "机关状态与背景分离"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ELITE_UNCONTROLLED_CLOUD_BEAST",
+      "kind": "mobile_elite_concept",
+      "tier": "elite",
+      "design_identity": "失控云兽",
+      "contexts": ["天王殿外缘·四门失衡"],
+      "combat_duty": "制造可预判的机动路线压力，迫使玩家保留通路并处理分流。",
+      "warning": {
+        "spatial": "移动意图、扑向/驱离方向及受影响路线在发生前有轮廓或轨迹。",
+        "independent_channel": "声音、状态符号或UI提示之一。"
+      },
+      "counterplay": "引导经过空区、借门态错开、短暂控制占用路线，或利用其移动暴露错误守备信号。",
+      "failure_result": "未保留路径或错误引导会压缩回撤空间，但不表现为无预警追尾。",
+      "allowed_interactions": ["预判", "引导", "绕行", "接应", "与机关分开处理"],
+      "forbidden_interactions": ["不可躲避高速点名", "无边界追踪", "掉落容器", "四圣兽换皮"],
+      "one_to_four_adaptation": "单人靠路线和时序完成；多人可牵引与处理机关分工，牵引者始终留有脱离与交接路径。",
+      "boss_relationship": "仅连接四门失衡公共教学，不携带青龙、朱雀、白虎或玄武的首领结算语义。",
+      "arena_requirements": ["环绕路径", "会合区", "观察区", "安全回退区"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ELITE_GENERIC_STAR_OBSERVER",
+      "kind": "observation_and_calibration_elite_concept",
+      "tier": "elite",
+      "design_identity": "泛称监星使",
+      "contexts": ["朝会殿·周天观台"],
+      "combat_duty": "教授观察星点变化、辨认真伪链路和短暂校准，解释七星与二十八宿被卷入。",
+      "warning": {
+        "spatial": "观察对象、链路变化、可校验状态和校验结果具有连续历史。",
+        "independent_channel": "状态符号、文字或声音之一。"
+      },
+      "counterplay": "先观察变化再校验/净化；错误星图保留时能重新读出差异与修正方向。",
+      "failure_result": "过早处理错误链路会保留错误星轨或错失短暂净化机会。",
+      "allowed_interactions": ["观察", "验证", "标记变化", "短暂净化", "交叉确认", "重复验证"],
+      "forbidden_interactions": ["与天玑·匿曜监星使共用首领身份", "真伪仅颜色区分", "自动替玩家判定星图"],
+      "one_to_four_adaptation": "单人可按顺序反复验证；多人共享可见结果，任何成员不独占隐藏信息。",
+      "boss_relationship": "仅为主线路线中的泛称编制，绝不复用天玑首领的真伪星标反照动作或通关条件。",
+      "arena_requirements": ["短暂观察位", "连续星图历史", "可达校验面", "不被装饰遮蔽的链路"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ENTITY_PATROL_SIGNAL_ECHO",
+      "kind": "non_personified_mechanism_entity",
+      "tier": "mechanism",
+      "design_identity": "巡天信号回响",
+      "contexts": ["裂云南天门"],
+      "combat_duty": "以视线扇区、声波环与来源冲突表达错误巡天命令。",
+      "warning": {
+        "spatial": "扇区、环形传播、来源方向与遮蔽关系形态不同。",
+        "independent_channel": "声音、文字或状态提示之一。"
+      },
+      "counterplay": "利用遮蔽和交替安全路线证明两道命令冲突。",
+      "failure_result": "未区分视线与声波会走入错误安全判断。",
+      "allowed_interactions": ["读来源", "遮蔽", "绕行", "等待交替"],
+      "forbidden_interactions": ["作为千里眼/顺风耳本体", "独立掉落敌人", "只靠颜色表达"],
+      "one_to_four_adaptation": "单人顺序处理，多人相互提示；不提供首领替代伤害或阶段。",
+      "boss_relationship": "只表现千里眼/顺风耳既有压力的环境关系，不定义其实际动作。",
+      "arena_requirements": ["遮蔽位", "观察位", "交替安全路线", "退路"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ENTITY_BROKEN_RAINBOW_FORMATION_EYE",
+      "kind": "non_personified_mechanism_entity",
+      "tier": "mechanism",
+      "design_identity": "断虹阵眼",
+      "contexts": ["天宫道·断虹阵"],
+      "combat_duty": "标出错误阵势来源与受控天兵压力的关系。",
+      "warning": {
+        "spatial": "真伪差异、地脉/链路关系和错误召回压力先于处理可读。",
+        "independent_channel": "状态符号、声音或UI提示之一。"
+      },
+      "counterplay": "先验证真阵眼，再拆阵/救援并断开错误关系。",
+      "failure_result": "先清场会让错误阵势持续重写战场。",
+      "allowed_interactions": ["校验", "净化", "断开关系", "保护路线"],
+      "forbidden_interactions": ["隐藏真伪", "以纯输出跳过", "实际机关ID绑定"],
+      "one_to_four_adaptation": "单人有顺序解；多人可分工读线和保护路线。",
+      "boss_relationship": "只服务巨灵神守阵叙事，不替代巨灵神。",
+      "arena_requirements": ["关系线", "真伪差异", "可接近区", "回退通路"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ENTITY_STAR_CALENDAR_RIFT",
+      "kind": "non_personified_mechanism_entity",
+      "tier": "mechanism",
+      "design_identity": "星历裂缝与残缺星图",
+      "contexts": ["朝会殿·周天观台"],
+      "combat_duty": "展示星点、链路与变化方向，为校星和星宿预告提供可读对象。",
+      "warning": {
+        "spatial": "可净化链路、错误链路与变化方向具有连续历史。",
+        "independent_channel": "状态符号、文字或声音之一。"
+      },
+      "counterplay": "观察后校星，正确结果打开可见预告或通路。",
+      "failure_result": "过早净化错误链路会保留错误星轨。",
+      "allowed_interactions": ["观察", "校验", "短暂净化", "交叉确认"],
+      "forbidden_interactions": ["实际入口", "实例创建器", "资格来源", "奖励来源"],
+      "one_to_four_adaptation": "单人可重复验证；多人可交叉确认，不创建会话或轮换。",
+      "boss_relationship": "只预告七星和星宿语法，不替代其首领、星官或四圣兽。",
+      "arena_requirements": ["连续阅读历史", "观察位", "可达交互面", "背景和交互分层"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ENTITY_FRACTURED_LAW_COMMAND_NODE",
+      "kind": "non_personified_mechanism_entity",
+      "tier": "mechanism",
+      "design_identity": "裂律命令节点",
+      "contexts": ["凌霄外庭·裂律观台"],
+      "combat_duty": "呈现旧令来源、作用区、真伪关系与可净化状态，支持主线终局读图。",
+      "warning": {
+        "spatial": "命令来源、当前作用区、真伪关系与安全转移区同时可读。",
+        "independent_channel": "状态符号、声音或UI提示之一。"
+      },
+      "counterplay": "保护真节点、净化错误节点并维持通路。",
+      "failure_result": "误判节点会使错误规则接管或压缩退路。",
+      "allowed_interactions": ["校验", "净化", "保留", "放弃", "通路维护"],
+      "forbidden_interactions": ["替代监律天将或裂律核心", "直接写主线完成", "表现页面回滚完成"],
+      "one_to_four_adaptation": "单人可依次校验和转移；多人可并行，但不要求同步长期站桩。",
+      "boss_relationship": "仅支持监律天将和裂律核心的既有终局关系，所有权威结果仍归既有会话。",
+      "arena_requirements": ["中央可读区", "节点与首领压力同屏", "转移线", "连续证据历史"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ENTITY_SEVEN_STAR_RULE_ECHO",
+      "kind": "solo_rule_echo",
+      "tier": "support_mechanism",
+      "design_identity": "七星校星规则回响",
+      "contexts": ["天枢", "天璇", "天玑", "天权", "玉衡", "开阳", "瑶光"],
+      "combat_duty": "将既有首领的空间规则、身份动作和反转收束表达为可读场地关系。",
+      "warning": {
+        "spatial": "中轴/环轨、真伪星标、双侧平衡、安全位、门态或轨迹历史在压力前可读。",
+        "independent_channel": "状态符号、声音或UI提示之一。"
+      },
+      "counterplay": "按每颗星既有规则完成定轴、回环、验证、归位、调和、开阙或截断回溯。",
+      "failure_result": "未识别该星规则会导致本星轨校正未完成，且能复述漏读的来源或收束点。",
+      "allowed_interactions": ["读取规则", "顺序处理", "重复确认", "自我制造反制窗口"],
+      "forbidden_interactions": ["第八个首领", "额外怪潮", "双人硬依赖", "挑战次数或掉落定义"],
+      "one_to_four_adaptation": "仅单人会话：任何协作概念改写为顺序、位置转换、重复验证或自我回收。",
+      "boss_relationship": "只帮助七星首领身份动作可读，绝不定义其具体单位、能力、数值或结算。",
+      "arena_requirements": ["每星对应的规则阅读面", "观察位", "可回退路径", "反制结果可见"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ENTITY_MANSION_ORIENTATION_ECHO",
+      "kind": "raid_rule_echo",
+      "tier": "support_mechanism",
+      "design_identity": "方位语法回响",
+      "contexts": ["二十八星宿·普通"],
+      "combat_duty": "强化青龙连线/导流、朱雀火种/缺口、白虎猎印/接应、玄武壁障/开口的共同语法。",
+      "warning": {
+        "spatial": "连线、火场、猎印、壁障及其目标/方向/开口关系可读。",
+        "independent_channel": "声音、文字、状态符号或UI提示之一。"
+      },
+      "counterplay": "按方位语法改线、净化、接应、反猎、开墙或利用反射，令路线和状态可见地转化。",
+      "failure_result": "错误顺序、目标、关系或退路会保留该方位压力，且可指出哪条语法未被处理。",
+      "allowed_interactions": ["路线重排", "净化", "接应", "轮换", "交叉确认", "利用可见开口"],
+      "forbidden_interactions": ["命名为星官", "可击杀替代星官", "客户端计算轮换", "固定职业唯一解"],
+      "one_to_four_adaptation": "一人有顺序/可携带/可重复验证路径；二至四人允许接应、补位、双组并行和交叉确认。",
+      "boss_relationship": "只复用方位共同语法；所有二十八星官仍由既有普通四段结构和签名动作规格拥有。",
+      "arena_requirements": ["路线可重排", "火场可辨缺口", "猎印接应区", "壁障开口与退路"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_ENTITY_NIGHTMARE_RESONANCE_SUPPORT",
+      "kind": "nightmare_support_state",
+      "tier": "support_mechanism",
+      "design_identity": "贡辉、净宿与圣兽庇护回响",
+      "contexts": ["二十八星宿·噩梦"],
+      "combat_duty": "使七宿—四圣双向关系、当前激活链和净宿援护可被读出与反制。",
+      "warning": {
+        "spatial": "当前激活链、对应星官、贡辉方向、援护范围和核心缺口可读。",
+        "independent_channel": "状态符号、声音、文字或UI提示之一。"
+      },
+      "counterplay": "完成既有星官签名反制，使贡辉转净宿并将援护转化为导流、庇护、反猎或破壁窗口。",
+      "failure_result": "未处理关系链会保留圣兽庇护和方位压力，且能指出当前未净宿链。",
+      "allowed_interactions": ["识别激活链", "完成签名反制", "利用净宿援护", "保留已建立通路"],
+      "forbidden_interactions": ["新增第九敌人", "状态图标作为唯一交互", "重算方位", "签发资格、消耗钥匙或生成结算输入"],
+      "one_to_four_adaptation": "一人保留顺序解；二至四人可并行但所有处理结果可见、可接应且不依赖离场成员。",
+      "boss_relationship": "不替代任何星官或四圣兽；只将其既有贡辉、净宿和庇护关系转为可读状态。",
+      "arena_requirements": ["星链和援护关系可读", "导流/庇护/反猎/破壁窗口可见", "通路与背景分离"],
+      "runtime": {
+        "runtimeKey": null,
+        "objectId": null,
+        "unitId": null,
+        "abilityIds": null,
+        "buffIds": null,
+        "resourceIds": null,
+        "numericValues": null,
+        "waveDefinition": null,
+        "dropDefinition": null
+      }
+    }
+  ],
+  "seven_star_rule_echoes": [
+    {"trial": "天枢", "grammar": "中轴、稳定锚、方向翻转、回归路径", "counterplay": "借稳定锚校回方位", "forbidden": "新增首领或不可读强制位移"},
+    {"trial": "天璇", "grammar": "内外双轨、旧轨来源、下一落点、回环", "counterplay": "区分旧轨复制并选择切换/诱导", "forbidden": "两轨仅靠颜色或额外追兵"},
+    {"trial": "天玑", "grammar": "真伪星标、观察位、反照", "counterplay": "验证真星后让假象反照首领", "forbidden": "泛称监星使替代首领或额外Boss"},
+    {"trial": "天权", "grammar": "双侧承压、裁决条、归位", "counterplay": "顺序处理并在正确窗口打断", "forbidden": "单人长期同时占据两侧"},
+    {"trial": "玉衡", "grammar": "两类安全位、灵息回流、护持转化", "counterplay": "交替利用安全位", "forbidden": "资源数值或职业专属唯一解"},
+    {"trial": "开阳", "grammar": "门态、冲锋线、通过窗口、回退区", "counterplay": "读门态并穿越正确窗口", "forbidden": "实际地图门、无提示传送或死角强迫"},
+    {"trial": "瑶光", "grammar": "当前轨迹、残影来源、历史路径、收束点", "counterplay": "追真实残影并截断回溯", "forbidden": "不可区分残影或无预警二次命中"}
+  ],
+  "mansion_orientation_echoes": [
+    {"quadrant": "青龙", "grammar": "连线、延迟、真阵眼、风潮、路线改道", "result": "错误龙脉被切断，连线转为可通过/导流路线"},
+    {"quadrant": "朱雀", "grammar": "火种、回响、余烬、水脉、火环缺口", "result": "火场停止复燃，余烬转为安全/净化条件"},
+    {"quadrant": "白虎", "grammar": "猎印、拦截线、明暗、破网、连锁顺序", "result": "猎印卸除或反向形成破绽，围猎路线打开"},
+    {"quadrant": "玄武", "grammar": "镇桩、回声、虚穴、甲壁开口、反射", "result": "甲壁出现稳定开口，反射转为可利用机关角度"}
+  ],
+  "boss_ownership_guards": {
+    "protected_bosses": [
+      "千里眼",
+      "顺风耳",
+      "巨灵神",
+      "监律天将",
+      "七星首领",
+      "二十八星官",
+      "四圣兽"
+    ],
+    "rules": [
+      "本生态不得定义受保护首领的实际单位、能力、阶段、数值、AI、掉落、资格或完成条件。",
+      "二十八星官（含角木蛟、井木犴等全名星官）不得被命名、降格或复用为小怪、精英或可击杀替代体。",
+      "泛称监星使不等同于天玑·匿曜监星使。",
+      "生态回响只表达既有首领关系的可读状态，不产生新的首领、会话或经济事实。"
+    ]
+  },
+  "authority_and_economy_boundaries": {
+    "presentation_and_design_only": true,
+    "forbidden_authority_mutations": [
+      "progression",
+      "admission",
+      "member_snapshot",
+      "rotation_snapshot",
+      "session_state",
+      "cleanup",
+      "qualification",
+      "completion"
+    ],
+    "forbidden_economic_outputs": [
+      "experience",
+      "currency",
+      "material",
+      "drop",
+      "pity",
+      "key",
+      "title",
+      "equipment",
+      "source_profile",
+      "reward_slot",
+      "receipt",
+      "settlement",
+      "economy_v2_input"
+    ],
+    "rule": "生态对象只能表达既有权威已确认结果；它们不能决定会话、轮换、断线、清理、资格、完成、奖励或收据。"
+  },
+  "acceptance": [
+    {"id": "TT-ENEMY-ACC-001", "rule": "仅纯离线设计；不创建Lua、Y3对象、地图、运行时键、进度、会话、奖励、经济或实际资源。"},
+    {"id": "TT-ENEMY-ACC-002", "rule": "设计只引用列明的主线、战斗、七星、星宿与资产蓝图来源。"},
+    {"id": "TT-ENEMY-ACC-003", "rule": "不把本生态用于通天塔层、赛季、Boss槽、塔地图或塔经济。"},
+    {"id": "TT-ENEMY-ACC-004", "rule": "覆盖常规战斗单位、精英、机制实体和噩梦支援状态。"},
+    {"id": "TT-ENEMY-ACC-005", "rule": "受控天兵是可救回的秩序执行者，不是纯刷怪或奖励容器。"},
+    {"id": "TT-ENEMY-ACC-006", "rule": "四门守备机关具备方向、状态、顺序和可回退的反制语法。"},
+    {"id": "TT-ENEMY-ACC-007", "rule": "失控云兽压力可预判、可引导且不以无预警追杀制造失败。"},
+    {"id": "TT-ENEMY-ACC-008", "rule": "泛称监星使明确不等同于天玑·匿曜监星使。"},
+    {"id": "TT-ENEMY-ACC-009", "rule": "巡天信号和断虹阵眼都有来源、关系、反制与可复盘失败。"},
+    {"id": "TT-ENEMY-ACC-010", "rule": "星历裂缝和残缺星图只承担观察/校准，不充当入口、资格或奖励源。"},
+    {"id": "TT-ENEMY-ACC-011", "rule": "命令节点服务主线终局读图与净化，不取代监律天将、裂律核心或完成写入。"},
+    {"id": "TT-ENEMY-ACC-012", "rule": "七星规则回响只帮助既有单人首领机制可读，不新增小怪潮或双人依赖。"},
+    {"id": "TT-ENEMY-ACC-013", "rule": "四方回响遵循既有方位语法与四段推进，不替换星官。"},
+    {"id": "TT-ENEMY-ACC-014", "rule": "贡辉、净宿和圣兽庇护具有可读反制结果，不构成新增敌人或结算输入。"},
+    {"id": "TT-ENEMY-ACC-015", "rule": "所有二十八星官均不得被命名、降格或复用为小怪/精英。"},
+    {"id": "TT-ENEMY-ACC-016", "rule": "受保护首领的动作和阶段不由本包定义。"},
+    {"id": "TT-ENEMY-ACC-017", "rule": "每类关键压力要求空间/形状与至少一种独立辅助；颜色不是唯一通道。"},
+    {"id": "TT-ENEMY-ACC-018", "rule": "正确处理以命令、关系线、路线、援护或节点状态变化清楚反馈。"},
+    {"id": "TT-ENEMY-ACC-019", "rule": "失败可归因于错误阅读、顺序、目标、关系或退路，而非无提示秒杀。"},
+    {"id": "TT-ENEMY-ACC-020", "rule": "每类生态均明确可读、校验、净化、引导等可用交互及越权、纯输出、隐藏规则等禁用交互。"},
+    {"id": "TT-ENEMY-ACC-021", "rule": "可进入单人语境的压力都有顺序、重复确认或自我回收反制路径。"},
+    {"id": "TT-ENEMY-ACC-022", "rule": "两至四人支持交接、补位、并行和交叉确认，且不需要第五人。"},
+    {"id": "TT-ENEMY-ACC-023", "rule": "任何成员不被锁为不可交接的永久站桩、救援或观察职责。"},
+    {"id": "TT-ENEMY-ACC-024", "rule": "不改变既有成员快照、断线离场、禁止重连、清理确认、重入或完成归属。"},
+    {"id": "TT-ENEMY-ACC-025", "rule": "runtimeKey、对象、单位、能力、Buff、资源、数值、波次和掉落保持null/deferred。"},
+    {"id": "TT-ENEMY-ACC-026", "rule": "不生成经验、货币、材料、钥匙、称号、装备、概率、保底、资格、收据或economy-v2输入。"},
+    {"id": "TT-ENEMY-ACC-027", "rule": "不定义刷新、波次、数量、强度、生命、伤害、冷却、仇恨或难度数值。"},
+    {"id": "TT-ENEMY-ACC-028", "rule": "只提出场地阅读职责，不给出坐标、地图、出生点或资源。"},
+    {"id": "TT-ENEMY-ACC-029", "rule": "不包含实际单位、技能、AI、地图、UI、Lua或同步内容，生产门禁保持关闭。"},
+    {"id": "TT-ENEMY-ACC-030", "rule": "JSON合同可解析，验收ID与Markdown矩阵连续一致。"}
+  ],
+  "deferred": [
+    "所有实际对象、单位、技能、Buff、投射物、AI、仇恨、模型、动画、音效、特效、资源包和资源ID。",
+    "所有生命、伤害、护甲、移动、冷却、施法、范围、频率、数量、波次、刷新、时间窗、人数缩放、性能预算和难度数值。",
+    "所有地图、坐标、尺寸、出生点、路径点、碰撞、刷怪点、入口、传送、触发器、UI控件、Lua、网络同步和存档。",
+    "所有经验、货币、材料、掉落、概率、保底、资格、钥匙、称号、装备、收据、结算、进度、会话和权威服务。",
+    "通天塔的内容接入、敌群、地图、经济、赛季和任何独立运行逻辑。"
+  ]
+}

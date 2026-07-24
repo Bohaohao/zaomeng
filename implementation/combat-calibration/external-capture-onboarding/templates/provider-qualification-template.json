@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_EXTERNAL_CAPTURE_PROVIDER_QUALIFICATION_TEMPLATE_V1",
+    "status": "not_created",
+    "external_provider_id": null,
+    "provider_proof_ref": null,
+    "qualification_decision_ref": null,
+    "revocation_ref": null
+  },
+  "required_claims": [
+    "authorized scope for read-only Y3/editor/authority observation",
+    "isolated execution process and JSON/IPC or equivalent immutable transport",
+    "authority-clock attestation capability",
+    "toolchain identity and version attestation capability",
+    "revocation status and incident-reporting capability"
+  ],
+  "prohibited_claims": [
+    "local Node/Fengari fixture is a trusted capture provider",
+    "client clock or client combat UI is authoritative evidence",
+    "provider qualification itself adopts a P0 gate",
+    "provider qualification authorizes object, map, Lua, UI, reward or economy writes"
+  ],
+  "future_role_binding": {
+    "capture_provider_principal_ref": null,
+    "capture_operator_principal_ref": null,
+    "independent_reviewer_principal_ref": null,
+    "adoption_authority_principal_ref": null
+  }
+}

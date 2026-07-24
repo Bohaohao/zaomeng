@@ -1,0 +1,620 @@
+{
+  "version": 1,
+  "package_status": "offline-narrative-presentation-spec",
+  "production_gate": "closed",
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_MAINLINE_NARRATIVE_PRESENTATION",
+    "display_name": "天庭主线 Boss 叙事与表现深化包",
+    "scope": "five_non_tower_mainline_bosses_narrative_presentation_only",
+    "runtime_key": null,
+    "map_key": null,
+    "ui_node_id": null,
+    "object_id": null,
+    "resource_id": null
+  },
+  "source_contracts": [
+    {
+      "spec_id": "TT_SPEC_TIANTING_MAINLINE_BOSS_DEEPENING",
+      "path": "../mainline-boss/tianting-mainline-boss-contract.json",
+      "use": "五组首领的阶段语法、单人路径与权威边界"
+    },
+    {
+      "spec_id": "TT_SPEC_TIANTING_COMBAT_READABILITY",
+      "path": "../combat/tianting-combat-readability-contract.json",
+      "use": "P0—L3 可读性、双通道和一至四人原则"
+    },
+    {
+      "spec_id": "TT_SPEC_TIANTING_UI_ACCESSIBILITY_INFORMATION_ARCHITECTURE",
+      "path": "../ui/tianting-ui-accessibility-information-contract.json",
+      "use": "未来权威事实展示与无障碍替代边界"
+    },
+    {
+      "spec_id": "TT_SPEC_TIANTING_OBJECT_ART_VFX_BLUEPRINT",
+      "path": "../object-blueprint/tianting-object-art-vfx-blueprint-contract.json",
+      "use": "P0—P2 与 L0—L4 表现层级"
+    },
+    {
+      "path": "../mainline-route.md",
+      "use": "主线路径、章节因果与非塔范围"
+    },
+    {
+      "path": "../construction-readiness-ledger.md",
+      "use": "P0、真实工程与后续阶段门禁"
+    }
+  ],
+  "hard_boundaries": {
+    "original_summary_only": true,
+    "source_literature": {
+      "original_text_used": false,
+      "external_literature_reference_used": false,
+      "rule": "只使用既有离线策划中的原创概述；不收录、改写或拼接任何原作段落。"
+    },
+    "authority_rule": "本包只组织叙事和表现信息；不判断成功、失败、成员资格、会话状态、清理、重入或幂等。",
+    "presentation_rule": "未来表现只能消费已由权威端确认的事实；本包的预警词、镜头和层级均不是运行时命令。",
+    "economic_rule": "不定义或暗示奖励、掉落、货币、经验、材料、资格、收据、结算或其数值。",
+    "runtime_and_asset_bindings": {
+      "y3_write": null,
+      "lua_write": null,
+      "map_write": null,
+      "ui_write": null,
+      "object_write": null,
+      "asset_write": null,
+      "camera_path": null,
+      "audio_asset": null,
+      "vfx_asset": null,
+      "runtime_key": null,
+      "resource_id": null
+    },
+    "numeric_fields": {
+      "health": null,
+      "attack": null,
+      "defense": null,
+      "attack_speed": null,
+      "movement_speed": null,
+      "damage": null,
+      "cast_seconds": null,
+      "duration_seconds": null
+    },
+    "progression_and_settlement": {
+      "progression_write": null,
+      "completion_event": null,
+      "reward": null,
+      "drop": null,
+      "receipt": null,
+      "economy_input": null
+    }
+  },
+  "shared_presentation_grammar": {
+    "narrative_loop": [
+      "看见错误秩序的来源",
+      "辨别其影响的路径或关系",
+      "以既有反制读法留下可见证据",
+      "将证据带入下一阶段或下一节点"
+    ],
+    "dual_channel_rule": "每条关键预警同时给出空间或形态信号，以及独立的声音、短文本、状态变化或读屏摘要之一；颜色从不单独承担关键含义。",
+    "layer_rule": {
+      "L0": "谁在行动、哪里可走、何处可反制。",
+      "L1": "下一步错误规则或转段将如何出现。",
+      "L2": "来源、对象、路径和场地之间的关系。",
+      "L3": "正确处理或错误判断后可复述的结果。",
+      "L4": "氛围辅助；不得遮挡 L0—L3。"
+    },
+    "completion_message_rule": "完成后的文案只确认可见的叙事收束；它不能宣称进度已写入、奖励已发放、资格已获得或清理已结束。",
+    "failure_message_rule": "失败复盘只归因于已可读的来源、顺序、路线、关系或窗口判断；不得归因于隐藏数值、未预警判定或队伍人数不足。"
+  },
+  "boss_presentation_profiles": [
+    {
+      "spec_id": "TT_SPEC_MAINLINE_PRESENTATION_SPLIT_SOUTH_GATE",
+      "source_boss_spec_id": "TT_SPEC_MAINLINE_BOSS_SPLIT_SOUTH_GATE",
+      "display_name": "裂云南天门：巡天误令",
+      "entry_guidance": {
+        "narrative_intent": "让玩家先看懂守门者正在执行彼此矛盾的命令，而非把两位守门者预设为单纯敌人。",
+        "player_facing_brief": "先辨别视线与声波的来源；一处遮蔽并不能同时解决两种命令。",
+        "runtime_binding": null
+      },
+      "stage_anchors": [
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_SOUTH_GATE_DIVERGENT_ORDER",
+          "anchor_label": "命令异声",
+          "narrative_anchor": "门禁的混乱来自两条互不相同的错误命令，玩家需要先把它们分开理解。",
+          "evidence_to_carry_forward": "视线来源与声波来源各自保留可追溯方向。",
+          "warning_copy": {
+            "structural_channel": "一条命令以扇形来源显现，另一条命令以环形传播显现。",
+            "independent_channel": "候选短词：视令展开／声令回响。",
+            "accessibility_alternative": "读屏摘要可分别说明来源类别与可观察的遮蔽差异。"
+          },
+          "result_readback": "被证伪的错误命令失去可执行路径，剩余命令仍保持可见。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_SOUTH_GATE_ALTERNATING_VERIFY",
+          "anchor_label": "交替留路",
+          "narrative_anchor": "两条命令的矛盾并非加倍惩罚，而是让玩家发现可轮换的安全转移。",
+          "evidence_to_carry_forward": "下一条转移线与回转线必须在同一阅读面内保留。",
+          "warning_copy": {
+            "structural_channel": "轮换关系以不同的行动方向和可通过路径呈现。",
+            "independent_channel": "候选短词：转移线可读／保留回转。",
+            "accessibility_alternative": "以文本或状态符号说明当前应等待、转移或回看来源。"
+          },
+          "result_readback": "相互冲突的命令关系被明确揭露，而不是静默消失。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_SOUTH_GATE_GATE_RESET",
+          "anchor_label": "门禁回正",
+          "narrative_anchor": "被纠正的是门禁规则，不是以击倒守门者替代判断。",
+          "evidence_to_carry_forward": "失效命令的静默状态与仍在生效的命令保持区分。",
+          "warning_copy": {
+            "structural_channel": "失效来源改变轮廓，回转线恢复为可读通路。",
+            "independent_channel": "候选短词：误令已止／沿已证路径通过。",
+            "accessibility_alternative": "以非颜色的状态文本说明哪条命令已失效。"
+          },
+          "result_readback": "门禁从冲突状态回到可辨的秩序状态。"
+        }
+      ],
+      "failure_debrief_skeleton": [
+        {
+          "category": "merged_visual_and_audio_warning",
+          "template": "复盘：两类命令被当作同一种压力。下次先确认来源，再选择对应路线。"
+        },
+        {
+          "category": "treated_cover_as_universal_solution",
+          "template": "复盘：遮蔽只针对一种判定；请保留可轮换的转移线。"
+        },
+        {
+          "category": "crossed_the_wrong_boundary",
+          "template": "复盘：跨越发生在错误命令仍有效时；先看清下一条安全转换。"
+        }
+      ],
+      "non_economic_narrative_confirmation": {
+        "what_player_can_be_told": "两条误令已不再互相封锁，门内的调查路线重新可被辨认。",
+        "authority_fact_required": "future_authority_accepted_terminal_fact_only",
+        "progression_write": null,
+        "reward": null,
+        "receipt": null,
+        "economy_input": null
+      },
+      "presentation_layers": {
+        "camera_handoff_intent": [
+          "先交代两个命令来源的区别。",
+          "再把注意力交给交替路径与遮蔽关系。",
+          "最后回看被纠正的门禁状态。"
+        ],
+        "audio_intent": "两种来源保持不同的听觉性格；静默或减弱只用于说明已读结果，不承担唯一信息。",
+        "vfx_layer_intent": {
+          "L0": "扇形、环形、遮蔽边界与可读路径。",
+          "L1": "命令切换前的来源动作。",
+          "L2": "来源与受影响路线的对应。",
+          "L3": "被证伪命令的失效反馈。",
+          "L4": "云雾与门阙氛围，始终让位给前四层。"
+        },
+        "actual_camera_path": null,
+        "audio_asset": null,
+        "vfx_asset": null
+      },
+      "runtime_bindings": {
+        "map_key": null,
+        "ui_node_id": null,
+        "object_id": null,
+        "resource_id": null,
+        "event_id": null,
+        "runtime_key": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_MAINLINE_PRESENTATION_BROKEN_RAINBOW_FORMATION",
+      "source_boss_spec_id": "TT_SPEC_MAINLINE_BOSS_BROKEN_RAINBOW_FORMATION",
+      "display_name": "天宫道·断虹阵：守阵关系",
+      "entry_guidance": {
+        "narrative_intent": "将受控的守阵压力解释为被错误链路牵引的结果，先拆关系，再解除压迫。",
+        "player_facing_brief": "不要把所有可见节点当成同一目标；先确认真正的阵眼关系。",
+        "runtime_binding": null
+      },
+      "stage_anchors": [
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_RAINBOW_EYE_VERIFY",
+          "anchor_label": "辨眼留证",
+          "narrative_anchor": "阵中最重要的不是谁更显眼，而是哪条关系能解释守阵压力的来源。",
+          "evidence_to_carry_forward": "真伪节点的轮廓、链路或反馈差异被保留。",
+          "warning_copy": {
+            "structural_channel": "中心节点与双支观察线呈现可比对的关系差异。",
+            "independent_channel": "候选短词：阵眼待验／守阵链路可见。",
+            "accessibility_alternative": "读屏摘要分别描述可验证节点和受控压力来源。"
+          },
+          "result_readback": "经验证的关系与错误召回关系给出不同反馈。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_RAINBOW_CHAIN_BREAK",
+          "anchor_label": "断链释压",
+          "narrative_anchor": "玩家不是清空场面，而是让已确认的错误链路停止改写守阵者的行为。",
+          "evidence_to_carry_forward": "断开的错误关系与松动的守阵压力同时可见。",
+          "warning_copy": {
+            "structural_channel": "错误链路、可用支线与返程线保持可见关联。",
+            "independent_channel": "候选短词：错链可断／守阵压力松动。",
+            "accessibility_alternative": "用状态符号标示待处理关系与已出现的回退线。"
+          },
+          "result_readback": "守阵压力改变，但受控者仍不被叙事上改写为必须清除的对象。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_RAINBOW_GUARDIAN_CORRECTION",
+          "anchor_label": "守阵回正",
+          "narrative_anchor": "回正意味着保留被证实的链路历史，而非用最后一次压制抹去前因。",
+          "evidence_to_carry_forward": "已校正与未校正的关系在结尾仍可区分。",
+          "warning_copy": {
+            "structural_channel": "守阵姿态与撤离线共同表达关系已变化。",
+            "independent_channel": "候选短词：已校关系保留／未解关系仍在。",
+            "accessibility_alternative": "以文本状态描述关系是否仍需要复核。"
+          },
+          "result_readback": "受控压力不再重组为同一条错误链。"
+        }
+      ],
+      "failure_debrief_skeleton": [
+        {
+          "category": "misidentified_formation_eye",
+          "template": "复盘：节点尚未验证便被当作目标。下次先比对关系差异。"
+        },
+        {
+          "category": "ignored_guardian_chain_source",
+          "template": "复盘：守阵压力的来源没有被追溯；先阅读链路，再处理压迫。"
+        },
+        {
+          "category": "suppressed_guardian_before_breaking_chain",
+          "template": "复盘：错误链路仍在时过早压制守阵者；请先让链路失效。"
+        }
+      ],
+      "non_economic_narrative_confirmation": {
+        "what_player_can_be_told": "错误召回不再主导阵势，受控守备获得重新辨认的余地。",
+        "authority_fact_required": "future_authority_accepted_terminal_fact_only",
+        "progression_write": null,
+        "reward": null,
+        "receipt": null,
+        "economy_input": null
+      },
+      "presentation_layers": {
+        "camera_handoff_intent": [
+          "建立节点、守阵者与链路的三方关系。",
+          "把观察焦点交给已验证的错误链。",
+          "用回正后的关系收束，而非用单体压制收束。"
+        ],
+        "audio_intent": "节点差异、链路紧张与关系回正采用可区分的提示语气；声音只是第二通道。",
+        "vfx_layer_intent": {
+          "L0": "真伪差异、链路来源、可退路线。",
+          "L1": "错误关系即将召回时的变化。",
+          "L2": "节点到守阵压力的连接。",
+          "L3": "链路断开后关系松动的反馈。",
+          "L4": "天宫道的背景表现，不覆盖节点关系。"
+        },
+        "actual_camera_path": null,
+        "audio_asset": null,
+        "vfx_asset": null
+      },
+      "runtime_bindings": {
+        "map_key": null,
+        "ui_node_id": null,
+        "object_id": null,
+        "resource_id": null,
+        "event_id": null,
+        "runtime_key": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_MAINLINE_PRESENTATION_FOUR_GATE_IMBALANCE",
+      "source_boss_spec_id": "TT_SPEC_MAINLINE_BOSS_FOUR_GATE_IMBALANCE",
+      "display_name": "天王殿外缘：四门失衡",
+      "entry_guidance": {
+        "narrative_intent": "让玩家理解四向守备并非四份独立任务，而是一套彼此否定的命令关系。",
+        "player_facing_brief": "先找出相互冲突的方向，再决定观察、暂缓或按顺序处理。",
+        "runtime_binding": null
+      },
+      "stage_anchors": [
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_FOUR_GATE_REVEAL",
+          "anchor_label": "四向显令",
+          "narrative_anchor": "四方各自宣告秩序，却在同一时刻暴露出不能并存的要求。",
+          "evidence_to_carry_forward": "每一方向的来源、形态和受影响路线保持对应。",
+          "warning_copy": {
+            "structural_channel": "不同朝向以独立形态和来源动作显现，而非以颜色区分。",
+            "independent_channel": "候选短词：方位已显／冲突待辨。",
+            "accessibility_alternative": "以方位名称、形状标签或读屏摘要说明命令归属。"
+          },
+          "result_readback": "冲突来源与被影响的路线仍能一一追溯。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_FOUR_GATE_SEQUENCE_OR_SPLIT",
+          "anchor_label": "分流校序",
+          "narrative_anchor": "多人可以缩短观察与往返，但不能把协作变成必须同时驻守的硬锁。",
+          "evidence_to_carry_forward": "可会合的路径与已安静的回响保留为顺序证据。",
+          "warning_copy": {
+            "structural_channel": "干扰中的门向、可用路径与会合线共同可见。",
+            "independent_channel": "候选短词：顺序待校／会合线保留。",
+            "accessibility_alternative": "用文本标注说明当前是观察、处理还是回合阶段。"
+          },
+          "result_readback": "正确顺序让一条回响安静，错误顺序留下可解释的冲突痕迹。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_FOUR_GATE_STABILIZE",
+          "anchor_label": "失衡收束",
+          "narrative_anchor": "收束并不是把四门变成同色静物，而是让已回正与仍冲突的状态清楚分离。",
+          "evidence_to_carry_forward": "最终汇合线与尚未处理的关系不互相遮蔽。",
+          "warning_copy": {
+            "structural_channel": "安静回响与冲突回响保持不同形态与去向。",
+            "independent_channel": "候选短词：已回正／仍有冲突。",
+            "accessibility_alternative": "以独立状态文字说明哪个方向仍需处理。"
+          },
+          "result_readback": "保留下来的路线成为对前序判断的可见证明。"
+        }
+      ],
+      "failure_debrief_skeleton": [
+        {
+          "category": "read_only_one_direction",
+          "template": "复盘：只读取了一个方向，遗漏了与其相斥的命令。"
+        },
+        {
+          "category": "treated_four_commands_as_independent_clears",
+          "template": "复盘：四条命令被当成独立目标；请先确认它们的冲突顺序。"
+        },
+        {
+          "category": "missed_meeting_line",
+          "template": "复盘：处理后没有回到可读会合线，因而丢失了顺序证据。"
+        }
+      ],
+      "non_economic_narrative_confirmation": {
+        "what_player_can_be_told": "四方守备不再彼此否定，留下了一条能说明调整结果的共同路线。",
+        "authority_fact_required": "future_authority_accepted_terminal_fact_only",
+        "progression_write": null,
+        "reward": null,
+        "receipt": null,
+        "economy_input": null
+      },
+      "presentation_layers": {
+        "camera_handoff_intent": [
+          "建立多个方向同时可读的关系。",
+          "跟随顺序判断而非追逐单一执行者。",
+          "在会合线回看哪些回响已安静。"
+        ],
+        "audio_intent": "方向来源采用可辨的音色或文本归属，但不令声音承担唯一的方位信息。",
+        "vfx_layer_intent": {
+          "L0": "方位轮廓、来源动作与可用路线。",
+          "L1": "即将切换或相斥的状态。",
+          "L2": "门向之间的冲突和会合关系。",
+          "L3": "安静回响或保留冲突的结果。",
+          "L4": "方向纹样，只服务于阅读而不伪装成命令。"
+        },
+        "actual_camera_path": null,
+        "audio_asset": null,
+        "vfx_asset": null
+      },
+      "runtime_bindings": {
+        "map_key": null,
+        "ui_node_id": null,
+        "object_id": null,
+        "resource_id": null,
+        "event_id": null,
+        "runtime_key": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_MAINLINE_PRESENTATION_CELESTIAL_OBSERVATORY",
+      "source_boss_spec_id": "TT_SPEC_MAINLINE_BOSS_CELESTIAL_OBSERVATORY",
+      "display_name": "周天观台：星历裂缝",
+      "entry_guidance": {
+        "narrative_intent": "把观台塑造成观察变化、保留证据和校正错误关系的场所，而不是静态谜题或副本入口。",
+        "player_facing_brief": "星图仍在变化；先观察变化方向，再确认可校正的关系。",
+        "runtime_binding": null
+      },
+      "stage_anchors": [
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_OBSERVATORY_OBSERVE_DELTA",
+          "anchor_label": "先观其变",
+          "narrative_anchor": "观台的危机在于星图被持续改写，仓促处理会把背景误当成证据。",
+          "evidence_to_carry_forward": "星点、链路、变化方向与可校正状态构成连续历史。",
+          "warning_copy": {
+            "structural_channel": "可交互关系与背景星空在轮廓和层次上可分辨。",
+            "independent_channel": "候选短词：星历变动／先观后校。",
+            "accessibility_alternative": "读屏摘要按变化方向和关系状态陈述，不依赖颜色。"
+          },
+          "result_readback": "已经观察到的变化可被回看，而非被转段抹除。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_OBSERVATORY_FALSE_TRACK",
+          "anchor_label": "伪轨现形",
+          "narrative_anchor": "监星使的误导要留下来源，玩家用稳定关系或错误关系本身来揭穿它。",
+          "evidence_to_carry_forward": "稳定、错误与变化中的关系保留可复述差异。",
+          "warning_copy": {
+            "structural_channel": "链路差异与误导来源的关系可被看见。",
+            "independent_channel": "候选短词：链路待复核／误导可追。",
+            "accessibility_alternative": "提供状态文字或声音提示说明关系被拒绝或被校正。"
+          },
+          "result_readback": "被证伪的伪轨给出明确反馈，不伪装成无提示惩罚。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_OBSERVATORY_CALIBRATE",
+          "anchor_label": "校星开示",
+          "narrative_anchor": "校正的意义是让未来路线重新可读，而不是在此处发放试炼资格或开启会话。",
+          "evidence_to_carry_forward": "被证实的链路与可校正标记作为展示结果留存。",
+          "warning_copy": {
+            "structural_channel": "最终链路和可校正标记在同一阅读面内出现。",
+            "independent_channel": "候选短词：关系已证／预告可读。",
+            "accessibility_alternative": "用文本说明这是叙事展示，不代表任何入口或资格状态。"
+          },
+          "result_readback": "星图回到可辨的预告或路径展示状态。"
+        }
+      ],
+      "failure_debrief_skeleton": [
+        {
+          "category": "purified_before_observing",
+          "template": "复盘：关系尚未观察完整便尝试校正；先确认变化方向。"
+        },
+        {
+          "category": "mistook_background_for_verifiable_point",
+          "template": "复盘：背景被误认为可验证对象；请寻找具有独立轮廓和反馈的关系。"
+        },
+        {
+          "category": "misidentified_link_state",
+          "template": "复盘：链路状态判断不成立；回看其稳定、错误或变化中的证据。"
+        }
+      ],
+      "non_economic_narrative_confirmation": {
+        "what_player_can_be_told": "观台已能再次呈现可读的星历预告，但此确认不声明任何试炼、资格或收藏事实。",
+        "authority_fact_required": "future_authority_accepted_terminal_fact_only",
+        "progression_write": null,
+        "reward": null,
+        "receipt": null,
+        "economy_input": null
+      },
+      "presentation_layers": {
+        "camera_handoff_intent": [
+          "先给出星图变化的全局关系。",
+          "再聚焦被验证的链路与误导来源。",
+          "最后回到已经可读的预告展示。"
+        ],
+        "audio_intent": "变化、拒绝与校正的提示在声音和文字上可区分，且可被关闭或转写。",
+        "vfx_layer_intent": {
+          "L0": "可校正链路、错误链路、变化方向。",
+          "L1": "关系即将转变的前兆。",
+          "L2": "星点、链路、监星误导之间的关系。",
+          "L3": "拒绝、校正与预告恢复的结果。",
+          "L4": "背景星空，绝不与可读对象同层同形。"
+        },
+        "actual_camera_path": null,
+        "audio_asset": null,
+        "vfx_asset": null
+      },
+      "runtime_bindings": {
+        "map_key": null,
+        "ui_node_id": null,
+        "object_id": null,
+        "resource_id": null,
+        "event_id": null,
+        "runtime_key": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_MAINLINE_PRESENTATION_LINGXIAO_OUTER_COURT",
+      "source_boss_spec_id": "TT_SPEC_MAINLINE_BOSS_LINGXIAO_OUTER_COURT",
+      "display_name": "凌霄外庭·裂律观台：回正裁决",
+      "entry_guidance": {
+        "narrative_intent": "把终局塑造成对错误天律来源的复核与回正：首领、命令节点和裂律核心必须始终可区分。",
+        "player_facing_brief": "先追溯当前规则的来源，再保护已证实的节点与可用路线。",
+        "runtime_binding": null
+      },
+      "stage_anchors": [
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_LINGXIAO_IDENTIFY_ORDER",
+          "anchor_label": "断令识别",
+          "narrative_anchor": "压场的规则不是无主威胁；它必须被追溯到可辨认的命令来源。",
+          "evidence_to_carry_forward": "命令来源、影响范围与可校正标记同时保留。",
+          "warning_copy": {
+            "structural_channel": "执行者指向来源，符号或文书向影响区域展开。",
+            "independent_channel": "候选短词：令源已显／可校节点待验。",
+            "accessibility_alternative": "读屏摘要分别描述来源、影响区和可校正状态。"
+          },
+          "result_readback": "已验证的错误链进入可校正状态，而未验证关系仍不被伪装为安全。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_LINGXIAO_EXECUTE_ORDER",
+          "anchor_label": "执令压场",
+          "narrative_anchor": "旧规则覆盖场地时，叙事重点仍是维持可读通路，而不是追逐首领本体。",
+          "evidence_to_carry_forward": "当前规则类型、作用区、可转移路线与可用节点共同留存。",
+          "warning_copy": {
+            "structural_channel": "作用区、转移线和节点状态同时可辨。",
+            "independent_channel": "候选短词：旧令执行／路线可维持。",
+            "accessibility_alternative": "状态文本说明当前是验证、维持路线还是校正阶段。"
+          },
+          "result_readback": "正确校正把先前限制转为短暂可用的叙事通路。"
+        },
+        {
+          "source_phase_spec_id": "TT_SPEC_MAINLINE_PHASE_LINGXIAO_RESTORE_ORDER",
+          "anchor_label": "回正裁决",
+          "narrative_anchor": "裂律核心重组历史时，玩家必须重新判断证据，不能机械重复上一阶段。",
+          "evidence_to_carry_forward": "真节点、伪节点与核心重组前后的可见历史不被转段抹除。",
+          "warning_copy": {
+            "structural_channel": "核心重组前先展示真伪节点的差异与既有轨迹。",
+            "independent_channel": "候选短词：证据重核／回正可见。",
+            "accessibility_alternative": "以文本说明哪些节点需要保护、哪些仅为伪造关系。"
+          },
+          "result_readback": "真节点对裂律核心形成可见限制，作为常规主线的叙事收束。"
+        }
+      ],
+      "failure_debrief_skeleton": [
+        {
+          "category": "misidentified_command_source",
+          "template": "复盘：当前规则的来源判断错误；先追溯命令节点，再进入作用区域。"
+        },
+        {
+          "category": "treated_purifiable_node_as_danger",
+          "template": "复盘：可校正节点被误作危险来源；请对照来源、标记与路线关系。"
+        },
+        {
+          "category": "failed_to_recheck_corrected_evidence",
+          "template": "复盘：核心重组后仍沿用旧判断；需要复核保留下来的证据。"
+        }
+      ],
+      "non_economic_narrative_confirmation": {
+        "what_player_can_be_told": "已证实的节点限制了裂律核心，常规主线的秩序得以暂时回正。",
+        "authority_fact_required": "future_authority_accepted_terminal_fact_only",
+        "progression_write": null,
+        "reward": null,
+        "receipt": null,
+        "economy_input": null
+      },
+      "presentation_layers": {
+        "camera_handoff_intent": [
+          "先分开交代执行者、命令来源与核心。",
+          "在压场时优先强调可用路线和节点关系。",
+          "核心重组时回看历史，让重新判断有依据。"
+        ],
+        "audio_intent": "规则来源、区域展开、校正成功和核心重组各有可辨的语言提示；声音可被文本或读屏替代。",
+        "vfx_layer_intent": {
+          "L0": "来源、作用区、可转移路线、可校正标记。",
+          "L1": "旧规则即将展开与核心重组的前兆。",
+          "L2": "执行者、节点、核心和路线之间的关系。",
+          "L3": "规则暂停、路线转化与核心受限的结果。",
+          "L4": "残页、云雾和远景符号，均不得伪装为关键节点。"
+        },
+        "actual_camera_path": null,
+        "audio_asset": null,
+        "vfx_asset": null
+      },
+      "runtime_bindings": {
+        "map_key": null,
+        "ui_node_id": null,
+        "object_id": null,
+        "resource_id": null,
+        "event_id": null,
+        "runtime_key": null
+      }
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "TT-PRESENTATION-ACC-001",
+      "requirement": "恰好覆盖五组既有非通天塔主线首领，且每组只引用一个既有首领设计身份。"
+    },
+    {
+      "id": "TT-PRESENTATION-ACC-002",
+      "requirement": "每组都包含入场引导、三段叙事锚点、双通道预警词、失败复盘骨架与非经济叙事确认。"
+    },
+    {
+      "id": "TT-PRESENTATION-ACC-003",
+      "requirement": "每条关键预警都含结构信号与独立通道，并给出不以颜色独占的信息替代。"
+    },
+    {
+      "id": "TT-PRESENTATION-ACC-004",
+      "requirement": "镜头、音频、特效仅描述 L0—L4 的表现职责；不存在实际路径、资源、对象、地图或界面绑定。"
+    },
+    {
+      "id": "TT-PRESENTATION-ACC-005",
+      "requirement": "所有完成确认均为非经济叙事文本，且所有进度、奖励、收据和经济字段保持 null。"
+    },
+    {
+      "id": "TT-PRESENTATION-ACC-006",
+      "requirement": "不包含原作正文、外部文学引用、绝对属性、伤害、秒数、掉落、奖励值或实际运行时写入。"
+    }
+  ],
+  "deferred": [
+    "真实 Y3、Lua、地图、UI、对象、资源、镜头轨迹、音频文件、特效文件与全部运行时绑定。",
+    "P0 绝对标定通过后才可裁定的生命、攻击、防御、攻速、移速、伤害、施放和持续字段。",
+    "权威端的准入、成员、会话、成功、失败、清理、重入、进度、凭证、重放和幂等事实。",
+    "奖励、掉落、材料、货币、经验、资格、收据、结算与 economy-v2 输入。",
+    "七星、二十八星宿、四圣、通天塔、赛季与任何未列入五组主线首领的内容。"
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "spec_id": "TT_SPEC_SEVEN_STAR_SOLO_SESSION_REFERENCE",
+  "package_status": "offline-reference-model-only",
+  "production_gate": "closed",
+  "non_production": true,
+  "scope": {
+    "kind": "single_player_repeatable_session_reference",
+    "owner_scope": "character",
+    "source_contracts": [
+      "../../docs/物编/天庭篇主线遭遇与通天塔规格包/instances/七星单人本规格.md",
+      "../../docs/物编/天庭篇主线遭遇与通天塔规格包/authority/tianting-progression-and-instance-authority-contract.json",
+      "../../docs/物编/天庭篇主线遭遇与通天塔规格包/construction-readiness-ledger.md",
+      "../tianting-authority-vertical-slice/package-contract.json"
+    ]
+  },
+  "entry": {
+    "actor_scope": "owner_only",
+    "required_progress_spec_id": "TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN",
+    "trusted_resolution": "An injected offline authority fixture resolves the current owner lifecycle and observatory progress. Request fields cannot substitute for that resolution.",
+    "caller_progress_fields": "not_authoritative"
+  },
+  "route_registry": [
+    { "order": 1, "spec_id": "TT_SPEC_SOLO_TIANSHU" },
+    { "order": 2, "spec_id": "TT_SPEC_SOLO_TIANXUAN" },
+    { "order": 3, "spec_id": "TT_SPEC_SOLO_TIANJI" },
+    { "order": 4, "spec_id": "TT_SPEC_SOLO_TIANQUAN" },
+    { "order": 5, "spec_id": "TT_SPEC_SOLO_YUHENG" },
+    { "order": 6, "spec_id": "TT_SPEC_SOLO_KAIYANG" },
+    { "order": 7, "spec_id": "TT_SPEC_SOLO_YAOGUANG" }
+  ],
+  "session_identity_fields": [
+    "owner_actor_id",
+    "lifecycle_id",
+    "session_instance_id",
+    "session_epoch",
+    "revision",
+    "cleanup_token"
+  ],
+  "state_machine": {
+    "states": [
+      "active",
+      "cleanup_pending",
+      "closed"
+    ],
+    "allowed_transitions": [
+      "active -> cleanup_pending",
+      "cleanup_pending -> closed"
+    ],
+    "failure_reasons": [
+      "owner_death",
+      "timeout",
+      "owner_disconnect",
+      "owner_lifecycle_invalid"
+    ],
+    "reentry_before_matching_cleanup": "denied",
+    "reconnect": "not_supported_for_the_same_session"
+  },
+  "completion": {
+    "logical_progression_write": false,
+    "process_local_record_only": true,
+    "cleanup_rule": "A normal completion record remains retained when a later cleanup request is rejected, replayed, or delayed.",
+    "prohibited_outputs": [
+      "reward",
+      "drop",
+      "material_grant",
+      "title_grant",
+      "graduation_artifact",
+      "receipt",
+      "economy_v2_handoff",
+      "qualification"
+    ]
+  },
+  "idempotency": {
+    "request_key_fields": [
+      "operation",
+      "request_id"
+    ],
+    "same_payload": "return_existing_process_local_result",
+    "payload_drift": "reject"
+  },
+  "execution": {
+    "dependencies": "Node.js standard library only",
+    "storage": "process_local_test_model_only",
+    "network": false,
+    "persistence": false
+  },
+  "prohibited_surfaces": [
+    "Y3 runtime",
+    "Lua",
+    "map assets",
+    "UI assets",
+    "object data",
+    "absolute combat values",
+    "drops",
+    "material or title grants",
+    "economy-v2 input",
+    "runtime keys"
+  ]
+}

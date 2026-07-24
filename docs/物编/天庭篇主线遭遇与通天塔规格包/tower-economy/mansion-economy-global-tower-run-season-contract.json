@@ -1,0 +1,531 @@
+{
+  "version": 1,
+  "package_status": "offline-design-candidate-pending-global-tower-adoption",
+  "production_gate": "closed",
+  "artifact_kind": "offline_mansion_economy_global_tower_run_and_season_boundary_contract",
+  "identity": {
+    "spec_id": "TT_SPEC_MANSION_ECONOMY_GLOBAL_TOWER_RUN_SEASON",
+    "display_name": "星宿经济来源、全局通天塔运行与赛季裁决合同",
+    "runtime_key": null,
+    "tower_run_id": null,
+    "tower_cycle_id": null,
+    "tower_floor_id": null,
+    "tower_season_id": null,
+    "tower_season_snapshot_id": null,
+    "source_success_event_spec_id": null,
+    "source_profile": null,
+    "reward_slot_key": null,
+    "receipt_id": null,
+    "resource_id": null,
+    "event_id": null
+  },
+  "source_contracts": [
+    {
+      "artifact": "../tower-first-cycle-state-contract.json",
+      "spec_id": "TT_SPEC_TOWER_FIRST_CYCLE",
+      "role": "首轮五拍、第五拍休整、pending/terminal 与幂等语义唯一事实源",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../tianting-mainline-tower-contract.json",
+      "spec_id": null,
+      "role": "唯一全局通天塔、Lv55、每五层休整、玲珑主题与天庭内容池边界",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../authority/tianting-progression-and-instance-authority-contract.json",
+      "spec_id": "TT_SPEC_TIANTING_INSTANCE_RECOVERY",
+      "role": "成员快照、left、清理确认、不可重连与权威终局边界",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json",
+      "spec_id": "TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE",
+      "role": "凌霄唯一零价值来源候选与七星/星宿经济来源保持空值的既有事实",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../economy-candidates/天庭奖励候选登记.md",
+      "spec_id": null,
+      "role": "天庭候选材料、钥匙、称号与法宝不得被转化为经济资产的边界",
+      "runtime_key": null
+    }
+  ],
+  "non_replacement_invariant": {
+    "first_cycle_contract_spec_id": "TT_SPEC_TOWER_FIRST_CYCLE",
+    "rule": "The first-cycle contract remains the sole source for the first five abstract beats, fifth-rest window, pending states, terminal states and first-cycle idempotency. This contract wraps NEXT_CYCLE_HANDOFF only and never deletes, replaces, renames or assigns runtime floor keys to BEAT_01 through BEAT_05.",
+    "runtime_key": null
+  },
+  "global_tower_identity": {
+    "spec_id": "TT_SPEC_GLOBAL_TONGTIAN_TOWER_RUN",
+    "scope": "one_and_only_one_global_long_term_tower",
+    "linglong_relation": "theme_within_global_tongtian_tower_only",
+    "must_not_create": [
+      "second_tower_system",
+      "separate_tianting_tower_run",
+      "separate_tianting_tower_ledger",
+      "separate_tianting_tower_season",
+      "tower_mode"
+    ],
+    "runtime_key": null,
+    "tower_run_id": null,
+    "tower_mode": null
+  },
+  "global_tower_adoption_gate": {
+    "upstream_authority": "docs/物编/成长系统规格包/design-spec.json",
+    "status": "pending_global_tower_adoption",
+    "rule": "This package may propose a TianTing-side full-run shape, Boss slots and creative identities, but it must not promote them to an accepted global tower floor count, season or runtime plan until the upstream global tower contract explicitly adopts them.",
+    "runtime_key": null
+  },
+  "entry_contract": {
+    "spec_id": "TT_SPEC_GLOBAL_TOWER_RUN_ENTRY",
+    "required_level_rule": "every_participant_independently_requires_authority_confirmed_level_55",
+    "leader_substitution_rule": "prohibited",
+    "party_average_rule": "prohibited",
+    "client_cache_rule": "prohibited",
+    "protected_difu_key_rule": "DF_PROGRESS_YANLUO_HALL_CLEARED_is_not_an_entry_or_settlement_input",
+    "runtime_key": null,
+    "qualification_snapshot_id": null,
+    "event_id": null
+  },
+  "full_run_model": {
+    "spec_id": "TT_SPEC_GLOBAL_TOWER_FULL_RUN_MODEL",
+    "status": "tianting_offline_candidate_pending_global_tower_adoption",
+    "candidate_full_run_floor_count": 40,
+    "candidate_cycle_count": 8,
+    "candidate_ten_floor_arc_count": 4,
+    "candidate_rationale": "Eight five-floor segments preserve the locked fifth-rest cadence; four ten-floor arcs give each major boss a complete readable chapter without turning the first-cycle contract into a total-floor or runtime-floor table.",
+    "cycle_shape_dependency": "Every segment must preserve the TT_SPEC_TOWER_FIRST_CYCLE five-beat, fifth-rest, pending, terminal and idempotency invariants. Later-cycle adapters remain future runtime work and do not reuse first-cycle state identifiers as runtime keys.",
+    "continuation_rule": "Only an authority-accepted NEXT_CYCLE_HANDOFF from cycles 1 through 7 may create the next logical five-floor segment. SETTLED, FAILED and EXITED close the full run at the current segment and cannot locally open another segment.",
+    "cycle_terminal_policy": {
+      "cycles_1_through_7": "After inherited fifth-rest, NEXT_CYCLE_HANDOFF is the only continuation route for the planned forty-floor run; SETTLED, FAILED and EXITED are early terminal outcomes for the full run.",
+      "cycle_8": "After inherited fifth-rest, NEXT_CYCLE_HANDOFF is prohibited. Only inherited settlement, failure or exit terminal handling may close the forty-floor run.",
+      "runtime_key": null
+    },
+    "final_run_close_rule": "After the fortieth-floor major boss, the inherited fifth-rest window still occurs first. Existing SETTLEMENT_PENDING to SETTLED closing semantics then close the run; no ninth segment, NEXT_CYCLE_HANDOFF, economic field or new beat is permitted.",
+    "runtime_key": null,
+    "tower_run_id": null,
+    "tower_cycle_id": null,
+    "tower_floor_id": null
+  },
+  "boss_slot_cadence": {
+    "spec_id": "TT_SPEC_GLOBAL_TOWER_BOSS_SLOT_CADENCE",
+    "candidate_mini_boss_cadence": "every_five_floor_boss_slot",
+    "candidate_major_boss_cadence": "every_ten_floor_boss_slot",
+    "candidate_rationale": "Five-floor boss slots align exactly with the locked fifth-rest window. A decadal boss upgrades that slot to major-boss scope instead of stacking a mini boss and major boss before one rest.",
+    "non_decadal_slot_family_rotation": [
+      "seven_star_content_pool",
+      "twenty_eight_mansions_content_pool",
+      "seven_star_content_pool",
+      "twenty_eight_mansions_content_pool"
+    ],
+    "planned_boss_slots": [
+      {
+        "floor_ordinal": 5,
+        "boss_scope": "mini",
+        "content_family": "seven_star_content_pool",
+        "specific_content_spec_id": null,
+        "source_success_event_spec_id": null,
+        "runtime_key": null
+      },
+      {
+        "floor_ordinal": 10,
+        "boss_scope": "major",
+        "content_family": "major_boss_design",
+        "specific_content_spec_id": "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_10",
+        "source_success_event_spec_id": null,
+        "runtime_key": null
+      },
+      {
+        "floor_ordinal": 15,
+        "boss_scope": "mini",
+        "content_family": "twenty_eight_mansions_content_pool",
+        "specific_content_spec_id": null,
+        "source_success_event_spec_id": null,
+        "runtime_key": null
+      },
+      {
+        "floor_ordinal": 20,
+        "boss_scope": "major",
+        "content_family": "major_boss_design",
+        "specific_content_spec_id": "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_20",
+        "source_success_event_spec_id": null,
+        "runtime_key": null
+      },
+      {
+        "floor_ordinal": 25,
+        "boss_scope": "mini",
+        "content_family": "seven_star_content_pool",
+        "specific_content_spec_id": null,
+        "source_success_event_spec_id": null,
+        "runtime_key": null
+      },
+      {
+        "floor_ordinal": 30,
+        "boss_scope": "major",
+        "content_family": "major_boss_design",
+        "specific_content_spec_id": "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_30",
+        "source_success_event_spec_id": null,
+        "runtime_key": null
+      },
+      {
+        "floor_ordinal": 35,
+        "boss_scope": "mini",
+        "content_family": "twenty_eight_mansions_content_pool",
+        "specific_content_spec_id": null,
+        "source_success_event_spec_id": null,
+        "runtime_key": null
+      },
+      {
+        "floor_ordinal": 40,
+        "boss_scope": "major",
+        "content_family": "major_boss_design",
+        "specific_content_spec_id": "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_40",
+        "source_success_event_spec_id": null,
+        "runtime_key": null
+      }
+    ],
+    "specific_star_lord_or_mansion_officer_selection": null,
+    "selection_snapshot_dependency": "future authority content snapshot only; no client, UI, retry or local random selection",
+    "runtime_key": null,
+    "boss_instance_id": null,
+    "content_snapshot_id": null
+  },
+  "major_boss_designs": [
+    {
+      "spec_id": "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_10",
+      "display_name": "四门校律使·残响合判",
+      "floor_ordinal": 10,
+      "theme": "相互冲突的门令投射到多条可读路线",
+      "player_decision": "辨认真正命令，并让错误门令互相抵消",
+      "readability_rule": "路线、门令归属与反制结果必须双通道表达，颜色不是唯一载体",
+      "runtime_key": null,
+      "unit_id": null,
+      "ability_id": null,
+      "asset_id": null,
+      "source_success_event_spec_id": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_20",
+      "display_name": "九曜司衡官·错轨天盘",
+      "floor_ordinal": 20,
+      "theme": "多组星轨在场地上错位叠合",
+      "player_decision": "保留正确轨迹，再将偏移轨引入校正窗口",
+      "readability_rule": "轨迹来源、偏移趋势与校正窗口必须可区分且可复盘",
+      "runtime_key": null,
+      "unit_id": null,
+      "ability_id": null,
+      "asset_id": null,
+      "source_success_event_spec_id": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_30",
+      "display_name": "镇塔监律使·万象回声",
+      "floor_ordinal": 30,
+      "theme": "先前学习到的预警被错误复写为回声",
+      "player_decision": "区分原始规则与错误复写，选择正确反制顺序",
+      "readability_rule": "回声来源、原始规则与处理顺序不能依赖隐藏数值或单一颜色",
+      "runtime_key": null,
+      "unit_id": null,
+      "ability_id": null,
+      "asset_id": null,
+      "source_success_event_spec_id": null
+    },
+    {
+      "spec_id": "TT_SPEC_TOWER_MAJOR_BOSS_FLOOR_40",
+      "display_name": "玲珑塔灵·归律真影",
+      "floor_ordinal": 40,
+      "theme": "门令、星轨、围猎与封镇的阅读语言被汇聚为秩序复位",
+      "player_decision": "持续读出并处理正确关系，才可进入完整 run 的权威关闭路径",
+      "readability_rule": "终局关系、可反制窗口与关闭前状态必须可理解且可复盘",
+      "runtime_key": null,
+      "unit_id": null,
+      "ability_id": null,
+      "asset_id": null,
+      "source_success_event_spec_id": null
+    }
+  ],
+  "content_pool_isolation": {
+    "spec_id": "TT_SPEC_GLOBAL_TOWER_TIANTING_CONTENT_POOL_ISOLATION",
+    "allowed_reuse": [
+      "seven_star_battle_theme",
+      "twenty_eight_mansions_battle_theme",
+      "existing_readability_language"
+    ],
+    "prohibited_reuse": [
+      "seven_star_session_completion",
+      "mansion_normal_session_completion",
+      "mansion_nightmare_session_completion",
+      "mansion_credential",
+      "rotation_snapshot",
+      "mansion_qualification",
+      "source_evidence_envelope",
+      "economic_receipt"
+    ],
+    "rule": "A tower boss slot borrows content identity only. It never writes or consumes the original dungeon progression, session, qualification, rotation or economy facts.",
+    "runtime_key": null
+  },
+  "season_snapshot_contract": {
+    "spec_id": "TT_SPEC_GLOBAL_TOWER_SEASON_SNAPSHOT",
+    "status": "null_deferred_authority_snapshot_semantics_only",
+    "creation_rule": "Future authority creates one immutable season snapshot before accepting a run. A new run may receive a new snapshot only after new authority admission.",
+    "immutability_rule": "Client clock, local timezone, UI refresh, retry, reconnect and later content display must not calculate, replace or mutate the bound snapshot.",
+    "mansion_rotation_isolation_rule": "Tower season snapshot neither reads nor replaces the mansion Asia/Shanghai rotation snapshot.",
+    "fields": {
+      "tower_season_snapshot_id": null,
+      "season_catalog_version": null,
+      "season_scope": null,
+      "authority_time_basis_id": null,
+      "captured_authoritative_instant": null,
+      "schema_version": null
+    },
+    "season_values_deferred": {
+      "season_id": null,
+      "season_timezone": null,
+      "season_start": null,
+      "season_end": null,
+      "season_duration": null,
+      "season_reset_calendar": null,
+      "season_affix_policy": null,
+      "season_leaderboard": null,
+      "season_week_bucket": null,
+      "season_reward_track": null,
+      "season_reward_values": null
+    },
+    "runtime_key": null
+  },
+  "mansion_economy_source_boundary": {
+    "spec_id": "TT_SPEC_MANSION_ECONOMY_SOURCE_EMPTY_BOUNDARY",
+    "current_allowed_zero_value_source_fact": {
+      "source_session_spec_id": "TT_SPEC_SESSION_LINGXIAO_MAINLINE",
+      "source_success_event_spec_id": "TT_SPEC_EVENT_LINGXIAO_OUTER_COURT_SUCCESS",
+      "source_profile": null,
+      "reward_slot_key": null,
+      "receipt_id": null,
+      "rule": "Existing Lingxiao source fact remains the sole current zero-value TianTing candidate and this contract neither expands nor settles it."
+    },
+    "empty_sources": [
+      {
+        "source_session_spec_id": "TT_SPEC_SESSION_SEVEN_STAR",
+        "source_success_event_spec_id": null,
+        "source_profile": null,
+        "reward_slot_key": null,
+        "qualification_snapshot_id": null,
+        "receipt_id": null,
+        "rule": "Seven-star completion and tower reuse cannot form handoff candidate, qualification or settlement input."
+      },
+      {
+        "source_session_spec_id": "TT_SPEC_SESSION_MANSION_NORMAL",
+        "source_success_event_spec_id": null,
+        "source_profile": null,
+        "reward_slot_key": null,
+        "qualification_snapshot_id": null,
+        "receipt_id": null,
+        "rule": "Mansion-normal completion and tower reuse cannot form handoff candidate, qualification or settlement input."
+      },
+      {
+        "source_session_spec_id": "TT_SPEC_SESSION_MANSION_NIGHTMARE",
+        "source_success_event_spec_id": null,
+        "source_profile": null,
+        "reward_slot_key": null,
+        "qualification_snapshot_id": null,
+        "receipt_id": null,
+        "rule": "Mansion-nightmare completion, nightmare credential and tower reuse cannot form handoff candidate, qualification or settlement input."
+      },
+      {
+        "source_scope_spec_id": "TT_SPEC_GLOBAL_TONGTIAN_TOWER_RUN",
+        "source_success_event_spec_id": null,
+        "source_profile": null,
+        "reward_slot_key": null,
+        "qualification_snapshot_id": null,
+        "receipt_id": null,
+        "rule": "Tower mini bosses, major bosses, full-run close and cleanup cannot create a new TianTing economy source."
+      }
+    ],
+    "runtime_key": null
+  },
+  "tower_drop_and_settlement_boundary": {
+    "spec_id": "TT_SPEC_GLOBAL_TOWER_DROP_AND_SETTLEMENT_EMPTY_BOUNDARY",
+    "status": "null_deferred",
+    "actual_item_id": null,
+    "actual_material_id": null,
+    "actual_currency_id": null,
+    "actual_experience_value": null,
+    "actual_reward_table_id": null,
+    "drop_probability": null,
+    "pity_policy": null,
+    "quantity": null,
+    "source_profile": null,
+    "reward_slot_key": null,
+    "owner_id": null,
+    "qualification_snapshot_id": null,
+    "drop_roll_id": null,
+    "tower_mode": null,
+    "tower_week_bucket": null,
+    "receipt_id": null,
+    "settlement_request": null,
+    "rule": "Existing first-cycle economy-v2 design reference is neither compiled, instantiated nor expanded here. Until a separately approved source, qualification, owner, proof, resource-table and persistent idempotent receipt chain exists, no tower closure produces an economic effect.",
+    "runtime_key": null
+  },
+  "disconnect_cleanup_and_replay_boundary": {
+    "spec_id": "TT_SPEC_GLOBAL_TOWER_RUN_RECOVERY_AND_IDEMPOTENCY",
+    "membership_snapshot_rule": "Future authority freezes the run membership before active run state; client roster, leader status and local cache cannot substitute.",
+    "solo_disconnect_rule": "Owner disconnect, lifecycle invalidation or authority failure enters inherited terminal handling and run cleanup; reconnect or reentry in the same run is forbidden before matching cleanup acknowledgement.",
+    "team_disconnect_rule": "A disconnected member becomes left. Remaining authority-active members may continue only under future encounter rules; left cannot reconnect, proxy claim, make-up claim or form future economy qualification for that run.",
+    "cleanup_rule": "Only authority acknowledgement matching future run identity, cycle identity, epoch, revision and cleanup token may release the run lock. Wrong, stale or cross-run acknowledgement is rejected.",
+    "normal_terminal_persistence_rule": "An accepted normal cycle terminal result does not roll back because later cleanup is delayed, fails or replays. It still does not create any economic receipt.",
+    "idempotency_envelope_fields": [
+      "future_run_scope",
+      "future_cycle_scope",
+      "operation_id",
+      "request_kind",
+      "expected_source_state",
+      "frozen_member_scope",
+      "qualification_snapshot_id",
+      "event_id",
+      "schema_version"
+    ],
+    "duplicate_rules": [
+      "Entry returns first authority accept or reject only.",
+      "One boss-slot terminal has one first authority outcome among clear, failure and exit.",
+      "One NEXT_CYCLE_HANDOFF creates at most one next logical segment.",
+      "One cleanup acknowledgement either matches once or is rejected; it cannot unlock another run or create value."
+    ],
+    "runtime_key": null,
+    "tower_run_id": null,
+    "tower_cycle_id": null,
+    "cleanup_token": null,
+    "event_id": null
+  },
+  "deferred": {
+    "actual_global_run_service": null,
+    "actual_later_cycle_adapter": null,
+    "actual_floor_maps_and_encounters": null,
+    "actual_boss_units_abilities_ai_and_assets": null,
+    "actual_member_snapshot_storage": null,
+    "actual_disconnect_cleanup_transport": null,
+    "actual_authority_time_provider": null,
+    "actual_season_calendar_and_catalog": null,
+    "actual_season_rewards_and_leaderboard": null,
+    "actual_mansion_and_tower_source_events": null,
+    "actual_economy_profile_slots_and_receipts": null,
+    "actual_items_materials_currency_xp_drops_pity_and_values": null,
+    "runtime_key": null,
+    "resource_id": null,
+    "event_id": null
+  },
+  "acceptance": [
+    {
+      "id": "TT-TOWER-ACC-001",
+      "rule": "TT_SPEC_TOWER_FIRST_CYCLE remains the sole source for first-cycle five-beat and pending-terminal semantics."
+    },
+    {
+      "id": "TT-TOWER-ACC-002",
+      "rule": "Linglong remains a theme within the only global long-term tower; no second tower, ledger or season system exists."
+    },
+    {
+      "id": "TT-TOWER-ACC-003",
+      "rule": "Every participant independently needs authority-confirmed level 55; leader, average level, UI and cache cannot substitute."
+    },
+    {
+      "id": "TT-TOWER-ACC-004",
+      "rule": "Every five-floor segment opens rest only after inherited fifth-beat authority success."
+    },
+    {
+      "id": "TT-TOWER-ACC-005",
+      "rule": "The TianTing candidate full run has eight five-floor segments and four ten-floor arcs as offline orchestration only, pending upstream global-tower adoption."
+    },
+    {
+      "id": "TT-TOWER-ACC-006",
+      "rule": "Only accepted NEXT_CYCLE_HANDOFF creates a later logical segment; no local continuation or skip exists."
+    },
+    {
+      "id": "TT-TOWER-ACC-007",
+      "rule": "Final completion still passes inherited fifth-rest and closing semantics and never adds a sixth beat."
+    },
+    {
+      "id": "TT-TOWER-ACC-008",
+      "rule": "The TianTing candidate uses five-floor boss slots; decadal slots upgrade to major boss scope and do not stack a mini boss."
+    },
+    {
+      "id": "TT-TOWER-ACC-009",
+      "rule": "Non-decadal mini-boss slots alternate seven-star and twenty-eight-mansions content families while individual selection stays deferred."
+    },
+    {
+      "id": "TT-TOWER-ACC-010",
+      "rule": "Tower content reuse never reads, writes or consumes original dungeon completion, session, rotation, qualification or economy facts."
+    },
+    {
+      "id": "TT-TOWER-ACC-011",
+      "rule": "Every decadal boss has a no-value, readability-first creative identity without units, abilities, AI or assets."
+    },
+    {
+      "id": "TT-TOWER-ACC-012",
+      "rule": "Critical tower telegraphs preserve dual-channel, non-color-only and reviewable-failure rules."
+    },
+    {
+      "id": "TT-TOWER-ACC-013",
+      "rule": "One authority season snapshot is bound before an accepted run and is immutable during that run."
+    },
+    {
+      "id": "TT-TOWER-ACC-014",
+      "rule": "Client clock, timezone, UI, retry and reconnect cannot calculate or mutate season snapshot facts."
+    },
+    {
+      "id": "TT-TOWER-ACC-015",
+      "rule": "Tower season snapshot is isolated from mansion Asia/Shanghai rotation snapshot."
+    },
+    {
+      "id": "TT-TOWER-ACC-016",
+      "rule": "Season identifier, dates, duration, affixes, leaderboard, weekly bucket, rewards and resets remain null/deferred."
+    },
+    {
+      "id": "TT-TOWER-ACC-017",
+      "rule": "Seven-star completion and tower reuse have no current source-success event, profile, qualification or receipt."
+    },
+    {
+      "id": "TT-TOWER-ACC-018",
+      "rule": "Mansion normal/nightmare completion and tower reuse have no current source-success event, profile, qualification or receipt."
+    },
+    {
+      "id": "TT-TOWER-ACC-019",
+      "rule": "Existing Lingxiao success remains the sole zero-value TianTing source candidate and remains unmapped to profile, slot or receipt."
+    },
+    {
+      "id": "TT-TOWER-ACC-020",
+      "rule": "Tower mini bosses, major bosses, full-run close and cleanup cannot create a TianTing economy source."
+    },
+    {
+      "id": "TT-TOWER-ACC-021",
+      "rule": "Items, materials, currency, XP, probabilities, pity, quantities, resource identifiers, reward tables and values remain null/deferred."
+    },
+    {
+      "id": "TT-TOWER-ACC-022",
+      "rule": "One boss-slot clear, failure or exit has only one first authority terminal result."
+    },
+    {
+      "id": "TT-TOWER-ACC-023",
+      "rule": "One NEXT_CYCLE_HANDOFF creates at most one next logical segment and never adds rest or value."
+    },
+    {
+      "id": "TT-TOWER-ACC-024",
+      "rule": "Left members cannot reconnect, proxy claim, make-up claim or form future economy qualification; solo disconnect cannot reenter same run."
+    },
+    {
+      "id": "TT-TOWER-ACC-025",
+      "rule": "Only matching run-cycle-epoch-revision-cleanup-token authority acknowledgement releases a run lock."
+    },
+    {
+      "id": "TT-TOWER-ACC-026",
+      "rule": "Accepted normal cycle terminal facts do not roll back on later cleanup delay, failure or replay and still produce no receipt."
+    },
+    {
+      "id": "TT-TOWER-ACC-027",
+      "rule": "Protected Difu progression key is never a tower entry, settlement or source input."
+    },
+    {
+      "id": "TT-TOWER-ACC-028",
+      "rule": "This package creates no Lua, Y3 objects, maps, UI, storage, time service, runtime run, resource key or event key."
+    }
+  ]
+}

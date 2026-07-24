@@ -8,6 +8,11 @@
     "scope": "一个由五个抽象楼层节拍组成的首轮子循环；它不是总层数、主题表或实际关卡计划。",
     "runtime_key": null
   },
+  "external_full_run_reference": {
+    "artifact": "tower-economy/mansion-economy-global-tower-run-season-contract.json",
+    "role": "The separate offline contract chooses a forty-floor, eight-segment outer orchestration. It may label a segment fifth beat as a content slot but never replaces this five-beat state machine.",
+    "runtime_key": null
+  },
   "inherited_constraints": {
     "minimum_level_per_participant": 55,
     "member_check": "every_solo_player_or_team_member_independently",
@@ -494,13 +499,13 @@
   "unresolved": [
     "未来 run 记录范围、单人/团队关系、持久化、断线重连与恢复语义。",
     "每个抽象节拍的地图、遭遇、怪物、Boss、词缀、时长和难度。",
-    "下一循环的真实入口、实际节拍与总层数。",
+    "下一循环的真实入口、实际适配器、地图/实例与保存；离线四十层/八段编排由外部 full-run 合同定义，非本状态合同的有效字段。",
     "结算的天庭奖励槽位、资格快照、economy-v2 运行时编译、收据存储、证明解析和任何实际经济结果。"
   ],
   "acceptance_invariants": [
     "准入只可从 ENTRY_CHECKING 到 ENTRY_DENIED 或 BEAT_01_ACTIVE，且严格逐人 Lv55 校验。",
     "五个抽象节拍必须依次完成；第五节拍完成只可打开 REST_05_OPEN。",
-    "REST_05_OPEN 不暗示第六节拍、总层数、后续循环数量或资源结算值。",
+    "REST_05_OPEN 不自行声明第六节拍、总层数、后续循环数量或资源结算值；外部 full-run 合同只能在不改变本状态机的前提下组织交接。",
     "SETTLEMENT_PENDING、FAILURE_PENDING 和 EXIT_PENDING 必须分别权威收束到互斥终态。",
     "所有重复调用必须在其语义包络内返回既有权威结论，不得产生第二次状态推进或经济效果。",
     "本合同任何字段都不得读取、写入或替代 DF_PROGRESS_YANLUO_HALL_CLEARED。",

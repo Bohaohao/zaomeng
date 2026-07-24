@@ -4,7 +4,7 @@
 
 本文件将“首轮循环”限定为一个包含五个抽象楼层节拍的离线子循环。它只描述状态的可达性和收束顺序；不是通天塔总层数、实际关卡排表、遭遇配置、地图路径或结算配置。
 
-唯一机器可校验事实源是 [tower-first-cycle-state-contract.json](tower-first-cycle-state-contract.json)。本页是同一合同的可读时序视图。
+唯一机器可校验事实源是 [tower-first-cycle-state-contract.json](tower-first-cycle-state-contract.json)。本页是同一合同的可读时序视图。完整 run 的四十层编排、Boss 槽与第八段终局约束由独立的 [tower-economy 裁决](tower-economy/星宿经济来源、全局通天塔运行与赛季裁决.md) 定义；它不改写本页五拍状态语义。
 
 ## 主时序
 
@@ -65,9 +65,9 @@ ENTRY_CHECKING
 | 结算 | 第五节拍后的 `REST_05_OPEN` | `SETTLEMENT_PENDING` | `SETTLED` | 只可外部引用 economy-v2 的首通/重复奖励与周桶收据语义；未完成精确编译、持久化和证明解析时不发放经济效果。 |
 | 失败 | 任一活动节拍 | `FAILURE_PENDING` | `FAILED` | 不定义恢复、记录或奖励。 |
 | 自愿退出 | 任一活动节拍或休整期 | `EXIT_PENDING` | `EXITED` | 不把退出等同失败或奖励。 |
-| 继续 | `REST_05_OPEN` | 无 | `NEXT_CYCLE_HANDOFF` | 不创建第六节拍，不暗示后续总层数。 |
+| 继续 | `REST_05_OPEN` | 无 | `NEXT_CYCLE_HANDOFF` | 本合同不创建第六节拍；外层四十层编排只允许第 1–7 段交接，第 8 段禁止交接。 |
 
-`NEXT_CYCLE_HANDOFF` 只关闭这个五节拍子循环。后续循环是否存在、如何开始、如何保存，必须由独立的全局通天塔运行合同定义。
+`NEXT_CYCLE_HANDOFF` 只关闭这个五节拍子循环。独立全局塔裁决已选择八个五拍子循环：第 1–7 段可由匹配权威交接续段，第 8 段仅能沿既有终局路径关闭；真实运行、保存与恢复仍由未来服务定义。
 
 ## 幂等语义
 
@@ -86,5 +86,5 @@ ENTRY_CHECKING
 
 - 全局 run 的记录范围、持久化、断线重连、失败恢复和单人/团队关系。
 - 抽象节拍的任何实际内容：地形、遭遇、怪物、Boss、词缀、时长和难度。
-- 后续循环及总层数。
+- 真实后续循环适配器、run 服务、地图/实例、保存与恢复；离线四十层/八段编排见 `tower-economy/`，不属于本首轮状态合同。
 - 奖励槽位、天庭具体 source_profile、运行时资源表编译、收据存储和证明解析；economy-v2 已冻结塔首轮奖励设计值，但不等于可运行结算。

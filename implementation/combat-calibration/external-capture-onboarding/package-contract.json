@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_EXTERNAL_CAPTURE_ONBOARDING_V1",
+    "display_name": "P0 受信任外部实机采集方接入前置包",
+    "package_status": "offline-external-capture-onboarding-only",
+    "production_gate": "closed",
+    "runtime_handoff": false,
+    "actual_capture_provider": null,
+    "actual_provider_qualification": null,
+    "actual_y3_project_ref": null,
+    "actual_source_origin_preflight_attestation": null,
+    "actual_environment_attestation": null,
+    "actual_external_artifact_manifest": null,
+    "actual_independent_review_handoff": null,
+    "actual_adoption_decision": null
+  },
+  "source_contracts": [
+    {
+      "artifact": "../contract/cross-profession-combat-calibration-contract.json",
+      "contract_id": "CAL_SPEC_CROSS_PROFESSION_ABSOLUTE_COMBAT_V1",
+      "content_sha256": "72405ee76ed8841ff067eb3bb691db6dd29702d1635dc8103adc27d6a3f6f2a8",
+      "role": "P0 七门身份、顺序与绝对字段投影关闭态的唯一上游来源"
+    },
+    {
+      "artifact": "../evidence-adoption/p0-evidence-collection-and-adoption-contract.json",
+      "spec_id": "CAL_SPEC_P0_EVIDENCE_COLLECTION_AND_ADOPTION_V1",
+      "content_sha256": "2d3cbffd7233e75ef554e8febd9f152ba81153419fd4edcb5ddc5ed2f921dfec",
+      "role": "外部只读采集、规范化、独立复核、采纳与投影分离的上游控制面"
+    },
+    {
+      "artifact": "../../tianting-y3-construction-preflight/package-contract.json",
+      "spec_id": "TT_SPEC_Y3_CONSTRUCTION_PREFLIGHT",
+      "content_sha256": "73d4f0abccea82f8cbc8540d1b405d59397b6ba3f42f767734a44a725612e26f",
+      "role": "真实 map-local Y3 根的只读结构预检来源"
+    }
+  ],
+  "canonical_gate_snapshot": {
+    "required_gate_ids": [
+      "P0-GATE-01-all-12-fixed-builds-declared-and-replayed",
+      "P0-GATE-02-general-physical-magical-defense-formulas-adopted",
+      "P0-GATE-03-hit-crit-control-formulas-adopted",
+      "P0-GATE-04-engine-action-frame-and-speed-readback",
+      "P0-GATE-05-terrain-collision-and-camera-fixture",
+      "P0-GATE-06-authoritative-one-to-four-member-replays",
+      "P0-GATE-07-stable-object-keys-and-template-readback"
+    ],
+    "currently_satisfied_gate_ids": [],
+    "rule": "本包不新增、删改、排序或采纳 P0 门禁；它只为外部受信任采集方进入既有 evidence-adoption 控制面准备前置工件。"
+  },
+  "trust_boundary": {
+    "provider_execution_requirement": "external isolated process with read-only Y3/editor/authority access",
+    "transport_requirement": "canonical JSON/IPC or equivalent immutable external artifact transport",
+    "local_repository_role": "template, fingerprint and rejection-rule only",
+    "node_fengari_role": "offline test or future materialization boundary only, never a trusted live capture provider",
+    "node_fengari_live_capture_trust_root": false,
+    "local_repository_may_register_provider": false,
+    "local_repository_may_accept_evidence": false,
+    "local_repository_may_adopt_p0_gate": false,
+    "local_repository_may_project_absolute_fields": false,
+    "provider_credentials": null,
+    "provider_endpoint": null,
+    "provider_private_key": null,
+    "local_provider_registration": null,
+    "write_authorization": false
+  },
+  "role_separation": {
+    "roles": [
+      "capture_provider",
+      "capture_operator",
+      "independent_reviewer",
+      "adoption_authority"
+    ],
+    "must_not_be_same_principal_pairs": [
+      ["capture_provider", "capture_operator"],
+      ["capture_provider", "independent_reviewer"],
+      ["capture_provider", "adoption_authority"],
+      ["capture_operator", "independent_reviewer"],
+      ["capture_operator", "adoption_authority"],
+      ["independent_reviewer", "adoption_authority"]
+    ],
+    "actual_role_bindings": null
+  },
+  "preflight_dependency": {
+    "artifact": "../../tianting-y3-construction-preflight/tests/Invoke-TiantingY3ConstructionPreflight.ps1",
+    "real_target_map_root": null,
+    "required_live_result": "structural_preflight_passed",
+    "preflight_is_necessary_but_not_sufficient": true,
+    "preflight_runner_content_sha256": "e247c41f65829db2dc54d372bfef53d248399818c3adb50e0fc8e833c629b2a5",
+    "required_source_origin_attestation_template": "templates/source-origin-preflight-attestation-template.json",
+    "current_workspace_result": "structural_preflight_blocked",
+    "rule": "结构预检是开始外部环境证明的必要条件而非真实来源证明；还必须由合格提供方出具绑定预检合同与 runner 摘要、报告摘要、只读授权、权威时间与非秘密工程/地图指纹的外部来源证明。合成目录和当前离线仓库根不得充当采集源。"
+  },
+  "onboarding_sequence": [
+    "authorization_and_role_separation",
+    "real_map_local_structural_preflight",
+    "provider_qualification",
+    "environment_attestation",
+    "read_only_capture",
+    "canonicalization_and_external_manifest",
+    "independent_review_handoff",
+    "external_adoption_authority"
+  ],
+  "first_fieldwork_order": [
+    {
+      "step_id": "CAL-ONBOARD-FIELD-01",
+      "purpose": "冻结真实工程、地图、时钟、工具链与只读边界，尚不声称任何门禁证据。",
+      "gate_id": null,
+      "status": "blocked_pending_external_operator",
+      "external_artifact_ref": null
+    },
+    {
+      "step_id": "CAL-ONBOARD-FIELD-02",
+      "purpose": "优先进行稳定对象键、模板、字段与资源的只读库存盘点，为后续读回建立真实身份基础。",
+      "gate_id": "P0-GATE-07-stable-object-keys-and-template-readback",
+      "status": "blocked_pending_external_operator",
+      "external_artifact_ref": null
+    },
+    {
+      "step_id": "CAL-ONBOARD-FIELD-03",
+      "purpose": "在已冻结模板身份下读取真实动作帧、攻速与移速字段。",
+      "gate_id": "P0-GATE-04-engine-action-frame-and-speed-readback",
+      "status": "blocked_pending_external_operator",
+      "external_artifact_ref": null
+    },
+    {
+      "step_id": "CAL-ONBOARD-FIELD-04",
+      "purpose": "在真实地图根中读取碰撞、寻路、镜头与安全落点，不写入地图。",
+      "gate_id": "P0-GATE-05-terrain-collision-and-camera-fixture",
+      "status": "blocked_pending_external_operator",
+      "external_artifact_ref": null
+    },
+    {
+      "step_id": "CAL-ONBOARD-FIELD-05",
+      "purpose": "完成四职业十二份构筑与每份三次确定性重放的外部采集。",
+      "gate_id": "P0-GATE-01-all-12-fixed-builds-declared-and-replayed",
+      "status": "blocked_pending_external_operator",
+      "external_artifact_ref": null
+    },
+    {
+      "step_id": "CAL-ONBOARD-FIELD-06",
+      "purpose": "收集泛用物理/魔法/双防穿透、命中/暴击/控制的读回、反例与保留验证向量。",
+      "gate_id": "P0-GATE-02-general-physical-magical-defense-formulas-adopted",
+      "status": "blocked_pending_external_operator",
+      "external_artifact_ref": null
+    },
+    {
+      "step_id": "CAL-ONBOARD-FIELD-07",
+      "purpose": "收集命中、暴击与控制公式分支的独立观察和反例。",
+      "gate_id": "P0-GATE-03-hit-crit-control-formulas-adopted",
+      "status": "blocked_pending_external_operator",
+      "external_artifact_ref": null
+    },
+    {
+      "step_id": "CAL-ONBOARD-FIELD-08",
+      "purpose": "收集 1/2/3/4 人权威会话、left、旧生命周期与清理后的只读回放。",
+      "gate_id": "P0-GATE-06-authoritative-one-to-four-member-replays",
+      "status": "blocked_pending_external_operator",
+      "external_artifact_ref": null
+    }
+  ],
+  "template_artifacts": [
+    "templates/provider-qualification-template.json",
+    "templates/source-origin-preflight-attestation-template.json",
+    "templates/environment-attestation-template.json",
+    "templates/canonicalization-profile-template.json",
+    "templates/external-artifact-manifest-template.json",
+    "templates/independent-review-handoff-template.json"
+  ],
+  "deferred_outputs": {
+    "trusted_provider_registration": null,
+    "real_y3_project_ref": null,
+    "source_origin_preflight_attestation": null,
+    "environment_attestation": null,
+    "external_artifact_manifest": null,
+    "independent_review_handoff": null,
+    "accepted_evidence_ledger": null,
+    "adoption_decision": null,
+    "absolute_projection_payload": null,
+    "target_object_or_unit_id": null,
+    "hp_max": null,
+    "attack_phy": null,
+    "attack_mag": null,
+    "defense_phy": null,
+    "defense_mag": null,
+    "attack_speed": null,
+    "attack_interval_seconds": null,
+    "move_speed_field": null,
+    "skill_damage": null,
+    "skill_duration_seconds": null,
+    "y3_object_write": null,
+    "lua_write": null,
+    "map_write": null,
+    "ui_write": null,
+    "reward": null,
+    "receipt": null,
+    "economy_input": null
+  },
+  "acceptance": [
+    {"id": "CAL-ONBOARD-ACC-001", "rule": "该包仅为外部采集方接入前置，production gate 保持 closed，所有真实提供方、工程、证明、清单、审阅、采纳与投影均为空。"},
+    {"id": "CAL-ONBOARD-ACC-002", "rule": "父 P0 合同、evidence-adoption 合同与 Y3 结构预检合同均以精确路径、身份和 SHA-256 绑定。"},
+    {"id": "CAL-ONBOARD-ACC-003", "rule": "七道 P0 门禁的身份、顺序和 0/7 关闭态只来自父合同；本包不得自行改变。"},
+    {"id": "CAL-ONBOARD-ACC-004", "rule": "真实采集方必须位于外部隔离进程，以 JSON/IPC 或等价不可变外部工件传输；Node/Fengari 不是实机采集信任根。"},
+    {"id": "CAL-ONBOARD-ACC-005", "rule": "当前离线仓库根与合成目录不能作为真实采集源；真实 map-local 根须先通过既有结构预检，且必须另有绑定预检合同、runner、报告、授权、时钟与工程/地图指纹的外部来源证明。"},
+    {"id": "CAL-ONBOARD-ACC-006", "rule": "提供方资格、来源—预检证明、环境证明、规范化 profile、外部工件 manifest 和独立审阅交接均为外部工件；本仓库只保存空模板。"},
+    {"id": "CAL-ONBOARD-ACC-007", "rule": "采集方、采集操作者、独立审阅者与采纳机关两两不可合并；审阅交接不是采纳决定。"},
+    {"id": "CAL-ONBOARD-ACC-008", "rule": "首次现场采集先建立环境，再按 G07、G04、G05、G01、G02、G03、G06 的采集依赖顺序推进；不改变最终七门采纳顺序。"},
+    {"id": "CAL-ONBOARD-ACC-009", "rule": "工程、地图、模板、工具链、时钟、库存、capture-basis 或来源证明任一漂移时，外部 bundle 必须整体拒绝，不得跨版本拼接。"},
+    {"id": "CAL-ONBOARD-ACC-010", "rule": "本包不得包含原始日志、对象键、绝对单位字段、奖励、收据、经济输入、Lua、地图或 UI 写入。"},
+    {"id": "CAL-ONBOARD-ACC-011", "rule": "任何本地演练、模板、预检、发现清单或离线 Node/Fengari 结果都不能登记提供方、采纳门禁或投影对象字段。"},
+    {"id": "CAL-ONBOARD-ACC-012", "rule": "即使未来所有外部工件齐备，仍须由既有 evidence-adoption 之外的授权采纳机关逐门决定，并单独复审绝对字段投影。"}
+  ]
+}

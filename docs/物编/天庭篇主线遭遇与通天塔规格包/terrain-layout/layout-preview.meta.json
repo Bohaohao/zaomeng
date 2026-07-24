@@ -1,0 +1,19 @@
+{
+    "status":  "rendered",
+    "renderer":  "chrome-headless",
+    "htmlPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\物编\\天庭篇主线遭遇与通天塔规格包\\terrain-layout\\layout-preview.html",
+    "imagePath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\物编\\天庭篇主线遭遇与通天塔规格包\\terrain-layout\\layout-preview.png",
+    "metaPath":  "D:\\薄振浩\\个人\\策划案\\造梦\\docs\\物编\\天庭篇主线遭遇与通天塔规格包\\terrain-layout\\layout-preview.meta.json",
+    "width":  1280,
+    "height":  720,
+    "mapWidth":  640,
+    "mapHeight":  416,
+    "canvasWidth":  852.31,
+    "canvasHeight":  554,
+    "scale":  1.3317307692307692,
+    "error":  null,
+    "notes":  [
+                  "Preview is generated from structured layout JSON.",
+                  "Y3 left-bottom coordinates are converted to HTML left-top coordinates."
+              ]
+}

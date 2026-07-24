@@ -1,0 +1,760 @@
+{
+  "version": 1,
+  "package_status": "offline-design-spec",
+  "production_gate": "closed",
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_MAINLINE_BOSS_DEEPENING",
+    "display_name": "天庭主线Boss深化规格",
+    "scope": "non_tower_tianting_mainline_boss_readability_only",
+    "runtime_key": null
+  },
+  "source_artifacts": [
+    "../mainline-route.md",
+    "../combat/天庭战斗机制与可读性规格.md",
+    "../object-blueprint/天庭物编美术与特效需求蓝图.md",
+    "../combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+    "../enemy-ecology/tianting-enemy-ecology-contract.json",
+    "../terrain-layout/layout.json",
+    "../terrain-layout/天庭地图口径对齐与白盒前置裁决.md",
+    "../authority/tianting-progression-and-instance-authority-contract.json"
+  ],
+  "hard_boundaries": {
+    "content_scope": "split_south_gate_broken_rainbow_formation_four_gate_imbalance_celestial_observatory_lingxiao_outer_court_only",
+    "excluded_content": [
+      "tongtian_tower",
+      "seven_star",
+      "twenty_eight_mansions",
+      "four_sacred_nightmare",
+      "rewards",
+      "economy",
+      "season"
+    ],
+    "authority_rule": "this contract may describe readable combat pressure only; it must not decide admission, membership, session creation, success, failure, cleanup, reentry, progression, credential or settlement.",
+    "map_rule": "candidate terrain responsibilities are diagram_or_whitebox_readability_only; no coordinate, map key, entrance, teleport, spawn, collision or actual map is declared.",
+    "asset_rule": "no Y3 object, unit, ability, buff, projectile, AI, Lua, event, resource or asset is created.",
+    "economy_rule": "no XP, currency, material, equipment, key, drop, probability, pity, qualification, receipt or settlement is defined.",
+    "runtime_key": null
+  },
+  "shared_readability_grammar": {
+    "spec_id": "TT_SPEC_MAINLINE_BOSS_READABILITY_GRAMMAR",
+    "runtime_key": null,
+    "loop": [
+      "read_error_source_and_relation",
+      "choose_route_order_or_observation",
+      "counter_or_reverse_the_wrong_rule",
+      "confirm_visible_result",
+      "retain_failure_explanation"
+    ],
+    "p0_requirements": {
+      "source_direction_range_or_relation": "required",
+      "independent_second_channel": "required",
+      "color_as_only_carrier": "forbidden",
+      "unexplained_instant_failure": "forbidden",
+      "runtime_key": null
+    },
+    "party_rule": "one_to_four_authority_frozen_members_only; every puzzle has a serial single-player path, while multiplayer may parallelize but may not create a fifth-player, permanent-split or simultaneous-hold requirement.",
+    "failure_review_rule": "each failure must name a readable source, order, route, node, observation or counter-window mistake; it may not blame hidden numbers or missing output.",
+    "combat_numeric_values": {
+      "damage": null,
+      "health": null,
+      "armor": null,
+      "cooldown": null,
+      "cast_time": null,
+      "movement": null,
+      "aggro": null,
+      "timeout": null,
+      "revive": null,
+      "runtime_key": null
+    }
+  },
+  "numeric_baseline_reference": {
+    "artifact": "../combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+    "status": "accepted_relative_balance_baseline_offline_only",
+    "rule": "this Boss-deepening contract keeps its local combat_numeric_values null; it may only reference the external dimensionless phase-exposure, pressure and window coefficients without assigning raw object values, seconds, waves, authority effects or economy outputs.",
+    "runtime_key": null
+  },
+  "bosses": [
+    {
+      "spec_id": "TT_SPEC_MAINLINE_BOSS_SPLIT_SOUTH_GATE",
+      "display_name": "裂云南天门：千里眼／顺风耳的巡天误令",
+      "scope": "mainline_gate_dual_command_source",
+      "source_route_semantic": "裂云南天门候选战斗区的双预警、遮蔽、声波空隙与中央回转阅读职责",
+      "roles": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_QIANLIYAN_VISUAL_COMMAND",
+          "role": "visual_cone_command_source",
+          "readability_duty": "make line-of-sight fan source and direction readable",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_SHUNFENGER_AUDIO_COMMAND",
+          "role": "audio_ring_command_source",
+          "readability_duty": "make sound-wave ring source and direction readable",
+          "runtime_binding": null
+        }
+      ],
+      "phase_grammar": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_SOUTH_GATE_DIVERGENT_ORDER",
+          "phase": "异源误令",
+          "reading_problem": "visual and audio patrol orders are separate judgments rather than one area attack",
+          "p0_telegraphs": [
+            "distinct_fan_and_ring_geometry",
+            "traceable_source_direction",
+            "visible_cover_effect_scope",
+            "independent_audio_state_or_text_channel"
+          ],
+          "decision": "read the active source before choosing cover, gap or an alternating route",
+          "counterplay": "use a cover or gap that solves one judgment, then transition through the visible alternating safe route",
+          "visible_result": "one disproven wrong command temporarily loses its executable path",
+          "failure_debrief": [
+            "merged_visual_and_audio_warning",
+            "treated_cover_as_universal_solution",
+            "crossed_the_wrong_boundary",
+            "failed_to_preserve_return_route"
+          ],
+          "field_responsibility": "two distinguishable cover groups, sound-wave gaps and a central return path remain simultaneously readable",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_SOUTH_GATE_ALTERNATING_VERIFY",
+          "phase": "交替校验",
+          "reading_problem": "the player must read timing and mutual conflict between the two order sources",
+          "p0_telegraphs": [
+            "next_safe_transition_line",
+            "alternating_source_state",
+            "preserved_return_path",
+            "independent_accessibility_channel"
+          ],
+          "decision": "choose when to wait, rotate or traverse without taking both judgments as one unavoidable pressure",
+          "counterplay": "use the contradiction between commands to expose the order source rather than bypass it through output",
+          "visible_result": "the conflicting command relation becomes visibly invalidated",
+          "failure_debrief": [
+            "read_the_wrong_windup",
+            "transitioned_during_the_wrong_warning",
+            "ignored_the_command_conflict"
+          ],
+          "field_responsibility": "transition and observation lines do not collapse into decorative blind spots",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_SOUTH_GATE_GATE_RESET",
+          "phase": "门禁回正",
+          "reading_problem": "the group must distinguish a disproven command from a still-active command",
+          "p0_telegraphs": [
+            "invalidated_command_silence_or_shape_change",
+            "remaining_safe_route_direction",
+            "independent_result_channel"
+          ],
+          "decision": "choose the already-proven alternating route to conclude the gate correction",
+          "counterplay": "retain the safe conversion rather than treating the encounter as a damage race",
+          "visible_result": "the return line and safe conversion remain readable after correction",
+          "failure_debrief": [
+            "allowed_commands_to_overlap_again",
+            "missed_the_open_transition"
+          ],
+          "field_responsibility": "gate ornaments never imitate the P0 route or command state",
+          "runtime_binding": null
+        }
+      ],
+      "party_adaptation": {
+        "single_player_path": "observe_source_then_choose_one_cover_or_gap_then_alternate_then_confirm_return",
+        "multiplayer_path": "members may report or distribute traversal, but every member independently reads both warnings",
+        "forbidden_requirements": [
+          "mandatory_simultaneous_two_player_hold",
+          "one_member_only_information",
+          "permanent_role_lock"
+        ],
+        "runtime_key": null
+      },
+      "minion_elite_interface": {
+        "small_monster_pressure": "controlled_patrol_guard_pressure_candidate_only",
+        "elite_or_mechanism_pressure": "none_required_beyond_dual_command_relation",
+        "ecology_spec_ids": [
+          "TT_SPEC_ENEMY_CONTROLLED_CELESTIAL_SOLDIER",
+          "TT_SPEC_ENTITY_PATROL_SIGNAL_ECHO"
+        ],
+        "allowed_duty": "reinforce_visual_audio_distinction_without_hiding_p0",
+        "forbidden_duty": "create_a_third_untelegraphed_judgment_or_a_clear_all_gate",
+        "spawn_wave_ai_object_and_numbers": null,
+        "runtime_key": null
+      },
+      "authority_boundary": "combat readability emits no progress write, session result, completion event, credential or economy input.",
+      "runtime_bindings": {
+        "unit_object_id": null,
+        "ability_id": null,
+        "buff_id": null,
+        "projectile_id": null,
+        "resource_id": null,
+        "map_key": null,
+        "progression_write": null,
+        "reward": null,
+        "runtime_key": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_MAINLINE_BOSS_BROKEN_RAINBOW_FORMATION",
+      "display_name": "天宫道·断虹阵：巨灵神与受控阵眼",
+      "scope": "mainline_formation_eye_and_guardian_relation",
+      "source_route_semantic": "断虹阵候选的双支线、居中阵眼、锁链关系和连续回退阅读职责",
+      "roles": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_JULINGSHEN_GUARDIAN",
+          "role": "formation_guardian_pressure_anchor",
+          "readability_duty": "show guardian-to-formation chain before body pressure",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_BROKEN_RAINBOW_TRUE_FALSE_EYE",
+          "role": "true_false_command_relation",
+          "readability_duty": "make verified and wrong formation-eye relations distinguishable",
+          "runtime_binding": null
+        }
+      ],
+      "phase_grammar": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_RAINBOW_EYE_VERIFY",
+          "phase": "阵眼校验",
+          "reading_problem": "true and false formation eyes cannot be treated as equal targets",
+          "p0_telegraphs": [
+            "true_false_silhouette_or_link_or_feedback_difference",
+            "guardian_chain_relation_before_pressure",
+            "independent_accessibility_channel"
+          ],
+          "decision": "verify the true eye before selecting an error-recall relation to handle",
+          "counterplay": "use the verified relation as the only valid entry to the formation response",
+          "visible_result": "true-eye and wrong-recall feedback diverge visibly",
+          "failure_debrief": [
+            "misidentified_formation_eye",
+            "ignored_guardian_chain_source"
+          ],
+          "field_responsibility": "both branch observations and the central eye remain visible without environmental occlusion",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_RAINBOW_CHAIN_BREAK",
+          "phase": "断链解阵",
+          "reading_problem": "wrong chain removal must precede use of the guardian pressure window",
+          "p0_telegraphs": [
+            "verified_wrong_chain",
+            "recalled_pressure_relation",
+            "usable_branch_and_return_line",
+            "independent_result_channel"
+          ],
+          "decision": "break the verified wrong command chain before trying to suppress guardian pressure",
+          "counterplay": "turn chain removal into a readable guardian-pressure release window",
+          "visible_result": "controlled pressure visibly relaxes or changes relation after the chain breaks",
+          "failure_debrief": [
+            "suppressed_guardian_before_breaking_chain",
+            "cleared_pressure_without_verifying_eye",
+            "allowed_wrong_eye_to_recall_pressure"
+          ],
+          "field_responsibility": "side routes remain an observation-and-return solution, never a hidden bypass",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_RAINBOW_GUARDIAN_CORRECTION",
+          "phase": "守阵回正",
+          "reading_problem": "the player must preserve corrected eye history instead of reclassifying controlled actors as the target",
+          "p0_telegraphs": [
+            "corrected_and_uncorrected_relation_difference",
+            "guardian_stance_change",
+            "retreat_route_visibility"
+          ],
+          "decision": "conclude through the corrected relation and retain an available branch",
+          "counterplay": "do not replace formation correction with a clear-all encounter",
+          "visible_result": "corrected relation persists while unresolved relation remains recognizable",
+          "failure_debrief": [
+            "allowed_error_eye_reassembly",
+            "sealed_both_branch_returns"
+          ],
+          "field_responsibility": "the final readable state preserves the chain history across stage change",
+          "runtime_binding": null
+        }
+      ],
+      "party_adaptation": {
+        "single_player_path": "observe_branches_then_verify_true_eye_then_break_chain_then_return_to_guardian_window",
+        "multiplayer_path": "members may observe different branches or reduce pressure in parallel without replacing verification",
+        "forbidden_requirements": [
+          "two_simultaneous_long_hold_points",
+          "clear_all_adds_before_counterplay",
+          "hidden_assignment_by_party_size"
+        ],
+        "runtime_key": null
+      },
+      "minion_elite_interface": {
+        "small_monster_pressure": "controlled_celestial_soldier_pressure_candidate_only",
+        "elite_or_mechanism_pressure": "wrong_formation_eye_recall_pressure_candidate_only",
+        "ecology_spec_ids": [
+          "TT_SPEC_ENEMY_CONTROLLED_CELESTIAL_SOLDIER",
+          "TT_SPEC_ENTITY_BROKEN_RAINBOW_FORMATION_EYE"
+        ],
+        "allowed_duty": "make_wrong_chain_and_controlled_status_more_readable",
+        "forbidden_duty": "obscure_chain_p0_or_replace_eye_verification_with_kill_count",
+        "spawn_wave_ai_object_and_numbers": null,
+        "runtime_key": null
+      },
+      "authority_boundary": "no encounter action decides success, progression, membership, cleanup or economy.",
+      "runtime_bindings": {
+        "unit_object_id": null,
+        "ability_id": null,
+        "buff_id": null,
+        "projectile_id": null,
+        "resource_id": null,
+        "map_key": null,
+        "progression_write": null,
+        "reward": null,
+        "runtime_key": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_MAINLINE_BOSS_FOUR_GATE_IMBALANCE",
+      "display_name": "天王殿外缘：四门失衡守备首领／机关群",
+      "scope": "mainline_four_direction_conflicting_commands",
+      "source_route_semantic": "四门候选区的多向观察、可分流路径、汇合线和冲突痕迹阅读职责",
+      "roles": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_FOUR_GATE_COMMAND_SOURCES",
+          "role": "four_direction_command_relation",
+          "readability_duty": "make each direction, state and conflict source distinct without color-only coding",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_FOUR_GATE_GUARD_EXECUTION",
+          "role": "guardian_and_mechanism_execution_surface",
+          "readability_duty": "visualize command execution without becoming a single-target output solution",
+          "runtime_binding": null
+        }
+      ],
+      "phase_grammar": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_FOUR_GATE_REVEAL",
+          "phase": "四向显令",
+          "reading_problem": "four directions issue commands that can mutually deny one another",
+          "p0_telegraphs": [
+            "directional_shape_per_command",
+            "source_specific_windup",
+            "visible_affected_route",
+            "independent_accessibility_channel"
+          ],
+          "decision": "identify which commands conflict before choosing what to observe, defer or process",
+          "counterplay": "treat the commands as an ordered relation rather than four isolated clear targets",
+          "visible_result": "source and affected route retain a visible correspondence",
+          "failure_debrief": [
+            "read_only_one_direction",
+            "treated_four_commands_as_independent_clears"
+          ],
+          "field_responsibility": "multiple direction states can be inspected without a static terrain deadlock",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_FOUR_GATE_SEQUENCE_OR_SPLIT",
+          "phase": "分流校序",
+          "reading_problem": "route order and temporary split must respect the same visible command relationship",
+          "p0_telegraphs": [
+            "interfering_gate_states",
+            "available_path_and_meeting_line",
+            "sequence_change_windup",
+            "independent_result_channel"
+          ],
+          "decision": "a solo player orders actions serially; a group may split observation or handling while retaining a shared order",
+          "counterplay": "apply a correct sequence so one echo quiets and leaves a stable trace",
+          "visible_result": "correct order quiets one echo; wrong order preserves a readable conflict trace",
+          "failure_debrief": [
+            "switched_too_early",
+            "split_against_visible_order",
+            "missed_meeting_line"
+          ],
+          "field_responsibility": "split routes rejoin visibly and do not imply permanent independent lanes",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_FOUR_GATE_STABILIZE",
+          "phase": "失衡收束",
+          "reading_problem": "quieted and still-conflicting commands must remain distinct through the final recovery",
+          "p0_telegraphs": [
+            "quieted_vs_conflicting_state_difference",
+            "final_rejoin_line",
+            "independent_accessibility_channel"
+          ],
+          "decision": "retain a corrected path while resolving the remaining conflict",
+          "counterplay": "use the stabilized route to prevent a remaining command from negating prior correction",
+          "visible_result": "remaining signals do not silently invalidate quieted results",
+          "failure_debrief": [
+            "premature_gate_change",
+            "wrong_route_split",
+            "missed_final_rejoin"
+          ],
+          "field_responsibility": "the final route is readable as a correction result, not as an unexplained map opening",
+          "runtime_binding": null
+        }
+      ],
+      "party_adaptation": {
+        "single_player_path": "observe_four_directions_then_verify_one_route_then_recheck_conflict_then_handle_next_direction",
+        "multiplayer_path": "members may parallelize reading or travel, but the same sequence remains valid for every party shape",
+        "forbidden_requirements": [
+          "four_members_must_simultaneously_guard_four_gates",
+          "permanent_split_team",
+          "fifth_member_coordination"
+        ],
+        "runtime_key": null
+      },
+      "minion_elite_interface": {
+        "small_monster_pressure": "out_of_control_cloud_beast_route_disturbance_candidate_only",
+        "elite_or_mechanism_pressure": "four_gate_guard_execution_candidate_only",
+        "ecology_spec_ids": [
+          "TT_SPEC_ELITE_UNCONTROLLED_CLOUD_BEAST",
+          "TT_SPEC_ELITE_FOUR_GATE_GUARD_MECHANISM"
+        ],
+        "allowed_duty": "emphasize_directional_command_execution_after_p0_is_readable",
+        "forbidden_duty": "replace_order_judgment_with_spawn_count_or_hide_directional_source",
+        "spawn_wave_ai_object_and_numbers": null,
+        "runtime_key": null
+      },
+      "authority_boundary": "this prefigures direction relationships only; it does not import mansion rotation, raid qualification or any session state.",
+      "runtime_bindings": {
+        "unit_object_id": null,
+        "ability_id": null,
+        "buff_id": null,
+        "projectile_id": null,
+        "resource_id": null,
+        "map_key": null,
+        "progression_write": null,
+        "reward": null,
+        "runtime_key": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_MAINLINE_BOSS_CELESTIAL_OBSERVATORY",
+      "display_name": "周天观台：监星使与星历裂缝",
+      "scope": "mainline_observatory_stellar_rift_readability",
+      "source_route_semantic": "周天观台公共枢纽的中央星图、外缘观察线、短暂回退和轮换预告展示职责",
+      "roles": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_STAR_OBSERVER_MISDIRECTION",
+          "role": "observation_and_misdirection_pressure",
+          "readability_duty": "make misleading relation pressure traceable to the monitor role",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_STELLAR_CALENDAR_RIFT",
+          "role": "changing_star_link_relation",
+          "readability_duty": "preserve point, link, direction and purifiable-state history",
+          "runtime_binding": null
+        }
+      ],
+      "phase_grammar": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_OBSERVATORY_OBSERVE_DELTA",
+          "phase": "星历观差",
+          "reading_problem": "the current star chart is changing and cannot be solved as a static picture",
+          "p0_telegraphs": [
+            "star_point_link_direction_and_state_history",
+            "interactive_point_distinct_from_background",
+            "independent_accessibility_channel"
+          ],
+          "decision": "observe the direction of change before deciding whether a relation is ready to verify",
+          "counterplay": "retain observation history rather than purifying the first plausible link",
+          "visible_result": "the observed change remains reviewable across the stage",
+          "failure_debrief": [
+            "purified_before_observing",
+            "mistook_background_for_verifiable_point"
+          ],
+          "field_responsibility": "central star-chart state and a short observation retreat remain simultaneously legible",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_OBSERVATORY_FALSE_TRACK",
+          "phase": "伪轨分辨",
+          "reading_problem": "stable and wrong links require a non-color distinction while monitor pressure remains traceable",
+          "p0_telegraphs": [
+            "stable_wrong_relation_difference",
+            "monitor_to_misdirection_relation",
+            "verification_feedback",
+            "independent_accessibility_channel"
+          ],
+          "decision": "verify the stable relation or use the wrong relation to expose the source of misdirection",
+          "counterplay": "never choose a link solely through color or kill the monitor to skip verification",
+          "visible_result": "a disproven link gives explicit rejection or correction feedback",
+          "failure_debrief": [
+            "read_change_direction_incorrectly",
+            "misidentified_link_state",
+            "treated_observation_as_kill_requirement"
+          ],
+          "field_responsibility": "links, sources and purification state are not hidden by starfield decoration",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_OBSERVATORY_CALIBRATE",
+          "phase": "校星开示",
+          "reading_problem": "the final correction must expose a verified link and a purifiable state before outcome",
+          "p0_telegraphs": [
+            "final_verified_link",
+            "purifiable_marker",
+            "visible_forecast_or_route_display_change"
+          ],
+          "decision": "correct only the proved relation while retaining the star-chart evidence",
+          "counterplay": "turn the stable link into a readable forecast or route display rather than a session or qualification action",
+          "visible_result": "the stellar chart visibly returns to a readable forecast or route display",
+          "failure_debrief": [
+            "retained_wrong_star_track",
+            "missed_purification_window"
+          ],
+          "field_responsibility": "the corrected display remains an exhibition responsibility, not an actual portal or entrance",
+          "runtime_binding": null
+        }
+      ],
+      "party_adaptation": {
+        "single_player_path": "observe_history_then_verify_one_relation_then_review_feedback_then_correct_next_relation",
+        "multiplayer_path": "members may observe separate relations or share verification results, while each can independently confirm the critical link",
+        "forbidden_requirements": [
+          "simultaneous_multi_point_hold",
+          "session_entrance_creation",
+          "qualification_by_combat_display"
+        ],
+        "runtime_key": null
+      },
+      "minion_elite_interface": {
+        "small_monster_pressure": "none_required",
+        "elite_or_mechanism_pressure": "uncalibrated_star_marker_and_rift_overflow_candidate_only",
+        "ecology_spec_ids": [
+          "TT_SPEC_ELITE_GENERIC_STAR_OBSERVER",
+          "TT_SPEC_ENTITY_STAR_CALENDAR_RIFT"
+        ],
+        "allowed_duty": "make_stable_wrong_and_changing_relations_more_readable",
+        "forbidden_duty": "turn_observation_into_spawn_clear_or_obscure_star_points_links_and_purifiable_marks",
+        "spawn_wave_ai_object_and_numbers": null,
+        "runtime_key": null
+      },
+      "authority_boundary": "a visible calibration result is not TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN, a seven-star session, a mansion session or a qualification write.",
+      "runtime_bindings": {
+        "unit_object_id": null,
+        "ability_id": null,
+        "buff_id": null,
+        "projectile_id": null,
+        "resource_id": null,
+        "map_key": null,
+        "progression_write": null,
+        "reward": null,
+        "runtime_key": null
+      }
+    },
+    {
+      "spec_id": "TT_SPEC_MAINLINE_BOSS_LINGXIAO_OUTER_COURT",
+      "display_name": "凌霄外庭·裂律观台：监律天将与裂律核心",
+      "scope": "private_mainline_final_readability_only",
+      "source_route_semantic": "私有主线终局候选的中央阅读区、命令来源、作用区、安全转移线、侧向撤离与连续证据历史",
+      "roles": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_LINGXIAO_LAW_INSPECTOR",
+          "role": "wrong_order_executor",
+          "readability_duty": "use ruler, document and fractured-law symbols to show execution of a wrong order",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_LINGXIAO_COMMAND_NODES",
+          "role": "wrong_order_source_and_purification_relation",
+          "readability_duty": "show source, active rule and purifiable state",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_ROLE_LINGXIAO_FRACTURED_LAW_CORE",
+          "role": "corrected_order_reset_pressure",
+          "readability_duty": "show how corrected and forged nodes are recombined before reset pressure",
+          "runtime_binding": null
+        }
+      ],
+      "phase_grammar": [
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_LINGXIAO_IDENTIFY_ORDER",
+          "phase": "断令识别",
+          "reading_problem": "the enforced rule must be traced to its command-node source instead of solved by attacking the boss",
+          "p0_telegraphs": [
+            "ruler_points_to_command_source",
+            "document_or_symbol_expands_toward_affected_area",
+            "wrong_chain_purifiable_marker",
+            "independent_accessibility_channel"
+          ],
+          "decision": "identify which command-node group forces the current rule and which node is safe to purify",
+          "counterplay": "validate the wrong chain before using its purification window",
+          "visible_result": "the validated wrong chain visibly enters a purifiable state",
+          "failure_debrief": [
+            "misidentified_command_source",
+            "treated_purifiable_node_as_danger",
+            "chased_boss_instead_of_verifying_order"
+          ],
+          "field_responsibility": "source, active area and safe transfer line are readable at the same time",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_LINGXIAO_EXECUTE_ORDER",
+          "phase": "执令压场",
+          "reading_problem": "wrong rules cover the field while players retain a visible route to verify and purify",
+          "p0_telegraphs": [
+            "current_order_type",
+            "affected_area",
+            "safe_transfer_line",
+            "available_node_state",
+            "independent_accessibility_channel"
+          ],
+          "decision": "choose when to maintain a route, verify a node and cross a rewritten area",
+          "counterplay": "a correct purification turns a prior restriction into a temporary usable route",
+          "visible_result": "the converted route and paused pressure are visible rather than silently resolved",
+          "failure_debrief": [
+            "allowed_wrong_node_takeover",
+            "sealed_retreat_path",
+            "crossed_unavailable_window"
+          ],
+          "field_responsibility": "central reading, lateral circulation, meeting and retreat remain connected without enabling a bypass",
+          "runtime_binding": null
+        },
+        {
+          "spec_id": "TT_SPEC_MAINLINE_PHASE_LINGXIAO_RESTORE_ORDER",
+          "phase": "回正裁决",
+          "reading_problem": "the core reuses corrected and forged visual history, so players must re-evaluate evidence",
+          "p0_telegraphs": [
+            "core_recombination_windup",
+            "true_false_node_difference",
+            "preserved_visual_history",
+            "independent_accessibility_channel"
+          ],
+          "decision": "protect verified true nodes and abandon forged nodes based on accumulated evidence",
+          "counterplay": "turn preserved true nodes into a visible limit on the core rather than mechanically repeating the prior phase",
+          "visible_result": "true nodes create a readable core-restriction and conclusion window",
+          "failure_debrief": [
+            "protected_forged_node",
+            "failed_to_recheck_corrected_evidence",
+            "missed_restoration_window"
+          ],
+          "field_responsibility": "true and false history survives stage transition and does not move without a readable transition",
+          "runtime_binding": null
+        }
+      ],
+      "party_adaptation": {
+        "single_player_path": "verify_then_maintain_route_then_purify_then_recheck_evidence_in_sequence",
+        "multiplayer_path": "members may parallelize already-readable verification, route maintenance and purification without making simultaneous work mandatory",
+        "forbidden_requirements": [
+          "fifth_member",
+          "hidden_synchronization",
+          "damage_only_skip",
+          "combat_ui_decides_authority"
+        ],
+        "runtime_key": null
+      },
+      "minion_elite_interface": {
+        "small_monster_pressure": "none_required_for_final_solution",
+        "elite_or_mechanism_pressure": "fractured_document_symbol_and_old_order_execution_candidate_only",
+        "ecology_spec_ids": [
+          "TT_SPEC_ENTITY_FRACTURED_LAW_COMMAND_NODE"
+        ],
+        "allowed_duty": "make_wrong_order_source_or_route_pressure_more_readable_after_p0",
+        "forbidden_duty": "hide_command_nodes_replace_purification_or_create_separate_completion_or_reward_condition",
+        "spawn_wave_ai_object_and_numbers": null,
+        "runtime_key": null
+      },
+      "authority_boundary": "only the existing TT_SPEC_SESSION_LINGXIAO_MAINLINE authority contract may determine frozen-member eligibility, death or left status, cleanup, reentry, TT_SPEC_PROGRESS_MAINLINE_CLEARED and later source evidence; this contract does none of those things.",
+      "runtime_bindings": {
+        "unit_object_id": null,
+        "ability_id": null,
+        "buff_id": null,
+        "projectile_id": null,
+        "resource_id": null,
+        "map_key": null,
+        "progression_write": null,
+        "reward": null,
+        "runtime_key": null
+      }
+    }
+  ],
+  "cross_boss_minion_elite_rule": {
+    "spec_id": "TT_SPEC_MAINLINE_BOSS_MINION_ELITE_INTERFACE",
+    "permitted_interface_families": [
+      "patrol_guard_pressure",
+      "formation_eye_recall_pressure",
+      "four_gate_execution_pressure",
+      "stellar_rift_pressure",
+      "fractured_law_execution_pressure"
+    ],
+    "shared_rule": "minion_and_elite_content_is_a_readability_amplifier_not_a_spawn_kpi_or_independent_victory_condition.",
+    "solo_rule": "no interface may invalidate the serial single-player solution through permanent simultaneous holds, fixed-player soaking or mandatory clear-all gates.",
+    "authority_rule": "no interface may write progression, qualification, rewards, receipts, membership or session state.",
+    "ecology_contract": "../enemy-ecology/tianting-enemy-ecology-contract.json",
+    "ecology_mapping_rule": "every boss minion_elite_interface must reference only existing TT_SPEC ecology identities; references only describe readable pressure and do not create a unit, object, wave, reward or authority effect.",
+    "objects_skills_buffs_ai_waves_and_numbers": null,
+    "runtime_key": null
+  },
+  "acceptance": [
+    { "id": "TT-MAINLINE-BOSS-ACC-001", "condition": "all identities are offline TT_SPEC identities without object or resource binding" },
+    { "id": "TT-MAINLINE-BOSS-ACC-002", "condition": "production gate remains closed and no Lua, Y3 object, map or actual session is created" },
+    { "id": "TT-MAINLINE-BOSS-ACC-003", "condition": "objects, skills, buffs, values, resources, maps, rewards and progression writes are null or deferred" },
+    { "id": "TT-MAINLINE-BOSS-ACC-004", "condition": "existing authority admission, membership, completion, failure, cleanup, reentry and idempotency contracts are not replaced" },
+    { "id": "TT-MAINLINE-BOSS-ACC-005", "condition": "every boss phase exposes P0 source, direction_or_relation and a second channel before consequence" },
+    { "id": "TT-MAINLINE-BOSS-ACC-006", "condition": "critical mechanics are not color-only and failure is diagnosable" },
+    { "id": "TT-MAINLINE-BOSS-ACC-007", "condition": "every boss has a serial single-player solution" },
+    { "id": "TT-MAINLINE-BOSS-ACC-008", "condition": "one-to-four-player adaptation creates no fifth-player, permanent-split or simultaneous-hold requirement" },
+    { "id": "TT-MAINLINE-BOSS-ACC-009", "condition": "minion and elite interfaces define no entity, wave, number, drop or independent victory condition" },
+    { "id": "TT-MAINLINE-BOSS-ACC-010", "condition": "field descriptions declare only readability duties and no coordinate, collision, map, entrance or spawn" },
+    { "id": "TT-MAINLINE-BOSS-ACC-011", "condition": "South Gate visual fan and audio ring use distinct non-color geometry and alternating route" },
+    { "id": "TT-MAINLINE-BOSS-ACC-012", "condition": "South Gate cover solves one judgment and counterplay reads source plus alternating route" },
+    { "id": "TT-MAINLINE-BOSS-ACC-013", "condition": "South Gate review distinguishes dual-warning misread, cover misuse, wrong crossing and lost return route" },
+    { "id": "TT-MAINLINE-BOSS-ACC-014", "condition": "Broken Rainbow true false eyes and guardian chain are readable before pressure" },
+    { "id": "TT-MAINLINE-BOSS-ACC-015", "condition": "Broken Rainbow verifies and breaks wrong chain before guardian window; clear-all cannot replace it" },
+    { "id": "TT-MAINLINE-BOSS-ACC-016", "condition": "Broken Rainbow review covers eye error, chain omission, guardian-first order and blocked branch" },
+    { "id": "TT-MAINLINE-BOSS-ACC-017", "condition": "Four Gate commands have direction, shape and source windup, not color-only labels" },
+    { "id": "TT-MAINLINE-BOSS-ACC-018", "condition": "Four Gate correct sequence quiets an echo and wrong sequence preserves a conflict trace" },
+    { "id": "TT-MAINLINE-BOSS-ACC-019", "condition": "Four Gate permits serial solo handling and never requires four simultaneous gate guards" },
+    { "id": "TT-MAINLINE-BOSS-ACC-020", "condition": "Observatory points, links, direction and purifiable state retain continuous history" },
+    { "id": "TT-MAINLINE-BOSS-ACC-021", "condition": "Observatory stable and wrong links are non-color distinguishable; observation cannot be replaced by kills" },
+    { "id": "TT-MAINLINE-BOSS-ACC-022", "condition": "Observatory correction creates no seven-star or mansion session, qualification or progression write" },
+    { "id": "TT-MAINLINE-BOSS-ACC-023", "condition": "Lingxiao inspector, command nodes and fractured-law core remain visually and semantically distinct" },
+    { "id": "TT-MAINLINE-BOSS-ACC-024", "condition": "Lingxiao identify, execute and restore phases each have P0, decision, counterplay, result and debrief" },
+    { "id": "TT-MAINLINE-BOSS-ACC-025", "condition": "Lingxiao cannot skip order verification, route maintenance, purification or evidence review through output" },
+    { "id": "TT-MAINLINE-BOSS-ACC-026", "condition": "Lingxiao combat presentation never becomes completion, membership, cleanup or economy authority" },
+    { "id": "TT-MAINLINE-BOSS-ACC-027", "condition": "all five minion elite interfaces do not obscure P0 source, route, node or counter window" },
+    { "id": "TT-MAINLINE-BOSS-ACC-028", "condition": "failure review adds no checkpoint, revive, disconnect, reconnect, cleanup or reentry rule" },
+    { "id": "TT-MAINLINE-BOSS-ACC-029", "condition": "no reward value, drop, qualification, receipt or settlement promise is present" },
+    { "id": "TT-MAINLINE-BOSS-ACC-030", "condition": "machine contract contains five bosses, phases, interfaces, null deferred boundaries and continuous IDs 001 through 030" }
+  ],
+  "acceptance_ids": [
+    "TT-MAINLINE-BOSS-ACC-001",
+    "TT-MAINLINE-BOSS-ACC-002",
+    "TT-MAINLINE-BOSS-ACC-003",
+    "TT-MAINLINE-BOSS-ACC-004",
+    "TT-MAINLINE-BOSS-ACC-005",
+    "TT-MAINLINE-BOSS-ACC-006",
+    "TT-MAINLINE-BOSS-ACC-007",
+    "TT-MAINLINE-BOSS-ACC-008",
+    "TT-MAINLINE-BOSS-ACC-009",
+    "TT-MAINLINE-BOSS-ACC-010",
+    "TT-MAINLINE-BOSS-ACC-011",
+    "TT-MAINLINE-BOSS-ACC-012",
+    "TT-MAINLINE-BOSS-ACC-013",
+    "TT-MAINLINE-BOSS-ACC-014",
+    "TT-MAINLINE-BOSS-ACC-015",
+    "TT-MAINLINE-BOSS-ACC-016",
+    "TT-MAINLINE-BOSS-ACC-017",
+    "TT-MAINLINE-BOSS-ACC-018",
+    "TT-MAINLINE-BOSS-ACC-019",
+    "TT-MAINLINE-BOSS-ACC-020",
+    "TT-MAINLINE-BOSS-ACC-021",
+    "TT-MAINLINE-BOSS-ACC-022",
+    "TT-MAINLINE-BOSS-ACC-023",
+    "TT-MAINLINE-BOSS-ACC-024",
+    "TT-MAINLINE-BOSS-ACC-025",
+    "TT-MAINLINE-BOSS-ACC-026",
+    "TT-MAINLINE-BOSS-ACC-027",
+    "TT-MAINLINE-BOSS-ACC-028",
+    "TT-MAINLINE-BOSS-ACC-029",
+    "TT-MAINLINE-BOSS-ACC-030"
+  ],
+  "deferred": {
+    "actual_y3_objects_and_assets": null,
+    "actual_skills_buffs_projectiles_ai_and_events": null,
+    "actual_combat_numbers_and_timing": null,
+    "actual_maps_coordinates_collision_spawns_and_logic_points": null,
+    "actual_session_and_progression_writes": null,
+    "actual_rewards_receipts_and_economy": null,
+    "actual_tower_reuse_and_season_content": null,
+    "runtime_key": null
+  }
+}

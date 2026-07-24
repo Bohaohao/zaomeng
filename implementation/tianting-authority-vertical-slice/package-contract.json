@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "package_status": "offline-tested-reference-only",
+  "production_gate": "closed",
+  "runtime_handoff": false,
+  "identity": {
+    "spec_id": "TT_SPEC_AUTHORITY_RUNTIME_VERTICAL_SLICE",
+    "scope": "Entry, Celestial Observatory, and Lingxiao Outer Court only; pure offline Lua contract probe.",
+    "runtime_key": null
+  },
+  "authority_contract": {
+    "source": "../../docs/物编/天庭篇主线遭遇与通天塔规格包/authority/tianting-progression-and-instance-authority-contract.json",
+    "implemented_slice": [
+      "TT_SPEC_PROGRESS_CHAPTER_ENTERED",
+      "TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN",
+      "TT_SPEC_PROGRESS_MAINLINE_CLEARED",
+      "TT_SPEC_SESSION_LINGXIAO_MAINLINE"
+    ],
+    "protected_difu_progress_key_consumer": false,
+    "protected_difu_progress_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+    "permitted_entry_source": "DF_E_YANLUO_HALL authoritative handoff proof only",
+    "handoff_resolver_boundary": "The injected fixture resolver represents a trusted resolver that has already validated the complete same-actor authoritative handoff envelope; the core never accepts a caller-provided bare success boolean as proof.",
+    "runtime_key": null
+  },
+  "trusted_execution_boundary": {
+    "runner": "../huaguoshan/tests/run-all.ps1 external Lua mode",
+    "node_path_policy": "NODE_PATH is rejected before execution and cleared inside the inherited runner; no module is loaded through NODE_PATH.",
+    "rejected_environment_prefixes": [
+      "NODE_",
+      "LUA_"
+    ],
+    "node_and_fengari_policy": "The inherited runner verifies a signed Node executable, removes injection variables, pins its cached Fengari closure, verifies the Lua test source hash, and runs the package Y3 API-isolation gate.",
+    "trusted_filesystem_precondition": "For one invocation, the package, inherited runner, selected Node executable, and pinned Fengari closure are controlled by the trusted executor.",
+    "runtime_key": null
+  },
+  "runtime_model": {
+    "authority_provider": "injected offline interface; fixture only and never a production proof source",
+    "logical_progression_storage": "process-local test model only",
+    "session_states": [
+      "active",
+      "cleanup_pending",
+      "closed"
+    ],
+    "idempotency_key": [
+      "actor_id",
+      "event_id"
+    ],
+    "cleanup_identity": [
+      "session_instance_id",
+      "session_epoch",
+      "revision",
+      "cleanup_token"
+    ],
+    "runtime_key": null
+  },
+  "non_goals": {
+    "y3_lua_map_objects_ui_or_eca": null,
+    "persistent_progress_or_session_storage": null,
+    "network_or_reconnect_transport": null,
+    "economy_v2_call_receipt_or_reward": null,
+    "seven_star_mansion_or_four_sacred_runtime": null,
+    "runtime_key": null
+  },
+  "acceptance": [
+    "Authority-only Lv41 and DF_E_YANLUO_HALL handoff entry is accepted; direct protected Difu progression use is absent.",
+    "Three logical records have ordered writers, current-lifecycle prerequisites, and actor-event replay returns the existing result only when every bound receipt field is unchanged.",
+    "Lingxiao admission freezes one to four authority members and rejects proxy, forged, unentered, and stale members.",
+    "Only active, effective frozen members receive mainline completion; cleanup failure cannot erase it.",
+    "Cleanup requires matching instance, epoch, revision, and token before locks release.",
+    "Trusted Node/Fengari execution rejects NODE_PATH and other Node/Lua injection variables."
+  ]
+}

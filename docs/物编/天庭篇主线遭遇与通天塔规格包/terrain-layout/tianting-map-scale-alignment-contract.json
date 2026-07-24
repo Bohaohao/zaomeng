@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_MAP_SCALE_ALIGNMENT",
+    "runtime_key": null,
+    "status": "offline-preconstruction-decision",
+    "rule": "All TT_MAP_, TT_R_, TT_ROUTE_, TT_ZONE_, TT_SESSION_ and TT_WB_ identifiers are design identities only, never runtime map, resource, persistence, entrance or teleport keys."
+  },
+  "source_status": {
+    "reference_policy": "current-conversation-and-approved-project-designs-only",
+    "y3maker_map_read": "unavailable-no-current-map-project-in-workspace",
+    "production_gate": "closed",
+    "actual_map_write": false,
+    "actual_resource_binding": false,
+    "actual_runtime_integration": false
+  },
+  "source_materials": [
+    "docs/README.md",
+    "docs/归档/地图设计/13-首发地图推理基线与验证TODO.md",
+    "docs/物编/天庭篇主线遭遇与通天塔规格包/terrain-layout/layout.json",
+    "docs/物编/天庭篇主线遭遇与通天塔规格包/combat/天庭战斗机制与可读性规格.md",
+    "docs/物编/天庭篇主线遭遇与通天塔规格包/authority/tianting-progression-and-instance-authority-contract.json"
+  ],
+  "coordinate_spaces": {
+    "global_first_release_canvas": {
+      "width": 384,
+      "height": 320,
+      "unit": "terrain-cell-candidate",
+      "status": "current-global-inference-baseline",
+      "actual_map_key": null,
+      "resize_authority": "separate-global-map-decision-required"
+    },
+    "heavenly_band_envelope": {
+      "width": 224,
+      "height": 80,
+      "unit": "terrain-cell-candidate",
+      "status": "current-heavenly-allocation-baseline",
+      "actual_map_key": null,
+      "actual_origin": null,
+      "note": "This is a capacity envelope, not a current editor map or navigable world coordinate range."
+    },
+    "tianting_layout_diagram": {
+      "id": "TT_LAYOUT_CANVAS_640X416",
+      "width": 640,
+      "height": 416,
+      "unit": "diagram-unit",
+      "is_terrain_cell": false,
+      "is_world_coordinate": false,
+      "is_runtime_map_dimension": false,
+      "source": "terrain-layout/layout.json",
+      "allowed_uses": [
+        "narrative adjacency",
+        "route causality",
+        "region responsibility",
+        "candidate spatial readability"
+      ],
+      "forbidden_uses": [
+        "direct terrain placement",
+        "linear coordinate conversion",
+        "map resize",
+        "entrance or teleport creation",
+        "logic-resource creation"
+      ]
+    },
+    "session_candidate_diagrams": {
+      "unit": "diagram-unit",
+      "is_terrain_cell": false,
+      "is_runtime_map_dimension": false,
+      "scope": [
+        "TT_SESSION_CANDIDATE_LINGXIAO_MAINLINE",
+        "TT_SESSION_CANDIDATE_SEVEN_STAR_*",
+        "TT_SESSION_CANDIDATE_MANSION_*"
+      ],
+      "rule": "Candidate session sizes describe mechanism space only. Every physical whitebox dimension must be revalidated independently."
+    }
+  },
+  "selected_mapping_strategy": {
+    "strategy_id": "TT_MAP_DECISION_DIAGRAM_TO_TWO_PUBLIC_WHITEBOX_SCENES",
+    "status": "selected-for-offline-whitebox-only",
+    "global_resize": "not-authorized",
+    "direct_atlas_scaling": "forbidden",
+    "public_scene_strategy": "two-public-scene-envelopes",
+    "session_strategy": "separate-session-whiteboxes",
+    "ui_strategy": "session-gallery-is-an-information-context-not-a-physical-dungeon-corridor",
+    "tower_strategy": "visual-facade-only-not-an-entrance-or-independent-map"
+  },
+  "public_whitebox_allocation": {
+    "container": "HEAVENLY_BAND_ENVELOPE",
+    "outer_margin": 8,
+    "inter_scene_non_reachable_separator": 8,
+    "occupied_width": 200,
+    "occupied_height": 64,
+    "within_heavenly_band": true,
+    "scenes": [
+      {
+        "spec_id": "TT_WB_PUBLIC_SCENE_GATE",
+        "name": "临时天庭与南天门回查",
+        "candidate_bounds": {
+          "x": 8,
+          "z": 8,
+          "width": 96,
+          "height": 64
+        },
+        "actual_map_key": null,
+        "actual_entrance": null,
+        "actual_teleport": null,
+        "actual_spawn": null,
+        "actual_logic_resource_ids": [],
+        "responsibilities": [
+          "临时天庭公共锚点",
+          "错误命令初始阅读",
+          "南天门回查",
+          "裂云门禁公共遭遇的白盒验证"
+        ],
+        "diagram_sources": [
+          "TT_R_PUBLIC_TEMPORARY_CELESTIAL_HUB",
+          "TT_R_MAIN_ROUTE_GATE_APPROACH",
+          "TT_R_BOSS_SPLIT_SOUTH_GATE"
+        ]
+      },
+      {
+        "spec_id": "TT_WB_PUBLIC_SCENE_INNER",
+        "name": "天宫道、天王殿与周天观台",
+        "candidate_bounds": {
+          "x": 112,
+          "z": 8,
+          "width": 96,
+          "height": 64
+        },
+        "actual_map_key": null,
+        "actual_entrance": null,
+        "actual_teleport": null,
+        "actual_spawn": null,
+        "actual_logic_resource_ids": [],
+        "responsibilities": [
+          "断虹阵与天王殿公共遭遇的顺序白盒",
+          "内廷折返因果",
+          "周天观台公共信息锚点",
+          "凌霄外庭的非交互门面"
+        ],
+        "diagram_sources": [
+          "TT_R_MAIN_ROUTE_BROKEN_RAINBOW_FORMATION",
+          "TT_R_BOSS_TIANWANG_OUTER",
+          "TT_R_SIDE_ROUTE_INNER_CLOUD_REENTRY",
+          "TT_R_PUBLIC_CELESTIAL_OBSERVATORY",
+          "TT_R_BOSS_LINGXIAO_OUTER",
+          "TT_R_TRANSITION_SESSION_GALLERY"
+        ]
+      }
+    ],
+    "non_concurrent_rule": "Public encounter footprints are sequenced whitebox responsibilities, not simultaneously populated live zones."
+  },
+  "session_whitebox_envelopes": [
+    {
+      "spec_id": "TT_WB_SESSION_LINGXIAO_MAINLINE",
+      "authority_session_spec_id": "TT_SPEC_SESSION_LINGXIAO_MAINLINE",
+      "players": "1-4",
+      "baseline_width": 48,
+      "baseline_height": 36,
+      "fallback_width": 56,
+      "fallback_height": 40,
+      "fallback_gate": "Only if four participants cannot simultaneously read the boss telegraph, purification nodes and a legal lateral retreat route.",
+      "actual_map_key": null
+    },
+    {
+      "spec_id": "TT_WB_SESSION_SEVEN_STAR",
+      "authority_session_spec_id": "TT_SPEC_SESSION_SEVEN_STAR",
+      "players": "1",
+      "baseline_width": 32,
+      "baseline_height": 28,
+      "fallback_width": 40,
+      "fallback_height": 32,
+      "fallback_gate": "Only for an individual star whose required directional, orbit or multi-anchor grammar is not readable in the baseline envelope.",
+      "actual_map_key": null
+    },
+    {
+      "spec_id": "TT_WB_SESSION_MANSION_NORMAL",
+      "authority_session_spec_id": "TT_SPEC_SESSION_MANSION_NORMAL",
+      "players": "1-4",
+      "baseline_width": 48,
+      "baseline_height": 36,
+      "fallback_width": 56,
+      "fallback_height": 40,
+      "fallback_gate": "Only if the current quadrant's two-hostel handoff cannot remain readable and solvable for every frozen active member.",
+      "actual_map_key": null
+    },
+    {
+      "spec_id": "TT_WB_SESSION_MANSION_NIGHTMARE",
+      "authority_session_spec_id": "TT_SPEC_SESSION_MANSION_NIGHTMARE",
+      "players": "1-4",
+      "baseline_width": 48,
+      "baseline_height": 36,
+      "fallback_width": 56,
+      "fallback_height": 40,
+      "fallback_gate": "Only if the Seven-Hostel / Four-Sacred-Beast relation, countermeasure window and safe retreat remain distinguishable in neither a baseline nor a phased layout.",
+      "actual_map_key": null
+    }
+  ],
+  "authority_and_economy_boundary": {
+    "map_is_not_authority": true,
+    "map_is_not_economy": true,
+    "forbidden_progression_keys": [
+      "DF_PROGRESS_YANLUO_HALL_CLEARED",
+      "TT_SPEC_PROGRESS_CHAPTER_ENTERED",
+      "TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN",
+      "TT_SPEC_PROGRESS_MAINLINE_CLEARED"
+    ],
+    "forbidden_runtime_actions": [
+      "create or close a session",
+      "write or infer progression",
+      "change member snapshot",
+      "reconnect a left member",
+      "unlock a cleanup-pending session",
+      "calculate or issue any reward",
+      "derive a source profile or qualification"
+    ],
+    "unchanged_session_rule": "active -> cleanup_pending -> closed",
+    "unchanged_left_rule": "left members cannot reconnect or receive rewards",
+    "unchanged_economy_rule": "Only the existing Lingxiao mainline source fact may form the current zero-value handoff candidate; this map contract cannot expand it."
+  },
+  "whitebox_acceptance": [
+    {"id": "TT-MAP-ACC-001", "rule": "640x416 and session candidate sizes are diagram-unit only."},
+    {"id": "TT-MAP-ACC-002", "rule": "Two 96x64 public envelopes, separator and margin fit inside the 224x80 heavenly allocation."},
+    {"id": "TT-MAP-ACC-003", "rule": "No 384x320 global resize is implied or performed."},
+    {"id": "TT-MAP-ACC-004", "rule": "Every public diagram responsibility maps to a public whitebox scene or a separately named session."},
+    {"id": "TT-MAP-ACC-005", "rule": "Lingxiao final, Seven Star and Mansion sessions are never merged into a public map."},
+    {"id": "TT-MAP-ACC-006", "rule": "The gate-to-inner-court causality is readable without a long artificial backtrack."},
+    {"id": "TT-MAP-ACC-007", "rule": "The public-scene boundary is explicit and not portrayed as an existing seamless road."},
+    {"id": "TT-MAP-ACC-008", "rule": "Telegraph, countermeasure, retreat route and purification node can be read in 2.5D without decoration occlusion."},
+    {"id": "TT-MAP-ACC-009", "rule": "One to four active participants retain legal positions and routes; static terrain cannot create an unsolvable block."},
+    {"id": "TT-MAP-ACC-010", "rule": "Failure can be reconstructed from non-color-only world/UI feedback."},
+    {"id": "TT-MAP-ACC-011", "rule": "Observatory and tower facades do not imply live entrance, teleport or qualification behavior."},
+    {"id": "TT-MAP-ACC-012", "rule": "The public Lingxiao facade cannot replace TT_SPEC_SESSION_LINGXIAO_MAINLINE."},
+    {"id": "TT-MAP-ACC-013", "rule": "Whitebox layout creates no checkpoint, revive, reconnect or cleanup exception."},
+    {"id": "TT-MAP-ACC-014", "rule": "The left-member ban remains unchanged."},
+    {"id": "TT-MAP-ACC-015", "rule": "No event, qualification, material, XP, currency, drop, probability, pity or receipt is created."}
+  ],
+  "deferred": [
+    "actual editor map reads and map keys",
+    "actual map adjacency, loading, entrance, teleport, spawn, revive, collision and logic-resource IDs",
+    "camera height, zoom, visible range and performance budget",
+    "terrain, texture, decoration, unit, boss, ability, effect and sound resource IDs",
+    "combat numeric values and timing windows",
+    "all economy values, source profiles, receipts, drops, titles, keys and materials"
+  ],
+  "runtime_key": null
+}

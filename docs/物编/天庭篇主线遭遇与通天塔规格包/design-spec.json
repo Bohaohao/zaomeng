@@ -4,7 +4,7 @@
     "name": "天庭篇主线、遭遇、七星与二十八星宿离线规格",
     "genre": "最多四人同游、存档制的西游题材 ORPG 离线设计层",
     "camera": "2.5D 俯视角",
-    "sessionType": "公共路线与副本均以单局关卡会话组织；主线、七星单人试炼、团队副本与全局通天塔内容池均尚未施工",
+    "sessionType": "公共路线与副本均以单局关卡会话组织；主线纵切只在受信任 Node/Fengari 离线基座中回归，Y3 地图、对象、UI、存档和多人运行时均尚未施工",
     "targetPlayers": "1-4 人",
     "targetDurationMinutes": 0,
     "pitch": "以第三劫下的临时天庭为 Lv41–60 内容锚点：常规主线修复裂律，七星提供单人长期校星目标，二十八星宿以时辰轮换和噩梦四圣兽形成高端团队终局。"
@@ -35,8 +35,64 @@
       "use": "用户定向的七星、星宿轮换、四圣兽和通天塔复用内容合同"
     },
     {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/combat/tianting-combat-readability-contract.json",
+      "use": "主线、七星、四方七宿与四圣兽的预警、决策、反制、复盘与 1–4 人可读性合同"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/terrain-layout/layout.json",
+      "use": "公共路线和独立会话图的纯离线候选分布、空间职责与施工层"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/terrain-layout/tianting-map-scale-alignment-contract.json",
+      "use": "图解单位、224×80 天界容量、96×64 公共白盒与会话包络的前置裁决"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/ui/tianting-ui-accessibility-information-contract.json",
+      "use": "双通道预警、轮换快照、队伍状态、失败复盘与称号展示的信息架构边界"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/object-blueprint/tianting-object-art-vfx-blueprint-contract.json",
+      "use": "Boss 轮廓、前摇、特效层级与场地交互的无 ID 资产需求蓝图"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/object-preallocation/tianting-object-field-reservation-contract.json",
+      "use": "十一类敌人生态、五组主线、七星、二十八星官和四圣的五十五张逻辑物编卡与全空字段预占；不是 Y3-Helper assets 输入"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/enemy-ecology/tianting-enemy-ecology-contract.json",
+      "use": "非通天塔小怪、精英、机制实体与噩梦支援状态的职责、反制、首领身份护栏和空绑定边界"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/mainline-boss/tianting-mainline-boss-contract.json",
+      "use": "五组主线首领级遭遇的 P0 预警、决策、可见反制、复盘与附属压力接口"
+    },
+    {
+      "path": "implementation/tianting-authority-vertical-slice/package-contract.json",
+      "use": "入章、周天观台与凌霄外庭的受信任 Node/Fengari 纯 Lua 离线回归边界"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/tower-economy/mansion-economy-global-tower-run-season-contract.json",
+      "use": "待上位全局塔采纳的天庭侧四十层候选、Boss 槽、赛季快照和经济来源空值边界"
+    },
+    {
       "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/references/西游记与造梦参考.md",
       "use": "星官全名、文学灵感与原创转译边界"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+      "use": "四职业裸装参照、相对单位压力/暴露/节拍、1–4 人缩放、绝对值标定门禁与运行时隔离"
+    },
+    {
+      "path": "implementation/tianting-seven-star-session-reference/package-contract.json",
+      "use": "七星 owner、观台进度、七路线、失败清理和重放的进程内离线参考边界；不产生真实会话或经济输出"
+    },
+    {
+      "path": "implementation/tianting-mansion-session-reference/contract/mansion-session-time-qualification-reference-contract.json",
+      "use": "星宿注入上海时辰、逐人普通/噩梦准入、三方位、断线、清理和重放的进程内离线参考边界"
+    },
+    {
+      "path": "docs/物编/天庭篇主线遭遇与通天塔规格包/mainline-presentation/tianting-mainline-presentation-contract.json",
+      "use": "五组既有主线 Boss 的叙事、双通道预警、复盘、无障碍替代与 L0–L4 表现职责；不裁决权威事实"
     }
   ],
   "worldview": {
@@ -63,19 +119,22 @@
       "玲珑塔只作为唯一全局通天塔中的天庭主题。",
       "未经新决策，天庭不得消费或写入 DF_PROGRESS_YANLUO_HALL_CLEARED。",
       "任何时辰轮换必须由权威时间快照锁定，禁止客户端时钟决定或中途换宿。",
-      "任何材料、钥匙、称号、装备和法宝都不是现有运行时资源键。"
+      "任何材料、钥匙、称号、装备和法宝都不是现有运行时资源键。",
+      "640×416 与历史会话尺寸是图解单位；224×80 白盒容量、两张 96×64 公共白盒和会话包络都只服务 dry-run，不能被解释为现有地图、入口、传送、出生点或编辑器资源。",
+      "关键战斗预警必须有非颜色唯一的双通道表达，并保留一至四名成员可完成的反制路径。",
+      "天庭战斗数值只可使用独立裁决中的无量纲相对标尺；原始对象字段和秒数必须等待实机标定。"
     ]
   },
   "playerExperience": {
     "opening": "在临时天庭发现受控守卫仍在执行自相矛盾的命令，理解问题来自被污染的天律。",
     "escalation": "沿南天门、天宫道、天王殿和周天观台，从拆阵与救援学会校星、净宿和四象轮值。",
-    "longTerm": "七星单人试炼提供七种可重复的机制精通与称号收集；二十八星宿普通/噩梦提供四象团队挑战；Lv55 后它们只作为全局通天塔的未来内容池。",
+    "longTerm": "七星单人试炼提供七种可重复的机制精通与称号收集；二十八星宿普通/噩梦提供四象团队挑战；Lv55 后它们可进入待上位全局塔采纳的天庭侧四十层离线内容槽候选。",
     "social": "普通星宿先教会每位星官的签名动作，噩梦让最多四人逐链解除七宿与四圣兽的双向加成。"
   },
   "coreLoop": {
     "shortLoop": "在公共路线识别错误命令，拆除阵眼或净化节点，推进至周天观台。",
     "midLoop": "以七星单人本学习空间规则，收集残片并逐步解锁星君称号；这不是常规主线门票。",
-    "longLoop": "常规主线收束后，按冻结的时辰方位挑战二十八星宿普通与噩梦；通天塔只保留未来复用接口。",
+    "longLoop": "常规主线收束后，按冻结的时辰方位挑战二十八星宿普通与噩梦；Lv55 后可由上位全局塔采纳八段五拍、每五层 Boss 槽和每十层大 Boss 的天庭侧离线候选。",
     "rewards": [
       "七星残片、星君称号、方位宿印、夜巡钥、四圣铸核和圣兽遗珍均只登记为候选类别。",
       "同种七星残片累计十枚合成对应星君称号是用户固定的离线配方倍率；掉落、数量、概率、保底与属性未定义。"
@@ -111,11 +170,11 @@
       "successCriteria": "十二时辰映射完整，副本内方位锁定；每位成员均通过主线完成与同方位资格校验，普通到噩梦路径与双向加成关系可验证。"
     },
     {
-      "phase": "通天塔未来复用",
-      "duration": "Lv55 后；运行时未裁定",
-      "playerGoal": "在唯一全局塔内未来遭遇七星/星宿内容池。",
-      "systemsUsed": ["全局塔五节拍边界", "天庭 Boss 池接口"],
-      "successCriteria": "不绑定现有五节拍、不定义层位/掉落、不建立第二座塔。"
+      "phase": "全局通天塔天庭段（待采纳离线候选）",
+      "duration": "Lv55 后；候选四十层逻辑 run，实际时长未裁定",
+      "playerGoal": "若被上位全局塔采纳，在唯一全局塔内按七星/星宿内容槽和四个大 Boss 创意身份完成八段五拍。",
+      "systemsUsed": ["全局塔五节拍边界", "候选四十层外层编排", "候选每五层 Boss 槽", "权威赛季快照语义"],
+      "successCriteria": "候选要求第 1–7 段只可由 NEXT_CYCLE_HANDOFF 续段；第 8 段禁止继续交接并经既有终局路径关闭；在上位采纳前不创建实际地图、掉落、记录或赛季值。"
     }
   ],
   "systems": [
@@ -154,17 +213,97 @@
     {
       "name": "通天塔天庭内容复用",
       "category": "long_term",
-      "designIntent": "把七星和星宿注册为未来小 Boss 内容池，同时保持唯一全局塔的既有运行边界。",
-      "requiredData": ["全局 run", "楼层计划", "三或五层选择", "十层大 Boss 名单", "奖励与记录"],
-      "runtimeBehavior": "offline_design；不绑定现有五节拍，不创建 tower_mode 或奖励表。",
-      "owner": "后续全局通天塔合同"
+      "designIntent": "提出把七星和星宿编入唯一全局塔候选的五层 Boss 槽，并用四个十层大 Boss 形成四段可读阶段总结。",
+      "requiredData": ["上位全局塔采纳", "候选四十层/八段逻辑编排", "第 1–7 段续段与第 8 段关闭规则", "候选每五层 Boss 槽", "四个无数值大 Boss 身份", "赛季快照语义", "奖励与记录边界"],
+      "runtimeBehavior": "offline_design_candidate_pending_global_tower_adoption；可提出继承第五拍为内容槽但不改状态或转移；不创建 tower_mode、地图、实例、记录、奖励表或经济输入。",
+      "owner": "tower-economy/mansion-economy-global-tower-run-season-contract.json"
+    },
+    {
+      "name": "天庭战斗机制与可读性",
+      "category": "combat",
+      "designIntent": "把主线、七星、普通星宿与四圣噩梦统一成可读的预警、玩家决策、可见反制和可复盘失败，并确保一至四名成员都有完成路径。",
+      "requiredData": ["战斗阶段权威状态", "目标/路线/连线可见反馈", "场地职责", "双通道预警", "成员快照", "失败与清理边界"],
+      "runtimeBehavior": "offline_design；只定义机制语言与验收，不创建技能、单位、伤害、计时、AI、同步、进度或结算。",
+      "owner": "combat/tianting-combat-readability-contract.json"
+    },
+    {
+      "name": "天庭战斗数值与单位基线",
+      "category": "combat_balance",
+      "designIntent": "以四职业 Lv41/45/50/55/60 裸装包络和八个无量纲标尺，为已登记小怪、精英、五组主线 Boss、七星、二十八星官和四圣建立可复算的相对压力与暴露基线。",
+      "requiredData": ["四职业裸装公式", "H0/A0/M0/I0/R0/B0/O0/S0", "既有 TT_SPEC 身份映射", "权威确认的 active 成员数量", "绝对值标定门禁证据"],
+      "runtimeBehavior": "accepted_relative_balance_baseline_offline_only；不写入 hp_max、攻击、双防、秒数、对象、Lua、会话、资格、经济或塔值；绝对投影持续为 null。",
+      "owner": "combat-baseline/tianting-combat-numeric-unit-baseline-contract.json"
+    },
+    {
+      "name": "候选副本分布与地形布局",
+      "category": "map",
+      "designIntent": "以公共路线候选图承接调查折返，以独立会话图承接凌霄、七星与星宿，保证 2.5D 视角下的预警、反制、退路和会话边界可读。",
+      "requiredData": ["候选地图尺寸", "区域/路线职责", "会话图尺寸族", "战斗读线", "当前地图与资源读取", "性能验证"],
+      "runtimeBehavior": "offline_dry_run_candidate；布局坐标、分区、门廊和逻辑点候选不创建地图、入口、传送、出生点、资源或编辑器逻辑资源。",
+      "owner": "terrain-layout/layout.json"
+    },
+    {
+      "name": "地图口径与白盒前置裁决",
+      "category": "map",
+      "designIntent": "把章节关系图解与可施工白盒容量分离，避免 640×416 图解被误写为地形格或运行时地图。",
+      "requiredData": ["384×320 全局推理基线", "224×80 天界容量", "两张 96×64 公共白盒", "独立会话包络", "图解单位隔离"],
+      "runtimeBehavior": "offline_preconstruction_decision；无地图、入口、传送、出生点、坐标、资源或编辑器写入。",
+      "owner": "terrain-layout/tianting-map-scale-alignment-contract.json"
+    },
+    {
+      "name": "天庭 UI 与无障碍信息架构",
+      "category": "ui",
+      "designIntent": "把双通道预警、轮换快照、队伍状态、失败复盘和称号展示组织为只能展示权威结果的信息层。",
+      "requiredData": ["权威预警事实", "rotation_snapshot", "成员状态", "清理与失败原因", "称号展示身份", "非颜色唯一替代"],
+      "runtimeBehavior": "offline_design；无 UI 节点、资产、音效、特效、事件、本地状态机或本地裁决。",
+      "owner": "ui/tianting-ui-accessibility-information-contract.json"
+    },
+    {
+      "name": "天庭物编／美术／特效需求蓝图",
+      "category": "asset_requirements",
+      "designIntent": "在施工前把 Boss 轮廓、前摇、特效优先级和场地交互统一成跨战斗与地图的资产需求。",
+      "requiredData": ["主线/七星/二十八星官/四圣覆盖", "P0–P2", "L0–L4", "双通道前摇", "场地交互职责"],
+      "runtimeBehavior": "offline_design_requirements_only；无对象/资源 ID、单位、技能、Buff、模型、动画、特效或数值。",
+      "owner": "object-blueprint/tianting-object-art-vfx-blueprint-contract.json"
+    },
+    {
+      "name": "天庭物编字段预占",
+      "category": "object_preallocation",
+      "designIntent": "将既有敌人生态、主线、七星、二十八星官与四圣细化为逻辑单位、技能壳、表现状态、投射物和声音卡，在稳定对象键与数值到位前冻结可读性和复用边界。",
+      "requiredData": ["五十五张来源身份卡", "三个语义技能槽", "P0 空间信号", "独立第二通道", "反制结果", "全空字段预占", "P0 七道门与真实对象资源盘点"],
+      "runtimeBehavior": "offline_field_reservation_only；没有 assets、mode、稳定对象键、copyFrom、模板、资源 ID、字段映射、绝对数值、对象、插件或运行时写入。",
+      "owner": "object-preallocation/tianting-object-field-reservation-contract.json"
+    },
+    {
+      "name": "天庭敌人生态与精英职责",
+      "category": "enemy_ecology",
+      "designIntent": "把主线、七星、星宿与四圣周围的附属压力限定为可读的秩序错误、观察、净化、路线和共鸣职责，而非清场或奖励容器。",
+      "requiredData": ["受保护首领身份", "双通道预警", "可见反制", "1–4 人交接", "场地阅读职责", "权威与经济隔离"],
+      "runtimeBehavior": "offline_design_requirements_only；只定义 11 类非通天塔生态身份，所有单位/对象、技能、AI、数值、波次、掉落、进度、资格和收据为空。",
+      "owner": "enemy-ecology/tianting-enemy-ecology-contract.json"
+    },
+    {
+      "name": "天庭主线 Boss 深化",
+      "category": "boss_design",
+      "designIntent": "将南天门、断虹阵、四门失衡、周天观台与凌霄外庭深化为来源/关系预警、读图决策、可见反制和可复盘失败的五组首领级遭遇。",
+      "requiredData": ["P0 来源与关系", "独立第二通道", "串行单人解", "1–4 人适配", "附属压力接口", "既有权威会话边界"],
+      "runtimeBehavior": "offline_design_requirements_only；不创建 Boss 单位、技能、Buff、AI、数值、波次、地图、会话写入、奖励或经济输入。",
+      "owner": "mainline-boss/tianting-mainline-boss-contract.json"
+    },
+    {
+      "name": "主线权威运行时纵切（离线）",
+      "category": "authority_runtime_probe",
+      "designIntent": "用独立纯 Lua 白盒模型回归入章、观台、凌霄的当前生命周期、逐人、幂等和清理边界。",
+      "requiredData": ["受信任 authority_provider fixture", "完整绑定收据字段", "1–4 人冻结成员快照", "cleanup identity", "Node/Fengari 注入拒绝"],
+      "runtimeBehavior": "offline_tested_reference_only；无 Y3 API、地图根 Lua、持久化、网络、证明服务或 economy-v2 调用。",
+      "owner": "../../../implementation/tianting-authority-vertical-slice/package-contract.json"
     },
     {
       "name": "经济与奖励收据依赖",
       "category": "economy",
       "designIntent": "只登记奖励类别和用户固定的称号配方倍率，拒绝把候选内容写成运行时资源。",
       "requiredData": ["resource_table_version", "owner_id", "qualification_snapshot_id", "encounter_instance_id", "event_id", "reward_slot_key", "receipt_id", "award_plan_hash"],
-      "runtimeBehavior": "accepted_design_reference_runtime_not_integrated；economy-v2 可被设计引用，不能被本包调用、编译或扩容。",
+      "runtimeBehavior": "accepted_design_reference_runtime_not_integrated；economy-v2 可被设计引用，不能被本包调用、编译或扩容；当前只有凌霄主线成功可形成既有零价值来源事实候选，七星/星宿/噩梦仍不得进入 handoff 或结算。",
       "owner": "成长数值与经济裁决的独立运行时实施"
     }
   ],
@@ -189,6 +328,12 @@
         "status": "offline_design",
         "role": "青龙连线、朱雀火候、白虎围猎、玄武封镇是星宿团本机制语法，不是 Buff 或数值。",
         "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_TIANTING_COMBAT_READABILITY_GRAMMAR",
+        "status": "offline_design",
+        "role": "预警、决策、反制、可复盘失败与双通道表达是天庭战斗的施工前行为语言，不是已实现能力。",
+        "runtimeKey": null
       }
     ],
     "monsters": [
@@ -203,6 +348,18 @@
         "status": "offline_design",
         "role": "四象各七名星官的完整名单与签名动作见内容扩展合同。",
         "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_TIANTING_ENEMY_ECOLOGY",
+        "status": "offline_design_requirements_only",
+        "role": "受控天兵、四门机关、失控云兽、泛称监星使与非人格机制回响是非通天塔生态职责；它们不降格首领且不含单位、波次、掉落或经济。",
+        "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_TIANTING_COMBAT_NUMERIC_UNIT_BASELINE",
+        "status": "accepted_relative_balance_baseline_offline_only",
+        "role": "十一类生态身份的相对耐久、压力、节拍与可读性窗口基线；不等于实际单位或 Y3 属性。",
+        "runtimeKey": null
       }
     ],
     "bosses": [
@@ -210,6 +367,18 @@
         "specId": "TT_SPEC_MAINLINE_BOSS_DIRECTION",
         "status": "offline_design",
         "role": "千里眼、顺风耳、巨灵神与监律天将承担主线可读性方向。",
+        "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_TIANTING_MAINLINE_BOSS_DEEPENING",
+        "status": "offline_design_requirements_only",
+        "role": "南天门、断虹阵、四门失衡、周天观台与凌霄外庭五组主线首领级遭遇已有阶段语法和附属压力接口；不含 Boss 对象、技能、AI、数值、地图、进度或奖励。",
+        "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_TIANTING_COMBAT_NUMERIC_UNIT_BASELINE",
+        "status": "accepted_relative_balance_baseline_offline_only",
+        "role": "五组主线、七星、二十八星官与四圣的相对暴露、压力、窗口和人数缩放；不生成 Boss 对象、血量或伤害字段。",
         "runtimeKey": null
       },
       {
@@ -222,6 +391,12 @@
         "specId": "TT_SPEC_FOUR_SACRED_NIGHTMARE_BOSSES",
         "status": "offline_design",
         "role": "青龙、朱雀、白虎、玄武与对应七宿形成双向加成终局。",
+        "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_GLOBAL_TOWER_MAJOR_BOSS_CREATIVE_ROSTER",
+        "status": "offline_design_candidate_pending_global_tower_adoption",
+        "role": "天庭侧候选第 10/20/30/40 层依次为四门校律使、九曜司衡官、镇塔监律使、玲珑塔灵的无数值创意身份；不创建单位、技能、AI、资产或掉落。",
         "runtimeKey": null
       }
     ],
@@ -242,14 +417,26 @@
     "maps": [
       {
         "specId": "TT_SPEC_MAINLINE_ROUTE_MAP_ROLES",
-        "status": "offline_design",
-        "role": "临时天庭、南天门、天宫道、天王殿、周天观台和凌霄外庭是逻辑路径。",
+        "status": "offline_design_candidate",
+        "role": "临时天庭、南天门、天宫道、天王殿、周天观台和凌霄外庭已有公共路线候选分布；实际地图仍未创建。",
         "runtimeKey": null
       },
       {
         "specId": "TT_SPEC_INSTANCE_SPACE_ROLES",
-        "status": "offline_design",
-        "role": "七星星盘、四象阵台与四圣兽场地仅有机制职责，未建地图。",
+        "status": "offline_design_candidate",
+        "role": "凌霄、七星星盘、四象阵台与四圣兽场地已有独立会话图候选尺寸和机制职责，未建地图。",
+        "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_TERRAIN_LAYOUT_DRY_RUN",
+        "status": "offline_design_candidate",
+        "role": "terrain-layout/layout.json 是可复现的预览布局，不是地图键、入口、传送、出生点、资源或编辑器逻辑资源。",
+        "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_TIANTING_MAP_SCALE_ALIGNMENT",
+        "status": "offline_preconstruction_decision",
+        "role": "640×416 为图解单位；224×80 天界容量、两张 96×64 公共白盒和独立会话包络为 dry-run 施工前口径，均无实际绑定。",
         "runtimeKey": null
       }
     ],
@@ -265,13 +452,31 @@
         "status": "offline_design",
         "role": "展示七星/四圣收藏、聚合称号和独特效果方向；不创建 UI 资产。",
         "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_UI_COMBAT_READABILITY",
+        "status": "offline_design",
+        "role": "关键机制以形状/轨迹/空间加独立声音、状态或文本表达，颜色不得作为唯一信息；UI 只展示权威状态。",
+        "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_TIANTING_UI_ACCESSIBILITY_INFORMATION_ARCHITECTURE",
+        "status": "offline_design",
+        "role": "双通道预警、轮换快照、队伍状态、失败复盘和七曜/四圣称号展示都只消费权威事实。",
+        "runtimeKey": null
       }
     ],
     "economy": [
       {
         "specId": "TT_SPEC_ECONOMY_TIANTING_CANDIDATE_BOUNDARY",
         "status": "accepted_design_reference_runtime_not_integrated",
-        "role": "只外部引用 economy-v2；不定义 XP、货币、掉率、保底、材料产出、装备或塔奖励。",
+        "role": "只外部引用 economy-v2；当前仅凌霄主线成功可形成既有零价值来源事实候选，七星/普通星宿/噩梦星宿不得进入 handoff 或结算；不定义 XP、货币、掉率、保底、材料产出、装备或塔奖励。",
+        "runtimeKey": null
+      },
+      {
+        "specId": "TT_SPEC_MANSION_ECONOMY_GLOBAL_TOWER_RUN_SEASON",
+        "status": "offline_design_candidate_pending_global_tower_adoption",
+        "role": "待上位全局塔采纳的天庭侧 run 候选中，七星、星宿普通/噩梦、塔小 Boss、大 Boss 与完整 run 关闭均无来源事件、profile、slot、资格或收据；赛季值和掉落也保持 null/deferred。",
         "runtimeKey": null
       }
     ],
@@ -324,33 +529,42 @@
       "二十八星宿四象各七宿、十二时辰三轮轮换和权威快照边界。",
       "普通到噩梦路径，以及七宿强化四圣、四圣庇护七宿的双向关系。",
       "七星、主线终局、二十八星宿普通/噩梦的会话身份、清理确认、严格不重连和逐人资格合同。",
+      "主线、七星、星宿与四圣的预警、决策、反制、可复盘失败、双通道可读性和 1–4 人适配。",
+      "四职业 Lv41/45/50/55/60 裸装包络、相对单位基线、共鸣系数和 1–4 人缩放，以及绝对对象字段的标定门禁。",
+      "公共路线与独立会话图的候选分布、场地职责和 dry-run 预览，同时保持无 Y3 写入。",
+      "640×416 图解、224×80 容量、两张 96×64 公共白盒和会话包络的唯一地图口径裁决。",
+      "UI 双通道预警、快照、队伍状态、失败复盘和称号展示的信息架构，以及无本地裁决约束。",
+      "Boss 轮廓、前摇、特效层级和场地交互的无 ID 资产需求蓝图。",
+      "受信任 Node/Fengari 离线基座对入章、观台、凌霄逐人完成、当前生命周期、回放字段和清理身份的回归。",
+      "待上位全局塔采纳的天庭侧四十层、八段五拍、每五层 Boss 槽、四个十层大 Boss 创意身份与第八段禁止继续交接的离线候选。",
       "经济候选、通天塔复用和运行时施工的严格隔离。"
     ],
     "shouldHave": [
       "七星/四圣称号的作用域、叠加、展示位和持久化裁决。",
       "天庭毕业法宝名称、配方、珍贵材料来源与属性裁决。",
-      "通天塔三或五层小 Boss 选择、十层大 Boss 名单与全局运行合同。"
+      "七星/四圣称号的 UI 展示资产、天庭毕业法宝名称、配方、珍贵材料来源与属性裁决。"
     ],
     "later": [
-      "地图、对象、战斗数值、Lua、UI、存档、多人与性能施工。",
-      "经济-v2 的权威编译、持久化收据、证明解析和实际奖池接入。"
+      "候选布局之外的真实地图、对象、战斗数值、地图根 Lua、UI、存档、多人与性能施工。",
+      "全局塔实例、楼层地图、内容抽取、词缀、记录、失败恢复和季节服务。",
+      "economy-v2 的权威编译、持久化收据、证明解析和实际奖池接入。"
     ]
   },
   "handoffs": {
     "objectConfig": [
-      "handoff/object-config-brief.json：以七星首领、二十八星官、四圣兽和材料候选为资产请求清单；不生成物编。"
+      "handoff/object-config-brief.json、object-blueprint/tianting-object-art-vfx-blueprint-contract.json、object-preallocation/tianting-object-field-reservation-contract.json、enemy-ecology/tianting-enemy-ecology-contract.json、mainline-boss/tianting-mainline-boss-contract.json、combat-baseline/tianting-combat-numeric-unit-baseline-contract.json 与 implementation/combat-calibration：先用五十五张逻辑卡冻结声音／投射物／表现状态、技能壳、单位／机制体和遭遇组装，再等待稳定对象键、模板、真实字段盘点与 P0 七道绝对投影门禁逐项采纳；当前不得生成 assets、mode、插件或实际物编。"
     ],
     "terrainLayout": [
-      "handoff/terrain-layout-brief.json：补充主线区域、七星星盘、四象阵台和四圣兽场地的逻辑职责；不含坐标。"
+      "handoff/terrain-layout-brief.json、terrain-layout/layout.json、scale-alignment/、enemy-ecology/、mainline-boss/、implementation/tianting-y3-construction-preflight 与 implementation/tianting-surface-construction-manifest：提供公共路线、五组主线首领级遭遇、七星星盘、四象阵台和四圣兽场地的读线职责；640×416 图解与 224×80/96×64 白盒口径均只供 dry-run，先经真实项目读取与结构预检，不含实际地图写入。"
     ],
     "luaLogic": [
-      "authority/tianting-progression-and-instance-authority-contract.json 与 handoff/lua-logic-brief.md：明确权威进度、Asia/Shanghai rotation_snapshot、双向共鸣、会话/清理和幂等边界；不含 Lua。"
+      "authority/tianting-progression-and-instance-authority-contract.json、主线纵切离线包、七星/星宿会话离线参考包、implementation/tianting-y3-construction-preflight、combat/、combat-baseline/、implementation/combat-calibration、enemy-ecology/、mainline-boss/ 与 handoff/lua-logic-brief.md：明确权威进度、当前生命周期、字段漂移、会话/清理、注入时辰、表现职责、P0 绝对字段门禁和真实 Y3 根预检；参考包只作进程内测试，不含 Y3 地图根 Lua 或绝对属性写入。"
     ],
     "uiPipeline": [
-      "handoff/ui-brief.md：描述轮换、星官机制、称号收藏和权威展示边界；不含 UI 资产。"
+      "handoff/ui-brief.md、ui/tianting-ui-accessibility-information-contract.json、mainline-presentation/ 与 implementation/tianting-surface-construction-manifest：描述轮换、队伍状态、失败复盘、称号收藏、双通道预警、五组主线表现职责、权威展示边界和未来 UI 根读取项；不含 UI 资产、节点或运行时命令写入。"
     ],
     "reviewPanel": [
-      "handoff/review-brief.md：复审用户固定内容、跨篇禁令、经济隔离、时间快照和施工门禁。"
+      "handoff/review-brief.md：复审用户固定内容、跨篇禁令、经济隔离、时间/赛季快照、战斗可读性、相对数值基线、P0 绝对标定协议、敌人生态、主线 Boss 深化、七星/星宿会话离线回归、主线叙事表现、白盒口径、纵切回归、Y3 结构预检、表面发现清单与施工门禁。"
     ]
   },
   "risks": [
@@ -376,17 +590,39 @@
     },
     {
       "id": "TT-RISK-005",
-      "risk": "把七星/星宿复用接口绑定到现有通天塔五节拍或提前设计塔掉落。",
-      "mitigation": "只登记未来小 Boss 内容池；三或五层未选，十层大 Boss 名单/奖励均 deferred。"
+      "risk": "把待采纳的四十层离线槽位误作全局已冻结地图/实例，或允许第八段 REST 后继续进入第九段，导致首轮状态语义与完整 run 分叉。",
+      "mitigation": "只允许循环 1–7 的 NEXT_CYCLE_HANDOFF；第八段禁交接，经既有终局关闭；槽位不改状态/转移、不生成 runtime floor key、掉落或记录。"
+    },
+    {
+      "id": "TT-RISK-006",
+      "risk": "把候选分区、坐标、会话门廊或预览图误认为已创建的 Y3 地图、入口、传送或编辑器资源。",
+      "mitigation": "所有布局工件均标为 offline dry-run candidate；实际写入前必须重新读取当前地图与资源并获得明确确认。"
+    },
+    {
+      "id": "TT-RISK-007",
+      "risk": "高密度特效、颜色复用或装饰遮挡让玩家无法读出预警、目标归属和反制路线。",
+      "mitigation": "强制形状/轨迹/空间与独立辅助的双通道可读性，场地优先保证观察、反制、退路和 1–4 人处理路径。"
+    },
+    {
+      "id": "TT-RISK-008",
+      "risk": "将附属敌人、精英或机制回响做成独立清场 KPI，遮挡 P0 信息，或降格复用主线首领、七星首领、二十八星官与四圣兽。",
+      "mitigation": "生态和首领深化合同均要求附属压力只放大既有来源、关系和反制；受保护首领身份不可复用，且所有单位、波次、掉落和经济绑定保持未施工。"
+    },
+    {
+      "id": "TT-RISK-009",
+      "risk": "在缺少技能循环、长期养成、伤害公式、动作帧和场地回放时，把相对系数误投影为 Y3 原始 HP、伤害或秒数。",
+      "mitigation": "数值合同只接受无量纲系数和裸装参照；所有绝对字段必须等待完整标定门禁，不得绕过对象键与实机回放。"
     }
   ],
   "unresolved": [
     "天庭逻辑进度、会话身份、可信时间基准和资格凭证的真实运行时键、持久化、提供方接入与迁移。",
-    "真实地图、对象、AI、技能、战斗数值、检查点、失败/清理/重连与多人同步。",
+    "候选布局之外的真实地图绑定、地图键、入口/传送、出生点、对象、AI、技能、原始战斗属性/秒数、检查点、失败/清理/重连与多人同步。",
+    "镜头高度、缩放、性能预算、无障碍表现、真实地形/碰撞/寻路和官方资源绑定。",
     "可信时间提供方的真实部署、维护窗口、异常回退与跨服务时钟对账。",
     "七星/星宿/四圣材料、夜巡钥、称号、毕业法宝的资源表、所有权、收据、掉率、保底、数量和属性。",
     "集合称号最终名称、效果作用域与实际叠加规则。",
-    "通天塔全局 run、三或五层小 Boss 间隔选择、十层大 Boss、楼层计划、词缀、记录与奖励。"
+    "敌人生态与主线 Boss 的实际对象名册、技能/Buff、AI、波次/刷新、绝对值、性能、地图/出生点和施工资产绑定。",
+    "通天塔实际全局 run 服务、楼层地图/实例、内容抽取、词缀、记录、失败恢复、季节服务、掉落来源、资格、收据与奖励。"
   ],
   "acceptanceCriteria": [
     "规格精确声明天庭等级带为 Lv41–60，且不新增经验阈值或升级时长。",
@@ -401,8 +637,16 @@
     "普通通关到噩梦钥候选的路径明确；噩梦中七宿强化四圣、四圣庇护七宿，并以逐链净宿建立终局窗口。",
     "二十八星宿普通与噩梦逐人校验常规完成；噩梦逐人校验同方位资格，断线成员不可重连或领奖。",
     "奖励只登记类别和用户指定称号倍率，不出现实际掉率、数量、保底、货币、属性或运行时资源键。",
-    "七星/二十八星宿只作为未来通天塔内容池；三或五层未选、十层大 Boss 名单和塔掉落未定。",
-    "所有天庭局部内容使用 TT_SPEC_ 身份并保持 runtimeKey 为 null。"
+    "天庭侧已提出四十层、八段五拍、每五层 Boss 槽和第 10/20/30/40 层四个大 Boss 创意身份；它仍待上位全局塔采纳，第八段禁交接也不产生运行时楼层、掉落、记录或赛季值。",
+    "所有天庭局部内容使用 TT_SPEC_ 身份并保持 runtimeKey 为 null。",
+    "战斗规格覆盖主线、七星、普通星宿与四圣噩梦的预警、决策、反制、复盘和一至四人路径，且颜色不是唯一关键信息。",
+    "战斗数值合同精确覆盖四职业 Lv41/45/50/55/60 裸装参照、八个无量纲标尺、既有单位身份、七宿—四圣相对共鸣和 1–4 人缩放；原始对象字段、秒数和经济仍为空。",
+    "候选公共路线、七星七张、四方普通、四方噩梦和凌霄会话图均有空间职责，但布局保持 preview/dry-run，未写入 Y3。",
+    "当前仅凌霄主线成功可进入既有零价值来源事实候选；七星、普通星宿、噩梦星宿、塔小 Boss、大 Boss 与完整 run 关闭均不得形成 handoff candidate、资格或结算输入。",
+    "11 类非通天塔敌人生态都只表达职责、预警、反制与首领护栏；不得产生单位、波次、掉落、资格、进度、收据或经济输入。",
+    "五组主线首领级遭遇均具备 P0 来源/关系、独立第二通道、串行单人解、1–4 人适配、可见反制和可复盘失败；附属压力不得遮挡 P0 或越权写入会话、进度、奖励或结算。",
+    "七星与星宿会话参考模型只能以注入、进程内数据复核既有权威合同；它们不得创建真实进度、时间、成员、资格、会话、奖励、收据或 economy-v2 输入。",
+    "五组主线 Boss 的叙事与表现深化恰好保留三段锚点、双通道预警、失败复盘、非经济确认和 L0–L4 表现职责；它不能裁决权威事实或绑定任何实际资产。"
   ],
   "crossChapterBoundary": {
     "protectedExistingKey": "DF_PROGRESS_YANLUO_HALL_CLEARED",
@@ -424,13 +668,134 @@
     "artifact": "tianting-content-expansion-contract.json",
     "status": "offline_design",
     "runtimeKey": null,
-    "towerReuseDoesNotBindExistingBeats": true
+    "towerReuseDoesNotBindExistingBeats": false,
+    "allowedOuterBeatAnnotation": "fifth_beat_content_slot_only"
   },
   "authorityProgressionAndInstanceContract": {
     "artifact": "authority/tianting-progression-and-instance-authority-contract.json",
     "status": "offline_design",
     "runtimeKey": null,
     "productionGate": "closed"
+  },
+  "combatReadabilityContract": {
+    "artifact": "combat/tianting-combat-readability-contract.json",
+    "status": "offline_design",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "acceptanceRange": "TT-COMBAT-ACC-001..031"
+  },
+  "combatNumericUnitBaselineContract": {
+    "artifact": "combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+    "status": "accepted_relative_balance_baseline_offline_only",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "acceptanceRange": "TT-NUM-ACC-001..027",
+    "absoluteObjectFieldProjection": null
+  },
+  "terrainLayoutDryRun": {
+    "artifact": "terrain-layout/layout.json",
+    "status": "offline_dry_run_candidate",
+    "mode": "preview",
+    "runtimeKey": null,
+    "actualMapKey": null,
+    "writePolicy": "confirmation_required_before_any_Y3Maker_or_Y3_write"
+  },
+  "mapScaleAlignmentContract": {
+    "artifact": "terrain-layout/tianting-map-scale-alignment-contract.json",
+    "status": "offline_preconstruction_decision",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "diagramUnitOnly": true,
+    "actualMapKey": null
+  },
+  "uiAccessibilityInformationContract": {
+    "artifact": "ui/tianting-ui-accessibility-information-contract.json",
+    "status": "offline_design",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "acceptanceRange": "TT-UI-ACC-001..024"
+  },
+  "objectArtVfxBlueprintContract": {
+    "artifact": "object-blueprint/tianting-object-art-vfx-blueprint-contract.json",
+    "status": "offline_design_requirements_only",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "acceptanceRange": "TT-BLUEPRINT-ACC-001..031"
+  },
+  "objectFieldReservationContract": {
+    "artifact": "object-preallocation/tianting-object-field-reservation-contract.json",
+    "status": "offline_field_reservation_only",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "pluginGeneration": false,
+    "normalizedDesignInput": null,
+    "stableObjectKey": null,
+    "copyFrom": null,
+    "absoluteObjectFieldProjection": null,
+    "acceptanceRange": "TT-OBJRES-ACC-001..008"
+  },
+  "enemyEcologyContract": {
+    "artifact": "enemy-ecology/tianting-enemy-ecology-contract.json",
+    "status": "offline_design_requirements_only",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "acceptanceRange": "TT-ENEMY-ACC-001..030",
+    "unitObjectWaveAndEconomyBinding": null
+  },
+  "mainlineBossDeepeningContract": {
+    "artifact": "mainline-boss/tianting-mainline-boss-contract.json",
+    "status": "offline_design_requirements_only",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "acceptanceRange": "TT-MAINLINE-BOSS-ACC-001..030",
+    "bossObjectSkillAiAndEconomyBinding": null
+  },
+  "authorityRuntimeVerticalSlice": {
+    "artifact": "../../../implementation/tianting-authority-vertical-slice/package-contract.json",
+    "status": "offline_tested_reference_only",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "y3Integration": false,
+    "economyCall": null
+  },
+  "sevenStarSessionReference": {
+    "artifact": "../../../implementation/tianting-seven-star-session-reference/package-contract.json",
+    "status": "offline_reference_model_only",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "y3Integration": false,
+    "economyOutputs": null,
+    "acceptanceRange": "TT-ACC-043"
+  },
+  "mansionSessionReference": {
+    "artifact": "../../../implementation/tianting-mansion-session-reference/package-contract.json",
+    "status": "offline_reference_only",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "y3Integration": false,
+    "economyOutputs": null,
+    "acceptanceRange": "TT-ACC-044"
+  },
+  "mainlineNarrativePresentationContract": {
+    "artifact": "mainline-presentation/tianting-mainline-presentation-contract.json",
+    "status": "offline_narrative_presentation_spec",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "y3Integration": false,
+    "economyOutputs": null,
+    "acceptanceRange": "TT-PRESENTATION-ACC-001..006"
+  },
+  "towerEconomyFullRunContract": {
+    "artifact": "tower-economy/mansion-economy-global-tower-run-season-contract.json",
+    "status": "tianting_offline_candidate_pending_global_tower_adoption",
+    "runtimeKey": null,
+    "productionGate": "closed",
+    "upstreamGlobalTowerAdoption": "pending",
+    "candidateFullRunFloorCount": 40,
+    "candidateCycleCount": 8,
+    "candidateMajorBossEveryFloors": 10,
+    "economicValues": "null_or_deferred",
+    "runtimeRun": null
   },
   "economyV2AuthorityReceiptInputHandoff": {
     "artifact": "../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json",

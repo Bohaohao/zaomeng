@@ -23,6 +23,7 @@
 - [`docs/`](docs/README.md)：策划总索引、世界观、地图、物编规格和职业设计归档。
 - [`docs/归档/地图设计/`](docs/归档/地图设计/README.md)：地形布局、扩容策略和花果山白盒交付。
 - [`docs/归档/职业设计/`](docs/归档/职业设计/README.md)：职业蓝本及 C01-C04 子基线。
+- [`docs/归档/物编施工/`](docs/归档/物编施工/README.md)：离线施工阶段的验收、门禁与复审归档。
 - [`docs/物编/`](docs/物编/README.md)：英雄、技能、效果的预施工字段规范。
 - [`implementation/`](implementation/)：C01-C04 职业包与花果山遭遇包的离线 Lua、桥接契约、预检与测试入口。
 
@@ -86,6 +87,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\implementation\run-all-pre
 - [economy-v2 权威结算内核与天庭收据输入交接归档](docs/归档/物编施工/07-economy-v2权威结算内核与天庭收据输入交接归档.md) 已记录经济内核复审修复、Tide Trace 外部 fixture 的可信闭包、受信任 Node/Fengari 离线验收，以及天庭完成/会话到经济收据输入候选的零价值交接。
 - 天庭来源证据封套把完成 receipt/proof、会话 route/instance/epoch/revision、成员快照/状态和星宿轮换原子绑定；没有 source-profile、slot、资格、roll、保底或任何奖励分配。
 - 全量离线验收通过 `225` 条结算、`395` 条天庭交接与 `83` 条 Tide Lua 断言；独立复审 P0/P1/P2 均已关闭。生产账本、证明服务、Y3 接入和多人实机仍未开始。
+
+### 天庭离线施工收口与 P0 外部实证接入（2026-07-24）
+
+- [天庭离线施工收口与 P0 外部实证接入归档](docs/归档/物编施工/08-天庭离线施工收口与P0外部实证接入归档.md) 已收口主线、遭遇、副本、地图、UI、物编/资产蓝图和施工交接的离线规格；天庭主校验通过 `7183 checks`，设计规格完整度为 `100/100 ready`。
+- P0 外部实机采集接入已冻结来源—预检证明、四角色两两隔离和单向 manifest 审阅；真实 Y3 工程、外部采集方、逐门实证与绝对单位字段仍均未产生，七门保持 `0/7`。
 
 ## 版本管理范围
 

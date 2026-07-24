@@ -1,0 +1,320 @@
+{
+  "version": 1,
+  "package_status": "accepted_relative_balance_baseline_offline_only",
+  "production_gate": "closed",
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_COMBAT_NUMERIC_UNIT_BASELINE",
+    "display_name": "天庭战斗数值与单位基线裁决",
+    "scope": "tianting_mainline_seven_star_mansion_and_four_sacred_relative_combat_baseline_only",
+    "runtime_key": null
+  },
+  "source_policy": {
+    "allowed_sources": [
+      "../../02-破妄英雄单位与基础属性规格.md",
+      "../../06-镇界英雄单位与基础属性规格.md",
+      "../../09-持明英雄单位与基础属性规格.md",
+      "../../12-巡猎英雄单位与基础属性规格.md",
+      "../../../归档/职业设计/12-跨职业白盒战斗夹具.md",
+      "../combat/tianting-combat-readability-contract.json",
+      "../enemy-ecology/tianting-enemy-ecology-contract.json",
+      "../mainline-boss/tianting-mainline-boss-contract.json",
+      "../tianting-content-expansion-contract.json",
+      "../authority/tianting-progression-and-instance-authority-contract.json"
+    ],
+    "rule": "existing hero bare-stat formulas provide the numeric player envelope; readable-mechanic and authority contracts provide identity and boundary only. This contract owns relative combat coefficients and must not infer runtime object values, session outcomes or economic outputs.",
+    "runtime_key": null
+  },
+  "hard_boundaries": {
+    "chapter_level_band": [41, 60],
+    "party_cap": [1, 4],
+    "tower_scope": "excluded_pending_upstream_global_tower_adoption",
+    "authority_rule": "relative combat coefficients may consume only a future authority-confirmed active-member count; they must not decide admission, membership, progress, success, failure, cleanup, reconnect, rotation, credential or any authority mutation.",
+    "cross_chapter_rule": "must not read, write or register as a consumer of DF_PROGRESS_YANLUO_HALL_CLEARED.",
+    "economic_rule": "must not define or derive experience, currency, material, item, probability, pity, source profile, reward slot, qualification, receipt, settlement, title effect or artifact effect.",
+    "runtime_rule": "all runtime keys, object and unit IDs, ability and buff IDs, resource and map IDs, Lua bindings and object-field projections remain null.",
+    "runtime_key": null
+  },
+  "player_bare_stat_envelope": {
+    "spec_id": "TT_SPEC_COMBAT_PLAYER_BARE_STAT_ENVELOPE",
+    "meaning": "Reference-only Lv41/Lv55/Lv60 naked-character values calculated from the four already-reviewed profession formulas. They are neither encounter DPS nor effective survivability and do not include skills, equipment, artifacts, pets, collections, buffs, defense formula or action-frame results.",
+    "profiles": [
+      {
+        "spec_id": "TT_SPEC_COMBAT_REFERENCE_C01_BARE",
+        "profession_id": "C01",
+        "primary_damage_attribute": "physical_attack",
+        "reference_levels": [
+          {"level": 41, "hp_max": 3340, "primary_attack": 276, "defense_phy": 98, "defense_mag": 76},
+          {"level": 45, "hp_max": 3612, "primary_attack": 299, "defense_phy": 106, "defense_mag": 82},
+          {"level": 50, "hp_max": 3952, "primary_attack": 327, "defense_phy": 115, "defense_mag": 90},
+          {"level": 55, "hp_max": 4292, "primary_attack": 356, "defense_phy": 125, "defense_mag": 97},
+          {"level": 60, "hp_max": 4632, "primary_attack": 384, "defense_phy": 134, "defense_mag": 105}
+        ],
+        "movement_speed": 3.8,
+        "attack_interval": 1.05,
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_COMBAT_REFERENCE_C02_BARE",
+        "profession_id": "C02",
+        "primary_damage_attribute": "physical_attack",
+        "reference_levels": [
+          {"level": 41, "hp_max": 3920, "primary_attack": 230, "defense_phy": 120, "defense_mag": 92},
+          {"level": 45, "hp_max": 4240, "primary_attack": 249, "defense_phy": 129, "defense_mag": 99},
+          {"level": 50, "hp_max": 4640, "primary_attack": 272, "defense_phy": 141, "defense_mag": 108},
+          {"level": 55, "hp_max": 5040, "primary_attack": 296, "defense_phy": 152, "defense_mag": 117},
+          {"level": 60, "hp_max": 5440, "primary_attack": 319, "defense_phy": 164, "defense_mag": 126}
+        ],
+        "movement_speed": 3.55,
+        "attack_interval": 1.15,
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_COMBAT_REFERENCE_C03_BARE",
+        "profession_id": "C03",
+        "primary_damage_attribute": "magic_attack",
+        "reference_levels": [
+          {"level": 41, "hp_max": 3150, "primary_attack": 296, "defense_phy": 82, "defense_mag": 94},
+          {"level": 45, "hp_max": 3406, "primary_attack": 320, "defense_phy": 88, "defense_mag": 101},
+          {"level": 50, "hp_max": 3726, "primary_attack": 351, "defense_phy": 96, "defense_mag": 110},
+          {"level": 55, "hp_max": 4046, "primary_attack": 381, "defense_phy": 104, "defense_mag": 119},
+          {"level": 60, "hp_max": 4366, "primary_attack": 412, "defense_phy": 112, "defense_mag": 128}
+        ],
+        "movement_speed": 3.65,
+        "attack_interval": 1.1,
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_COMBAT_REFERENCE_C04_BARE",
+        "profession_id": "C04",
+        "primary_damage_attribute": "physical_attack",
+        "reference_levels": [
+          {"level": 41, "hp_max": 2880, "primary_attack": 264, "defense_phy": 79, "defense_mag": 84},
+          {"level": 45, "hp_max": 3112, "primary_attack": 286, "defense_phy": 85, "defense_mag": 91},
+          {"level": 50, "hp_max": 3402, "primary_attack": 313, "defense_phy": 93, "defense_mag": 99},
+          {"level": 55, "hp_max": 3692, "primary_attack": 340, "defense_phy": 101, "defense_mag": 107},
+          {"level": 60, "hp_max": 3982, "primary_attack": 368, "defense_phy": 108, "defense_mag": 115}
+        ],
+        "movement_speed": 3.85,
+        "attack_interval": 1.0,
+        "runtime_key": null
+      }
+    ],
+    "aggregate_reference": [
+      {"level": 41, "mean_hp_max": 3322.5, "mean_primary_attack": 266.5, "mean_defense_phy": 94.75, "mean_defense_mag": 86.5},
+      {"level": 45, "mean_hp_max": 3592.5, "mean_primary_attack": 288.5, "mean_defense_phy": 102.0, "mean_defense_mag": 93.25},
+      {"level": 50, "mean_hp_max": 3930.0, "mean_primary_attack": 315.75, "mean_defense_phy": 111.25, "mean_defense_mag": 101.75},
+      {"level": 55, "mean_hp_max": 4267.5, "mean_primary_attack": 343.25, "mean_defense_phy": 120.5, "mean_defense_mag": 110.0},
+      {"level": 60, "mean_hp_max": 4605.0, "mean_primary_attack": 370.75, "mean_defense_phy": 129.5, "mean_defense_mag": 118.5}
+    ],
+    "range_reference": {
+      "movement_speed": {"minimum": 3.55, "maximum": 3.85},
+      "attack_interval": {"minimum": 1.0, "maximum": 1.15}
+    },
+    "runtime_key": null
+  },
+  "relative_scalar_system": {
+    "spec_id": "TT_SPEC_COMBAT_RELATIVE_SCALAR_SYSTEM",
+    "meaning": "All encounter coefficients below are deliberately dimensionless. The scalar values are one by definition; their real HP, damage, speed and seconds remain unbound until the calibration gate passes.",
+    "scalars": [
+      {"symbol": "H0", "meaning": "controlled celestial soldier effective-health reference", "relative_value": 1.0, "absolute_runtime_value": null},
+      {"symbol": "A0", "meaning": "controlled celestial soldier one-action pressure reference", "relative_value": 1.0, "absolute_runtime_value": null},
+      {"symbol": "M0", "meaning": "controlled celestial soldier movement reference", "relative_value": 1.0, "absolute_runtime_value": null},
+      {"symbol": "I0", "meaning": "controlled celestial soldier attack-cadence reference", "relative_value": 1.0, "absolute_runtime_value": null},
+      {"symbol": "R0", "meaning": "one complete read-P0, choose, counter and visible-result decision beat", "relative_value": 1.0, "absolute_runtime_value": null},
+      {"symbol": "B0", "meaning": "one mainline or seven-star counterplay exposure budget", "relative_value": 1.0, "absolute_runtime_value": null},
+      {"symbol": "O0", "meaning": "one mansion-officer encounter exposure budget", "relative_value": 1.0, "absolute_runtime_value": null},
+      {"symbol": "S0", "meaning": "one nightmare sacred-beast core exposure budget", "relative_value": 1.0, "absolute_runtime_value": null}
+    ],
+    "runtime_key": null
+  },
+  "party_scaling": {
+    "spec_id": "TT_SPEC_COMBAT_PARTY_SCALING_BASELINE",
+    "future_input_rule": "only a future authority-confirmed active-member count may select a multiplier. This is not a membership, leave, reconnect, cleanup or session contract.",
+    "member_counts": [1, 2, 3, 4],
+    "profiles": [
+      {"profile_id": "single_owner", "allowed_member_counts": [1], "exposure_multiplier": [1.0], "pressure_multiplier": [1.0]},
+      {"profile_id": "small_monster", "exposure_multiplier": [1.0, 1.0, 1.0, 1.0], "pressure_multiplier": [1.0, 1.0, 1.0, 1.0]},
+      {"profile_id": "elite", "exposure_multiplier": [1.0, 1.35, 1.70, 2.05], "pressure_multiplier": [1.0, 1.0, 1.0, 1.0]},
+      {"profile_id": "mainline_boss", "exposure_multiplier": [1.0, 1.50, 2.00, 2.50], "pressure_multiplier": [1.0, 1.0, 1.0, 1.0]},
+      {"profile_id": "mansion_officer", "exposure_multiplier": [1.0, 1.45, 1.90, 2.35], "pressure_multiplier": [1.0, 1.0, 1.0, 1.0]},
+      {"profile_id": "sacred_beast", "exposure_multiplier": [1.0, 1.50, 2.00, 2.50], "pressure_multiplier": [1.0, 1.0, 1.0, 1.0]}
+    ],
+    "invariant_multipliers": {
+      "movement_speed": 1.0,
+      "attack_interval": 1.0,
+      "p0_window": 1.0,
+      "counter_window": 1.0
+    },
+    "pressure_slot_limit": {
+      "one_member": {"primary_p0_sources": 1, "secondary_pressures": 1},
+      "two_to_four_members": {"primary_p0_sources": 1, "secondary_pressures": 2},
+      "rule": "every secondary pressure retains a serial single-player solution; a member-count increase never creates a simultaneous-hold requirement."
+    },
+    "runtime_key": null
+  },
+  "enemy_ecology_unit_baselines": [
+    {
+      "spec_id": "TT_SPEC_ENEMY_CONTROLLED_CELESTIAL_SOLDIER",
+      "unit_class": "small_monster",
+      "party_profile_id": "small_monster",
+      "stat_basis": {"effective_health": {"symbol": "H0", "coefficient": 1.0}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.80}, "armor_band": "low", "movement": {"symbol": "M0", "coefficient": 0.95}, "attack_cadence": {"symbol": "I0", "coefficient": 1.10}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.0}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.0}},
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_ELITE_FOUR_GATE_GUARD_MECHANISM",
+      "unit_class": "interaction_elite",
+      "party_profile_id": "elite",
+      "stat_basis": {"effective_health": null, "single_action_pressure": {"symbol": "A0", "coefficient": 0.70}, "armor_band": null, "movement": null, "attack_cadence": {"symbol": "I0", "coefficient": 1.35}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}},
+      "rule": "route-state interaction must not become a kill-health gate or armor stack.",
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_ELITE_UNCONTROLLED_CLOUD_BEAST",
+      "unit_class": "elite",
+      "party_profile_id": "elite",
+      "stat_basis": {"effective_health": {"symbol": "H0", "coefficient": 0.80}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.70}, "armor_band": "none_or_low", "movement": {"symbol": "M0", "coefficient": 1.20}, "attack_cadence": {"symbol": "I0", "coefficient": 0.95}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.25}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.0}},
+      "runtime_key": null
+    },
+    {
+      "spec_id": "TT_SPEC_ELITE_GENERIC_STAR_OBSERVER",
+      "unit_class": "elite",
+      "party_profile_id": "elite",
+      "stat_basis": {"effective_health": {"symbol": "H0", "coefficient": 1.55}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.60}, "armor_band": "low", "movement": {"symbol": "M0", "coefficient": 0.90}, "attack_cadence": {"symbol": "I0", "coefficient": 1.30}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}},
+      "runtime_key": null
+    },
+    {"spec_id": "TT_SPEC_ENTITY_PATROL_SIGNAL_ECHO", "unit_class": "relation_mechanism", "combat_stats": null, "runtime_key": null},
+    {"spec_id": "TT_SPEC_ENTITY_BROKEN_RAINBOW_FORMATION_EYE", "unit_class": "relation_mechanism", "combat_stats": null, "runtime_key": null},
+    {"spec_id": "TT_SPEC_ENTITY_STAR_CALENDAR_RIFT", "unit_class": "relation_mechanism", "combat_stats": null, "runtime_key": null},
+    {"spec_id": "TT_SPEC_ENTITY_FRACTURED_LAW_COMMAND_NODE", "unit_class": "relation_mechanism", "combat_stats": null, "runtime_key": null},
+    {"spec_id": "TT_SPEC_ENTITY_SEVEN_STAR_RULE_ECHO", "unit_class": "relation_mechanism", "combat_stats": null, "runtime_key": null},
+    {"spec_id": "TT_SPEC_ENTITY_MANSION_ORIENTATION_ECHO", "unit_class": "relation_mechanism", "combat_stats": null, "runtime_key": null},
+    {"spec_id": "TT_SPEC_ENTITY_NIGHTMARE_RESONANCE_SUPPORT", "unit_class": "relation_mechanism", "combat_stats": null, "runtime_key": null}
+  ],
+  "mainline_boss_baselines": [
+    {"spec_id": "TT_SPEC_MAINLINE_BOSS_SPLIT_SOUTH_GATE", "party_profile_id": "mainline_boss", "phase_exposure_budget": [{"symbol": "B0", "coefficient": 0.80}, {"symbol": "B0", "coefficient": 0.80}, {"symbol": "B0", "coefficient": 0.80}], "single_action_pressure": {"symbol": "A0", "coefficient": 0.75}, "movement": {"symbol": "M0", "coefficient": 0.85}, "attack_cadence": {"symbol": "I0", "coefficient": 1.05}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.25}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.0}, "secondary_pressure_rule": "patrol_signal_only_no_spawn_wave", "runtime_key": null},
+    {"spec_id": "TT_SPEC_MAINLINE_BOSS_BROKEN_RAINBOW_FORMATION", "party_profile_id": "mainline_boss", "phase_exposure_budget": [{"symbol": "B0", "coefficient": 1.15}, {"symbol": "B0", "coefficient": 1.15}, {"symbol": "B0", "coefficient": 1.15}], "single_action_pressure": {"symbol": "A0", "coefficient": 1.10}, "movement": {"symbol": "M0", "coefficient": 0.70}, "attack_cadence": {"symbol": "I0", "coefficient": 1.25}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.25}, "secondary_pressure_rule": "formation_eye_plus_one_controlled_soldier_pressure_layer", "runtime_key": null},
+    {"spec_id": "TT_SPEC_MAINLINE_BOSS_FOUR_GATE_IMBALANCE", "party_profile_id": "mainline_boss", "phase_exposure_budget": [{"symbol": "B0", "coefficient": 1.20}, {"symbol": "B0", "coefficient": 1.20}, {"symbol": "B0", "coefficient": 1.20}], "single_action_pressure": {"symbol": "A0", "coefficient": 0.95}, "movement": null, "attack_cadence": {"symbol": "I0", "coefficient": 1.35}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "secondary_pressure_rule": "one_guard_mechanism_group_or_cloud_beast_not_both_full", "runtime_key": null},
+    {"spec_id": "TT_SPEC_MAINLINE_BOSS_CELESTIAL_OBSERVATORY", "party_profile_id": "mainline_boss", "phase_exposure_budget": [{"symbol": "B0", "coefficient": 0.90}, {"symbol": "B0", "coefficient": 0.90}, {"symbol": "B0", "coefficient": 0.90}], "single_action_pressure": {"symbol": "A0", "coefficient": 0.60}, "movement": {"symbol": "M0", "coefficient": 0.80}, "attack_cadence": {"symbol": "I0", "coefficient": 1.40}, "p0_window": {"symbol": "R0", "minimum_coefficient": 2.0}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "secondary_pressure_rule": "star_observer_and_rift_relation_only", "runtime_key": null},
+    {"spec_id": "TT_SPEC_MAINLINE_BOSS_LINGXIAO_OUTER_COURT", "party_profile_id": "mainline_boss", "phase_exposure_budget": [{"symbol": "B0", "coefficient": 1.60}, {"symbol": "B0", "coefficient": 1.60}, {"symbol": "B0", "coefficient": 1.60}], "single_action_pressure": {"symbol": "A0", "coefficient": 1.20}, "movement": {"symbol": "M0", "coefficient": 0.85}, "attack_cadence": {"symbol": "I0", "coefficient": 1.20}, "p0_window": {"symbol": "R0", "minimum_coefficient": 2.0}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "secondary_pressure_rule": "fractured_law_command_nodes_only_no_clear_all_wave", "runtime_key": null}
+  ],
+  "seven_star_trial_baselines": [
+    {"spec_id": "TT_SPEC_SOLO_TIANSHU", "trial_index": 1, "party_profile_id": "single_owner", "exposure_budget": {"symbol": "B0", "coefficient": 0.85}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.75}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.25}, "runtime_key": null},
+    {"spec_id": "TT_SPEC_SOLO_TIANXUAN", "trial_index": 2, "party_profile_id": "single_owner", "exposure_budget": {"symbol": "B0", "coefficient": 0.95}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.80}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.25}, "runtime_key": null},
+    {"spec_id": "TT_SPEC_SOLO_TIANJI", "trial_index": 3, "party_profile_id": "single_owner", "exposure_budget": {"symbol": "B0", "coefficient": 1.05}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.85}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.75}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.25}, "runtime_key": null},
+    {"spec_id": "TT_SPEC_SOLO_TIANQUAN", "trial_index": 4, "party_profile_id": "single_owner", "exposure_budget": {"symbol": "B0", "coefficient": 1.10}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.90}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.75}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.50}, "runtime_key": null},
+    {"spec_id": "TT_SPEC_SOLO_YUHENG", "trial_index": 5, "party_profile_id": "single_owner", "exposure_budget": {"symbol": "B0", "coefficient": 1.15}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.85}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.75}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.50}, "runtime_key": null},
+    {"spec_id": "TT_SPEC_SOLO_KAIYANG", "trial_index": 6, "party_profile_id": "single_owner", "exposure_budget": {"symbol": "B0", "coefficient": 1.25}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.95}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.75}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.50}, "runtime_key": null},
+    {"spec_id": "TT_SPEC_SOLO_YAOGUANG", "trial_index": 7, "party_profile_id": "single_owner", "exposure_budget": {"symbol": "B0", "coefficient": 1.35}, "single_action_pressure": {"symbol": "A0", "coefficient": 1.05}, "p0_window": {"symbol": "R0", "minimum_coefficient": 2.0}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.50}, "runtime_key": null}
+  ],
+  "mansion_officer_baselines": {
+    "segment_profiles": [
+      {"profile_id": "front_pair", "party_profile_id": "mansion_officer", "exposure_budget": {"symbol": "O0", "coefficient": 0.75}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.70}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.25}},
+      {"profile_id": "middle_pair", "party_profile_id": "mansion_officer", "exposure_budget": {"symbol": "O0", "coefficient": 0.90}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.80}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}},
+      {"profile_id": "rear_pair", "party_profile_id": "mansion_officer", "exposure_budget": {"symbol": "O0", "coefficient": 1.05}, "single_action_pressure": {"symbol": "A0", "coefficient": 0.95}, "p0_window": {"symbol": "R0", "minimum_coefficient": 1.75}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}},
+      {"profile_id": "guard_single", "party_profile_id": "mansion_officer", "exposure_budget": {"symbol": "O0", "coefficient": 1.25}, "single_action_pressure": {"symbol": "A0", "coefficient": 1.10}, "p0_window": {"symbol": "R0", "minimum_coefficient": 2.0}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}}
+    ],
+    "quadrant_assignments": [
+      {"quadrant": "东方青龙", "officers": [{"spec_id": "TT_SPEC_MANSION_JIA_MU_JIAO", "profile_id": "front_pair"}, {"spec_id": "TT_SPEC_MANSION_KANG_JIN_LONG", "profile_id": "front_pair"}, {"spec_id": "TT_SPEC_MANSION_DI_TU_HE", "profile_id": "middle_pair"}, {"spec_id": "TT_SPEC_MANSION_FANG_RI_TU", "profile_id": "middle_pair"}, {"spec_id": "TT_SPEC_MANSION_XIN_YUE_HU", "profile_id": "rear_pair"}, {"spec_id": "TT_SPEC_MANSION_WEI_HUO_HU", "profile_id": "rear_pair"}, {"spec_id": "TT_SPEC_MANSION_JI_SHUI_BAO", "profile_id": "guard_single"}]},
+      {"quadrant": "南方朱雀", "officers": [{"spec_id": "TT_SPEC_MANSION_JING_MU_AN", "profile_id": "front_pair"}, {"spec_id": "TT_SPEC_MANSION_GUI_JIN_YANG", "profile_id": "front_pair"}, {"spec_id": "TT_SPEC_MANSION_LIU_TU_ZHANG", "profile_id": "middle_pair"}, {"spec_id": "TT_SPEC_MANSION_XING_RI_MA", "profile_id": "middle_pair"}, {"spec_id": "TT_SPEC_MANSION_ZHANG_YUE_LU", "profile_id": "rear_pair"}, {"spec_id": "TT_SPEC_MANSION_YI_HUO_SHE", "profile_id": "rear_pair"}, {"spec_id": "TT_SPEC_MANSION_ZHEN_SHUI_YIN", "profile_id": "guard_single"}]},
+      {"quadrant": "西方白虎", "officers": [{"spec_id": "TT_SPEC_MANSION_KUI_MU_LANG", "profile_id": "front_pair"}, {"spec_id": "TT_SPEC_MANSION_LOU_JIN_GOU", "profile_id": "front_pair"}, {"spec_id": "TT_SPEC_MANSION_WEI_TU_ZHI", "profile_id": "middle_pair"}, {"spec_id": "TT_SPEC_MANSION_MAO_RI_JI", "profile_id": "middle_pair"}, {"spec_id": "TT_SPEC_MANSION_BI_YUE_WU", "profile_id": "rear_pair"}, {"spec_id": "TT_SPEC_MANSION_ZI_HUO_HOU", "profile_id": "rear_pair"}, {"spec_id": "TT_SPEC_MANSION_SHEN_SHUI_YUAN", "profile_id": "guard_single"}]},
+      {"quadrant": "北方玄武", "officers": [{"spec_id": "TT_SPEC_MANSION_DOU_MU_XIE", "profile_id": "front_pair"}, {"spec_id": "TT_SPEC_MANSION_NIU_JIN_NIU", "profile_id": "front_pair"}, {"spec_id": "TT_SPEC_MANSION_NV_TU_FU", "profile_id": "middle_pair"}, {"spec_id": "TT_SPEC_MANSION_XU_RI_SHU", "profile_id": "middle_pair"}, {"spec_id": "TT_SPEC_MANSION_WEI_YUE_YAN", "profile_id": "rear_pair"}, {"spec_id": "TT_SPEC_MANSION_SHI_HUO_ZHU", "profile_id": "rear_pair"}, {"spec_id": "TT_SPEC_MANSION_BI_SHUI_YU", "profile_id": "guard_single"}]}
+    ],
+    "normal_mode_rule": "the four segment profiles follow the already-fixed front-pair, middle-pair, rear-pair and guard-single order. They do not create waves, spawn counts or a session schedule.",
+    "runtime_key": null
+  },
+  "four_sacred_nightmare_baselines": [
+    {"spec_id": "TT_SPEC_SACRED_BEAST_AZURE_DRAGON", "quadrant": "东方青龙", "party_profile_id": "sacred_beast", "core_exposure_budget": {"symbol": "S0", "coefficient": 3.20}, "single_action_pressure": {"symbol": "A0", "coefficient": 1.15}, "movement": {"symbol": "M0", "coefficient": 1.0}, "attack_cadence": {"symbol": "I0", "coefficient": 1.10}, "p0_window": {"symbol": "R0", "minimum_coefficient": 2.0}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "runtime_key": null},
+    {"spec_id": "TT_SPEC_SACRED_BEAST_VERMILION_BIRD", "quadrant": "南方朱雀", "party_profile_id": "sacred_beast", "core_exposure_budget": {"symbol": "S0", "coefficient": 3.35}, "single_action_pressure": {"symbol": "A0", "coefficient": 1.10}, "movement": {"symbol": "M0", "coefficient": 0.85}, "attack_cadence": {"symbol": "I0", "coefficient": 1.25}, "p0_window": {"symbol": "R0", "minimum_coefficient": 2.0}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "runtime_key": null},
+    {"spec_id": "TT_SPEC_SACRED_BEAST_WHITE_TIGER", "quadrant": "西方白虎", "party_profile_id": "sacred_beast", "core_exposure_budget": {"symbol": "S0", "coefficient": 3.30}, "single_action_pressure": {"symbol": "A0", "coefficient": 1.30}, "movement": {"symbol": "M0", "coefficient": 1.05}, "attack_cadence": {"symbol": "I0", "coefficient": 0.95}, "p0_window": {"symbol": "R0", "minimum_coefficient": 2.0}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "runtime_key": null},
+    {"spec_id": "TT_SPEC_SACRED_BEAST_BLACK_TORTOISE", "quadrant": "北方玄武", "party_profile_id": "sacred_beast", "core_exposure_budget": {"symbol": "S0", "coefficient": 3.55}, "single_action_pressure": {"symbol": "A0", "coefficient": 1.15}, "movement": {"symbol": "M0", "coefficient": 0.70}, "attack_cadence": {"symbol": "I0", "coefficient": 1.35}, "p0_window": {"symbol": "R0", "minimum_coefficient": 2.0}, "counter_window": {"symbol": "R0", "minimum_coefficient": 1.5}, "runtime_key": null}
+  ],
+  "nightmare_resonance_relative_rule": {
+    "spec_id": "TT_SPEC_NIGHTMARE_RESONANCE_RELATIVE_BASELINE",
+    "seven_officer_to_sacred_core_exposure_multiplier_per_active_link": 0.10,
+    "sacred_to_officer_pressure_multiplier_per_active_link": 0.06,
+    "active_link_count": [0, 1, 2, 3, 4, 5, 6, 7],
+    "calculation_rule": "core_exposure = base_core_exposure * (1 + active_link_count * 0.10); officer_pressure = base_officer_pressure * (1 + active_link_count * 0.06). A future authority state alone decides which links are active or purified; this contract does not store, mutate or validate link state.",
+    "runtime_key": null
+  },
+  "calibration_gate": {
+    "spec_id": "TT_SPEC_COMBAT_ABSOLUTE_VALUE_CALIBRATION_GATE",
+    "status": "blocked_pending_runtime_evidence",
+    "canonical_p0_gate_source": {
+      "artifact": "../../../../implementation/combat-calibration/contract/cross-profession-combat-calibration-contract.json",
+      "contract_id": "CAL_SPEC_CROSS_PROFESSION_ABSOLUTE_COMBAT_V1",
+      "source_content_sha256": "72405ee76ed8841ff067eb3bb691db6dd29702d1635dc8103adc27d6a3f6f2a8",
+      "evidence_collection_artifact": "../../../../implementation/combat-calibration/evidence-adoption/p0-evidence-collection-and-adoption-contract.json",
+      "evidence_collection_spec_id": "CAL_SPEC_P0_EVIDENCE_COLLECTION_AND_ADOPTION_V1",
+      "current_satisfied_gate_ids": [],
+      "rule": "This TianTing relative baseline consumes the canonical P0 gate IDs only as a blocked prerequisite. It cannot reinterpret, shorten, adopt or satisfy any P0 gate, and it must wait for the external evidence-adoption package plus a separate absolute-field projection review."
+    },
+    "must_exist_before_absolute_projection": [
+      "P0-GATE-01-all-12-fixed-builds-declared-and-replayed",
+      "P0-GATE-02-general-physical-magical-defense-formulas-adopted",
+      "P0-GATE-03-hit-crit-control-formulas-adopted",
+      "P0-GATE-04-engine-action-frame-and-speed-readback",
+      "P0-GATE-05-terrain-collision-and-camera-fixture",
+      "P0-GATE-06-authoritative-one-to-four-member-replays",
+      "P0-GATE-07-stable-object-keys-and-template-readback"
+    ],
+    "human_readable_evidence_summary": [
+      "12 complete fixed builds with three deterministic replays each",
+      "general physical, magical, defense and penetration formulas",
+      "hit, crit and control-resistance formulas",
+      "real Y3 action-frame, attack-speed and move-speed readback",
+      "real terrain, collision, pathing and camera fixture",
+      "authoritative one-to-four-member replays without authority mutation",
+      "stable object keys, templates and field readback"
+    ],
+    "existing_offline_fixture": {
+      "artifact": "../../../归档/职业设计/12-跨职业白盒战斗夹具.md",
+      "status": "read_only_calibration_input_not_tianting_unit_data",
+      "lv60_reference_target_defense_phy": 180,
+      "rule": "the fixture may validate a future formula implementation but cannot be copied into a TianTing unit profile."
+    },
+    "absolute_object_field_projection": null,
+    "runtime_key": null
+  },
+  "runtime_bindings": {
+    "object_id": null,
+    "unit_id": null,
+    "ability_id": null,
+    "buff_id": null,
+    "resource_id": null,
+    "map_key": null,
+    "lua_module": null,
+    "runtime_key": null
+  },
+  "acceptance": [
+    {"id": "TT-NUM-ACC-001", "condition": "contract is offline-only with closed production gate and TT_SPEC identity"},
+    {"id": "TT-NUM-ACC-002", "condition": "four profession Lv41/Lv55/Lv60 naked-stat references exactly mirror their approved formulas"},
+    {"id": "TT-NUM-ACC-003", "condition": "H0, A0, M0, I0, R0, B0, O0 and S0 are dimensionless and all absolute runtime values are null"},
+    {"id": "TT-NUM-ACC-004", "condition": "all eleven existing enemy ecology identities are covered exactly once"},
+    {"id": "TT-NUM-ACC-005", "condition": "relation mechanisms retain null combat stats and cannot become kill-health gates"},
+    {"id": "TT-NUM-ACC-006", "condition": "all five existing mainline Boss identities have three relative phase-exposure budgets and readable P0/counter minima"},
+    {"id": "TT-NUM-ACC-007", "condition": "all seven solo trials have exactly one ordered relative baseline and retain owner-only semantics"},
+    {"id": "TT-NUM-ACC-008", "condition": "all twenty-eight mansion officers are mapped to the existing 2+2+2+1 segment profile without creating waves or sessions"},
+    {"id": "TT-NUM-ACC-009", "condition": "all four sacred-beast identities have nightmare-only relative core baselines"},
+    {"id": "TT-NUM-ACC-010", "condition": "nightmare resonance coefficients are relative only and active-link state remains authority-owned"},
+    {"id": "TT-NUM-ACC-011", "condition": "party scaling accepts only an authority-confirmed active-member count in the range one through four"},
+    {"id": "TT-NUM-ACC-012", "condition": "party scaling never accelerates movement, attack cadence, P0 or counter windows"},
+    {"id": "TT-NUM-ACC-013", "condition": "small monsters do not receive health scaling and every secondary pressure keeps a serial solo solution"},
+    {"id": "TT-NUM-ACC-014", "condition": "Boss, elite, officer and sacred exposure multipliers are exact and monotone across one through four members"},
+    {"id": "TT-NUM-ACC-015", "condition": "all relative coefficients are finite, non-negative and use only declared scalar symbols"},
+    {"id": "TT-NUM-ACC-016", "condition": "no profile can use output values to bypass a required P0, verification, route or purification relation"},
+    {"id": "TT-NUM-ACC-017", "condition": "the combat readability, enemy ecology, mainline Boss and object-art contracts keep their own numeric fields null"},
+    {"id": "TT-NUM-ACC-018", "condition": "no object, unit, ability, buff, resource, map, Lua or runtime key is assigned"},
+    {"id": "TT-NUM-ACC-019", "condition": "no authority progress, session, cleanup, reconnect, rotation or credential rule is changed"},
+    {"id": "TT-NUM-ACC-020", "condition": "DF_PROGRESS_YANLUO_HALL_CLEARED remains neither read, written nor consumed"},
+    {"id": "TT-NUM-ACC-021", "condition": "no experience, currency, material, item, probability, pity, source profile, reward slot, qualification, receipt or settlement field is declared"},
+    {"id": "TT-NUM-ACC-022", "condition": "seven-star, mansion and sacred content do not become economy-v2 input candidates"},
+    {"id": "TT-NUM-ACC-023", "condition": "tower floors, run, Boss slots, rewards and season values remain excluded"},
+    {"id": "TT-NUM-ACC-024", "condition": "absolute object-field values remain blocked until every calibration-gate evidence category exists"},
+    {"id": "TT-NUM-ACC-025", "condition": "object-config handoff may reference this contract but cannot generate a plugin without stable object keys and absolute projections"},
+    {"id": "TT-NUM-ACC-026", "condition": "main and content contracts, design spec, handoffs, decision register and acceptance matrix each reference this contract once"},
+    {"id": "TT-NUM-ACC-027", "condition": "machine and Markdown acceptance IDs are continuous and identical"}
+  ],
+  "acceptance_ids": [
+    "TT-NUM-ACC-001", "TT-NUM-ACC-002", "TT-NUM-ACC-003", "TT-NUM-ACC-004", "TT-NUM-ACC-005", "TT-NUM-ACC-006", "TT-NUM-ACC-007", "TT-NUM-ACC-008", "TT-NUM-ACC-009", "TT-NUM-ACC-010", "TT-NUM-ACC-011", "TT-NUM-ACC-012", "TT-NUM-ACC-013", "TT-NUM-ACC-014", "TT-NUM-ACC-015", "TT-NUM-ACC-016", "TT-NUM-ACC-017", "TT-NUM-ACC-018", "TT-NUM-ACC-019", "TT-NUM-ACC-020", "TT-NUM-ACC-021", "TT-NUM-ACC-022", "TT-NUM-ACC-023", "TT-NUM-ACC-024", "TT-NUM-ACC-025", "TT-NUM-ACC-026", "TT-NUM-ACC-027"
+  ]
+}

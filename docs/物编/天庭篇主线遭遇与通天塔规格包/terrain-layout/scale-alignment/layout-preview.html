@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Y3 &#22320;&#24418;&#24067;&#23616;&#31034;&#24847;&#22270;</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  background: #f4f1ea;
+  color: #1e2528;
+  font-family: "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
+}
+.page { width: 100%; height: 100%; padding: 24px; }
+.summary {
+  height: 86px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: start;
+}
+h1 { margin: 0 0 8px; font-size: 24px; font-weight: 700; letter-spacing: 0; }
+.sub { margin: 0; font-size: 13px; color: #526066; max-width: 820px; line-height: 1.45; }
+.stats { display: grid; grid-template-columns: repeat(4, auto); gap: 8px; }
+.stat { border: 1px solid #c9d1ce; background: #ffffffcc; padding: 7px 9px; border-radius: 6px; font-size: 12px; white-space: nowrap; }
+.map-wrap {
+  position: relative;
+  height: calc(100% - 86px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-canvas {
+  position: relative;
+  width: 1224px;
+  height: 437.14px;
+  background:
+    linear-gradient(rgba(30,37,40,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,37,40,.045) 1px, transparent 1px),
+    #fbfaf5;
+  background-size: 32px 32px;
+  border: 2px solid #263238;
+  box-shadow: 0 10px 30px rgba(30,37,40,.18);
+  overflow: hidden;
+}
+.region {
+  position: absolute;
+  border: 2px solid rgba(32, 45, 48, .38);
+  background: rgba(160, 166, 160, .28);
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 6px;
+  font-size: 12px;
+  font-weight: 650;
+  color: #182123;
+  overflow: hidden;
+}
+.region span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 0 rgba(255,255,255,.75); }
+.region-public { background: rgba(81, 157, 100, .30); border-color: #3d9a54; }
+.region-safe { background: rgba(74, 158, 148, .28); border-color: #267c74; }
+.region-main-route { background: rgba(192, 143, 67, .30); border-color: #b1752c; }
+.region-side-route { background: rgba(225, 200, 105, .34); border-color: #c9a83e; }
+.region-monster { background: rgba(217, 97, 57, .27); border-color: #cf573a; }
+.region-boss { background: rgba(170, 56, 118, .22); border-color: #a83276; border-width: 4px; }
+.region-hidden { background: rgba(93, 80, 170, .18); border-color: #5d50aa; border-style: dashed; }
+.region-transition { background: rgba(128, 137, 141, .25); border-color: #7c8589; }
+.region-buffer { background: rgba(181, 187, 184, .22); border-color: #a5adab; }
+.region-water { background: rgba(71, 138, 190, .26); border-color: #377dad; }
+.route-segment {
+  position: absolute;
+  height: 6px;
+  border-radius: 999px;
+  transform-origin: left center;
+  z-index: 20;
+  opacity: .94;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.55);
+}
+.route-main-route { background: #87551e; }
+.route-side-route { background: #c9a83e; height: 4px; opacity: .84; }
+.marker {
+  position: absolute;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.22);
+}
+.marker span {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translate(5px, -50%);
+  min-width: max-content;
+  max-width: 88px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: rgba(255,255,255,.88);
+  border: 1px solid rgba(38,50,56,.18);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 10px;
+  color: #1e2528;
+}
+.marker-spawn { background: #d74835; border-radius: 50%; }
+.marker-boss { background: #a83276; transform: rotate(45deg); }
+.marker-boss span { transform: rotate(-45deg) translate(5px, -50%); transform-origin: left top; }
+.marker-npc { background: #3e78b2; border-radius: 3px; }
+.marker-shop { background: #16a3a3; border-radius: 3px; }
+.marker-hiddenEntry { background: transparent; border: 3px solid #5d50aa; border-radius: 50%; }
+.marker-resource { background: #d7a928; border-radius: 50%; }
+.legend {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 5px 10px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid rgba(38,50,56,.18);
+  border-radius: 6px;
+  background: rgba(255,255,255,.88);
+  font-size: 10px;
+}
+.swatch { width: 14px; height: 10px; border-radius: 3px; border: 1px solid rgba(38,50,56,.28); }
+.s-public { background: rgba(81,157,100,.45); }
+.s-monster { background: rgba(217,97,57,.42); }
+.s-boss { background: rgba(170,56,118,.42); border: 2px solid #a83276; }
+.s-hidden { background: rgba(93,80,170,.22); border-style: dashed; }
+.s-route { background: #87551e; }
+.s-point { background: #3e78b2; border-radius: 50%; }
+</style>
+</head>
+<body>
+<div class="page">
+  <section class="summary">
+    <div>
+      <h1>Y3 &#22320;&#24418;&#24067;&#23616;&#31034;&#24847;&#22270;</h1>
+      <p class="sub">&#20027;&#39064;: 裂律污染下的西游天庭：将临时天庭、南天门、断虹阵、天王殿、周天观台与凌霄门面压缩为两个可验证的白盒公共场景；真正副本仍独立。 | &#35774;&#35745;&#20381;&#25454;: 在既有 224x80 天界预留带内，先用两张 96x64 白盒公共场景验证拆图、镜头与可读性，不触发 384x320 总图扩容。</p>
+    </div>
+    <div class="stats">
+      <div class="stat">&#22320;&#22270;: 224 x 80</div>
+      <div class="stat">&#24341;&#29992;&#28304;: 5</div>
+      <div class="stat">&#20998;&#21306;: 9</div>
+      <div class="stat">&#36335;&#32447;: 1 / &#21047;&#24618;&#28857;: 0</div>
+    </div>
+  </section>
+  <div class="map-wrap">
+    <div class="map-canvas">
+<div class="region region-buffer" style="left:568.286px;top:43.714px;width:43.714px;height:349.714px;"><span>八格非连通章节边界</span></div>
+<div class="region region-safe" style="left:65.571px;top:251.357px;width:153px;height:120.214px;"><span>临时天庭枢纽白盒</span></div>
+<div class="region region-main-route" style="left:218.571px;top:240.429px;width:131.143px;height:87.429px;"><span>南天门回查路线白盒</span></div>
+<div class="region region-boss" style="left:349.714px;top:196.714px;width:218.571px;height:196.714px;"><span>裂云南天门机制白盒</span></div>
+<div class="region region-default" style="left:65.571px;top:120.214px;width:109.286px;height:87.429px;"><span>通天塔视觉门面候选</span></div>
+<div class="region region-main-route" style="left:633.857px;top:240.429px;width:153px;height:98.357px;"><span>断虹阵阅读带</span></div>
+<div class="region region-boss" style="left:808.714px;top:196.714px;width:240.429px;height:196.714px;"><span>天王殿外缘四门白盒</span></div>
+<div class="region region-public" style="left:896.143px;top:65.571px;width:174.857px;height:131.143px;"><span>周天观台公共信息锚点</span></div>
+<div class="region region-default" style="left:1071px;top:174.857px;width:65.571px;height:153px;"><span>凌霄外庭非交互门面</span></div>
+<div class="route-segment route-main-route" style="left:1049.143px;top:284.143px;width:78.807px;transform:rotate(-123.69deg);"></div>
+<div class="route-segment route-main-route" style="left:1005.429px;top:218.571px;width:58.852px;transform:rotate(-111.801deg);"></div>
+<div class="marker marker-boss" style="left:450px;top:286.071px;width:18px;height:18px;"><span>裂云南天门候选机制包络</span></div>
+<div class="marker marker-boss" style="left:919.929px;top:286.071px;width:18px;height:18px;"><span>天王殿候选机制包络</span></div>
+      <div class="legend">
+        <span class="swatch s-public"></span><span>&#20844;&#20849;/&#23433;&#20840;</span>
+        <span class="swatch s-monster"></span><span>&#21047;&#24618;</span>
+        <span class="swatch s-boss"></span><span>BOSS</span>
+        <span class="swatch s-hidden"></span><span>&#38544;&#34255;</span>
+        <span class="swatch s-route"></span><span>&#36335;&#32447;</span>
+        <span class="swatch s-point"></span><span>&#28857;&#20301;</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

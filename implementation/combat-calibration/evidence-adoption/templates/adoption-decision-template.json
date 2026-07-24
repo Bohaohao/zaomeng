@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_P0_EXTERNAL_ADOPTION_DECISION_TEMPLATE_V1",
+    "status": "not_created",
+    "adoption_authority_ref": null,
+    "adoption_bundle_digest": null,
+    "absolute_projection_entitlement": null
+  },
+  "gate_decisions": [
+    { "gate_id": "P0-GATE-01-all-12-fixed-builds-declared-and-replayed", "decision": null, "evidence_bundle_digest": null, "reviewer_proof_ref": null, "reason": null },
+    { "gate_id": "P0-GATE-02-general-physical-magical-defense-formulas-adopted", "decision": null, "evidence_bundle_digest": null, "reviewer_proof_ref": null, "reason": null },
+    { "gate_id": "P0-GATE-03-hit-crit-control-formulas-adopted", "decision": null, "evidence_bundle_digest": null, "reviewer_proof_ref": null, "reason": null },
+    { "gate_id": "P0-GATE-04-engine-action-frame-and-speed-readback", "decision": null, "evidence_bundle_digest": null, "reviewer_proof_ref": null, "reason": null },
+    { "gate_id": "P0-GATE-05-terrain-collision-and-camera-fixture", "decision": null, "evidence_bundle_digest": null, "reviewer_proof_ref": null, "reason": null },
+    { "gate_id": "P0-GATE-06-authoritative-one-to-four-member-replays", "decision": null, "evidence_bundle_digest": null, "reviewer_proof_ref": null, "reason": null },
+    { "gate_id": "P0-GATE-07-stable-object-keys-and-template-readback", "decision": null, "evidence_bundle_digest": null, "reviewer_proof_ref": null, "reason": null }
+  ],
+  "rule": "This local template cannot be signed, populated, adopted or used as an absolute projection entitlement. An authorized external adoption system must create a separate immutable decision artifact after independent review."
+}

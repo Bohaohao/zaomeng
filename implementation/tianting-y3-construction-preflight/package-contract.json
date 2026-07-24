@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "kind": "tianting-y3-construction-preflight",
+  "status": "structural-preflight-only",
+  "production_gate": "closed",
+  "identity": {
+    "spec_id": "TT_SPEC_Y3_CONSTRUCTION_PREFLIGHT",
+    "runtime_key": null,
+    "object_key": null,
+    "map_key": null,
+    "ui_key": null
+  },
+  "purpose": "Read an operator-supplied map-local Y3 directory and fail closed until the minimum construction roots are present. This package never creates, edits, imports, or deploys Y3 assets.",
+  "input_contract": {
+    "target_map_root": {
+      "parameter": "TargetMapRoot",
+      "required": true,
+      "expected_layout": "map-local only: <target-map-root>/script/y3 and <target-map-root>/ui",
+      "must_be_existing_directory": true
+    },
+    "script_root": {
+      "relative_path": "script",
+      "required": true,
+      "must_be_existing_directory": true
+    },
+    "y3_lualib_root": {
+      "relative_path": "script/y3",
+      "required": true,
+      "required_structure_directories": [
+        "meta",
+        "game"
+      ],
+      "verification_scope": "structural root only; actual API names and signatures still require source/reference verification before Lua is written"
+    },
+    "ui_root": {
+      "parameter": "UiRoot",
+      "default_relative_path": "ui",
+      "required": true,
+      "must_be_existing_directory": true,
+      "must_reside_under_target_map_root": true,
+      "verification_scope": "root existence only; no UI node tree, JSON, or Lua is created or validated"
+    },
+    "object_interface_identifier": {
+      "parameter": "ObjectInterfaceIdentifier",
+      "required": false,
+      "accepted_format": "lowercase dotted interface name, for example object-editor.adapter",
+      "semantic_boundary": "This is an opaque construction-interface label, never a Y3 unit, ability, item, resource, or production object key.",
+      "availability_verified": false
+    }
+  },
+  "failure_closed_conditions": [
+    "TargetMapRoot is absent or not a directory.",
+    "The map-local script root is absent.",
+    "The script/y3 root or either required structural directory is absent.",
+    "The UI root is absent, not a directory, or lies outside TargetMapRoot.",
+    "A supplied object-interface identifier is blank or is not a lowercase dotted interface name."
+  ],
+  "non_goals": [
+    "Create maps, map roots, terrain, points, paths, areas, units, abilities, buffs, items, editor_table JSON, UI nodes, UI JSON, Lua modules, or object keys.",
+    "Claim editor readback, Y3 API compatibility, object-interface availability, persistent progress, authority services, network transport, or multiplayer verification.",
+    "Replace the separate P0 absolute-combat calibration gate or the TianTing authority contracts."
+  ],
+  "current_workspace_fixture": {
+    "target_map_root": "repository root",
+    "expected_result": "fail_closed",
+    "reason": "The repository is an offline design and preconstruction workspace; it has no map-local script/y3 or ui root."
+  },
+  "synthetic_fixture": {
+    "source": "tests/fixtures/synthetic-complete-directory.json",
+    "location": "test-only temporary directory",
+    "contains_maps": false,
+    "contains_lua_files": false,
+    "contains_ui_nodes": false,
+    "purpose": "Proves the structural gate and its reporting only; it is not a real Y3 map or editor artifact."
+  },
+  "acceptance": [
+    "The current repository root is explicitly rejected as a missing map-local script root.",
+    "A synthetic directory tree with script/y3/meta, script/y3/game, and ui passes only structural preflight.",
+    "Missing y3 structure, missing UI root, an out-of-root UI path, and malformed optional object-interface identifiers fail closed.",
+    "A structural pass still reports production_gate=closed and editor/API/object readback as unresolved."
+  ]
+}

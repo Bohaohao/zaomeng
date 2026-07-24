@@ -1,0 +1,480 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "TT_SPEC_SURFACE_CONSTRUCTION_DISCOVERY_MANIFEST",
+    "display_name": "天庭地图、UI 与资产施工发现清单",
+    "package_status": "offline_preconstruction_discovery_only",
+    "production_gate": "closed",
+    "artifact_kind": "future_y3_project_import_discovery_manifest",
+    "actual_y3_write_authorized": false,
+    "runtime_key": null,
+    "actual_map_root": null,
+    "actual_map_key": null,
+    "actual_ui_root": null,
+    "actual_y3editor_session": null,
+    "actual_y3helper_session": null
+  },
+  "non_write_contract": {
+    "mode": "read_discover_validate_only",
+    "prohibited_actions": [
+      "create, resize, or save a Y3 map",
+      "write terrain, water, roads, textures, decorations, logic points, logic paths, or logic areas",
+      "create, hotfix, or save a Y3 UI JSON or UI tree",
+      "generate or run a Y3-Helper object plugin",
+      "create or bind units, abilities, items, effects, sounds, materials, rewards, or economy receipts",
+      "infer authority progression, session membership, rotation, qualification, completion, cleanup, or reward state"
+    ],
+    "invariants": [
+      "Candidate diagram dimensions and regions are discovery references, never direct editor coordinates.",
+      "Every real map, UI, object, and resource binding remains null until a live project inventory is read and the relevant construction gate passes.",
+      "This manifest may guide future import discovery but cannot authorize a Y3 MCP write by itself.",
+      "All player-facing facts in the future HUD remain authority-rendered only; unavailable facts stay unconfirmed."
+    ]
+  },
+  "source_artifacts": [
+    {
+      "artifact": "docs/物编/天庭篇主线遭遇与通天塔规格包/terrain-layout/tianting-map-scale-alignment-contract.json",
+      "role": "公共白盒与会话候选包络的唯一尺度口径",
+      "status": "offline_reference_only"
+    },
+    {
+      "artifact": "docs/物编/天庭篇主线遭遇与通天塔规格包/terrain-layout/layout.json",
+      "role": "主线区域、路线与五组主线遭遇的图解关系",
+      "status": "offline_dry_run_candidate_only"
+    },
+    {
+      "artifact": "docs/物编/天庭篇主线遭遇与通天塔规格包/ui/tianting-ui-accessibility-information-contract.json",
+      "role": "双通道预警、团队会话、失败复盘的权威展示边界",
+      "status": "offline_information_architecture_only"
+    },
+    {
+      "artifact": "docs/物编/天庭篇主线遭遇与通天塔规格包/object-blueprint/tianting-object-art-vfx-blueprint-contract.json",
+      "role": "五组主线首领的轮廓、前摇、P0–P2 与场地交互资产要求",
+      "status": "offline_asset_requirements_only"
+    },
+    {
+      "artifact": "docs/物编/天庭篇主线遭遇与通天塔规格包/combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+      "role": "绝对对象字段标定前的相对战斗基线",
+      "status": "relative_balance_baseline_only"
+    },
+    {
+      "artifact": "implementation/tianting-authority-vertical-slice/package-contract.json",
+      "role": "主线权威进度与会话离线参考边界",
+      "status": "offline_tested_reference_only"
+    }
+  ],
+  "future_project_import_discovery": {
+    "entry_condition": "A future Y3 project is open, its editor and helper endpoints are available, and all listed live reads complete before any write is considered.",
+    "future_destination": {
+      "project_root": null,
+      "map_root": null,
+      "map_key": null,
+      "ui_root": null,
+      "editor_session_id": null,
+      "helper_session_id": null,
+      "runtime_session_id": null
+    },
+    "required_live_reads": [
+      {
+        "discovery_id": "TT_DISCOVERY_PROJECT_AND_MAP_ROOT",
+        "required_before": "any_map_or_ui_write",
+        "observed_value": null,
+        "must_confirm": [
+          "opened project root",
+          "current map root and map key",
+          "current map dimensions and origin",
+          "existing placed resources and protected areas"
+        ]
+      },
+      {
+        "discovery_id": "TT_DISCOVERY_TERRAIN_AND_LOGIC_INVENTORY",
+        "required_before": "terrain_or_logic_write",
+        "observed_value": null,
+        "must_confirm": [
+          "terrain and texture capacity",
+          "collision and pathing conventions",
+          "existing logic point, path, and area namespaces",
+          "camera and performance baseline"
+        ]
+      },
+      {
+        "discovery_id": "TT_DISCOVERY_UI_ROOT_AND_WIDGETS",
+        "required_before": "ui_json_or_hotfix",
+        "observed_value": null,
+        "must_confirm": [
+          "actual UI root",
+          "existing panel and widget namespace",
+          "available shared templates and accessible text/audio facilities",
+          "future authority-to-UI data transport boundary"
+        ]
+      },
+      {
+        "discovery_id": "TT_DISCOVERY_OBJECT_AND_RESOURCE_INVENTORY",
+        "required_before": "object_plugin_or_resource_binding",
+        "observed_value": null,
+        "must_confirm": [
+          "stable object keys and source templates",
+          "current Y3 object field mappings",
+          "approved model, animation, effect, sound, and material resources",
+          "P0 absolute combat calibration acceptance"
+        ]
+      },
+      {
+        "discovery_id": "TT_DISCOVERY_RUNTIME_AUTHORITY_ADAPTER",
+        "required_before": "playable_mainline_vertical_slice",
+        "observed_value": null,
+        "must_confirm": [
+          "real map script root and Y3 API baseline",
+          "trusted authority provider boundary",
+          "session cleanup and reconnect transport",
+          "1–4 player replay and recovery fixture"
+        ]
+      }
+    ]
+  },
+  "map_whitebox_checklist": {
+    "status": "offline_candidate_only",
+    "coordinate_policy": "Do not copy diagram coordinates or candidate envelopes into an editor. Revalidate every physical dimension after live map, camera, collision, pathing, and 1–4 player reads.",
+    "mainline_boss_whitebox_slices": [
+      {
+        "spec_id": "TT_SURFACE_WB_MAINLINE_SOUTH_GATE",
+        "order": 1,
+        "encounter": "巡天误令：千里眼与顺风耳",
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_PATROL_FALSE_ORDER",
+        "candidate_scene_ref": "TT_WB_PUBLIC_SCENE_GATE",
+        "candidate_region_ref": "TT_R_BOSS_SPLIT_SOUTH_GATE",
+        "whitebox_focus": [
+          "视线扇区与声波环的不同几何语言",
+          "遮蔽位与交替安全路线",
+          "不遮挡预警来源的回退空间"
+        ],
+        "future_y3_binding": {
+          "actual_map_key": null,
+          "map_relative_path": null,
+          "world_origin": null,
+          "terrain_write_set": null,
+          "logic_point_ids": null,
+          "logic_area_ids": null,
+          "camera_profile_id": null,
+          "collision_profile_id": null,
+          "spawn_id": null
+        }
+      },
+      {
+        "spec_id": "TT_SURFACE_WB_MAINLINE_BROKEN_RAINBOW",
+        "order": 2,
+        "encounter": "断虹阵眼：巨灵神与真伪节点",
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_BROKEN_RAINBOW_NODE",
+        "candidate_scene_ref": "TT_WB_PUBLIC_SCENE_INNER",
+        "candidate_region_ref": "TT_R_MAIN_ROUTE_BROKEN_RAINBOW_FORMATION",
+        "whitebox_focus": [
+          "真伪阵眼、地脉与锁链关系",
+          "错误召回压力的可见退路",
+          "节点交互与背景层的形态区分"
+        ],
+        "future_y3_binding": {
+          "actual_map_key": null,
+          "map_relative_path": null,
+          "world_origin": null,
+          "terrain_write_set": null,
+          "logic_point_ids": null,
+          "logic_area_ids": null,
+          "camera_profile_id": null,
+          "collision_profile_id": null,
+          "spawn_id": null
+        }
+      },
+      {
+        "spec_id": "TT_SURFACE_WB_MAINLINE_FOUR_GATES",
+        "order": 3,
+        "encounter": "四门回响：天王殿外缘失衡",
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_FOUR_GATE_ECHO",
+        "candidate_scene_ref": "TT_WB_PUBLIC_SCENE_INNER",
+        "candidate_region_ref": "TT_R_BOSS_TIANWANG_OUTER",
+        "whitebox_focus": [
+          "四向命令与状态形态",
+          "正确顺序的安静回响与错误痕迹",
+          "所有方向和安全转换线同时可读"
+        ],
+        "future_y3_binding": {
+          "actual_map_key": null,
+          "map_relative_path": null,
+          "world_origin": null,
+          "terrain_write_set": null,
+          "logic_point_ids": null,
+          "logic_area_ids": null,
+          "camera_profile_id": null,
+          "collision_profile_id": null,
+          "spawn_id": null
+        }
+      },
+      {
+        "spec_id": "TT_SURFACE_WB_MAINLINE_OBSERVATORY",
+        "order": 4,
+        "encounter": "星历裂缝：监星使校星",
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_STAR_CALENDAR_RIFT",
+        "candidate_scene_ref": "TT_WB_PUBLIC_SCENE_INNER",
+        "candidate_region_ref": "TT_R_PUBLIC_CELESTIAL_OBSERVATORY",
+        "whitebox_focus": [
+          "可净化与错误链路的连续历史",
+          "校星结果的可见通路",
+          "背景星空不与可交互星点同层同形"
+        ],
+        "future_y3_binding": {
+          "actual_map_key": null,
+          "map_relative_path": null,
+          "world_origin": null,
+          "terrain_write_set": null,
+          "logic_point_ids": null,
+          "logic_area_ids": null,
+          "camera_profile_id": null,
+          "collision_profile_id": null,
+          "spawn_id": null
+        }
+      },
+      {
+        "spec_id": "TT_SURFACE_WB_MAINLINE_LINGXIAO",
+        "order": 5,
+        "encounter": "凌霄外庭：监律天将与裂律观台",
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_DISCIPLINE_GENERAL",
+        "candidate_scene_ref": "TT_WB_SESSION_LINGXIAO_MAINLINE",
+        "candidate_region_ref": "TT_R_BOSS_LINGXIAO_OUTER",
+        "whitebox_focus": [
+          "命令来源、作用区、安全转移线与可净化标记",
+          "首领、命令节点和裂律核心的身份分离",
+          "最多四人同时读取预警、净化节点和侧向退路"
+        ],
+        "future_y3_binding": {
+          "actual_map_key": null,
+          "map_relative_path": null,
+          "world_origin": null,
+          "terrain_write_set": null,
+          "logic_point_ids": null,
+          "logic_area_ids": null,
+          "camera_profile_id": null,
+          "collision_profile_id": null,
+          "spawn_id": null
+        }
+      }
+    ]
+  },
+  "ui_hud_checklist": {
+    "status": "offline_information_handoff_only",
+    "surfaces": [
+      {
+        "spec_id": "TT_SPEC_UI_SURFACE_COMBAT_WARNING_AND_COUNTERPLAY",
+        "implementation_slice": "双通道战斗预警 HUD",
+        "required_display_contract": [
+          "视觉轮廓、轨迹或场地形态中的至少一种",
+          "声音、状态文本或读屏摘要中的至少一种",
+          "颜色不能是方向、危险或归属的唯一载体"
+        ],
+        "authority_fact_classes": [
+          "future authority-accepted combat presentation",
+          "current confirmed encounter state"
+        ],
+        "color_only_prohibited": true,
+        "fallback_when_unavailable": "unconfirmed; do not infer from client animation, cache, color, or local clock",
+        "future_y3_binding": {
+          "ui_json_path": null,
+          "ui_node_id": null,
+          "asset_id": null,
+          "sound_id": null,
+          "text_template_id": null,
+          "runtime_event_id": null
+        }
+      },
+      {
+        "spec_id": "TT_SPEC_UI_SURFACE_TEAM_AND_SESSION_STATUS",
+        "implementation_slice": "冻结成员与清理状态 HUD",
+        "required_display_contract": [
+          "只显示权威冻结成员归属",
+          "active、dead、left 与 cleanup_pending 使用文本和非颜色状态表达",
+          "队长、旁观者或客户端队伍列表不能修改成员资格"
+        ],
+        "authority_fact_classes": [
+          "future frozen membership snapshot",
+          "future authority recovery state"
+        ],
+        "fallback_when_unavailable": "unconfirmed; do not add, restore, or unlock a member locally",
+        "future_y3_binding": {
+          "ui_json_path": null,
+          "ui_node_id": null,
+          "asset_id": null,
+          "sound_id": null,
+          "text_template_id": null,
+          "runtime_event_id": null
+        }
+      },
+      {
+        "spec_id": "TT_SPEC_UI_SURFACE_FAILURE_AND_REVIEW",
+        "implementation_slice": "失败、清理与复盘面板",
+        "required_display_contract": [
+          "权威确认的失败原因类别",
+          "可复述的预警、决策与反制链条",
+          "completed 或 cleanup_pending 的已确认非经济事实"
+        ],
+        "authority_fact_classes": [
+          "future authority terminal fact",
+          "future authority cleanup fact",
+          "future authority accepted completion fact"
+        ],
+        "fallback_when_unavailable": "unconfirmed; closing a panel or retrying cannot grant re-entry, rollback, reward, or settlement",
+        "future_y3_binding": {
+          "ui_json_path": null,
+          "ui_node_id": null,
+          "asset_id": null,
+          "sound_id": null,
+          "text_template_id": null,
+          "runtime_event_id": null
+        }
+      }
+    ]
+  },
+  "p0_asset_batch": {
+    "status": "requirements_only_pending_p0_absolute_calibration",
+    "batch_scope": "天庭主线五组教学首领的轮廓、前摇、P0–P2 和场地交互",
+    "blocking_gates": [
+      "P0 absolute combat calibration acceptance",
+      "stable object keys and source templates",
+      "live Y3 object field and resource inventory",
+      "approved model, animation, effect, sound, and material sources"
+    ],
+    "profiles": [
+      {
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_PATROL_FALSE_ORDER",
+        "encounter": "巡天误令",
+        "asset_focus": "视线扇区、声波环、遮蔽位和交替安全路线",
+        "future_object_and_resource_binding": {
+          "unit_object_key": null,
+          "ability_object_keys": null,
+          "model_resource_id": null,
+          "animation_resource_ids": null,
+          "effect_resource_ids": null,
+          "sound_resource_ids": null,
+          "material_resource_ids": null,
+          "hp_max": null,
+          "attack_value": null,
+          "physical_defense": null,
+          "magical_defense": null,
+          "attack_interval_seconds": null,
+          "move_speed": null
+        }
+      },
+      {
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_BROKEN_RAINBOW_NODE",
+        "encounter": "断虹阵眼",
+        "asset_focus": "真伪阵眼、地脉、锁链关系与错误召回压力",
+        "future_object_and_resource_binding": {
+          "unit_object_key": null,
+          "ability_object_keys": null,
+          "model_resource_id": null,
+          "animation_resource_ids": null,
+          "effect_resource_ids": null,
+          "sound_resource_ids": null,
+          "material_resource_ids": null,
+          "hp_max": null,
+          "attack_value": null,
+          "physical_defense": null,
+          "magical_defense": null,
+          "attack_interval_seconds": null,
+          "move_speed": null
+        }
+      },
+      {
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_FOUR_GATE_ECHO",
+        "encounter": "四门回响",
+        "asset_focus": "四向命令、方向状态、安静回响与冲突痕迹",
+        "future_object_and_resource_binding": {
+          "unit_object_key": null,
+          "ability_object_keys": null,
+          "model_resource_id": null,
+          "animation_resource_ids": null,
+          "effect_resource_ids": null,
+          "sound_resource_ids": null,
+          "material_resource_ids": null,
+          "hp_max": null,
+          "attack_value": null,
+          "physical_defense": null,
+          "magical_defense": null,
+          "attack_interval_seconds": null,
+          "move_speed": null
+        }
+      },
+      {
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_STAR_CALENDAR_RIFT",
+        "encounter": "星历裂缝",
+        "asset_focus": "可净化链路、错误链路、变化方向与校星结果",
+        "future_object_and_resource_binding": {
+          "unit_object_key": null,
+          "ability_object_keys": null,
+          "model_resource_id": null,
+          "animation_resource_ids": null,
+          "effect_resource_ids": null,
+          "sound_resource_ids": null,
+          "material_resource_ids": null,
+          "hp_max": null,
+          "attack_value": null,
+          "physical_defense": null,
+          "magical_defense": null,
+          "attack_interval_seconds": null,
+          "move_speed": null
+        }
+      },
+      {
+        "blueprint_spec_id": "TT_SPEC_BLUEPRINT_DISCIPLINE_GENERAL",
+        "encounter": "凌霄外庭·裂律观台",
+        "asset_focus": "法尺、文书、裂律符、命令节点与裂律核心的身份分离",
+        "future_object_and_resource_binding": {
+          "unit_object_key": null,
+          "ability_object_keys": null,
+          "model_resource_id": null,
+          "animation_resource_ids": null,
+          "effect_resource_ids": null,
+          "sound_resource_ids": null,
+          "material_resource_ids": null,
+          "hp_max": null,
+          "attack_value": null,
+          "physical_defense": null,
+          "magical_defense": null,
+          "attack_interval_seconds": null,
+          "move_speed": null
+        }
+      }
+    ]
+  },
+  "future_import_sequence": [
+    {
+      "order": 1,
+      "action": "read_live_project_inventory",
+      "write_permitted": false
+    },
+    {
+      "order": 2,
+      "action": "approve_target_map_and_construction_layers",
+      "write_permitted": false
+    },
+    {
+      "order": 3,
+      "action": "build_mainline_whitebox_after_map_confirmation",
+      "write_permitted": "future_explicit_confirmation_required"
+    },
+    {
+      "order": 4,
+      "action": "create_read_only_hud_after_ui_root_and_authority_transport",
+      "write_permitted": "future_explicit_confirmation_required"
+    },
+    {
+      "order": 5,
+      "action": "bind_p0_assets_after_absolute_calibration_and_object_inventory",
+      "write_permitted": "future_explicit_confirmation_required"
+    }
+  ],
+  "scope_exclusions": [
+    "seven-star playable implementation",
+    "twenty-eight-mansion normal or nightmare implementation",
+    "four-sacred-beast implementation",
+    "tower run, tower bosses, drops, seasons, and economy",
+    "progression persistence, rewards, materials, titles, credentials, and receipts"
+  ]
+}

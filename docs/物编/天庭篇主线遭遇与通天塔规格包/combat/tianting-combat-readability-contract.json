@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "package_status": "offline-design-spec",
+  "production_gate": "closed",
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_COMBAT_READABILITY",
+    "display_name": "天庭战斗机制与施工前可读性合同",
+    "scope": "mainline_seven_star_mansion_normal_mansion_nightmare_readability_only",
+    "runtime_key": null
+  },
+  "source_artifacts": [
+    "../mainline-route.md",
+    "../encounters/天庭公共遭遇规格.md",
+    "../instances/七星单人本规格.md",
+    "../instances/二十八星宿团队本规格.md",
+    "../authority/tianting-progression-and-instance-authority-contract.json",
+    "../combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+    "天庭战斗机制与可读性规格.md"
+  ],
+  "hard_boundaries": {
+    "party_cap": {
+      "minimum_players": 1,
+      "maximum_players": 4,
+      "member_rule": "every combat puzzle has a one-to-four-player completion path; seven-star remains solo",
+      "runtime_key": null
+    },
+    "authority_rule": "combat readability may describe pressure, decision and visible counterplay only; it must not write TT_SPEC progression, mutate membership, recompute rotation, issue credentials or alter cleanup semantics.",
+    "session_rule": "existing active_to_cleanup_pending_to_closed and per-actor admission contracts remain the sole source for failure, disconnect, reentry, completion and cleanup.",
+    "economy_rule": "only TT_SPEC_EVENT_LINGXIAO_OUTER_COURT_SUCCESS may currently enter the existing zero-value TT_SPEC_ECONOMY_HANDOFF_SOURCE_EVIDENCE source-fact candidate; seven-star, mansion-normal and mansion-nightmare success remain deferred and must not form handoff candidate, qualification or settlement input.",
+    "protected_difu_key_rule": "DF_PROGRESS_YANLUO_HALL_CLEARED must not be read, written, registered as a consumer or substituted for the trusted DF_E_YANLUO_HALL handoff proof.",
+    "runtime_asset_rule": "no map, unit, ability, item, buff, projectile, UI control, Lua, storage, timer, resource key or actual Y3 asset is created.",
+    "runtime_key": null
+  },
+  "combat_grammar": {
+    "spec_id": "TT_SPEC_TIANTING_COMBAT_READABILITY_GRAMMAR",
+    "runtime_key": null,
+    "loop": [
+      "read_error_order_or_stellar_pressure",
+      "choose_position_route_order_or_cooperation",
+      "counter_or_reverse_the_wrong_rule",
+      "use_visible_purification_window",
+      "retain_evidence_for_the_next_stage"
+    ],
+    "required_information_layers": [
+      {
+        "spec_id": "TT_SPEC_COMBAT_TELEGRAPH_LAYER",
+        "required_player_information": "source_direction_range_target_or_affected_route",
+        "minimum_channels": "shape_or_trajectory_or_ground_projection plus one independent audio_ui_or_state_change channel",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_COMBAT_DECISION_LAYER",
+        "required_player_information": "whether_to_evade_block_redirect_verify_split_sync_rotate_or_wait",
+        "runtime_key": null
+      },
+      {
+        "spec_id": "TT_SPEC_COMBAT_RESULT_LAYER",
+        "required_player_information": "visible state change after correct or failed counterplay",
+        "runtime_key": null
+      }
+    ],
+    "accessibility_rule": "color is never the sole carrier of a critical mechanic; failure must be diagnosable rather than an unexplained instant loss.",
+    "numeric_values": {
+      "damage": null,
+      "health": null,
+      "cooldown": null,
+      "cast_time": null,
+      "movement": null,
+      "timeout": null,
+      "revive": null,
+      "runtime_key": null
+    }
+  },
+  "numeric_baseline_reference": {
+    "artifact": "../combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+    "status": "accepted_relative_balance_baseline_offline_only",
+    "rule": "this readability contract keeps numeric_values null; it consumes no raw field, duration or damage value and may only require the external relative baseline to preserve P0 and counterplay before output.",
+    "runtime_key": null
+  },
+  "coverage": {
+    "mainline": {
+      "spec_id": "TT_SPEC_COMBAT_MAINLINE_TEACHING_CHAIN",
+      "runtime_key": null,
+      "encounters": [
+        {
+          "spec_id": "TT_SPEC_COMBAT_SPLIT_SOUTH_GATE",
+          "reading_goal": "separate visual and audio patrol warnings",
+          "counterplay": "use alternating cover and routes",
+          "runtime_key": null
+        },
+        {
+          "spec_id": "TT_SPEC_COMBAT_BROKEN_RAINBOW_FORMATION",
+          "reading_goal": "identify the true formation eye before suppressing the guardian",
+          "counterplay": "break the visible wrong-order chain",
+          "runtime_key": null
+        },
+        {
+          "spec_id": "TT_SPEC_COMBAT_FOUR_GATE_ECHO",
+          "reading_goal": "understand four mutually conflicting commands",
+          "counterplay": "route, sequence or split without requiring a fifth player",
+          "runtime_key": null
+        },
+        {
+          "spec_id": "TT_SPEC_COMBAT_CELESTIAL_OBSERVATORY_RIFT",
+          "reading_goal": "observe changing star links before purification",
+          "counterplay": "verify the stable link rather than interact blindly",
+          "runtime_key": null
+        },
+        {
+          "spec_id": "TT_SPEC_COMBAT_LINGXIAO_OUTER_COURT",
+          "phases": ["identify_wrong_order", "survive_order_pressure", "restore_verified_order"],
+          "counterplay": "preserve and purify command nodes rather than bypassing them with output",
+          "runtime_key": null
+        }
+      ]
+    },
+    "seven_star": {
+      "spec_id": "TT_SPEC_COMBAT_SEVEN_STAR_SOLO_COVERAGE",
+      "runtime_key": null,
+      "entry_rule": "single-player counterplay only; no simultaneous second-player action, external rescue or mandatory co-occupancy.",
+      "trials": [
+        { "spec_id": "TT_SPEC_COMBAT_SEVEN_STAR_TIANSHU", "star_name": "天枢", "grammar": "axis_stabilization_and_direction_reversal", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_SEVEN_STAR_TIANXUAN", "star_name": "天璇", "grammar": "dual_orbit_prediction_and_return_path", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_SEVEN_STAR_TIANJI", "star_name": "天玑", "grammar": "truth_falsehood_observation_and_reflection", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_SEVEN_STAR_TIANQUAN", "star_name": "天权", "grammar": "two_side_balance_and_interrupt_window", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_SEVEN_STAR_YUHENG", "star_name": "玉衡", "grammar": "alternating_safe_space_and_harmony", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_SEVEN_STAR_KAIYANG", "star_name": "开阳", "grammar": "gate_state_and_charge_lane", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_SEVEN_STAR_YAOGUANG", "star_name": "瑶光", "grammar": "trail_history_and_convergence_cutoff", "runtime_key": null }
+      ]
+    },
+    "mansion_normal": {
+      "spec_id": "TT_SPEC_COMBAT_MANSION_NORMAL_COVERAGE",
+      "runtime_key": null,
+      "structure": ["front_pair", "middle_pair", "rear_pair", "guard_single"],
+      "quadrants": [
+        { "spec_id": "TT_SPEC_COMBAT_MANSION_AZURE_DRAGON", "quadrant": "东方青龙", "grammar": "link_mobility_wind_and_route_rewrite", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_MANSION_VERMILION_BIRD", "quadrant": "南方朱雀", "grammar": "fire_seed_transfer_heat_and_ash", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_MANSION_WHITE_TIGER", "quadrant": "西方白虎", "grammar": "mark_hunt_intercept_and_counterattack", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_MANSION_BLACK_TORTOISE", "quadrant": "北方玄武", "grammar": "seal_wall_tide_and_armor_break", "runtime_key": null }
+      ]
+    },
+    "mansion_nightmare": {
+      "spec_id": "TT_SPEC_COMBAT_MANSION_NIGHTMARE_COVERAGE",
+      "runtime_key": null,
+      "states": ["resonance_visible", "officer_counterplay", "purified_officer_aid", "sacred_core_restoration"],
+      "two_way_rule": "seven officers grant stellar resonance to their matching sacred beast; the sacred beast grants protection back to the same seven officers until each chain is purified.",
+      "quadrants": [
+        { "spec_id": "TT_SPEC_COMBAT_NIGHTMARE_AZURE_DRAGON", "quadrant": "东方青龙", "counterplay": "purified links become dragon-track guidance", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_NIGHTMARE_VERMILION_BIRD", "quadrant": "南方朱雀", "counterplay": "purified ashes become temporary protection", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_NIGHTMARE_WHITE_TIGER", "quadrant": "西方白虎", "counterplay": "purified trails reverse the hunt into a counter window", "runtime_key": null },
+        { "spec_id": "TT_SPEC_COMBAT_NIGHTMARE_BLACK_TORTOISE", "quadrant": "北方玄武", "counterplay": "purified links open a defensible wall break", "runtime_key": null }
+      ],
+      "rotation_rule": "authority-frozen Asia/Shanghai rotation snapshot remains immutable for the instance; client clock, client quadrant and retry recalculation are forbidden.",
+      "disconnect_rule": "left members cannot reconnect, claim the current instance result or become a substitute participant."
+    }
+  },
+  "handoff_boundaries": {
+    "terrain": "space must expose observation, decision, counterplay, retreat and interaction sightlines; this contract contains no actual coordinates, resources or terrain writes.",
+    "object_config": "future assets need silhouettes, telegraph categories and counterplay identities only; object IDs and properties remain deferred.",
+    "lua": "future runtime must consume existing authority session outcomes and cannot infer progression or settlement from a combat phase.",
+    "ui": "future UI displays authority results, dual-channel warnings and state priority only; it cannot decide entry, rotation, purification, qualification or settlement.",
+    "runtime_key": null
+  },
+  "acceptance_ids": [
+    "TT-COMBAT-ACC-001", "TT-COMBAT-ACC-002", "TT-COMBAT-ACC-003", "TT-COMBAT-ACC-004", "TT-COMBAT-ACC-005", "TT-COMBAT-ACC-006", "TT-COMBAT-ACC-007", "TT-COMBAT-ACC-008", "TT-COMBAT-ACC-009", "TT-COMBAT-ACC-010", "TT-COMBAT-ACC-011", "TT-COMBAT-ACC-012", "TT-COMBAT-ACC-013", "TT-COMBAT-ACC-014", "TT-COMBAT-ACC-015", "TT-COMBAT-ACC-016", "TT-COMBAT-ACC-017", "TT-COMBAT-ACC-018", "TT-COMBAT-ACC-019", "TT-COMBAT-ACC-020", "TT-COMBAT-ACC-021", "TT-COMBAT-ACC-022", "TT-COMBAT-ACC-023", "TT-COMBAT-ACC-024", "TT-COMBAT-ACC-025", "TT-COMBAT-ACC-026", "TT-COMBAT-ACC-027", "TT-COMBAT-ACC-028", "TT-COMBAT-ACC-029", "TT-COMBAT-ACC-030", "TT-COMBAT-ACC-031"
+  ],
+  "deferred": {
+    "actual_combat_numbers": null,
+    "actual_rewards_and_receipts": null,
+    "actual_y3_assets_and_runtime": null,
+    "actual_map_bindings": null,
+    "runtime_key": null
+  }
+}

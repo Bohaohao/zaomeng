@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_EXTERNAL_CAPTURE_SOURCE_ORIGIN_PREFLIGHT_ATTESTATION_TEMPLATE_V1",
+    "status": "not_created",
+    "source_origin_preflight_attestation_ref": null,
+    "issuer_principal_ref": null
+  },
+  "source_binding": {
+    "preflight_contract_sha256": "73d4f0abccea82f8cbc8540d1b405d59397b6ba3f42f767734a44a725612e26f",
+    "preflight_runner_sha256": "e247c41f65829db2dc54d372bfef53d248399818c3adb50e0fc8e833c629b2a5",
+    "required_live_result": "structural_preflight_passed",
+    "structural_preflight_report_digest": null,
+    "provider_qualification_ref": null,
+    "read_only_authorization_ref": null,
+    "captured_authoritative_instant": null,
+    "real_project_identity_digest": null,
+    "real_map_identity_digest": null
+  },
+  "required_origin_properties": [
+    "qualified provider observed an operator-supplied real map-local root under read-only authorization",
+    "bound structural-preflight runner produced the stated live result and immutable report digest",
+    "non-secret project and map identity digests identify one source family without storing paths",
+    "issuer, authority-clock basis and revocation-aware provider qualification are externally verifiable"
+  ],
+  "failure_rule": "结构预检通过本身不能证明真实地图来源；任一合同或 runner 摘要、报告摘要、提供方资格、只读授权、权威时间或非秘密工程/地图身份指纹缺失、无效或漂移时，拒绝整个外部 capture bundle。"
+}

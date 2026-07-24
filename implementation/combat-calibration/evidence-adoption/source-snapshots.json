@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_P0_EVIDENCE_SOURCE_SNAPSHOT_V1",
+    "status": "offline-source-snapshot-only",
+    "runtime_handoff": false,
+    "actual_external_capture_source": null,
+    "accepted_evidence_ledger": null,
+    "adoption_decision": null
+  },
+  "sources": [
+    {
+      "source_id": "CAL-SRC-P0-CANONICAL-GATES",
+      "artifact": "../contract/cross-profession-combat-calibration-contract.json",
+      "contract_id": "CAL_SPEC_CROSS_PROFESSION_ABSOLUTE_COMBAT_V1",
+      "content_sha256": "72405ee76ed8841ff067eb3bb691db6dd29702d1635dc8103adc27d6a3f6f2a8",
+      "role": "the only canonical source of P0 gate identity and order",
+      "may_supply_external_evidence": false,
+      "may_supply_gate_adoption": false,
+      "may_supply_absolute_projection": false
+    }
+  ],
+  "external_capture_family": {
+    "engine_build_digest": null,
+    "real_project_revision": null,
+    "map_or_fixture_revision": null,
+    "object_inventory_snapshot_digest": null,
+    "template_readback_basis_digest": null,
+    "capture_provider_proof_ref": null,
+    "rule": "The values above are populated only by an independently authorized external capture system; no local fixture, Node/Fengari run, construction preflight or discovery manifest may fill them."
+  },
+  "acceptance": [
+    "canonical parent bytes are fingerprinted",
+    "no external evidence source exists locally",
+    "no adoption decision or projection is present"
+  ]
+}

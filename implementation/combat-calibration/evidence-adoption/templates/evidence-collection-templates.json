@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_P0_EVIDENCE_COLLECTION_TEMPLATES_V1",
+    "status": "offline-template-only",
+    "actual_capture_records": null,
+    "accepted_evidence_ledger": null,
+    "absolute_projection_payload": null
+  },
+  "common_submission_shape": {
+    "use": "Populate only in an authorized external read-only capture system, then submit immutable references and digests through the evidence-adoption contract.",
+    "required_envelope_fields": [
+      "evidence_id",
+      "gate_id",
+      "evidence_kind",
+      "source_capture_session_id",
+      "capture_run_id",
+      "capture_provider_proof_ref",
+      "engine_build_digest",
+      "real_project_revision",
+      "map_or_fixture_revision",
+      "object_inventory_snapshot_digest",
+      "template_readback_basis_digest",
+      "canonical_artifact_digest",
+      "capture_basis_digest",
+      "input_trace_digest",
+      "recorded_authoritative_instant",
+      "collector_identity_ref",
+      "reviewer_identity_ref",
+      "external_artifact_ref",
+      "gate_scope"
+    ],
+    "forbidden_local_payloads": [
+      "raw combat log bytes",
+      "target object or unit binding",
+      "absolute unit fields",
+      "gate decision",
+      "reward, receipt or economy input"
+    ]
+  },
+  "gate_templates": [
+    {
+      "gate_id": "P0-GATE-01-all-12-fixed-builds-declared-and-replayed",
+      "external_record_shape": [
+        "one complete declaration for each C01-C04 at Lv41/Lv55/Lv60",
+        "three distinct capture_run_id values for each profile",
+        "gate_scope with one canonical profile_id and deterministic_run_index 1, 2 or 3",
+        "shared engine/project/map/template/input family and byte-identical canonical log digest within each triplet"
+      ],
+      "local_records": null
+    },
+    {
+      "gate_id": "P0-GATE-02-general-physical-magical-defense-formulas-adopted",
+      "external_record_shape": [
+        "physical and magical observations",
+        "defense and penetration ordering observations",
+        "formula revision, boundary and hold-out vector references"
+      ],
+      "local_records": null
+    },
+    {
+      "gate_id": "P0-GATE-03-hit-crit-control-formulas-adopted",
+      "external_record_shape": [
+        "hit/dodge, critical-order and control-resistance observations",
+        "actor/target lifecycle and target-rank basis",
+        "formula branch and counterexample references"
+      ],
+      "local_records": null
+    },
+    {
+      "gate_id": "P0-GATE-04-engine-action-frame-and-speed-readback",
+      "external_record_shape": [
+        "real engine field readback for action frames, attack speed and move speed",
+        "observed tick/distance trace",
+        "engine-to-design conversion review reference"
+      ],
+      "local_records": null
+    },
+    {
+      "gate_id": "P0-GATE-05-terrain-collision-and-camera-fixture",
+      "external_record_shape": [
+        "real map/whitebox collision, pathing, safe-landing, target-range and camera observations",
+        "recorded input, position and outcome references",
+        "map and camera revision binding"
+      ],
+      "local_records": null
+    },
+    {
+      "gate_id": "P0-GATE-06-authoritative-one-to-four-member-replays",
+      "external_record_shape": [
+        "authority captures for one, two, three and four active members",
+        "gate_scope with exactly one party_member_count from 1 through 4",
+        "member/lifecycle, encounter and time-basis snapshots",
+        "left, stale-lifecycle and cleanup observations with accepted-damage immutability"
+      ],
+      "local_records": null
+    },
+    {
+      "gate_id": "P0-GATE-07-stable-object-keys-and-template-readback",
+      "external_record_shape": [
+        "read-only object inventory and source-template readback",
+        "stable-key, field-reference and resource-inventory digests",
+        "no object, resource or map write during capture"
+      ],
+      "local_records": null
+    }
+  ],
+  "template_values_are_not_evidence": true
+}

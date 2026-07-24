@@ -1,0 +1,406 @@
+{
+  "version": 1,
+  "package_status": "offline-design-spec",
+  "production_gate": "closed",
+  "artifact_kind": "offline_information_architecture_contract_not_y3_ui_json",
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_UI_ACCESSIBILITY_INFORMATION_ARCHITECTURE",
+    "display_name": "天庭 UI 与无障碍信息架构合同",
+    "runtime_key": null,
+    "ui_node_id": null,
+    "asset_id": null,
+    "icon_id": null,
+    "sound_id": null,
+    "effect_id": null,
+    "text_template_id": null,
+    "event_id": null,
+    "save_key": null
+  },
+  "source_contracts": [
+    {
+      "artifact": "../combat/tianting-combat-readability-contract.json",
+      "spec_id": "TT_SPEC_TIANTING_COMBAT_READABILITY",
+      "role": "预警、决策、反制、可见结果与双通道可读性要求",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../authority/tianting-progression-and-instance-authority-contract.json",
+      "spec_id": "TT_SPEC_TIANTING_LOGICAL_PROGRESSION",
+      "role": "权威进度、会话成员、轮换快照、资格、恢复、清理与完成边界",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../tianting-content-expansion-contract.json",
+      "spec_id": "TT_SPEC_SEVEN_STAR_AGGREGATE_TITLE",
+      "role": "七星与四圣称号的离线展示关系与集合替代语义",
+      "runtime_key": null
+    },
+    {
+      "artifact": "../economy-candidates/天庭奖励候选登记.md",
+      "spec_id": null,
+      "role": "收藏和奖励均不能由 UI 生成、推算或承诺的经济隔离边界",
+      "runtime_key": null
+    }
+  ],
+  "global_boundaries": {
+    "authority_display_rule": "UI only renders future authority-accepted facts. Missing, stale, mismatched or unavailable facts must remain unconfirmed and cannot be inferred from client cache, party leadership, local clock, animation or visual effects.",
+    "dual_channel_rule": "Every critical warning requires at least two independent expressions. Color is never the sole carrier for direction, danger, ownership, counterplay, chain state or terminal result.",
+    "request_result_separation_rule": "A local click, animation completion, local timer or panel refresh never becomes progression, admission, session, cleanup, qualification, collection, reward or settlement success.",
+    "economy_rule": "No panel creates, selects or submits source_profile, reward_slot_key, owner, qualification, roll, pity, receipt, currency, material, XP, drop, reward or settlement data.",
+    "protected_difu_key_rule": "DF_PROGRESS_YANLUO_HALL_CLEARED is never read, written, displayed as a TianTing prerequisite or substituted for the trusted handoff proof.",
+    "runtime_key": null,
+    "ui_node_id": null,
+    "asset_id": null
+  },
+  "information_surfaces": [
+    {
+      "spec_id": "TT_SPEC_UI_SURFACE_COMBAT_WARNING_AND_COUNTERPLAY",
+      "display_name": "战斗预警与反制信息层",
+      "runtime_key": null,
+      "ui_node_id": null,
+      "asset_id": null,
+      "authoritative_data_source": {
+        "source_spec_id": "TT_SPEC_TIANTING_COMBAT_READABILITY",
+        "source_kind": "future_authority_accepted_combat_presentation_state_only",
+        "runtime_key": null
+      },
+      "minimum_display_facts": [
+        "已接受的预警类别、方向或轨迹",
+        "已接受的可观察场地变化与反制窗口",
+        "已发生的可见反制结果"
+      ],
+      "local_decision_prohibited": [
+        "命中、伤害、阶段、净宿、胜负、Boss 状态或会话推进",
+        "进度、成员、资格、时辰、清理或经济结果"
+      ],
+      "accessibility_alternatives": [
+        "轮廓、轨迹或场地形态",
+        "独立文字、状态提示、声音、震动或读屏描述",
+        "非颜色唯一的方向、归属和危险区分"
+      ],
+      "acceptance_ids": [
+        "TT-UI-ACC-004",
+        "TT-UI-ACC-005",
+        "TT-UI-ACC-006",
+        "TT-UI-ACC-007"
+      ]
+    },
+    {
+      "spec_id": "TT_SPEC_UI_SURFACE_MANSION_ROTATION_SNAPSHOT",
+      "display_name": "星宿轮换快照信息层",
+      "runtime_key": null,
+      "ui_node_id": null,
+      "asset_id": null,
+      "authoritative_data_source": {
+        "source_spec_id": "TT_SPEC_TIME_BASIS_ASIA_SHANGHAI_SHICHEN",
+        "source_kind": "immutable_authority_rotation_snapshot_after_successful_raid_creation",
+        "required_fact_labels": [
+          "rotation_snapshot_id",
+          "authoritative_time_slot",
+          "quadrant",
+          "difficulty",
+          "instance_scope"
+        ],
+        "runtime_key": null
+      },
+      "minimum_display_facts": [
+        "已冻结的方位、时辰槽、难度与实例内不换宿说明",
+        "未创建实例时仅可说明规则，不能伪造当前实例方位"
+      ],
+      "local_decision_prohibited": [
+        "读取客户端时钟、本地时区、重试次数或 UI 刷新时间来计算方位",
+        "改写、重算、混拼或替换当前轮换快照"
+      ],
+      "accessibility_alternatives": [
+        "方位名称与星图符号",
+        "形状或纹理标记",
+        "已锁定文字与非颜色状态标记"
+      ],
+      "acceptance_ids": [
+        "TT-UI-ACC-008",
+        "TT-UI-ACC-009",
+        "TT-UI-ACC-010"
+      ]
+    },
+    {
+      "spec_id": "TT_SPEC_UI_SURFACE_TEAM_AND_SESSION_STATUS",
+      "display_name": "团队成员与会话状态层",
+      "runtime_key": null,
+      "ui_node_id": null,
+      "asset_id": null,
+      "authoritative_data_source": {
+        "source_spec_ids": [
+          "TT_SPEC_SESSION_LINGXIAO_MAINLINE",
+          "TT_SPEC_MANSION_RAID_SESSION_AUTHORITY",
+          "TT_SPEC_TIANTING_INSTANCE_RECOVERY"
+        ],
+        "source_kind": "future_authority_created_frozen_membership_snapshot_and_recovery_state",
+        "runtime_key": null
+      },
+      "minimum_display_facts": [
+        "已冻结成员归属",
+        "未来权威返回的 active、dead、left 与清理中状态",
+        "当前会话是否仍在权威清理中的已确认事实"
+      ],
+      "local_decision_prohibited": [
+        "增删成员、恢复 left、解除重入锁或修改生命周期",
+        "由队长、客户端队伍列表或旁观者取得成员资格或完成"
+      ],
+      "accessibility_alternatives": [
+        "成员名称、位置和形状标签",
+        "非颜色唯一的状态文本与读屏描述",
+        "离场、死亡与清理中状态的独立提示"
+      ],
+      "acceptance_ids": [
+        "TT-UI-ACC-011",
+        "TT-UI-ACC-012",
+        "TT-UI-ACC-013"
+      ]
+    },
+    {
+      "spec_id": "TT_SPEC_UI_SURFACE_ADMISSION_AND_QUALIFICATION_FEEDBACK",
+      "display_name": "准入与资格反馈层",
+      "runtime_key": null,
+      "ui_node_id": null,
+      "asset_id": null,
+      "authoritative_data_source": {
+        "source_spec_ids": [
+          "TT_SPEC_TIANTING_LOGICAL_PROGRESSION",
+          "TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL"
+        ],
+        "source_kind": "future_authority_resolved_per_actor_admission_result_only",
+        "runtime_key": null
+      },
+      "minimum_display_facts": [
+        "可请求、不可请求或等待权威校验的结果",
+        "不含敏感证明内容的原因类别"
+      ],
+      "local_decision_prohibited": [
+        "声称已持有、复制、共享或消耗资格",
+        "用队长状态、客户端记录、普通界面结果或客户端方位替代逐人校验",
+        "暴露证明引用、凭证内容、成员生命周期或其他内部字段"
+      ],
+      "accessibility_alternatives": [
+        "结果文本与符号",
+        "非颜色唯一的原因类别",
+        "可选读屏摘要"
+      ],
+      "acceptance_ids": [
+        "TT-UI-ACC-014",
+        "TT-UI-ACC-015"
+      ]
+    },
+    {
+      "spec_id": "TT_SPEC_UI_SURFACE_FAILURE_AND_REVIEW",
+      "display_name": "失败、清理与复盘层",
+      "runtime_key": null,
+      "ui_node_id": null,
+      "asset_id": null,
+      "authoritative_data_source": {
+        "source_spec_ids": [
+          "TT_SPEC_TIANTING_INSTANCE_RECOVERY",
+          "TT_SPEC_TIANTING_COMPLETION_RECEIPT_IDEMPOTENCY"
+        ],
+        "source_kind": "future_authority_terminal_and_cleanup_fact_only",
+        "runtime_key": null
+      },
+      "minimum_display_facts": [
+        "已确认的失败原因类别与可复述的预警/决策/反制链条",
+        "是否仍在 cleanup_pending 的已确认状态",
+        "正常完成是否已被权威接受的非经济事实"
+      ],
+      "local_decision_prohibited": [
+        "从复盘关闭、重试点击、清理动画或延迟确认推导重入许可",
+        "回滚已接受完成、创建奖励、结算或经济收据"
+      ],
+      "accessibility_alternatives": [
+        "简明失败文本",
+        "机制图形与读屏摘要",
+        "可关闭声音说明与非颜色状态提示"
+      ],
+      "acceptance_ids": [
+        "TT-UI-ACC-016",
+        "TT-UI-ACC-017",
+        "TT-UI-ACC-018"
+      ]
+    },
+    {
+      "spec_id": "TT_SPEC_UI_SURFACE_SEVEN_STAR_TITLE_COLLECTION",
+      "display_name": "七星称号收藏展示层",
+      "runtime_key": null,
+      "ui_node_id": null,
+      "asset_id": null,
+      "authoritative_data_source": {
+        "source_spec_ids": [
+          "TT_SPEC_SEVEN_STAR_SOLO_SERIES",
+          "TT_SPEC_SEVEN_STAR_AGGREGATE_TITLE"
+        ],
+        "source_kind": "offline_title_relationship_with_future_authority_collection_fact_required_for_ownership",
+        "runtime_key": null
+      },
+      "minimum_display_facts": [
+        "七个星君称号与七曜集合称号的离线关系",
+        "集合称号替代单称号效果集合的说明",
+        "缺少未来权威收藏事实时的未确认状态"
+      ],
+      "local_decision_prohibited": [
+        "推算材料、兑换、拥有、解锁、属性、作用域、展示位或奖励",
+        "用客户端收藏页状态宣称已发放或已持久化"
+      ],
+      "accessibility_alternatives": [
+        "称号名称与星位符号",
+        "文本关系说明",
+        "结构图或列表而非颜色层级独占"
+      ],
+      "acceptance_ids": [
+        "TT-UI-ACC-019",
+        "TT-UI-ACC-020"
+      ]
+    },
+    {
+      "spec_id": "TT_SPEC_UI_SURFACE_FOUR_SACRED_TITLE_AND_CHAIN",
+      "display_name": "四圣称号与净宿链路展示层",
+      "runtime_key": null,
+      "ui_node_id": null,
+      "asset_id": null,
+      "authoritative_data_source": {
+        "source_spec_ids": [
+          "TT_SPEC_FOUR_SACRED_TITLE_SERIES",
+          "TT_SPEC_FOUR_SACRED_AGGREGATE_TITLE",
+          "TT_SPEC_TIANTING_COMBAT_READABILITY"
+        ],
+        "source_kind": "offline_title_relation_and_future_authority_accepted_chain_state_only",
+        "runtime_key": null
+      },
+      "minimum_display_facts": [
+        "四方圣兽称号与四象集合称号的离线展示关系",
+        "分别可读的星官压力、圣兽庇护与已确认净宿链路",
+        "集合称号替代四方单称号效果集合的说明"
+      ],
+      "local_decision_prohibited": [
+        "把动画、链路点击或队友显示转换为净宿、称号取得、资格或奖励",
+        "声明数值、属性、材料、装备、法宝或经济结果"
+      ],
+      "accessibility_alternatives": [
+        "方位名称、圣兽轮廓与链路纹理",
+        "文本标签与可选声音",
+        "不以四色作为唯一关系表达"
+      ],
+      "acceptance_ids": [
+        "TT-UI-ACC-021",
+        "TT-UI-ACC-022"
+      ]
+    }
+  ],
+  "deferred": {
+    "actual_ui_tree": null,
+    "actual_ui_nodes": null,
+    "actual_assets": null,
+    "actual_accessibility_implementation": null,
+    "actual_combat_state_transport": null,
+    "actual_authority_data_service": null,
+    "actual_progression_session_rotation_qualification_collection_storage": null,
+    "actual_rewards_and_economy_receipts": null,
+    "runtime_key": null,
+    "ui_node_id": null,
+    "asset_id": null
+  },
+  "acceptance": [
+    {
+      "id": "TT-UI-ACC-001",
+      "rule": "Artifact remains an offline information architecture contract and contains no Y3 UI JSON, Lua, runtime control tree or state machine."
+    },
+    {
+      "id": "TT-UI-ACC-002",
+      "rule": "All runtime, UI node, asset, icon, sound, effect, text-template, event and save identifiers remain null."
+    },
+    {
+      "id": "TT-UI-ACC-003",
+      "rule": "Missing, stale or mismatched authority facts remain unconfirmed and are never inferred locally."
+    },
+    {
+      "id": "TT-UI-ACC-004",
+      "rule": "Each critical warning has dual-channel expression."
+    },
+    {
+      "id": "TT-UI-ACC-005",
+      "rule": "Color is never the sole carrier for direction, danger, ownership, counterplay, chain state or result."
+    },
+    {
+      "id": "TT-UI-ACC-006",
+      "rule": "Combat display never writes progression, membership, chain, session, qualification, cleanup or economy facts."
+    },
+    {
+      "id": "TT-UI-ACC-007",
+      "rule": "Failure review remains understandable as a warning-decision-counterplay chain."
+    },
+    {
+      "id": "TT-UI-ACC-008",
+      "rule": "Current mansion rotation facts read only one immutable authority snapshot."
+    },
+    {
+      "id": "TT-UI-ACC-009",
+      "rule": "Client clock, timezone, retry, reconnect and UI refresh cannot calculate or mutate rotation."
+    },
+    {
+      "id": "TT-UI-ACC-010",
+      "rule": "Created instances state their locked snapshot, while uncreated instances do not impersonate live instance facts."
+    },
+    {
+      "id": "TT-UI-ACC-011",
+      "rule": "Team display reads authority-frozen membership and accepted member state only."
+    },
+    {
+      "id": "TT-UI-ACC-012",
+      "rule": "A left member receives no UI route for reconnect, proxy claim, make-up claim or current-instance completion."
+    },
+    {
+      "id": "TT-UI-ACC-013",
+      "rule": "Cleanup-pending state cannot be unlocked or bypassed by UI."
+    },
+    {
+      "id": "TT-UI-ACC-014",
+      "rule": "Nightmare qualification remains per-member and cannot be replaced by leader, teammate, client record or client-selected quadrant."
+    },
+    {
+      "id": "TT-UI-ACC-015",
+      "rule": "Admission feedback exposes only non-sensitive result and reason categories."
+    },
+    {
+      "id": "TT-UI-ACC-016",
+      "rule": "Review presentation never grants retry, reward, settlement or terminal-session authority."
+    },
+    {
+      "id": "TT-UI-ACC-017",
+      "rule": "Accepted normal completion remains visible as accepted even if cleanup acknowledgement is pending, delayed or failed."
+    },
+    {
+      "id": "TT-UI-ACC-018",
+      "rule": "Failure, completion and review views do not display or promise rewards, values, drops, currency, XP, pity or receipts."
+    },
+    {
+      "id": "TT-UI-ACC-019",
+      "rule": "Without future authority collection facts, seven-star ownership, exchange and unlock state stay unconfirmed."
+    },
+    {
+      "id": "TT-UI-ACC-020",
+      "rule": "Seven-star aggregate title is presented as replacing, not stacking with, individual-title effect sets."
+    },
+    {
+      "id": "TT-UI-ACC-021",
+      "rule": "Officer pressure, sacred-beast protection and accepted purified-chain state are separately readable."
+    },
+    {
+      "id": "TT-UI-ACC-022",
+      "rule": "Four-sacred aggregate title is presented as replacing, not stacking with, directional-title effect sets."
+    },
+    {
+      "id": "TT-UI-ACC-023",
+      "rule": "UI never creates or submits economy input, qualification, receipt or settlement data."
+    },
+    {
+      "id": "TT-UI-ACC-024",
+      "rule": "Protected Difu progression key is never consumed, written or presented as a TianTing prerequisite."
+    }
+  ]
+}

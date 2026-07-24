@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_EXTERNAL_CAPTURE_ARTIFACT_MANIFEST_TEMPLATE_V1",
+    "status": "not_created",
+    "manifest_ref": null,
+    "manifest_digest": null
+  },
+  "bundle_binding": {
+    "provider_qualification_ref": null,
+    "source_origin_preflight_attestation_ref": null,
+    "environment_attestation_ref": null,
+    "canonicalization_profile_ref": null
+  },
+  "environment_family_binding": {
+    "environment_attestation_ref": null,
+    "engine_build_digest": null,
+    "real_project_revision": null,
+    "map_or_fixture_revision": null,
+    "object_inventory_snapshot_digest": null,
+    "template_readback_basis_digest": null,
+    "capture_clock_basis": null,
+    "collector_toolchain_digest": null,
+    "capture_basis_digest": null
+  },
+  "entries": [],
+  "entry_shape": [
+    "gate_id",
+    "gate_scope",
+    "raw_artifact_ref",
+    "canonical_artifact_ref",
+    "canonical_artifact_digest",
+    "capture_basis_digest",
+    "input_trace_digest",
+    "provider_proof_ref",
+    "recorded_authoritative_instant"
+  ],
+  "forbidden_entry_fields": [
+    "object_key",
+    "target_object_or_unit_id",
+    "hp_max",
+    "attack_phy",
+    "attack_mag",
+    "defense_phy",
+    "defense_mag",
+    "attack_speed",
+    "attack_interval_seconds",
+    "move_speed_field",
+    "skill_damage",
+    "skill_duration_seconds",
+    "reward",
+    "receipt",
+    "economy_input",
+    "lua_write",
+    "map_write",
+    "ui_write",
+    "adoption_decision_ref"
+  ],
+  "rule": "entries 只能由外部受信任系统创建；每个 manifest 只能绑定一个与环境证明完全一致的工程/地图/模板/时钟/工具链/capture-basis 摘要族，并且只能单向交给独立审阅，不得引用采纳决定。本地模板的空数组不是证据账本、采纳决定或对象字段投影。"
+}

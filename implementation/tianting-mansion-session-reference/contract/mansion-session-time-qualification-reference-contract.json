@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "TT_SPEC_MANSION_SESSION_TIME_QUALIFICATION_REFERENCE",
+    "display_name": "二十八星宿会话、时辰与资格离线参考合同",
+    "scope": "以进程内测试模型复现二十八星宿普通与噩梦的成员准入、时辰快照、资格比对、断线、完成、清理与重放边界；不构成运行时实现。",
+    "runtime_key": null
+  },
+  "package_status": "offline-reference-only",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "authority_time_input": {
+    "timezone": "Asia/Shanghai",
+    "input_policy": "仅接受注入的 authority_time_input；模型不读取系统时钟、客户端时钟、浏览器时间或任何时间服务。",
+    "required_fields": [
+      "rotation_snapshot_id",
+      "schedule_version",
+      "authoritative_time_slot",
+      "authority_time_basis_id",
+      "captured_authoritative_instant",
+      "schema_version",
+      "timezone"
+    ],
+    "derived_snapshot_fields": [
+      "rotation_snapshot_id",
+      "schedule_version",
+      "authoritative_time_slot",
+      "quadrant",
+      "difficulty",
+      "instance_scope",
+      "authority_time_basis_id",
+      "captured_authoritative_instant",
+      "schema_version"
+    ],
+    "slot_to_quadrant": {
+      "子": "东方青龙",
+      "辰": "东方青龙",
+      "申": "东方青龙",
+      "丑": "南方朱雀",
+      "巳": "南方朱雀",
+      "酉": "南方朱雀",
+      "寅": "西方白虎",
+      "午": "西方白虎",
+      "戌": "西方白虎",
+      "卯": "北方玄武",
+      "未": "北方玄武",
+      "亥": "北方玄武"
+    },
+    "rejected_client_fields": [
+      "client_clock",
+      "client_timezone",
+      "client_quadrant",
+      "requested_quadrant",
+      "retry_time_slot",
+      "local_time"
+    ],
+    "retry_rule": "同一 raid_instance_id 与 session_epoch 的重试只能读取已冻结快照；不能提交新的时辰输入，也不能重新计算方位。"
+  },
+  "session": {
+    "spec_id": "TT_SPEC_MANSION_RAID_SESSION_REFERENCE",
+    "kind": "team_raid",
+    "participant_capacity": {
+      "minimum": 1,
+      "maximum": 4
+    },
+    "identity_fields": [
+      "raid_instance_id",
+      "boss_instance_id",
+      "session_epoch",
+      "phase_id",
+      "revision",
+      "cleanup_token"
+    ],
+    "frozen_member_fields": [
+      "actor_id",
+      "actor_lifecycle_id",
+      "membership_snapshot_id",
+      "member_status"
+    ],
+    "state_sequence": [
+      "active",
+      "cleanup_pending",
+      "closed"
+    ],
+    "reentry_before_matching_cleanup": "denied"
+  },
+  "admission": {
+    "normal": {
+      "difficulty": "normal",
+      "per_member_mainline_rule": "每个冻结成员均须带有其本人、当前生命周期且已由权威侧验证的 TT_SPEC_PROGRESS_MAINLINE_CLEARED 证明摘要；队长、旁观者或其他成员不得代替。"
+    },
+    "nightmare": {
+      "difficulty": "nightmare",
+      "per_member_mainline_rule": "沿用普通的逐人主线完成验证。",
+      "credential_rule": "每个冻结成员另须提供其本人的不透明资格摘要；模型只校验主体、生命周期、证明引用与三方位关系，不表示资格的物品形态、取得、消耗或持久化。",
+      "quadrant_match_rule": "normal_clear.quadrant == credential.quadrant == nightmare.rotation_snapshot.quadrant"
+    },
+    "rejected_member_classes": [
+      "leader_without_individual_mainline_completion",
+      "member_without_individual_mainline_completion",
+      "spectator",
+      "unfrozen_teammate",
+      "stale_lifecycle_member",
+      "client_injected_member"
+    ]
+  },
+  "nightmare_fixture_to_authority_crosswalk": {
+    "authority_semantic_source": {
+      "artifact": "../../../docs/物编/天庭篇主线遭遇与通天塔规格包/authority/tianting-progression-and-instance-authority-contract.json",
+      "contract_property": "nightmare_qualification_contract",
+      "spec_id": "TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL",
+      "required_fields": [
+        "credential_subject_actor_id",
+        "normal_clear_rotation_snapshot_id",
+        "normal_clear_quadrant",
+        "nightmare_access_credential",
+        "nightmare_rotation_snapshot_id",
+        "owner_scope",
+        "authority_proof_ref",
+        "schema_version"
+      ],
+      "semantic_ownership": "unique"
+    },
+    "fixture_adapter_status": "test_only_not_an_independent_schema",
+    "field_crosswalk": {
+      "credential_subject_actor_id": "same-name authority subject field",
+      "credential_subject_lifecycle_id": "fixture-only join assertion against the frozen current member lifecycle; it exercises the upper lifecycle_rule but is not an upper required_fields entry",
+      "normal_clear_rotation_snapshot_id": "same-name authority normal-clear snapshot field",
+      "normal_clear_quadrant": "same-name authority normal-clear quadrant field",
+      "opaque_credential_ref": "fixture-only opaque handle standing in for authority nightmare_access_credential; it is not an item, ownership, consumption, or storage definition",
+      "credential_quadrant": "fixture-only resolved projection used to exercise credential.quadrant in the authority three-way equality; it never becomes an independent authority field",
+      "nightmare_rotation_snapshot_id": "never supplied by fixture input; the model binds it to the already frozen rotation_snapshot.rotation_snapshot_id",
+      "owner_scope": "never supplied by fixture input; character scope is enforced through the frozen actor/lifecycle identity",
+      "authority_proof_ref": "same-name authority proof-reference field",
+      "schema_version": "same-name authority schema-version field"
+    },
+    "adapter_prohibitions": [
+      "fixture field names must not override, extend, or replace the upper required_fields list",
+      "fixture qualification input must not define a runtime credential representation",
+      "fixture qualification input must not define any ownership, consumption, persistence, value, or settlement behavior"
+    ]
+  },
+  "recovery_and_outcome": {
+    "left_member_rule": "成员断线后状态固定为 left；该成员不能在当前 raid_instance_id 重连，也不能获得当前实例的完成资格。",
+    "remaining_active_rule": "其余 active 冻结成员可继续，具体战斗成功条件仍由未来遭遇实现决定。",
+    "cleanup_rule": "只有 raid_instance_id、session_epoch、revision 与 cleanup_token 全部匹配的确认才可把 cleanup_pending 变为 closed。",
+    "completion_durability_rule": "已写入的完成结果在错误确认或清理失败观察后保持不变；不会被回滚。",
+    "idempotency_rule": "同一 operation/event 标识重放时，完整请求必须逐字段一致并仅返回首次结果；创建事件的首次结果是不可变的 frozen active 视图，后续完成、断线或清理状态不得污染其重放结果；发生字段漂移则拒绝。"
+  },
+  "deferred": {
+    "actual_time_provider": null,
+    "actual_mainline_proof_resolver": null,
+    "actual_nightmare_credential_resolver": null,
+    "actual_member_lifecycle_provider": null,
+    "actual_session_storage": null,
+    "actual_cleanup_channel": null,
+    "actual_scene_ui_object_and_network_binding": null,
+    "actual_value_material_and_settlement_rules": null,
+    "runtime_key": null
+  },
+  "acceptance": [
+    "只从显式 authority_time_input 冻结 Asia/Shanghai 时辰槽与方位；不读取系统或客户端时间。",
+    "普通与噩梦均以冻结的一至四名成员逐人验证主线完成。",
+    "噩梦逐人校验 normal_clear、资格摘要与本次冻结快照的三方位一致性。",
+    "left 成员不可重连或获得当前实例完成资格，剩余 active 成员仍有继续路径。",
+    "错误或旧 cleanup 身份不能释放锁；完成在清理失败后不回滚。",
+    "创建、断线、完成和清理确认的同标识重放只返回原结果，字段漂移失败关闭。",
+    "所有运行时键、场景/对象绑定、绝对数值、物品形态和价值结算保持 null 或不在包内。"
+  ]
+}

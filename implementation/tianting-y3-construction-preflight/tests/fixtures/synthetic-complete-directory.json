@@ -1,0 +1,16 @@
+{
+  "fixture_kind": "synthetic-y3-map-local-directory-structure",
+  "scope": "test-only structural fixture; it is not a Y3 map, Lua library, UI tree, or editor artifact",
+  "directories": [
+    "script",
+    "script/y3",
+    "script/y3/meta",
+    "script/y3/game",
+    "ui"
+  ],
+  "object_interface_identifier": "object-editor.adapter",
+  "contains_maps": false,
+  "contains_lua_files": false,
+  "contains_ui_nodes": false,
+  "contains_object_keys": false
+}

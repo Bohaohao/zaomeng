@@ -15,6 +15,21 @@
       "docs/02-公共野外与副本规则.md"
     ],
     "economic_dependency_source": "docs/物编/成长数值与经济裁决包/decision-register.json",
+    "derived_offline_artifacts": [
+      "combat/tianting-combat-readability-contract.json",
+      "combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+      "terrain-layout/layout.json",
+      "terrain-layout/tianting-map-scale-alignment-contract.json",
+      "ui/tianting-ui-accessibility-information-contract.json",
+      "object-blueprint/tianting-object-art-vfx-blueprint-contract.json",
+      "object-preallocation/tianting-object-field-reservation-contract.json",
+      "enemy-ecology/tianting-enemy-ecology-contract.json",
+      "mainline-boss/tianting-mainline-boss-contract.json",
+      "mainline-presentation/tianting-mainline-presentation-contract.json",
+      "../../../implementation/tianting-seven-star-session-reference/package-contract.json",
+      "../../../implementation/tianting-mansion-session-reference/contract/mansion-session-time-qualification-reference-contract.json",
+      "tower-economy/mansion-economy-global-tower-run-season-contract.json"
+    ],
     "rule": "Only accepted or fixed facts are effective constraints. Proposal, deferred, conflict and whitebox-candidate values remain non-production."
   },
   "hard_constraints": {
@@ -209,15 +224,22 @@
         "runtime_key": null
       },
       "run_model": {
-        "status": "deferred",
+        "status": "tianting_offline_candidate_pending_global_tower_adoption",
+        "artifact": "tower-economy/mansion-economy-global-tower-run-season-contract.json",
+        "candidate_full_run_floor_count": 40,
+        "candidate_cycle_count": 8,
+        "candidate_ten_floor_arc_count": 4,
+        "orchestration_rule": "eight existing five-beat subcycles are connected through NEXT_CYCLE_HANDOFF only from cycles 1 through 7; each segment may label its inherited fifth beat as a content slot but never mutates state names, transitions or runtime keys",
         "record_scope": null,
         "solo_team_relation": null,
         "failure_exit": null,
         "resume_rule": null
       },
       "floor_plan": {
-        "status": "deferred",
-        "effective_value": null
+        "status": "tianting_offline_candidate_pending_global_tower_adoption",
+        "effective_value": null,
+        "candidate_value": "five-floor_boss_slots_with_ten-floor_major_boss_replacement",
+        "runtime_key": null
       },
       "affix_policy": {
         "status": "deferred",
@@ -234,16 +256,19 @@
         "qualification_snapshot_required": true
       },
       "season_policy": {
-        "status": "deferred",
+        "status": "tianting_offline_candidate_pending_global_tower_adoption",
+        "artifact": "tower-economy/mansion-economy-global-tower-run-season-contract.json",
+        "authority_snapshot_rule": "future authoritative run creation freezes a season snapshot; all season values remain null_or_deferred",
         "effective_value": null
       },
       "tianting_content_reuse": {
-        "status": "offline_design",
-        "artifact": "tianting-content-expansion-contract.json",
-        "rule": "seven_stars_and_twenty_eight_mansions_are_future_mini_boss_pools_only",
-        "mini_boss_cadence": "deferred_3_or_5_floors",
-        "major_boss_cadence": "user_directed_every_10_floors; roster_deferred",
-        "reward_rule": "deferred_after_tianting_mainline_and_instance_design",
+        "status": "tianting_offline_candidate_pending_global_tower_adoption",
+        "artifact": "tower-economy/mansion-economy-global-tower-run-season-contract.json",
+        "content_source": "tianting-content-expansion-contract.json",
+        "rule": "seven_stars_and_twenty_eight_mansions_are_future_mini_boss_pools_only; individual selections remain deferred",
+        "mini_boss_cadence": "candidate_every_5_floors; ten-floor major slots would replace rather than stack with mini-boss slots if adopted",
+        "major_boss_cadence": "candidate_every_10_floors; four offline creative identities only if adopted",
+        "reward_rule": "source_success_events_source_profiles_reward_slots_qualifications_and_receipts_remain_null_or_deferred",
         "runtime_key": null
       }
     }
@@ -260,21 +285,163 @@
         "twenty-eight-mansions normal and nightmare team lifecycle",
         "Asia/Shanghai rotation snapshot and per-character nightmare credential admission"
       ]
+    },
+    {
+      "contract": "tianting_combat_readability",
+      "artifact": "combat/tianting-combat-readability-contract.json",
+      "status": "offline_design",
+      "covers": [
+        "telegraph-decision-counterplay-review loop",
+        "one-to-four-player completion paths and non-color-only readability",
+        "mainline, seven-star, mansion-normal and mansion-nightmare construction inputs"
+      ]
+    },
+    {
+      "contract": "tianting_terrain_layout_dry_run",
+      "artifact": "terrain-layout/layout.json",
+      "status": "offline_dry_run_candidate",
+      "covers": [
+        "candidate public-route partition and session-map size families",
+        "terrain construction layers and sightline responsibilities",
+        "no-write candidate coordinates, regions and logic-resource candidates"
+      ]
+    },
+    {
+      "contract": "tianting_map_scale_alignment",
+      "artifact": "terrain-layout/tianting-map-scale-alignment-contract.json",
+      "status": "offline_preconstruction_decision",
+      "covers": [
+        "diagram-unit isolation for 640x416 and legacy session candidates",
+        "224x80 heavenly capacity envelope with two 96x64 public whitebox candidates",
+        "independent session envelopes with all map and resource bindings null"
+      ]
+    },
+    {
+      "contract": "tianting_ui_accessibility_information",
+      "artifact": "ui/tianting-ui-accessibility-information-contract.json",
+      "status": "offline_design",
+      "covers": [
+        "dual-channel warnings, rotation snapshot, party state and failure review",
+        "title presentation and non-color-only accessibility",
+        "authority-result display only with no local adjudication"
+      ]
+    },
+    {
+      "contract": "tianting_object_art_vfx_blueprint",
+      "artifact": "object-blueprint/tianting-object-art-vfx-blueprint-contract.json",
+      "status": "offline_design",
+      "covers": [
+        "Boss silhouettes, anticipation, VFX priority and arena interaction requirements",
+        "mainline, seven-star, twenty-eight-officer and sacred-beast coverage",
+        "no object, asset, skill, buff or numeric binding"
+      ]
+    },
+    {
+      "contract": "tianting_object_field_reservation",
+      "artifact": "object-preallocation/tianting-object-field-reservation-contract.json",
+      "status": "offline_field_reservation_only",
+      "covers": [
+        "fifty-five source-identity cards for enemy ecology, mainline, seven-star, mansion and sacred-beast content",
+        "semantic unit, ability-shell, presentation-state, projectile and sound dependencies",
+        "all-null object, resource, absolute-field and runtime reservations with no normalized design or plugin generation"
+      ]
+    },
+    {
+      "contract": "tianting_enemy_ecology",
+      "artifact": "enemy-ecology/tianting-enemy-ecology-contract.json",
+      "status": "offline_design_requirements_only",
+      "covers": [
+        "eleven non-tower small-monster, elite, mechanism and nightmare-support responsibilities",
+        "protected Boss identity guards and one-to-four-player readable counterplay",
+        "no unit, object, wave, numeric, reward, authority or economy binding"
+      ]
+    },
+    {
+      "contract": "tianting_mainline_boss_deepening",
+      "artifact": "mainline-boss/tianting-mainline-boss-contract.json",
+      "status": "offline_design_requirements_only",
+      "covers": [
+        "five non-tower mainline boss-level encounter phase grammars",
+        "P0 source and relation readability, visible counterplay, failure review and minion-elite interfaces",
+        "no Boss object, skill, AI, map, authority write, reward or economy binding"
+      ]
+    },
+    {
+      "contract": "tianting_combat_numeric_unit_baseline",
+      "artifact": "combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+      "status": "accepted_relative_balance_baseline_offline_only",
+      "covers": [
+        "four-profession Lv41-Lv60 naked-stat reference envelope",
+        "relative unit pressure, exposure, cadence, P0/counter and one-to-four scaling for existing TianTing identities",
+        "no absolute object fields, runtime bindings, authority mutations, economy outputs or tower values"
+      ]
+    },
+    {
+      "contract": "tianting_authority_vertical_slice",
+      "artifact": "../../../implementation/tianting-authority-vertical-slice/package-contract.json",
+      "status": "offline_tested_reference_only",
+      "covers": [
+        "trusted Node/Fengari execution boundary",
+        "entry, observatory and one-to-four Lingxiao closure replay and cleanup semantics",
+        "no Y3 API, map-root Lua, persistence, network or economy integration"
+      ]
+    },
+    {
+      "contract": "tianting_seven_star_session_reference",
+      "artifact": "../../../implementation/tianting-seven-star-session-reference/package-contract.json",
+      "status": "offline_reference_model_only",
+      "covers": [
+        "owner-only observatory admission, seven fixed routes and process-local idempotent session outcomes",
+        "active-to-cleanup_pending-to-closed failure and cleanup replay boundaries",
+        "no Y3, Lua, persistence, reward, title, qualification or economy-v2 output"
+      ]
+    },
+    {
+      "contract": "tianting_mansion_session_reference",
+      "artifact": "../../../implementation/tianting-mansion-session-reference/contract/mansion-session-time-qualification-reference-contract.json",
+      "status": "offline_reference_model_only",
+      "covers": [
+        "injected Asia/Shanghai rotation snapshot, one-to-four member admission and per-member nightmare quadrant comparison",
+        "left-member no-reconnect, completion durability, cleanup identity and strict replay boundaries",
+        "no real clock, network, persistence, Y3 binding, value assignment or settlement effect"
+      ]
+    },
+    {
+      "contract": "tianting_mainline_narrative_presentation",
+      "artifact": "mainline-presentation/tianting-mainline-presentation-contract.json",
+      "status": "offline_narrative_presentation_spec",
+      "covers": [
+        "five non-tower mainline Boss entry guidance, three narrative anchors, dual-channel warnings and failure debrief skeletons",
+        "non-economic narrative confirmation and L0-L4 camera, audio and VFX responsibility layers",
+        "no authority adjudication, progression, reward, receipt, economy, asset, object, map or runtime binding"
+      ]
+    },
+    {
+      "contract": "mansion_economy_global_tower_run_season",
+      "artifact": "tower-economy/mansion-economy-global-tower-run-season-contract.json",
+      "status": "tianting_offline_candidate_pending_global_tower_adoption",
+      "covers": [
+        "candidate forty-floor logical run with eight five-beat subcycles and four ten-floor arcs",
+        "candidate five-floor Boss slots, ten-floor major replacement and four creative major-Boss identities",
+        "season snapshot semantics and complete zero-value economy-source boundary"
+      ]
     }
   ],
   "required_future_contracts": [
     {
-      "contract": "tower_run_and_rewards",
+      "contract": "tower_runtime_implementation_and_rewards",
       "blocking_decision": "TT-DEFER-005_and_TT-DEFER-006",
       "required_fields": [
         "record_scope",
-        "floor_plan",
+        "runtime_run_identity",
+        "floor_map_and_instance_binding",
+        "content_selection_snapshot",
         "affix_pool",
         "idempotency_envelope",
         "clear_and_failure_receipt",
         "reward_slots",
         "resource_table_version",
-        "season_rule"
+        "season_service_and_calendar"
       ]
     }
   ],
@@ -282,8 +449,15 @@
     "No new Y3 object, map, encounter, item, ability, runtime progression key or resource key is created.",
     "No DF_PROGRESS_YANLUO_HALL_CLEARED consumer is added.",
     "Logical TT_SPEC progress identities, authority receipt shapes and session states remain offline-only and do not create persistence or a trusted runtime provider.",
-    "No concrete global floor plan, selected mini-Boss cadence, Boss roster, embedded reward amount, probability, pity threshold or season is adopted; the user-directed ten-floor major-Boss interface remains content-only and economy-v2 is referenced externally as a runtime-closed design baseline.",
+    "A forty-floor TianTing-side logical run candidate, five-floor Boss slots and four ten-floor creative major-Boss identities await upstream global-tower adoption; they create no accepted global floor count or runtime floors, maps, encounters, records, season values, reward values, source profiles, receipt slots or economy inputs.",
     "No proposal, conflict, deferred or whitebox-candidate value is promoted to an effective runtime value.",
+    "Candidate layout coordinates, session galleries, preview images and logic-resource candidates do not create a current Y3 map, entrance, teleport, spawn, editor resource or runtime key.",
+    "Combat readability does not create skills, battle values, progression writes, credentials, source profiles, handoff routes or settlement inputs.",
+    "Enemy ecology and mainline Boss deepening only define readable responsibilities and interfaces; they do not create units, objects, skills, AI, waves, maps, authority writes, rewards or economy inputs.",
+    "Seven-star and mansion reference models execute only injected, process-local offline fixtures; they do not replace the authority contract or create real progress, sessions, time, credentials, rewards or settlement inputs.",
+    "Mainline narrative presentation only describes how authority-confirmed facts may be communicated; it cannot adjudicate entry, member state, completion, cleanup, progression, qualification or economy.",
+    "Object field reservation only defines logical source cards and all-null future bindings; it does not create y3-object-config assets or mode, plugins, stable object keys, copyFrom templates, resources, raw fields, runtime writes or economic effects.",
+    "The combat numeric unit baseline owns only dimensionless offline coefficients and naked-player reference snapshots; it does not assign raw Y3 fields, seconds, objects, waves, authority effects, economy inputs or tower values.",
     "implementation/growth/ remains an offline candidate; economy-v2 does not imply an authoritative runtime resource table, ledger, proof resolver or reward issuer."
   ],
   "acceptance_invariants": [
@@ -294,11 +468,19 @@
     "天庭进度必须精确为入章、周天观台开启、常规主线完成三段 TT_SPEC 逻辑记录；三者均使用唯一生产者和 (actor_id,event_id) 幂等，运行时键为 null。",
     "七星只能在周天观台逻辑记录后以单人会话进入；二十八星宿普通/噩梦必须逐人校验常规主线完成。",
     "二十八星宿的方位只能由 Asia/Shanghai 权威时间基准在创建会话时冻结；客户端时钟、客户端方位与重试重算均不可接受。",
-    "塔首轮奖励只能外部引用 runtime-closed 的 economy-v2；楼层、词缀、兑换目录和赛季保持 deferred，implementation/growth/ 继续禁止消费。",
+    "塔首轮奖励只能外部引用 runtime-closed 的 economy-v2；四十层候选编排、五层 Boss 槽和十层大 Boss 创意身份尚待全局塔采纳，且不产生任何掉落、词缀、兑换目录、记录或赛季数值，implementation/growth/ 继续禁止消费。",
     "所有规格局部内容角色必须使用 TT_SPEC_ 前缀且 runtime_key 为 null。",
+    "天庭战斗数值只能以独立合同中的无量纲 H0/A0/M0/I0/R0/B0/O0/S0 表达；绝对物编字段须等待完整实机标定门禁。",
     "首轮五节拍合同只定义准入、顺序、第五节拍休整、结算/失败/退出/交接与幂等边界，不定义总层数或任何运行时内容。",
     "七星必须精确为七个固定单人试炼；同星十枚残片合成对应星君称号，七称号自动解锁名称待定的集合称号；所有物品和数值仍非运行时资产。",
     "二十八星宿必须精确为四象各七宿；子/辰/申青龙、丑/巳/酉朱雀、寅/午/戌白虎、卯/未/亥玄武，并在入场时冻结权威轮换快照。",
-    "噩梦必须保留七宿强化同方位四圣、四圣庇护七宿的双向关系；通天塔仅复用内容池，不决定掉落或层位。"
+    "噩梦必须保留七宿强化同方位四圣、四圣庇护七宿的双向关系；通天塔的五层 Boss 槽与十层大 Boss 创意身份仅是待上位采纳的天庭侧候选，不决定运行时楼层地图/实例、抽取、掉落、记录或赛季值。",
+    "主线、七星、普通星宿与四圣噩梦都必须可读地表达预警、决策、反制与可复盘失败，颜色不可成为唯一关键信息，且一至四人均有完成路径。",
+    "非通天塔敌人生态只能作为既有机制的可读放大器；不得降格复用主线首领、七星首领、二十八星官或四圣兽，也不得形成塔内容、波次、掉落、资格或经济输入。",
+    "南天门、断虹阵、四门失衡、周天观台与凌霄外庭五组主线首领级遭遇均须保留 P0 来源/关系、独立第二通道、串行单人解、可见反制与可复盘失败；附属压力不得遮挡 P0 或改写权威合同。",
+    "七星与星宿的离线参考模型只验证既有权威合同的准入、冻结、失败、清理与幂等边界；它们不产生进度、资格、掉落、称号、收据或 economy-v2 输入。",
+    "五组主线 Boss 的叙事与表现深化只能消费未来已确认的权威事实；双通道预警、复盘、镜头、音频和特效层级均不是运行时命令或完成结算。",
+    "候选公共路线、凌霄、七星、四方普通与四方噩梦空间只以 dry-run 形式存在；实际地图、入口、资源和逻辑资源保持未创建。",
+    "当前只有凌霄主线成功可进入既有零价值来源事实候选；七星、普通星宿、噩梦星宿、塔小 Boss、大 Boss 和完整 run 关闭不得成为 handoff candidate、资格或结算输入。"
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "targetSkill": "y3-terrain-layout",
   "project": {
     "name": "天庭篇主线、七星与二十八星宿离线规格",
@@ -8,11 +8,23 @@
     "sessionType": "公共路线、七星星盘、四象阵台与四圣兽场地；运行时未施工",
     "targetPlayers": "1-4 人",
     "targetDurationMinutes": 0,
-    "pitch": "为后续地形施工提供逻辑区域、可读性和路线职责，不提供任何坐标或地编资产。"
+    "pitch": "为后续地形施工提供逻辑区域、可读性和路线职责；候选坐标仅存在于独立 dry-run 布局，不是地编资产。"
   },
   "sourceContract": {
     "artifact": "../tianting-content-expansion-contract.json",
     "status": "offline_design",
+    "runtimeKey": null
+  },
+  "enemyEcologySource": {
+    "artifact": "../enemy-ecology/tianting-enemy-ecology-contract.json",
+    "status": "offline_design_requirements_only",
+    "role": "只向候选场地交接生态对象的阅读面、反制路径、退路和首领身份护栏；不交接刷怪点、单位、波次、坐标或运行时键。",
+    "runtimeKey": null
+  },
+  "mainlineBossDeepeningSource": {
+    "artifact": "../mainline-boss/tianting-mainline-boss-contract.json",
+    "status": "offline_design_requirements_only",
+    "role": "只向南天门、断虹阵、四门、周天观台与凌霄候选区域交接 P0、关系线、观察线、反制和复盘阅读职责；不交接地图、碰撞、出生点或会话入口。",
     "runtimeKey": null
   },
   "maps": {
@@ -39,16 +51,46 @@
     "role": "场地必须读得出七星轨道、青龙星链、朱雀火环、白虎猎印和玄武甲壁。",
     "runtimeKey": null
   },
+  "candidateLayout": {
+    "artifact": "../terrain-layout/layout.json",
+    "status": "offline-dry-run-candidate",
+    "mode": "preview",
+    "coordinateRule": "候选尺寸、坐标、分区和路线只服务布局预览；它们不创建地图根、入口、传送、出生点、碰撞、编辑器逻辑资源或运行时键。",
+    "runtimeKey": null
+  },
+  "mapScaleAlignment": {
+    "artifact": "../terrain-layout/tianting-map-scale-alignment-contract.json",
+    "status": "offline_preconstruction_decision",
+    "role": "640×416 仅是章节图解；公共内容映射为两张 96×64 候选白盒并受 224×80 天界带状容量约束。",
+    "runtimeKey": null
+  },
+  "y3ConstructionPreflightSource": {
+    "artifact": "../../../../implementation/tianting-y3-construction-preflight/package-contract.json",
+    "status": "structural-preflight-only",
+    "role": "真实施工前必须对已存在的 map-local 根检查 script/y3/{meta,game} 与 ui；当前离线仓库的 fail_closed 结果不能被目录占位或候选布局绕过。",
+    "runtimeKey": null,
+    "actualMapRoot": null,
+    "productionGate": "closed"
+  },
+  "surfaceConstructionDiscoverySource": {
+    "artifact": "../../../../implementation/tianting-surface-construction-manifest/surface-construction-manifest.json",
+    "status": "offline_preconstruction_discovery_only",
+    "role": "将五组主线白盒的未来读取项与实时地图、碰撞、镜头、逻辑资源清单对齐；它不授权地形、对象或 UI 写入。",
+    "runtimeKey": null,
+    "actualMapKey": null,
+    "writeAuthorized": false
+  },
   "layoutRequirements": [
     "南天门、天宫道、天王殿、周天观台和凌霄外庭的路径要支持主线因果，而非仅作为视觉串场。",
     "七星场地各自只突出一个核心空间规则，避免七张同构圆形竞技场。",
     "四象阵台必须预留最多四人完成的站位、路径、反制窗口和 Boss 读条空间。",
     "噩梦场地必须同时容纳四圣兽、七宿共鸣和净宿路线，但不把双向关系藏在装饰后。",
-    "不得创建地图根、坐标、传送点、地形、装饰物、刷怪、区域等级或资源路径。"
+    "主线附属压力只能位于不遮挡 P0 来源、关系线、可净化节点、回退路和安全转换线的候选阅读面；它们不产生刷怪点、波次或小怪出生数据。",
+    "候选坐标只可从 ../terrain-layout/layout.json 与 ../terrain-layout/scale-alignment/layout.json 读取为 dry-run 输入；不得把它们写入地图根、传送点、地形、装饰物、刷怪、区域等级、资源路径或逻辑资源。"
   ],
-  "handoffNotes": "此文件只提供地形/布局逻辑职责；真实施工要在地图工程存在后重新核验。",
+  "handoffNotes": "本简报提供地形/布局逻辑职责，并链接图解—白盒口径裁决、敌人生态、主线 Boss 深化、Y3 结构预检和表面发现清单的独立 dry-run 输入；真实施工要先读取当前地图与资源、通过对应门禁并获得明确确认后重新核验。",
   "unresolved": [
-    "地图规模、邻接、坐标、出生点、镜头、可破坏物、刷怪、寻路和性能预算。",
+    "实际地图规模、邻接、出生点、镜头、可破坏物、刷怪、寻路和性能预算；候选布局不替代这些事实。",
     "副本入口、失败重置、检查点、重连和场地状态同步。",
     "通天塔如何实例化天庭 Boss 池。"
   ]

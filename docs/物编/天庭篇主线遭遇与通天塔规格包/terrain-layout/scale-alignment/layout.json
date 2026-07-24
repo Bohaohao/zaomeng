@@ -1,0 +1,210 @@
+{
+  "version": 1,
+  "mode": "preview",
+  "documentStatus": "offline-whitebox-candidate",
+  "identity": {
+    "spec_id": "TT_SPEC_TIANTING_HEAVENLY_BAND_WHITEBOX",
+    "runtime_key": null,
+    "rule": "Every identifier and coordinate in this document is an offline whitebox candidate; no identifier is a runtime map, editor resource, spawn, entrance, teleport or persistence key."
+  },
+  "referenceSources": [
+    "specified: docs/README.md",
+    "specified: docs/归档/地图设计/13-首发地图推理基线与验证TODO.md",
+    "specified: ../layout.json",
+    "specified: ../tianting-map-scale-alignment-contract.json",
+    "specified: ../../combat/天庭战斗机制与可读性规格.md"
+  ],
+  "worldview": {
+    "theme": "裂律污染下的西游天庭：将临时天庭、南天门、断虹阵、天王殿、周天观台与凌霄门面压缩为两个可验证的白盒公共场景；真正副本仍独立。",
+    "hardRules": [
+      "此图使用 terrain-cell-candidate 仅作预算和白盒验证；不是现有 Y3 地图或世界坐标。",
+      "640x416 图解坐标不得复制、缩放或转换到此图。",
+      "公共图只承接路线、阅读、公共遭遇和门面；凌霄最终战、七星、星宿普通/噩梦不在图内。",
+      "两张公共场景之间的八格章节边界不可通行；它不是道路、传送、入口或地图邻接。",
+      "所有预警、反制、退路与净化节点的可读性优先于装饰密度。",
+      "不创建入口、传送、出生点、复活点、逻辑资源、对象、资源 ID 或任何运行时状态。"
+    ]
+  },
+  "map": {
+    "id": "TT_WB_CANDIDATE_HEAVENLY_BAND",
+    "width": 224,
+    "height": 80,
+    "coordinateUnit": "terrain-cell-candidate",
+    "status": "candidate-only-not-editor-map",
+    "actualMapKey": null,
+    "reason": "在既有 224x80 天界预留带内，先用两张 96x64 白盒公共场景验证拆图、镜头与可读性，不触发 384x320 总图扩容。"
+  },
+  "sceneEnvelopes": [
+    {
+      "id": "TT_WB_PUBLIC_SCENE_GATE",
+      "name": "公共场景一：临时天庭与南天门",
+      "bounds": {"x": 8, "z": 8, "width": 96, "height": 64},
+      "status": "candidate-only-not-editor-map",
+      "purpose": "验证公共锚点、南天门回查、裂云门禁与通天塔视觉门面的最小空间关系。",
+      "actualMapKey": null
+    },
+    {
+      "id": "TT_WB_PUBLIC_SCENE_INNER",
+      "name": "公共场景二：天宫道至周天观台",
+      "bounds": {"x": 112, "z": 8, "width": 96, "height": 64},
+      "status": "candidate-only-not-editor-map",
+      "purpose": "验证断虹阵、天王殿、内廷折返、周天观台与凌霄门面的顺序空间。",
+      "actualMapKey": null
+    }
+  ],
+  "regions": [
+    {
+      "id": "TT_WB_R_CHAPTER_SEPARATOR",
+      "name": "八格非连通章节边界",
+      "type": "boundary",
+      "bounds": {"x": 104, "z": 8, "width": 8, "height": 64},
+      "worldviewTag": "两张公共白盒之间未物化的断层",
+      "purpose": "把公共场景一和二明确画为非连通候选，不将章节因果误画成连续道路。",
+      "terrainIntent": "仅用于白盒边界可读性；不创建道路、相邻关系、入口、传送或加载实现。"
+    },
+    {
+      "id": "TT_WB_R_GATE_HUB",
+      "name": "临时天庭枢纽白盒",
+      "type": "safe",
+      "bounds": {"x": 12, "z": 12, "width": 28, "height": 22},
+      "worldviewTag": "秩序尚存的安置云台",
+      "purpose": "测试公共信息锚点、方向提示与不阻塞的集合空间。",
+      "terrainIntent": "低矮边界、明确出口与无障碍标识预留；不创建 NPC 或交互点。"
+    },
+    {
+      "id": "TT_WB_R_GATE_APPROACH",
+      "name": "南天门回查路线白盒",
+      "type": "main-route",
+      "bounds": {"x": 40, "z": 20, "width": 24, "height": 16},
+      "worldviewTag": "侦天预警与回查云阶",
+      "purpose": "验证从枢纽到门禁的方向变化、遮蔽提示和四人会车。",
+      "terrainIntent": "不能以装饰制造视线盲区；路线转折需要比 UI 箭头更早被看见。"
+    },
+    {
+      "id": "TT_WB_R_SPLIT_SOUTH_GATE",
+      "name": "裂云南天门机制白盒",
+      "type": "boss-envelope",
+      "bounds": {"x": 64, "z": 8, "width": 40, "height": 36},
+      "worldviewTag": "错误巽天命令的门禁现场",
+      "purpose": "测试双通道预警、遮蔽位、回旋路与四人撤离的空间语法。",
+      "terrainIntent": "场地边缘可框定门禁，不可成为机制无解的死角。"
+    },
+    {
+      "id": "TT_WB_R_TOWER_FACADE",
+      "name": "通天塔视觉门面候选",
+      "type": "visual-facade",
+      "bounds": {"x": 12, "z": 42, "width": 20, "height": 16},
+      "worldviewTag": "唯一全局通天塔的天庭主题门面",
+      "purpose": "只测试远景锚点和非交互提示位。",
+      "terrainIntent": "不得成为副本门、传送点、资格判断点或独立地图。"
+    },
+    {
+      "id": "TT_WB_R_BROKEN_RAINBOW",
+      "name": "断虹阵阅读带",
+      "type": "main-route",
+      "bounds": {"x": 116, "z": 18, "width": 28, "height": 18},
+      "worldviewTag": "阵眼与受控天兵的断虹云桥",
+      "purpose": "验证阵眼、双支线和内廷转向的阅读。",
+      "terrainIntent": "优先可见的阵眼和绕行通道；不使用实际可破坏物。"
+    },
+    {
+      "id": "TT_WB_R_TIANWANG",
+      "name": "天王殿外缘四门白盒",
+      "type": "boss-envelope",
+      "bounds": {"x": 148, "z": 8, "width": 44, "height": 36},
+      "worldviewTag": "四方守备信号互斥",
+      "purpose": "测试四向回响、汇合、分流与撤离的上限占用。",
+      "terrainIntent": "四门轮廓、中央汇合和边缘退路必须被 2.5D 镜头同时区分。"
+    },
+    {
+      "id": "TT_WB_R_OBSERVATORY",
+      "name": "周天观台公共信息锚点",
+      "type": "public",
+      "bounds": {"x": 164, "z": 44, "width": 32, "height": 24},
+      "worldviewTag": "星历裂缝与校星枢纽",
+      "purpose": "测试轮换快照、七星/星宿候选入口信息和主线折返的空间提示位。",
+      "terrainIntent": "信息展示可通过 UI 和场地标志共同完成；不创建副本入口。"
+    },
+    {
+      "id": "TT_WB_R_LINGXIAO_FACADE",
+      "name": "凌霄外庭非交互门面",
+      "type": "visual-facade",
+      "bounds": {"x": 196, "z": 20, "width": 12, "height": 28},
+      "worldviewTag": "裂律观台的远端门面",
+      "purpose": "标出主线终局去向，但不承接实际会话或首领战。",
+      "terrainIntent": "与周天观台保持可读方向关系；不创建门、区域、触发器或传送。"
+    }
+  ],
+  "routes": [
+    {
+      "id": "TT_WB_ROUTE_INNER_TO_OBSERVATORY",
+      "name": "天宫道至周天观台的折返",
+      "purpose": "验证从四门失衡转入星历污染的可读因果。",
+      "points": [{"x": 192, "z": 28}, {"x": 184, "z": 40}, {"x": 180, "z": 50}]
+    }
+  ],
+  "chapterBoundaries": [
+    {
+      "id": "TT_WB_ROUTE_GATE_TO_INNER",
+      "name": "场景一至场景二的候选章节切换",
+      "fromScene": "TT_WB_PUBLIC_SCENE_GATE",
+      "toScene": "TT_WB_PUBLIC_SCENE_INNER",
+      "transitionKind": "chapter_boundary_transition",
+      "traversable": false,
+      "nonTraversableGapCells": 8,
+      "handoff": "The 8-cell separator is intentionally non-traversable. A future scene-load or authority-approved transition is required; no road, teleport, entrance or adjacency is created here.",
+      "runtimeKey": null
+    }
+  ],
+  "spawns": [],
+  "bossZones": [
+    {
+      "id": "TT_WB_ZONE_SPLIT_SOUTH_GATE",
+      "name": "裂云南天门候选机制包络",
+      "bounds": {"x": 68, "z": 12, "width": 32, "height": 28},
+      "status": "candidate-only",
+      "readabilityIntent": "预警、遮蔽、反制与撤离同时可读。"
+    },
+    {
+      "id": "TT_WB_ZONE_TIANWANG",
+      "name": "天王殿候选机制包络",
+      "bounds": {"x": 152, "z": 12, "width": 36, "height": 28},
+      "status": "candidate-only",
+      "readabilityIntent": "四向状态、中央汇合和侧向退场不互相遮挡。"
+    }
+  ],
+  "publicAreas": [
+    {"id": "TT_WB_PUBLIC_GATE_HUB", "name": "临时天庭白盒公共区", "bounds": {"x": 12, "z": 12, "width": 28, "height": 22}, "status": "candidate-only"},
+    {"id": "TT_WB_PUBLIC_OBSERVATORY", "name": "周天观台白盒公共区", "bounds": {"x": 164, "z": 44, "width": 32, "height": 24}, "status": "candidate-only"}
+  ],
+  "hiddenAreas": [],
+  "npcPoints": [],
+  "terrainLayers": [
+    {"layer": "map", "status": "candidate-only", "handoff": "不创建或调整地图；仅验证 224x80 预算与两个 96x64 包络。"},
+    {"layer": "terrain", "status": "candidate-only", "handoff": "以路面、低矮边缘、台阶和视觉门面验证视线；不写高程、碰撞或断崖。"},
+    {"layer": "road", "status": "candidate-only", "handoff": "路线只表示阅读和测试路径；不生成编辑器路径资源。"},
+    {"layer": "texture", "status": "unresolved-resource-binding", "handoff": "未选择纹理资源。"},
+    {"layer": "decoration-entities", "status": "unresolved-resource-binding", "handoff": "未选择建筑、门框、星盘或远景资源。"},
+    {"layer": "logic-points-paths-areas", "status": "no-write", "handoff": "不创建出生、入口、Boss、镜头、区域或触发器。"}
+  ],
+  "decorations": [],
+  "logicResources": [],
+  "preview": {
+    "status": "rendered",
+    "htmlPath": "layout-preview.html",
+    "imagePath": "layout-preview.png",
+    "metaPath": "layout-preview.meta.json",
+    "renderer": "chrome-headless",
+    "notes": [
+      "Preview only visualizes the offline whitebox candidate.",
+      "No preview element is an existing Y3 terrain or runtime object."
+    ]
+  },
+  "unresolved": [
+    "No current Y3 map or editor resource inventory is available in this workspace.",
+    "Actual map keys, origin, adjacency, loading, entrances, teleports, spawns, revives, collision and logic resources are not designed.",
+    "Camera, pathing, performance and accessibility verification must occur before any physical map-size decision is adopted.",
+    "Session map physical dimensions remain whitebox envelopes and need independent tests.",
+    "No combat numeric, asset, economy, reward or persistence data belongs to this layout."
+  ]
+}

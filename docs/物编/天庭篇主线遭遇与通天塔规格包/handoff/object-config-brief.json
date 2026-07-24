@@ -1,19 +1,109 @@
 {
-  "version": 2,
+  "version": 3,
   "targetSkill": "y3-object-config",
   "project": {
     "name": "天庭篇主线、七星与二十八星宿离线规格",
     "genre": "最多四人同游的西游题材 ORPG",
     "camera": "2.5D 俯视角",
-    "sessionType": "主线、七星单人本、四象团队本与通天塔内容池；运行时未施工",
+    "sessionType": "主线、七星单人本、四象团队本与天庭侧候选通天塔内容池；运行时未施工",
     "targetPlayers": "1-4 人",
     "targetDurationMinutes": 0,
-    "pitch": "为后续物编准备受控天庭守卫、七星试炼首领、二十八星官、四圣兽和候选材料的离线请求。"
+    "pitch": "为后续物编准备受控天庭守卫、七星试炼首领、二十八星官、四圣兽和候选材料的离线请求。全局塔四个大 Boss 不在当前蓝图范围。"
   },
   "sourceContract": {
     "artifact": "../tianting-content-expansion-contract.json",
     "status": "offline_design",
     "runtimeKey": null
+  },
+  "combatReadabilitySource": {
+    "artifact": "../combat/tianting-combat-readability-contract.json",
+    "status": "offline_design",
+    "role": "为未来对象提供预警轮廓、反制类别、可见结果与场地阅读优先级；不生成资产。",
+    "runtimeKey": null
+  },
+  "combatNumericUnitBaselineSource": {
+    "artifact": "../combat-baseline/tianting-combat-numeric-unit-baseline-contract.json",
+    "status": "accepted_relative_balance_baseline_offline_only",
+    "role": "提供四职业裸装参照、相对耐久/压力/节拍/P0 窗口和 1–4 人缩放；它不是 hp_max、攻击、双防或秒数的对象字段表。",
+    "runtimeKey": null,
+    "objectId": null,
+    "unitId": null,
+    "absoluteObjectFieldProjection": null,
+    "pluginGeneration": "blocked_until_stable_object_keys_and_calibration_gate_pass"
+  },
+  "absoluteCombatCalibrationSource": {
+    "artifact": "../../../../implementation/combat-calibration/contract/cross-profession-combat-calibration-contract.json",
+    "status": "offline-calibration-reference-only",
+    "role": "P0 只提供跨职业锚点、构筑账本、D90/B10 与证据门禁；只有七道投影门禁经独立外部采纳并完成单独投影复审后，才可为既有相对标尺提出对象字段候选。",
+    "evidenceAdoptionArtifact": "../../../../implementation/combat-calibration/evidence-adoption/p0-evidence-collection-and-adoption-contract.json",
+    "evidenceAdoptionStatus": "offline-evidence-collection-plan-only",
+    "evidenceAdoptionGateSnapshot": {
+      "requiredGateIds": [
+        "P0-GATE-01-all-12-fixed-builds-declared-and-replayed",
+        "P0-GATE-02-general-physical-magical-defense-formulas-adopted",
+        "P0-GATE-03-hit-crit-control-formulas-adopted",
+        "P0-GATE-04-engine-action-frame-and-speed-readback",
+        "P0-GATE-05-terrain-collision-and-camera-fixture",
+        "P0-GATE-06-authoritative-one-to-four-member-replays",
+        "P0-GATE-07-stable-object-keys-and-template-readback"
+      ],
+      "currentSatisfiedGateIds": [],
+      "actualCaptureProvider": null,
+      "acceptedEvidenceLedger": null,
+      "adoptionDecision": null,
+      "absoluteProjectionPayload": null
+    },
+    "candidateId": "TT_CAL_ABSOLUTE_OBJECT_FIELDS_V1",
+    "runtimeKey": null,
+    "targetObjectOrUnitId": null,
+    "absoluteObjectFields": null,
+    "productionGate": "closed"
+  },
+  "objectArtVfxBlueprintSource": {
+    "artifact": "../object-blueprint/tianting-object-art-vfx-blueprint-contract.json",
+    "status": "offline_design_requirements_only",
+    "role": "为后续对象、美术和特效施工提供 Boss 轮廓、前摇、P0–P2、L0–L4 与场地交互需求；不生成对象或资源。",
+    "runtimeKey": null
+  },
+  "objectFieldReservationSource": {
+    "artifact": "../object-preallocation/tianting-object-field-reservation-contract.json",
+    "status": "offline_field_reservation_only",
+    "role": "将十一类敌人生态、五组主线、七星、二十八星官与四圣收束为五十五张逻辑单位／技能／Buff／投射物／声音卡；它不是 y3-object-config 的 assets 输入，不生成对象或插件。",
+    "runtimeKey": null,
+    "objectKey": null,
+    "copyFrom": null,
+    "normalizedDesignInput": null,
+    "pluginGeneration": false,
+    "absoluteObjectFields": null,
+    "productionGate": "closed"
+  },
+  "enemyEcologySource": {
+    "artifact": "../enemy-ecology/tianting-enemy-ecology-contract.json",
+    "status": "offline_design_requirements_only",
+    "role": "为未来受控天兵、四门机关、云兽、泛称监星使及机制回响提供职责、预警、反制和首领身份护栏；不生成单位、对象、波次或掉落。",
+    "runtimeKey": null,
+    "objectId": null,
+    "unitId": null,
+    "numericValues": null
+  },
+  "mainlineBossDeepeningSource": {
+    "artifact": "../mainline-boss/tianting-mainline-boss-contract.json",
+    "status": "offline_design_requirements_only",
+    "role": "为南天门、断虹阵、四门失衡、周天观台和凌霄外庭提供 P0、前摇、反制、复盘和附属压力接口；不生成 Boss 对象、技能、AI、地图、奖励或经济。",
+    "runtimeKey": null,
+    "objectId": null,
+    "abilityIds": null,
+    "resourceId": null
+  },
+  "globalTowerCandidateBoundary": {
+    "upstreamAuthority": "../../成长系统规格包/design-spec.json",
+    "status": "offline_design_candidate_pending_global_tower_adoption",
+    "candidate": "四十层、八段五拍、五层 Boss 槽与四个十层大 Boss 仅为天庭离线候选，须由上位全局塔显式采纳。",
+    "rule": "当前物编蓝图只涵盖天庭主线、七星、二十八星官与四圣；四个全局塔大 Boss 须在上位采纳后以独立物编／美术／特效蓝图重新立项，不能借本简报生成对象或资产。",
+    "runtimeKey": null,
+    "resourceId": null,
+    "economyValue": null,
+    "rewardValue": null
   },
   "assetRequests": {
     "heroes": {
@@ -25,7 +115,7 @@
     "abilities": {
       "specId": "TT_SPEC_TIANTING_MECHANIC_LANGUAGE",
       "status": "offline_design",
-      "role": "七星与四象机制语法是后续能力清单输入；本包不生成技能、Buff 或数值。",
+      "role": "七星与四象机制语法、双通道预警与可见反制结果是后续能力清单输入；本包不生成技能、Buff 或数值。",
       "runtimeKey": null
     },
     "monsters": {
@@ -37,7 +127,7 @@
     "bosses": {
       "specId": "TT_SPEC_TIANTING_BOSS_ROSTER",
       "status": "offline_design",
-      "role": "主线方向、七星七首领、四象二十八星官和噩梦四圣兽；名称/机制见内容合同。",
+      "role": "仅包括主线方向、七星七首领、四象二十八星官和噩梦四圣兽；四个全局塔大 Boss 未获上位采纳，名称/机制见内容合同。",
       "runtimeKey": null
     },
     "items": {
@@ -61,14 +151,21 @@
   },
   "objectDesignRequirements": [
     "七星七首领和二十八星官均须保留清晰的起手预警与反制窗口。",
+    "关键预警必须同时有轮廓/轨迹/场地形态与至少一种独立辅助，不得只靠颜色或聊天文本。",
+    "受控天兵、四门机关、失控云兽、泛称监星使和机制回响只能放大既有来源、关系与反制；不得把主线首领、七星首领、二十八星官或四圣兽降格成小怪。",
+    "五组主线首领级遭遇的附属压力不得遮挡 P0、制造未预告判定、变成清场门槛或反向决定会话、进度、资格、奖励与结算。",
+    "相对战斗系数只能在 `TT_CAL_ABSOLUTE_OBJECT_FIELDS_V1` 的七道绝对值标定门禁由 `evidence-adoption/` 逐项外部采纳、稳定对象键已审定并完成单独投影复审后，才可转换为对象字段候选；当前不得生成 y3-object-config 插件或填入 hp_max、攻击、双防、攻速、移速、秒数。",
     "四圣兽的噩梦形态须可视觉化宿曜贡辉和圣兽庇护两条方向相反的关系。",
     "胃土雉等异文必须在资产命名表中保留别名字段，不能重复创建星官。",
-    "所有对象、技能、物品、材料、称号和特效 ID 均留空，待专项物编裁决。"
+    "物编字段预占只使用逻辑卡与全空字段预占模板；在 P0 七道门、真实对象／资源盘点、稳定键／模板审定和写入授权全部具备前，不得生成 assets、mode、插件或任何实际对象。",
+    "所有对象、技能、物品、材料、称号和特效 ID 均留空，待专项物编裁决。",
+    "全局塔四个大 Boss 的对象／美术／特效不属于本蓝图，须在上位全局塔显式采纳后另起独立蓝图；候选不得生成 runtime key、resource ID 或经济／奖励值。"
   ],
-  "handoffNotes": "此文件是物编施工前的请求简报，不生成对象、技能、材料或数值。",
+  "handoffNotes": "此文件是物编施工前的请求简报；战斗语法见 ../combat/天庭战斗机制与可读性规格.md，相对数值基线见 ../combat-baseline/天庭战斗数值与单位基线裁决.md，P0 绝对标定见 ../../../../implementation/combat-calibration/README.md，P0 实证采集与采纳见 ../../../../implementation/combat-calibration/evidence-adoption/README.md，敌人职责见 ../enemy-ecology/天庭敌人生态与精英单位规格.md，主线首领阶段语法见 ../mainline-boss/天庭主线Boss深化规格.md，资产要求见 ../object-blueprint/天庭物编美术与特效需求蓝图.md，字段预占见 ../object-preallocation/天庭物编字段预占规格.md，候选空间职责见 ../terrain-layout/天庭地图口径对齐与白盒前置裁决.md。逻辑卡先冻结声音／投射物／表现状态、技能壳、单位／机制体与遭遇组装的依赖顺序；它们都不生成对象、技能、材料或绝对数值。四十层／八段／五层 Boss／四个大 Boss 仅为天庭候选，必须先获 ../../成长系统规格包/design-spec.json 所属全局塔显式采纳；届时四个大 Boss 另走独立蓝图。",
   "unresolved": [
-    "对象 ID、模型、动画、施法前摇、数值、AI、Buff、掉落和资源表绑定。",
+    "敌人生态与五组主线首领级遭遇的对象 ID、模型、动画、施法前摇、绝对对象字段、AI、Buff、波次、刷新、掉落和资源表绑定；相对数值不得绕过标定门禁。字段预占的五十五张逻辑卡不等于五十五个对象承诺。",
     "七星/四圣称号的实际效果、展示资产、作用域与持久化。",
-    "毕业法宝最终名称、配方、属性与锻造流程。"
+    "毕业法宝最终名称、配方、属性与锻造流程。",
+    "上位全局塔是否采纳天庭的四十层／八段／五层 Boss／四大 Boss 候选，以及采纳后的四个大 Boss 独立资产蓝图。"
   ]
 }

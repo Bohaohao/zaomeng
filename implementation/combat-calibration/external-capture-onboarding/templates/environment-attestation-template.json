@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "spec_id": "CAL_SPEC_EXTERNAL_CAPTURE_ENVIRONMENT_ATTESTATION_TEMPLATE_V1",
+    "status": "not_created",
+    "environment_attestation_ref": null,
+    "captured_authoritative_instant": null
+  },
+  "source_binding": {
+    "p0_contract_sha256": "72405ee76ed8841ff067eb3bb691db6dd29702d1635dc8103adc27d6a3f6f2a8",
+    "evidence_adoption_contract_sha256": "2d3cbffd7233e75ef554e8febd9f152ba81153419fd4edcb5ddc5ed2f921dfec",
+    "preflight_contract_sha256": "73d4f0abccea82f8cbc8540d1b405d59397b6ba3f42f767734a44a725612e26f",
+    "preflight_runner_sha256": "e247c41f65829db2dc54d372bfef53d248399818c3adb50e0fc8e833c629b2a5",
+    "real_target_map_root": null,
+    "structural_preflight_result_ref": null,
+    "structural_preflight_report_digest": null,
+    "source_origin_preflight_attestation_ref": null,
+    "read_only_authorization_ref": null
+  },
+  "required_environment_snapshot": {
+    "engine_build_digest": null,
+    "real_project_revision": null,
+    "map_or_fixture_revision": null,
+    "object_inventory_snapshot_digest": null,
+    "template_readback_basis_digest": null,
+    "capture_clock_basis": null,
+    "collector_toolchain_digest": null,
+    "capture_basis_digest": null
+  },
+  "failure_rule": "任何环境字段、来源证明、结构预检报告、只读授权、合同或 runner 绑定、权威时钟缺失、无效或漂移时，不得开始或拼接任何 gate 的外部 capture bundle。"
+}

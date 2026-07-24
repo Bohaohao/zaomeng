@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "package": "tianting-mansion-session-reference",
+  "package_status": "offline-reference-only",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "primary_contract": "contract/mansion-session-time-qualification-reference-contract.json",
+  "reference_model": "reference/mansion-session-model.js",
+  "test_entry": "tests/run-all.ps1",
+  "source_contracts": [
+    "../../docs/物编/天庭篇主线遭遇与通天塔规格包/authority/tianting-progression-and-instance-authority-contract.json",
+    "../../docs/物编/天庭篇主线遭遇与通天塔规格包/instances/二十八星宿团队本规格.md",
+    "../../docs/物编/天庭篇主线遭遇与通天塔规格包/construction-readiness-ledger.md",
+    "../tianting-authority-vertical-slice/package-contract.json"
+  ],
+  "boundaries": {
+    "creates_engine_assets": false,
+    "binds_editor_or_scene_assets": false,
+    "uses_real_clock_or_time_service": false,
+    "uses_network_or_persistent_storage": false,
+    "writes_progress": false,
+    "creates_value_or_settlement_effects": false,
+    "assigns_absolute_combat_fields": false,
+    "accepts_client_time_or_quadrant": false
+  },
+  "deferred": {
+    "actual_authority_time_provider": null,
+    "actual_member_transport": null,
+    "actual_credential_resolver": null,
+    "actual_progress_provider": null,
+    "actual_cleanup_transport": null,
+    "actual_reconnect_transport": null,
+    "actual_scene_and_object_bindings": null,
+    "actual_value_and_settlement_pipeline": null,
+    "runtime_key": null
+  }
+}
