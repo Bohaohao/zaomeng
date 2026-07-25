@@ -1,0 +1,208 @@
+{
+  "version": 1,
+  "contract_id": "TT_SPEC_ENDGAME_ARTIFACT_POSITIONING_AND_LINEAGE_V1",
+  "artifact_kind": "offline_tianting_endgame_artifact_positioning_and_lineage_contract",
+  "package_status": "offline-design-spec",
+  "production_gate": "closed",
+  "non_production": true,
+  "scope": "定义既有七曜毕业法宝概念身份的天庭阶段定位、单槽关系、玩法语义、材料类别、替换原则和未来权威结算前置；不分配实际资产或经济值。",
+  "source_contracts": [
+    {
+      "path": "../tianting-content-expansion-contract.json",
+      "role": "七星、残片、称号、四圣和既有毕业法宝概念身份的唯一上位内容来源"
+    },
+    {
+      "path": "../authority/tianting-progression-and-instance-authority-contract.json",
+      "role": "天庭进度、会话、时辰、成员、断线、清理与幂等边界"
+    },
+    {
+      "path": "../../成长数值与经济裁决包/three-chapter-growth-lineage-contract.json",
+      "role": "花果山、地府、天庭三段法宝谱系与唯一活动槽上位合同"
+    },
+    {
+      "path": "../../成长数值与经济裁决包/地府中期法宝裁决包/difu-midgame-artifact-positioning-and-replacement-contract.json",
+      "role": "地府中期法宝的保留、同槽选择与未来显式迁移边界"
+    },
+    {
+      "path": "../../19-装备、法宝、宠物与材料物编规格.md",
+      "role": "法宝物编分层与未施工资产边界"
+    },
+    {
+      "path": "../../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json",
+      "role": "天庭完成／会话事实到未来 economy-v2 输入候选的零价值交接边界"
+    }
+  ],
+  "identity": {
+    "graduation_artifact_spec_id": "TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT",
+    "display_name": "周天校律盘",
+    "display_name_status": "accepted_offline_design",
+    "documentation_name": "七曜毕业法宝",
+    "actual_logical_artifact_key": null,
+    "runtime_item_key": null,
+    "tier": "high_endgame",
+    "chapter_band": "TT_LV41_TO_60",
+    "positioning": "以七星单人学习闭环为基础、在天庭常规后段提供长期构筑收束的可选法宝；它是高阶横向选择，不是进度证明、战力门票或自动数值淘汰层。"
+  },
+  "slot_and_loadout_contract": {
+    "inherits_artifact_slot_version": "v1",
+    "active_artifact_slot_count": 1,
+    "inactive_artifact_default_combat_effect": false,
+    "artifact_active_ability_occupies_five_active_skill_slots": false,
+    "selection_rule": "七曜毕业法宝与 ART_HG_TIDE_SEAL、ART_HG_FLAME_CORE 及未来地府法宝竞争同一个活动法宝槽；拥有、展示或收藏不等于同时启用。",
+    "switching_rule": "只能沿既有权威构筑预设原子校验并整体切换；挑战锁、死亡锁、断线锁或 cleanup_pending 期间不得局部更换法宝、模式或材料关系。",
+    "forbidden": [
+      "新增第二活动法宝槽、后台常驻副效果或未装备叠加",
+      "按副本、Boss、时辰或客户端请求在挑战内自动换装",
+      "把七曜毕业法宝伪装为夜巡钥、噩梦资格或会话清理令牌"
+    ]
+  },
+  "stage_positioning": {
+    "collection_start_boundary": "仅在同一角色已由权威端确认 TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN 后，未来七星收集与相关展示才可开始；本合同不创建该进度或副本入口。",
+    "base_graduation_boundary": "基础毕业路线应在天庭常规后段以可选长期目标存在；具体等级、事件、来源档案、取得时刻和装备等级均保持 deferred。",
+    "recommended_equip_level": null,
+    "recommended_equip_band_note": "现阶段只能说明其属于 Lv41–60 天庭带的后段可选目标，不能虚构 Lv45、Lv55 或 Lv60 的硬性装备门槛。",
+    "not_a_requirement_for": [
+      "天庭入章",
+      "天庭常规主线完成",
+      "七星会话准入或完成",
+      "二十八星宿普通／噩梦准入或完成",
+      "通天塔准入或内容池资格",
+      "七曜、四圣或集合称号的取得"
+    ]
+  },
+  "core_play_semantics": {
+    "semantic_ability_label": "七曜校律",
+    "actual_ability_key": null,
+    "actual_effect_values": null,
+    "cooldown": null,
+    "duration": null,
+    "damage": null,
+    "core_loop": "读取星象预警或规则投影 → 玩家亲自完成正确反制 → 在已建立的归位窗口中选择一次校律响应。法宝只放大已被玩家正确打开的决策窗口，不能替代观察、打断、走位、净宿或场地互动。",
+    "build_forms": [
+      {
+        "form_id": "TT_SPEC_ARTIFACT_FORM_STABILIZE_SEQUENCE",
+        "display_label": "定序",
+        "semantic_source": ["天枢", "天权", "玉衡"],
+        "decision_role": "在已完成正确反制后，强调位置、承压或秩序的稳定回收。",
+        "must_not_do": ["提供额外复活", "取消强制位移的学习要求", "绕过伤害、死亡或清理规则"]
+      },
+      {
+        "form_id": "TT_SPEC_ARTIFACT_FORM_DISCERN_SEQUENCE",
+        "display_label": "辨序",
+        "semantic_source": ["天璇", "天玑"],
+        "decision_role": "在已确认正确星轨或真伪后，强调回环路径、信息辨识与反制结果的可读回收。",
+        "must_not_do": ["自动找出真身或弱点", "替玩家完成验证", "将隐藏预警变成无条件可见"]
+      },
+      {
+        "form_id": "TT_SPEC_ARTIFACT_FORM_OPEN_SEQUENCE",
+        "display_label": "开序",
+        "semantic_source": ["开阳", "瑶光"],
+        "decision_role": "在已建立的开阙或收束窗口中，强调追击、路线打开与正确结束时机。",
+        "must_not_do": ["无条件制造输出窗口", "跳过门阵、星链或净宿机制", "以纯伤害取代反制"]
+      }
+    ],
+    "form_exclusivity": "每个构筑预设只能选择一个校律形态；三形态不能并发、轮转叠层或按客户端在会话内重算。",
+    "title_non_duplication_rule": "七曜毕业法宝的校律形态不授予或放大七个星君称号、七曜集合称号、四圣称号或四象集合称号的效果标签；称号集合仍按既有替代而非叠加规则独立结算。"
+  },
+  "materials_and_ownership_boundary": {
+    "seven_star_fragment_requirement": "概念配方仍要求七种残片类别均齐备；每一类别的实际物品键、数量、掉率、背包上限、保底和消耗记录均为 null/deferred。",
+    "title_relation": "同星累计十枚残片合成星君称号的用户规则保持不变；称号与毕业法宝的消耗、累计、占用、退回、重放和共存必须由一个未来版本化经济合同显式决定，禁止无记录双花。",
+    "base_catalyst_route": "基础毕业路径未来必须拥有单人完整可达的常规／天律珍贵催化剂来源；该来源不能只依赖隐藏、稀有、团队、噩梦、重复或通天塔内容。",
+    "four_sacred_relation": "四圣噩梦只可在未来提供四象覆环的可选展示／叙事印证候选；它不改变校律形态或战斗强度，且不是基础毕业法宝的唯一或必需材料。",
+    "actual_material_keys": null,
+    "actual_recipe": null,
+    "actual_consumption": null,
+    "actual_drop_profiles": null,
+    "actual_pity": null,
+    "actual_receipts": null,
+    "forbidden_material_assumptions": [
+      "将 MAT_ARTIFACT_DUST 反推为天庭毕业配方材料",
+      "将 MAT_ADVANCE_HG 反推为天庭毕业配方材料",
+      "将夜巡钥或噩梦资格凭证等同为材料、掉落资格或法宝所有权",
+      "由七星、普通星宿或噩梦完成自动发放残片、催化剂、法宝或称号"
+    ]
+  },
+  "legacy_replacement_and_lineage": {
+    "legal_relationships": [
+      {
+        "relationship_id": "TT_ARTIFACT_RETAIN_LEGACY",
+        "meaning": "继续保留并可在唯一活动槽中启用花果山或未来地府法宝；天庭推进不令其自动失效。"
+      },
+      {
+        "relationship_id": "TT_ARTIFACT_SELECT_GRADUATION",
+        "meaning": "把七曜毕业法宝作为同槽高阶构筑选择；选择它不会删除或消耗前序法宝。"
+      },
+      {
+        "relationship_id": "TT_ARTIFACT_FUTURE_LINEAGE_MIGRATION",
+        "meaning": "任何跨阶段继承、重铸、转换或升级只可在独立谱系、经济与收据合同采纳后执行；当前不创建迁移。"
+      }
+    ],
+    "automatic_consumption_or_downgrade": false,
+    "specific_hg_or_df_artifact_prerequisite": false,
+    "future_migration_contract": null,
+    "forbidden": [
+      "自动消耗、删除、降级或静默转换 ART_HG_TIDE_SEAL 或 ART_HG_FLAME_CORE",
+      "要求任一具体地府法宝才能制作、装备或使用七曜毕业法宝",
+      "以纯数值倍率宣称旧法宝已经无效",
+      "把前序法宝的来源、长期状态或已有审计记录抹除"
+    ]
+  },
+  "authority_and_settlement_boundary": {
+    "entry_or_progression_writer": false,
+    "session_authority_writer": false,
+    "cleanup_bypass": false,
+    "current_economy_v2_input": false,
+    "current_source_profile": null,
+    "current_reward_slot": null,
+    "future_evidence_requirements": [
+      "同一角色 actor_id 与 actor_lifecycle_id",
+      "唯一权威 event_id 与 authority_proof_ref",
+      "规范化会话 route、实例、session_epoch、revision 与冻结成员状态",
+      "星宿来源另需冻结 rotation_snapshot、quadrant 与 difficulty",
+      "仅 active 的有效成员；left、旁观、旧生命周期、伪造成员、失败和清理前重入均拒绝",
+      "以 (actor_id, event_id) 幂等重放既有结果，正常成功不因后续 cleanup 确认失败而回滚"
+    ],
+    "future_settlement_rule": "只有独立的天庭 source-profile、资格与收据合同被采纳后，才可把权威完成事实解析为材料、制作、拥有或升级候选；本合同不能调用 economy-v2、物化器、账本或发奖流程。"
+  },
+  "complete_design_contract": {
+    "contract_id": "TT_SPEC_GRADUATION_ARTIFACT_COMPLETE_DESIGN_V1",
+    "path": "complete-design/tianting-graduation-artifact-complete-design-contract.json",
+    "status": "accepted-offline-design",
+    "display_name": "周天校律盘",
+    "actual_item_key": null,
+    "actual_ability_key": null,
+    "actual_material_keys": null,
+    "actual_recipe": null,
+    "actual_receipts": null
+  },
+  "deferred": {
+    "asset_display_binding": null,
+    "artifact_asset": null,
+    "logical_item_key": null,
+    "runtime_item_key": null,
+    "ability_asset": null,
+    "attributes": null,
+    "skill_values": null,
+    "materials": null,
+    "recipe": null,
+    "consumption": null,
+    "source_profiles": null,
+    "drop_rates": null,
+    "pity": null,
+    "qualification": null,
+    "receipt_schema": null,
+    "migration": null,
+    "ui_asset": null,
+    "y3_object": null
+  },
+  "acceptance_invariants": [
+    "仅复用 TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT 概念身份；正式展示名冻结为周天校律盘，物品键、对象与运行时键保持 null。",
+    "七曜毕业法宝与所有现有或未来法宝共用一个活动槽，且挑战锁期间只能按既有构筑预设原子切换。",
+    "校律只响应玩家已正确完成的反制窗口，不能自动观察、解谜、打断、净宿、复活、回滚或绕过 cleanup。",
+    "定序、辨序、开序每个预设只选一个，且不会与七曜／四象称号的集合效果重复叠加。",
+    "七种残片均齐备与同星十枚称号规则并存，但实际材料消费与防双花必须延后至单一经济合同。",
+    "基础毕业路径保留单人完整可达的普通／天律催化剂；四圣噩梦不是唯一必需材料。",
+    "天庭入章、主线、七星、星宿、通天塔和毕业均不得要求任一具体花果山或地府法宝。",
+    "所有法宝、材料、资格、概率、保底、收据、数值、对象和 Y3 运行时字段保持 null/deferred。"
+  ]
+}

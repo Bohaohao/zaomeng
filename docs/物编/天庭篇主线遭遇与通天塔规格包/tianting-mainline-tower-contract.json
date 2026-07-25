@@ -27,6 +27,8 @@
       "mainline-boss/tianting-mainline-boss-contract.json",
       "mainline-presentation/tianting-mainline-presentation-contract.json",
       "mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json",
+      "artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json",
+      "artifact-graduation/complete-design/tianting-graduation-artifact-complete-design-contract.json",
       "../../../implementation/tianting-seven-star-session-reference/package-contract.json",
       "../../../implementation/tianting-mansion-session-reference/contract/mansion-session-time-qualification-reference-contract.json",
       "tower-economy/mansion-economy-global-tower-run-season-contract.json"
@@ -428,6 +430,26 @@
       ]
     },
     {
+      "contract": "tianting_endgame_artifact_positioning_and_lineage",
+      "artifact": "artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json",
+      "status": "accepted_offline_design",
+      "covers": [
+        "optional high-endgame single-active-artifact positioning that preserves Huaguoshan and Difu choices",
+        "three mutually exclusive seven-star response forms with challenge-lock and no-auto-counterplay boundaries",
+        "single-player base graduation protection, fragment-title anti-double-spend precondition and zero current economy output"
+      ]
+    },
+    {
+      "contract": "tianting_graduation_artifact_complete_design",
+      "artifact": "artifact-graduation/complete-design/tianting-graduation-artifact-complete-design-contract.json",
+      "status": "accepted_offline_design",
+      "covers": [
+        "the formal display identity 周天校律盘, five-stage player path and three per-player readable response forms",
+        "seven-star, Lingxiao and Four Sacred source-evidence shapes; title non-duplication; optional 四象覆环 presentation; and four-profession semantic compatibility",
+        "response-window idempotency, accessibility, disconnect/cleanup precedence and all-null numeric, economic, receipt and runtime bindings"
+      ]
+    },
+    {
       "contract": "mansion_economy_global_tower_run_season",
       "artifact": "tower-economy/mansion-economy-global-tower-run-season-contract.json",
       "status": "tianting_offline_candidate_pending_global_tower_adoption",
@@ -469,6 +491,8 @@
     "Mainline narrative presentation only describes how authority-confirmed facts may be communicated; it cannot adjudicate entry, member state, completion, cleanup, progression, qualification or economy.",
     "Object field reservation only defines logical source cards and all-null future bindings; it does not create y3-object-config assets or mode, plugins, stable object keys, copyFrom templates, resources, raw fields, runtime writes or economic effects.",
     "The combat numeric unit baseline owns only dimensionless offline coefficients and naked-player reference snapshots; it does not assign raw Y3 fields, seconds, objects, waves, authority effects, economy inputs or tower values.",
+    "The Tianting endgame artifact contract only fixes optional single-slot positioning, semantic forms and future lineage/receipt preconditions; it does not create an item, ability, material, recipe, numeric effect, source profile, receipt or economy output.",
+    "The TianTing graduation artifact complete-design contract only freezes player-readable form responses, source-evidence shapes, accessibility and failure boundaries; it does not create an item, ability, material, recipe, numeric effect, source profile, receipt, economy output or runtime state.",
     "implementation/growth/ remains an offline candidate; economy-v2 does not imply an authoritative runtime resource table, ledger, proof resolver or reward issuer."
   ],
   "acceptance_invariants": [
@@ -484,6 +508,7 @@
     "天庭战斗数值只能以独立合同中的无量纲 H0/A0/M0/I0/R0/B0/O0/S0 表达；绝对物编字段须等待完整实机标定门禁。",
     "首轮五节拍合同只定义准入、顺序、第五节拍休整、结算/失败/退出/交接与幂等边界，不定义总层数或任何运行时内容。",
     "七星必须精确为七个固定单人试炼；同星十枚残片合成对应星君称号，七称号自动解锁名称待定的集合称号；所有物品和数值仍非运行时资产。",
+    "七曜毕业法宝仅是与前序法宝共用唯一活动槽的可选高阶构筑收束；定序、辨序、开序互斥，不能自动反制、绕过挑战锁或把四圣噩梦变成基础毕业唯一门票。",
     "二十八星宿必须精确为四象各七宿；子/辰/申青龙、丑/巳/酉朱雀、寅/午/戌白虎、卯/未/亥玄武，并在入场时冻结权威轮换快照。",
     "噩梦必须保留七宿强化同方位四圣、四圣庇护七宿的双向关系；通天塔的五层 Boss 槽与十层大 Boss 创意身份仅是待上位采纳的天庭侧候选，不决定运行时楼层地图/实例、抽取、掉落、记录或赛季值。",
     "主线、七星、普通星宿与四圣噩梦都必须可读地表达预警、决策、反制与可复盘失败，颜色不可成为唯一关键信息，且一至四人均有完成路径。",

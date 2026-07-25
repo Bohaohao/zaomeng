@@ -617,6 +617,20 @@
       "entry_gate_required_artifact_keys": [],
       "rule": "A character may choose at most one active artifact. Neither current Huaguoshan artifact may be presumed owned, equipped, consumed, upgraded, or required by a mainline gate."
     },
+    "artifact_detail_and_material_source_contract": {
+      "contract_id": "THREE_CHAPTER_ARTIFACT_DETAIL_AND_MATERIAL_SOURCE_V1",
+      "path": "三篇法宝详细设计与材料来源包/three-chapter-artifact-detail-and-material-source-contract.json",
+      "status": "accepted-offline-design",
+      "artifact_spec_count": 5,
+      "scope": "Design-level display identities, non-numeric gameplay cards, recommended stage bands, source nodes, material themes, and relative difficulty only.",
+      "actual_item_assets": null,
+      "actual_material_keys": null,
+      "material_quantities": null,
+      "recipes": null,
+      "combat_stats": null,
+      "source_profiles": null,
+      "receipts": null
+    },
     "stages": [
       {
         "stage_id": "HG_PUBLIC_BASELINE",
@@ -684,7 +698,34 @@
         "logical_artifact_keys": null,
         "source_profile_mapping": null,
         "stats": null,
-        "replacement_or_upgrade_rule": "deferred",
+        "replacement_or_upgrade_rule": "delegated_to_DF_SPEC_MIDGAME_ARTIFACT_POSITIONING_REPLACEMENT_V1",
+        "artifact_positioning_contract": {
+          "contract_id": "DF_SPEC_MIDGAME_ARTIFACT_POSITIONING_REPLACEMENT_V1",
+          "path": "地府中期法宝裁决包/difu-midgame-artifact-positioning-and-replacement-contract.json",
+          "status": "accepted-offline-design",
+          "tier": "medium",
+          "stage_role": "第一段全员可达但非强制装备的中期构筑转向；它提供局面处理差异，不以纯数值淘汰花果山可选法宝。",
+          "actual_logical_artifact_keys": null,
+          "source_profile_mapping": null,
+          "stats": null,
+          "recipes": null,
+          "consumption_rules": null
+        },
+        "artifact_detailed_design_contract": {
+          "contract_id": "DF_SPEC_TWO_MIDGAME_ARTIFACT_DETAIL_V1",
+          "path": "地府中期法宝裁决包/two-artifact-detail/difu-two-artifact-detailed-design-contract.json",
+          "status": "accepted-offline-design",
+          "artifact_spec_count": 2,
+          "artifact_spec_ids": [
+            "DF_SPEC_ARTIFACT_GUIDING_LANTERN",
+            "DF_SPEC_ARTIFACT_KARMIC_MIRROR"
+          ],
+          "actual_logical_artifact_keys": null,
+          "source_profile_mapping": null,
+          "stats": null,
+          "recipes": null,
+          "consumption_rules": null
+        },
         "mainline_required": false
       },
       {
@@ -694,14 +735,44 @@
         "logical_artifact_keys": null,
         "source_profile_mapping": null,
         "stats": null,
-        "replacement_or_upgrade_rule": "deferred",
+        "replacement_or_upgrade_rule": "delegated_to_TT_SPEC_ENDGAME_ARTIFACT_POSITIONING_AND_LINEAGE_V1",
+        "artifact_positioning_contract": {
+          "contract_id": "TT_SPEC_ENDGAME_ARTIFACT_POSITIONING_AND_LINEAGE_V1",
+          "path": "../天庭篇主线遭遇与通天塔规格包/artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json",
+          "status": "accepted-offline-design",
+          "tier": "high_endgame",
+          "stage_role": "以既有 TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT 承接七星学习闭环的可选高阶构筑收束；与花果山、地府法宝共用单槽，不成为章节、团队或称号门票。",
+          "actual_logical_artifact_keys": null,
+          "source_profile_mapping": null,
+          "stats": null,
+          "recipes": null,
+          "consumption_rules": null
+        },
+        "artifact_complete_design_contract": {
+          "contract_id": "TT_SPEC_GRADUATION_ARTIFACT_COMPLETE_DESIGN_V1",
+          "path": "../天庭篇主线遭遇与通天塔规格包/artifact-graduation/complete-design/tianting-graduation-artifact-complete-design-contract.json",
+          "status": "accepted-offline-design",
+          "display_name": "周天校律盘",
+          "actual_logical_artifact_key": null,
+          "actual_material_keys": null,
+          "actual_recipe": null,
+          "actual_receipts": null
+        },
         "mainline_required": false
       }
     ],
     "lineage_invariants": [
       "A later stage may not silently invalidate an owned optional Huaguoshan artifact before a separately adopted replacement or upgrade contract exists.",
       "A later stage may not require a random-only, rare-only, team-only, or optional-only artifact or equipment result for mainline continuation.",
-      "DF and TT asset identifiers, stats, recipes, replacement costs, and upgrade formulas remain null/deferred until their own source-profile and economic adoption exists."
+      "DF and TT asset identifiers, stats, recipes, replacement costs, and upgrade formulas remain null/deferred until their own source-profile and economic adoption exists.",
+      "The DF midgame artifact positioning contract may freeze medium-stage role, single-slot behavior, standard-access semantics, legacy preservation, and future migration preconditions; its separately referenced two-artifact detail contract may freeze two spec-local names, primary axes, semantic anchors, non-numeric ability cards, material themes, semantic growth, and encounter affinities, but neither contract may allocate a concrete asset, reward, material key, recipe, cost, stat, ability value, source profile, or receipt.",
+      "DF standard artifact access must remain reachable without Huaguoshan optional artifacts, rare awards, optional instances, team instances, repeat clears, or tower content, while ownership and equipping remain optional.",
+      "DF two-artifact detail must contain exactly Guiding Lantern on the Zhenhun primary axis and Karmic Mirror on the Kanming primary axis; Huizheng is a shared chapter resolution rather than a third or automatic artifact effect.",
+      "DF detailed semantic anchors may reference only Guiding Court and Judge Hall on the standard route; Baigu Secret Realm and Zhuanlun Hall may test horizontal play but cannot be a required base, upgrade, material, qualification, recipe, or mainline source.",
+      "The TT endgame artifact positioning contract may freeze only high-stage role, single-slot behavior, seven-star response semantics, non-team base-path protection, legacy preservation, and future migration or receipt preconditions; it cannot allocate a concrete artifact asset, reward, material, recipe, cost, stat, ability, source profile, or receipt.",
+      "TT base graduation access must retain a future ordinary or celestial-law path that is individually reachable; nightmare Four Sacred content may be optional but cannot be the unique mandatory source.",
+      "DF and TT chapter entry, regular completion, team eligibility, and graduation design may not require a specific Huaguoshan or Difu artifact until an explicit successor contract is separately adopted.",
+      "The three-chapter artifact detail and material-source contract may freeze only design-level display identities, non-numeric gameplay cards, recommended stage bands, source nodes, material themes and relative difficulty; every actual asset, material key, quantity, recipe, consumption, stat, source profile, probability, qualification and receipt remains null/deferred."
     ]
   },
   "currency_material_and_receipt_boundary": {

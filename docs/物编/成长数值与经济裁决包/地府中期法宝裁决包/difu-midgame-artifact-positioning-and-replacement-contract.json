@@ -1,0 +1,290 @@
+{
+  "contract_id": "DF_SPEC_MIDGAME_ARTIFACT_POSITIONING_REPLACEMENT_V1",
+  "schema_version": 1,
+  "artifact_kind": "offline_difu_midgame_artifact_positioning_and_replacement_contract",
+  "status": "accepted-offline-design",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "authoritative_sources": [
+    {
+      "path": "../three-chapter-growth-lineage-contract.json",
+      "role": "跨篇阶段、单活动法宝槽与花果山法宝保留边界的唯一上位合同"
+    },
+    {
+      "path": "../../19-装备、法宝、宠物与材料物编规格.md",
+      "role": "法宝字段、物编分层与未施工边界"
+    },
+    {
+      "path": "../../18-成长系统进度、掉落与长期目标契约.md",
+      "role": "构筑预设、挑战锁与原子切换边界"
+    },
+    {
+      "path": "../../地府篇主线遭遇副本规格包/difu-mainline-encounter-contract.json",
+      "role": "地府常规主线、阎罗殿终局与可选内容的章节边界"
+    },
+    {
+      "path": "../../地府篇主线遭遇副本规格包/combat/difu-combat-readability-contract.json",
+      "role": "命册证据→裁决→回正的地府战斗语法"
+    },
+    {
+      "path": "../../天庭篇主线遭遇与通天塔规格包/authority/tianting-progression-and-instance-authority-contract.json",
+      "role": "天庭入章只消费阎罗殿成功交接证明的跨篇保护边界"
+    }
+  ],
+  "non_production_boundary": {
+    "design_only": true,
+    "actual_artifact_keys": null,
+    "actual_asset_ids": null,
+    "source_profile_mapping": null,
+    "reward_values": null,
+    "drop_probability": null,
+    "pity_policy": null,
+    "recipes": null,
+    "consumption_rules": null,
+    "stats": null,
+    "active_abilities": null,
+    "runtime_keys": null,
+    "actual_receipt_creation": false,
+    "actual_economic_execution": false,
+    "y3_object_allocation": null
+  },
+  "chapter_position": {
+    "chapter_id": "DF",
+    "level_band": "Lv21-Lv40",
+    "tier": "medium",
+    "combat_grammar": "命册证据 → 裁决 → 回正",
+    "stage_role": "地府是第一段让任何常规路线角色都能接触到中期法宝构筑方向的章节；它提供处理局面的差异，而不是用纯数值碾压花果山法宝或提前替代天庭毕业目标。",
+    "story_timing_rule": "两件法宝的语义锚点分别落在玩家理解魂印后的接引院与理解命册校勘后的判官殿，均在阎罗殿常规终局之前；真实授予节点、事件、资格与物理入口保持 deferred。"
+  },
+  "slot_and_loadout_contract": {
+    "inherits_artifact_slot_version": "v1",
+    "active_artifact_slot_count": 1,
+    "adds_another_active_slot": false,
+    "inactive_artifact_default_combat_effect": false,
+    "artifact_active_ability_occupies_five_active_skill_slots": false,
+    "selection_rule": "花果山与未来地府法宝都竞争同一个活动法宝槽；拥有、展示、收藏或保留不等于同时启用。",
+    "switching_rule": "法宝引用只能随既有构筑预设在权威端原子校验和切换；挑战锁期间不得局部更换，返回集结点或其他既有合法节点后才可按上位构筑合同切换。"
+  },
+  "functional_axis_contract": {
+    "axis_count": 3,
+    "artifact_primary_axis_count": 2,
+    "chapter_shared_resolution_axis_id": "DF_SPEC_ARTIFACT_AXIS_HUIZHENG",
+    "actual_logical_artifact_keys": null,
+    "primary_axis_exclusivity": "地府恰好两件详细法宝分别声明一个主功能轴：镇魂／守序或勘命／破妄；回正／归律是章节共享正确结果，不归属任何法宝。任何一件标准法宝不得同时完整覆盖两条主轴或替代共享回正。",
+    "axes": [
+      {
+        "spec_axis_id": "DF_SPEC_ARTIFACT_AXIS_ZHENHUN",
+        "axis_name": "镇魂／守序",
+        "classification": "artifact_primary_axis",
+        "player_problem": "在持续压力、负面状态或失误后维持可继续处理机制的稳定窗口。",
+        "design_intent": "提供容错、稳定或状态应对方向；不得被实现为无条件常驻的纯伤害乘区。",
+        "forbidden_interpretations": [
+          "额外复活权",
+          "绕过死亡、失败或清理锁",
+          "改写队友或敌人的永久进度"
+        ],
+        "stats": null,
+        "ability_detail": null
+      },
+      {
+        "spec_axis_id": "DF_SPEC_ARTIFACT_AXIS_KANMING",
+        "axis_name": "勘命／破妄",
+        "classification": "artifact_primary_axis",
+        "player_problem": "识别证据、伪证、前摇或反制时机，并把正确判断转化为可读的行动窗口。",
+        "design_intent": "强化观察、判断和反制的构筑方向；不得替代地府遭遇原本要求玩家阅读的预警与反制。",
+        "forbidden_interpretations": [
+          "自动完成证据判定",
+          "跳过所有机制",
+          "以不可见随机判定取代玩家判断"
+        ],
+        "stats": null,
+        "ability_detail": null
+      },
+      {
+        "spec_axis_id": "DF_SPEC_ARTIFACT_AXIS_HUIZHENG",
+        "axis_name": "回正／归律",
+        "classification": "chapter_shared_correct_resolution",
+        "player_problem": "在位置、节奏或目标选择出现偏差后，重新建立可执行的战斗秩序。",
+        "design_intent": "作为所有地府遭遇中玩家完成证据与裁决后的共享正确结果；它不由任何法宝独占、自动触发或替代，且绝不重置整场战斗。",
+        "forbidden_interpretations": [
+          "回滚副本会话",
+          "复写阎罗殿完成事实",
+          "取消既有死亡、断线或清理结论"
+        ],
+        "stats": null,
+        "ability_detail": null
+      }
+    ]
+  },
+  "two_artifact_detailed_design_contract": {
+    "contract_id": "DF_SPEC_TWO_MIDGAME_ARTIFACT_DETAIL_V1",
+    "path": "two-artifact-detail/difu-two-artifact-detailed-design-contract.json",
+    "status": "accepted-offline-design",
+    "artifact_spec_count": 2,
+    "artifact_spec_ids": [
+      "DF_SPEC_ARTIFACT_GUIDING_LANTERN",
+      "DF_SPEC_ARTIFACT_KARMIC_MIRROR"
+    ],
+    "actual_logical_artifact_keys": null,
+    "source_profile_mapping": null,
+    "stats": null,
+    "recipes": null,
+    "consumption_rules": null,
+    "rule": "详细合同只可冻结展示名、主轴、语义锚点、非数值技能卡、材料主题、语义成长和遭遇适配；它不能创建实际资产、来源档案、经济或运行时事实。"
+  },
+  "standard_access_contract": {
+    "player_facing_rule": "未拥有任何花果山法宝的角色，仍必须能在未来地府常规可达路径中看见至少一个确定性的中期法宝选择；选择、领取和装备本身保持可选。",
+    "future_source_shape": "只能由权威可达的常规主线、公共或单人内容承接；具体生产者、事件、来源档案、资格快照、奖励槽和收据合同均未采纳。",
+    "specific_source_node": null,
+    "semantic_anchor_nodes": [
+      "DF_NODE_GUIDING_COURT",
+      "DF_NODE_JUDGE_HALL"
+    ],
+    "source_profile_mapping": null,
+    "forbidden_as_sole_or_required_source": [
+      "花果山隐藏本首通",
+      "花果山稀有掉落",
+      "白骨秘境",
+      "转轮殿团队完成",
+      "稀有奖励",
+      "重复挑战",
+      "通天塔"
+    ],
+    "automatic_grant_from_df_progress_key": false,
+    "normal_mainline_equip_requirement": false,
+    "normal_mainline_ownership_requirement": false
+  },
+  "legacy_and_replacement_contract": {
+    "supported_legacy_entry_states": [
+      "no_huaguoshan_artifact",
+      "ART_HG_TIDE_SEAL_only",
+      "ART_HG_FLAME_CORE_only",
+      "both_huaguoshan_artifacts"
+    ],
+    "relationship_modes": [
+      {
+        "mode_id": "DF_ARTIFACT_RETAIN_LEGACY",
+        "meaning": "继续持有并可在单槽中启用花果山法宝；未来地府内容不得仅因章节推进把其判为失效。"
+      },
+      {
+        "mode_id": "DF_ARTIFACT_SELECT_MIDGAME",
+        "meaning": "把未来地府法宝作为同槽的横向构筑选择；旧法宝仍保留所有权、来源和长期状态。"
+      },
+      {
+        "mode_id": "DF_ARTIFACT_FUTURE_LINEAGE_MIGRATION",
+        "meaning": "若未来采纳继承、重铸或进阶，必须由独立谱系与经济合同定义，不能由本合同或章节切换自动发生。"
+      }
+    ],
+    "forbidden_replacement_behaviors": [
+      "自动消耗、删除、降级或无记录转化花果山法宝",
+      "把 ART_HG_TIDE_SEAL 或 ART_HG_FLAME_CORE 设为地府法宝的必备前序",
+      "默认把 MAT_ARTIFACT_DUST、MAT_ADVANCE_HG 或任何花果山材料写为地府配方消耗",
+      "用地府法宝的纯倍率压制来宣称旧法宝已经无效",
+      "在没有独立天庭替换合同前使地府法宝于天庭入章时自动失效"
+    ],
+    "future_migration_preconditions": [
+      "明确源法宝的所有权、来源、前序长期状态与保留策略",
+      "明确目标资产、版本化配方、消耗或返还规则",
+      "明确幂等身份、重放结果、冲突处理与迁移审计",
+      "独立采纳地府经济来源、资格、收据与持久化边界",
+      "通过跨职业战斗绝对标定，证明不会把中期选择变成单一最优解"
+    ],
+    "current_migration_recipe": null,
+    "current_migration_cost": null,
+    "current_migration_receipt": null
+  },
+  "cross_chapter_protection": {
+    "difu_entry_requires_artifact": false,
+    "yanluo_regular_completion_requires_artifact": false,
+    "zhuanlun_team_entry_requires_artifact": false,
+    "tianting_entry_requires_artifact": false,
+    "tianting_normal_or_nightmare_instance_requires_artifact": false,
+    "tianting_graduation_recipe_requires_specific_df_artifact": false,
+    "this_contract_reads_or_writes_protected_difu_progress_key": false,
+    "protected_difu_progress_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+    "protected_key_note": "本合同不改变龙宫逆潮既有的受信任查询边界；它只禁止将该键兼任地府法宝发放、持有、替换或升级凭证。",
+    "tianting_handoff_rule": "天庭仍只验证同角色、源自 DF_E_YANLUO_HALL 成功的不可伪造交接证明；地府法宝不能替代该证明，也不能成为其隐含组成。"
+  },
+  "economy_and_receipt_boundary": {
+    "owner_scope_when_future_economy_is_adopted": "character",
+    "trade_when_future_economy_is_adopted": "disabled_until_separately_adopted",
+    "current_resource_table_version": null,
+    "current_reward_slot": null,
+    "current_qualification_rule": null,
+    "current_pity_rule": null,
+    "current_receipt_schema": null,
+    "historical_huaguoshan_receipt_recalculation": false,
+    "future_award_or_migration_requirements": [
+      "权威所有者解析与来源证明",
+      "实例、会话、角色生命周期和事件的可审计关联",
+      "相同语义身份只重放既有终态，不重复发放、扣除、首通或保底推进",
+      "清理确认滞后不得回滚已经正确持久化的成功事实，也不得借清理重放第二笔结算"
+    ]
+  },
+  "acceptance_matrix": [
+    {
+      "acceptance_id": "DF-ART-ACC-001",
+      "rule": "四种花果山前序状态均可进入地府、推进常规主线并抵达天庭；没有法宝、持有任一件或同时持有两件都不是门槛差异。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-002",
+      "rule": "未来地府中期选择与两件花果山法宝始终共用一个活动槽；未启用法宝不产生默认战斗效果。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-003",
+      "rule": "挑战锁期间不得局部切换法宝；合法切换必须沿用既有构筑预设的原子校验。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-004",
+      "rule": "中期法宝的未来确定性来源只能来自常规可达路径；任何可选、团队、稀有、重复或塔内容都不能成为唯一或必需来源。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-005",
+      "rule": "花果山法宝不会因地府章节、领取选择或进入天庭而被自动消耗、删除、降级或静默失效。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-006",
+      "rule": "未来继承或重铸必须具备独立经济、谱系、幂等和迁移审计合同；本合同不提供配方、成本或收据。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-007",
+      "rule": "镇魂、勘命是两件法宝的互斥主轴；回正是章节共享正确结果。三者均不得填入伤害、冷却、时长、词条、技能秒数或数值。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-008",
+      "rule": "法宝不得提供额外复活、会话回滚、完成键覆写或清理锁绕过。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-009",
+      "rule": "本合同不读取、写入或以 DF_PROGRESS_YANLUO_HALL_CLEARED 作为法宝资格、发放、替换或升级依据。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-010",
+      "rule": "天庭主线、七星、星宿普通/噩梦和天庭毕业法宝不得要求任一具体地府法宝，直到另行采纳替换合同。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-011",
+      "rule": "实际法宝键、资源 ID、掉落、概率、保底、材料、配方、消耗、属性、技能和运行时键均保持 null/deferred。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-012",
+      "rule": "详细设计合同恰好包含镇魂引灯、勘命业镜两件 spec-local 身份；二者不分配 ART_DF_*、Y3 或运行时标识。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-013",
+      "rule": "镇魂引灯只承接镇魂／守序，勘命业镜只承接勘命／破妄；回正不得被其中任一件自动拥有或替代。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-014",
+      "rule": "接引院、判官殿仅是两件法宝的常规主线语义锚点，不能被误写为当前授予事件、资格、来源档案、奖励槽或收据。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-015",
+      "rule": "两件法宝都必须先接收玩家亲自完成的核验事实；未证实或错误关系不得自动判真、自动裁决、自动回正或静默获益。"
+    },
+    {
+      "acceptance_id": "DF-ART-ACC-016",
+      "rule": "白骨秘境与转轮殿只可作为机制检验场，不能成为两件法宝的基础取得、升级、材料、资格、配方或主线的唯一来源。"
+    }
+  ]
+}

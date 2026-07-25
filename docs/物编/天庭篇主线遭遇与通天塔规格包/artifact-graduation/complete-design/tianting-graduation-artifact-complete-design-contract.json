@@ -1,0 +1,403 @@
+{
+  "contract_id": "TT_SPEC_GRADUATION_ARTIFACT_COMPLETE_DESIGN_V1",
+  "schema_version": 1,
+  "artifact_kind": "offline_tianting_graduation_artifact_complete_design_contract",
+  "status": "accepted-offline-design",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "scope": "在既有天庭毕业法宝定位合同之下，冻结周天校律盘的展示身份、设计阶段、三种校律形态、材料来源蓝图、标题关系、跨职业兼容、可读性、失败优先级与未来施工数据面；不创建真实物品、能力、数值、掉落、配方、资格、收据、进度、会话或Y3对象。",
+  "source_contracts": [
+    {
+      "path": "../tianting-endgame-artifact-positioning-and-lineage-contract.json",
+      "role": "唯一活动槽、天庭后段定位、旧法宝保留、权威会话与经济延后边界"
+    },
+    {
+      "path": "../../tianting-content-expansion-contract.json",
+      "role": "七星、残片、星君称号、四圣与主线节点的既有内容身份"
+    },
+    {
+      "path": "../../authority/tianting-progression-and-instance-authority-contract.json",
+      "role": "天庭入章、观台开启、主线完成、七星/星宿会话、失败、断线、清理与幂等权威边界"
+    },
+    {
+      "path": "../../combat/tianting-combat-readability-contract.json",
+      "role": "双通道预警、玩家反制、失败复盘与四职业可读性上位要求"
+    },
+    {
+      "path": "../../ui/tianting-ui-accessibility-information-contract.json",
+      "role": "校律面板、状态提示、称号展示和无障碍双通道信息边界"
+    },
+    {
+      "path": "../../../成长数值与经济裁决包/三篇法宝详细设计与材料来源包/three-chapter-artifact-detail-and-material-source-contract.json",
+      "role": "三篇五件法宝的阶段衔接、材料来源蓝图与非生产边界"
+    }
+  ],
+  "identity": {
+    "artifact_spec_id": "TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT",
+    "display_name": "周天校律盘",
+    "documentation_alias": "七曜毕业法宝",
+    "identity_rule": "周天校律盘把七星已学会的正确反制结果编成一次可选择的校律回应；它不是夺取星权、复制星君称号或直接制造伤害的器物。",
+    "tier": "high_endgame_optional",
+    "chapter_band": "TT_LV41_TO_60",
+    "actual_logical_artifact_key": null,
+    "runtime_item_key": null,
+    "object_asset": null,
+    "icon_asset": null
+  },
+  "design_stage_flow": [
+    {
+      "stage_id": "TT_ARTIFACT_STAGE_OBSERVATORY_AWARENESS",
+      "display_label": "观台识盘",
+      "player_state": "同一角色完成周天观台开启后，理解七星是独立单人学习系列而不是法宝门票。",
+      "authority_anchor": "TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN",
+      "design_role": "开放设计级收集路线与周天校律盘图鉴解释，不授予材料、法宝、称号或经济资格。",
+      "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+      "actual_progress_key": null,
+      "actual_grant_event": null
+    },
+    {
+      "stage_id": "TT_ARTIFACT_STAGE_SEVEN_STAR_LEARNING",
+      "display_label": "校星留痕",
+      "player_state": "玩家分别通过天枢至瑶光七个单人试炼，形成七类残片的设计级来源理解。",
+      "authority_anchor": "TT_SPEC_SEVEN_STAR_SOLO_SERIES",
+      "design_role": "七星各自教授一个反制判断；完成不是自动材料发放，也不写天庭主线进度。",
+      "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+      "actual_progress_key": null,
+      "actual_grant_event": null
+    },
+    {
+      "stage_id": "TT_ARTIFACT_STAGE_CELESTIAL_LAW_ALIGNMENT",
+      "display_label": "校律立盘",
+      "player_state": "常规主线后段凭凌霄外庭的天律校印概念，确认基础毕业不被团队噩梦锁死。",
+      "authority_anchor": "TT_SPEC_MAINLINE_NODE_05_LINGXIAO_OUTER_COURT",
+      "design_role": "定义基础毕业的珍贵催化剂来源主题；常规完成事实与经济材料发放仍严格分离。",
+      "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+      "actual_progress_key": null,
+      "actual_grant_event": null
+    },
+    {
+      "stage_id": "TT_ARTIFACT_STAGE_FORM_ATTUNEMENT",
+      "display_label": "三式调律",
+      "player_state": "在合法集结节点，玩家为同一块周天校律盘选择定序、辨序或开序之一。",
+      "authority_anchor": "existing_authoritative_loadout_preset_boundary",
+      "design_role": "三式是同一法宝的互斥构筑表达，不是三件法宝、三个叠层被动或三份材料配方。",
+      "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+      "actual_progress_key": null,
+      "actual_grant_event": null
+    },
+    {
+      "stage_id": "TT_ARTIFACT_STAGE_OPTIONAL_SACRED_ATTESTATION",
+      "display_label": "四圣印证",
+      "player_state": "已选择长期挑战的团队可在四圣噩梦中追求四象覆环的未来展示／叙事印证候选。",
+      "authority_anchor": "TT_SPEC_MANSION_NIGHTMARE_MODE",
+      "design_role": "只提供四象覆环的可选展示／叙事精进语境，不改变基础毕业、法宝形态、主线、称号、团队资格或战斗强度。",
+      "relative_difficulty_band": "D5_NIGHTMARE_PINNACLE_OPTIONAL",
+      "actual_progress_key": null,
+      "actual_grant_event": null
+    }
+  ],
+  "single_slot_and_switching": {
+    "active_artifact_slot_count": 1,
+    "same_artifact_form_count_per_preset": 1,
+    "ownership_is_not_equipping": true,
+    "form_selection_is_not_material_consumption": true,
+    "legal_switch_context": "只可沿既有权威构筑预设，在集结点或其他已获准的非挑战节点整体原子切换。",
+    "locked_contexts": [
+      "active challenge",
+      "death recovery lock",
+      "disconnect lock",
+      "cleanup_pending",
+      "client-only loadout request"
+    ],
+    "forbidden": [
+      "新增第二法宝槽或未装备后台效果",
+      "按Boss、方位、时辰、队友、客户端状态或失败结果自动改选形态",
+      "把形态切换写成残片、称号、夜巡钥或噩梦资格的消耗",
+      "以任何形态取代会话清理、复活、重连或进度权限"
+    ]
+  },
+  "shared_counter_response_gate": {
+    "semantic_name": "校律回应窗口",
+    "required_player_fact": "玩家本人在当前有效会话中已经读出预警、完成遭遇定义的正确反制，并由既有权威遭遇逻辑确认归位窗口成立。",
+    "authority_rule": "法宝只消费既有权威确认的正确反制语义；它不创建、伪造、重算或客户端声明正确反制。",
+    "form_tag_match_rule": "当前形态必须与该窗口声明的唯一兼容语义标签完全匹配：定序只匹配stabilize，辨序只匹配discern，开序只匹配open；错配不得出回应卡。",
+    "response_rule": "每次已确认的归位窗口只允许当前预设形态给出一张非数值回应卡；该卡强化已经验证的信息、位置或收束关系，而非替玩家完成下一道题。",
+    "missing_or_wrong_precondition": "未建立、已失效或错误的反制不触发校律；必须明确呈现未建立条件，绝不静默改成安全、伤害、护盾、控制或自动通关效果。",
+    "failure_precedence": "死亡、超时、断线、生命周期失效、left状态或cleanup_pending优先于任何校律回应；法宝不得保存、延迟结算、补领或回滚已经确定的失败/清理事实。",
+    "actual_ability_key": null,
+    "cooldown": null,
+    "duration": null,
+    "damage": null,
+    "shield": null,
+    "control": null
+  },
+  "response_state_machine": {
+    "owner_scope": "one current actor in one authority-created valid session",
+    "states": ["ready", "verified_window", "resolved", "invalidated"],
+    "ready_rule": "当前预设已在合法节点冻结，但尚未有可消费的正确反制窗口。",
+    "verified_window_rule": "既有遭遇权威逻辑已为当前角色确认一个声明了stabilize、discern或open语义的正确反制窗口；法宝只读订阅该事实。",
+    "resolved_rule": "当前选中形态已对同一窗口呈现一次非数值回应卡；重复请求只能返回同一结果，不能追加效果。",
+    "tag_mismatch_rule": "窗口标签与selected_form_id的唯一兼容标签不匹配时，窗口必须转为invalidated且不生成回应卡、数值效果、会话写入或补偿。",
+    "invalidated_rule": "错误前置、旧生命周期、错误实例/epoch/revision、死亡、断线、left、超时或cleanup_pending使未结算窗口立即失效。",
+    "idempotency_identity": ["actor_id", "response_window_id"],
+    "future_window_snapshot_fields": ["actor_id", "actor_lifecycle_id", "session_or_raid_instance_id", "session_epoch", "revision", "phase_or_beat_id", "response_window_id", "selected_form_id", "authority_proof_ref"],
+    "actual_runtime_state_key": null,
+    "actual_response_receipt": null
+  },
+  "encounter_subscription_boundary": {
+    "supported_semantic_tags": ["stabilize", "discern", "open"],
+    "subscription_rule": "遭遇只能在既有权威反制成功后声明一个兼容的语义标签；周天校律盘不得把任意正确操作、Boss状态或客户端推测升级为万能触发。",
+    "team_visibility_rule": "团队中可投射已经公开且已验证的可读信息，但回应始终归属于完成该反制的个人，不能改写队伍phase_id、星官净宿序列、轮换快照或圣兽共鸣。",
+    "actual_encounter_tag_key": null,
+    "actual_phase_write": null
+  },
+  "form_designs": [
+    {
+      "form_id": "TT_SPEC_ARTIFACT_FORM_STABILIZE_SEQUENCE",
+      "display_label": "定序",
+      "compatible_semantic_tags": ["stabilize"],
+      "star_learning_sources": ["天枢", "天权", "玉衡"],
+      "player_problem": "在已正确承受、打断或调和后，怎样确认下一次应回到哪一条已经验证的秩序？",
+      "player_input": "玩家先完成当前遭遇要求的正确稳定、裁衡或调和操作；随后沿既有路线自行移动、承压或作出下一次判断。",
+      "response_semantics": "把最近一次已验证的锚点、秩序方向或安全回收关系以短暂的可读关系呈现出来，帮助玩家继续执行，不改变位移、伤害、死亡或场地规则。",
+      "visual_channel": "星盘外环归正、稳定锚纹与已验证路径的低层轮廓。",
+      "independent_channel": "方向文字、节律铃音与无障碍描述同时说明“已验证锚点”而非“绝对安全”。",
+      "failure_feedback": "若玩家未完成稳定前置，只显示“未定序”，并保留原遭遇预警与失败后果。",
+      "must_not_do": [
+        "取消强制位移、推拉、承压、伤害、死亡或清理锁",
+        "替玩家自动站位、自动打断或自动调和资源",
+        "提供额外复活、无敌、护盾数值或永久安全区"
+      ],
+      "actual_effect_values": null
+    },
+    {
+      "form_id": "TT_SPEC_ARTIFACT_FORM_DISCERN_SEQUENCE",
+      "display_label": "辨序",
+      "compatible_semantic_tags": ["discern"],
+      "star_learning_sources": ["天璇", "天玑"],
+      "player_problem": "在已验证一段星轨、真伪或回环关系后，怎样不丢失这条证据的来源？",
+      "player_input": "玩家先通过观察、验证或反制建立一条已确认的星轨/真伪关系；随后仍由玩家自行选择下一次观察对象和行动。",
+      "response_semantics": "保留已经验证的来源链与下一条兼容观察提示，使玩家能复核已得结论；它不揭晓尚未验证的真身、弱点、隐藏预警或随机结果。",
+      "visual_channel": "已核验星轨以细线回环，未核验目标仍保持原有遮蔽层级。",
+      "independent_channel": "来源标签、短音标记与文字说明区分“已证实”与“待验证”。",
+      "failure_feedback": "错误验证或过期会话只显示“未成辨序”，不替换成任何答案或额外探测。",
+      "must_not_do": [
+        "自动找出真身、弱点、正确轨道或隐藏预警",
+        "替玩家完成验证、反制、打断或目标选择",
+        "将推测结果伪装为权威确认或永久地图信息"
+      ],
+      "actual_effect_values": null
+    },
+    {
+      "form_id": "TT_SPEC_ARTIFACT_FORM_OPEN_SEQUENCE",
+      "display_label": "开序",
+      "compatible_semantic_tags": ["open"],
+      "star_learning_sources": ["开阳", "瑶光"],
+      "player_problem": "在已正确打开或收束门阙、星链与追击关系后，怎样把握可执行的结束时机？",
+      "player_input": "玩家先亲自建立遭遇定义的开阙、追击或收束窗口；随后仍要完成路线、目标与退出时机的选择。",
+      "response_semantics": "将已经成立的开阙边缘、追击方向或收束节点可读化，让玩家看清可执行的结束关系；它不创建输出窗口或延长遭遇窗口。",
+      "visual_channel": "门阙边缘、拖光收束线与已成立节点的前景轮廓。",
+      "independent_channel": "开/合文字状态、节奏音与无障碍说明同步提示“窗口已由玩家建立”。",
+      "failure_feedback": "未建立开阙/收束条件时显示“未开序”，不得把封闭路径、错误目标或失败倒计时改为可通行。",
+      "must_not_do": [
+        "无条件制造、延长或重置输出/追击窗口",
+        "跳过门阵、星链、净宿、路线或结束时机机制",
+        "直接造成伤害、重置Boss相位或代替玩家完成终结"
+      ],
+      "actual_effect_values": null
+    }
+  ],
+  "material_and_source_blueprints": {
+    "base_collection_rule": "基础毕业概念要求七种残片类别与天律校印的来源关系均成立；它不是当前配方、背包检查、掉落授予或经济资格。",
+    "fragment_categories": [
+      {"material_spec_id": "TT_SPEC_MATERIAL_TIANSHU_FRAGMENT", "presentation_name": "天枢残片", "source_node_id": "TT_SPEC_SOLO_TIANSHU", "learning_role": "定轴与稳定锚", "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"},
+      {"material_spec_id": "TT_SPEC_MATERIAL_TIANXUAN_FRAGMENT", "presentation_name": "天璇残片", "source_node_id": "TT_SPEC_SOLO_TIANXUAN", "learning_role": "回环与路径复核", "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"},
+      {"material_spec_id": "TT_SPEC_MATERIAL_TIANJI_FRAGMENT", "presentation_name": "天玑残片", "source_node_id": "TT_SPEC_SOLO_TIANJI", "learning_role": "辨真与证据来源", "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"},
+      {"material_spec_id": "TT_SPEC_MATERIAL_TIANQUAN_FRAGMENT", "presentation_name": "天权残片", "source_node_id": "TT_SPEC_SOLO_TIANQUAN", "learning_role": "裁衡与正确打断", "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"},
+      {"material_spec_id": "TT_SPEC_MATERIAL_YUHENG_FRAGMENT", "presentation_name": "玉衡残片", "source_node_id": "TT_SPEC_SOLO_YUHENG", "learning_role": "调和与稳定回收", "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"},
+      {"material_spec_id": "TT_SPEC_MATERIAL_KAIYANG_FRAGMENT", "presentation_name": "开阳残片", "source_node_id": "TT_SPEC_SOLO_KAIYANG", "learning_role": "开阙与起势判断", "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"},
+      {"material_spec_id": "TT_SPEC_MATERIAL_YAOGUANG_FRAGMENT", "presentation_name": "瑶光残片", "source_node_id": "TT_SPEC_SOLO_YAOGUANG", "learning_role": "追影与收束时机", "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"}
+    ],
+    "base_catalyst": {
+      "material_spec_id": "TT_SPEC_MATERIAL_CELESTIAL_LAW_SEAL",
+      "presentation_name": "天律校印",
+      "source_node_id": "TT_SPEC_MAINLINE_NODE_05_LINGXIAO_OUTER_COURT",
+      "role": "保证基础毕业概念有常规主线后段、非团队的珍贵催化剂来源。",
+      "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+      "required_for_base_collection_concept": true
+    },
+    "optional_sacred_catalyst": {
+      "material_spec_id": "TT_SPEC_MATERIAL_FOUR_SACRED_FORGE_CORE",
+      "presentation_name": "四圣铸核",
+      "source_node_id": "TT_SPEC_MANSION_NIGHTMARE_MODE",
+      "upstream_reward_family_spec_id": "TT_SPEC_REWARD_SACRED_BEAST_CORE",
+      "role": "仅服务四象覆环的未来展示／叙事印证候选，不增强或替代基础毕业，也不提供战斗强度。",
+      "relative_difficulty_band": "D5_NIGHTMARE_PINNACLE_OPTIONAL",
+      "required_for_base_collection_concept": false
+    },
+    "actual_material_key": null,
+    "actual_quantity": null,
+    "actual_recipe": null,
+    "actual_consumption": null,
+    "actual_drop_profile": null,
+    "actual_drop_rate": null,
+    "actual_pity": null,
+    "actual_receipt": null
+  },
+  "future_source_evidence_by_material_role": [
+    {
+      "material_role": "seven_star_fragment_category",
+      "source_scope": "owner_only_single_player_trial",
+      "required_future_evidence": ["owner_actor_id", "lifecycle_id", "session_instance_id", "session_epoch", "revision", "cleanup_token", "authority_proof_ref"],
+      "eligibility_rule": "只能由同一拥有者完成的有效七星单人会话形成未来来源候选；队友、队长、旁观、旧生命周期、断线、失败与清理前重入均不能替代。",
+      "current_success_event": null,
+      "current_material_grant": null
+    },
+    {
+      "material_role": "celestial_law_seal_base_catalyst",
+      "source_scope": "private_mainline_final_effective_participant",
+      "required_future_evidence": ["actor_id", "actor_lifecycle_id", "event_id", "session_instance_id", "session_epoch", "revision", "authority_proof_ref", "effective_participation"],
+      "eligibility_rule": "未来只可引用凌霄外庭私有主线终局中有效参与者的成功事实；上位会话允许1–4人，单人完成必须完整可达，队长和旁观不能代领。",
+      "current_success_event": null,
+      "current_material_grant": null
+    },
+    {
+      "material_role": "four_sacred_optional_attestation",
+      "source_scope": "nightmare_mansion_active_member",
+      "required_future_evidence": ["actor_id", "actor_lifecycle_id", "raid_instance_id", "boss_instance_id", "session_epoch", "phase_id", "revision", "rotation_snapshot_id", "quadrant", "difficulty", "authority_proof_ref"],
+      "eligibility_rule": "未来只可引用四圣噩梦中权威冻结快照的active成员；夜巡钥/噩梦资格凭证不是材料、奖励或法宝所有权，left成员不能补领。",
+      "current_success_event": null,
+      "current_material_grant": null
+    }
+  ],
+  "title_and_collection_relationship": {
+    "same_star_title_rule": "同一星残片累计十枚合成对应星君称号，是用户锁定的收藏计数，不是单次掉落量。",
+    "aggregate_title_rule": "七个星君称号均已获得时可解锁既有七曜集合称号；集合称号替代而非叠加单称号的效果标签。",
+    "artifact_relation": "周天校律盘不要求、消耗、复制或放大任一星君/集合称号；称号也不自动解锁任何校律形态。",
+    "future_ledger_rule": "任何残片的计数、保留、占用、消耗、退回、转换与重放必须由同一个未来版本化经济账本唯一裁决，禁止称号和法宝无记录双花。",
+    "current_title_effect_values": null,
+    "current_consumption_rule": null,
+    "current_receipt_rule": null
+  },
+  "optional_sacred_attestation": {
+    "presentation_name": "四象覆环",
+    "unlock_context": "四圣铸核的未来可选至臻展示/叙事精进候选。",
+    "design_effect": "仅在周天校律盘外环叙事层叠加四象余辉，用于表达完成更高端协作挑战的经历；不改变定序、辨序、开序的触发、回应、数值、会话、资格或材料关系。",
+    "is_base_graduation_requirement": false,
+    "is_combat_form": false,
+    "actual_unlock_rule": null,
+    "actual_vfx_asset": null,
+    "actual_effect_value": null
+  },
+  "cross_profession_compatibility": {
+    "rule": "破妄、镇界、持明、巡猎均可选择定序、辨序或开序；形态是处理局面的偏好，绝不是职业专属、强制最优或伤害倍率标签。",
+    "semantic_fit_cards": [
+      {"profession": "破妄", "natural_reading": "辨序", "nonexclusive_reason": "更常处理证据、真伪与反制信息，但仍可因场地与队伍需求选择定序或开序。"},
+      {"profession": "镇界", "natural_reading": "定序", "nonexclusive_reason": "更常承接稳定、位置与秩序回收，但不会获得额外复活或承伤豁免。"},
+      {"profession": "持明", "natural_reading": "定序或辨序", "nonexclusive_reason": "更容易表达调和与信息复核，但不成为资源自动化或全队解题工具。"},
+      {"profession": "巡猎", "natural_reading": "开序", "nonexclusive_reason": "更容易表达开阙、追击与收束时机，但不会无条件获得追击伤害或窗口延长。"}
+    ],
+    "absolute_combat_values": null,
+    "profession_lock": null,
+    "best_in_slot_claim": null
+  },
+  "readability_and_presentation": {
+    "artifact_visual_silhouette": "一枚由七个可读星位围绕中心律环的悬浮圆盘；三种形态只改变外环秩序，不改变法宝身份或创造第二件物品。",
+    "form_visual_languages": [
+      {"form_id": "TT_SPEC_ARTIFACT_FORM_STABILIZE_SEQUENCE", "motif": "稳固星锚、内收环线、低频律铃"},
+      {"form_id": "TT_SPEC_ARTIFACT_FORM_DISCERN_SEQUENCE", "motif": "双轨回环、已证实细线、清晰/待验标签"},
+      {"form_id": "TT_SPEC_ARTIFACT_FORM_OPEN_SEQUENCE", "motif": "门阙缺口、前引拖光、开合节律"}
+    ],
+    "accessible_information_rules": [
+      "每张校律回应卡必须同时给出空间/特效线索与独立文字、音效或无障碍描述。",
+      "不得仅以颜色区分已验证、待验证、未建立、失效或可选至臻状态。",
+      "称号展示、法宝形态和四圣至臻展示必须独立分层，避免用叠层特效暗示不存在的战斗叠加。",
+      "失败复盘必须说明未建立的是哪条玩家前置，而非把失败归因于法宝等级或材料缺失。"
+    ],
+    "actual_vfx_asset": null,
+    "actual_ui_asset": null,
+    "actual_audio_asset": null
+  },
+  "authority_failure_and_settlement_boundary": {
+    "progression_writer": false,
+    "session_writer": false,
+    "cleanup_bypass": false,
+    "economy_v2_input": false,
+    "material_grant": false,
+    "title_grant": false,
+    "artifact_grant": false,
+    "future_fact_requirements": [
+      "actor_id、actor_lifecycle_id、event_id、authority_proof_ref与schema_version",
+      "七星单人会话的owner_actor_id、lifecycle_id、session_instance_id、session_epoch、revision与cleanup_token",
+      "星宿团队会话的冻结成员快照、rotation_snapshot、quadrant、difficulty、raid/boss实例身份与cleanup_token",
+      "有效参与者只能是权威快照中的active成员；left、旁观、伪造成员、旧生命周期、失败和清理前重入均拒绝",
+      "以既有幂等身份重放终态；正常成功不因后续cleanup确认失败而回滚",
+      "任何未来材料/法宝/称号结算都必须在独立source-profile、资格和收据合同被采纳后才可发生"
+    ],
+    "disconnection_rule": "七星拥有者断线不得重连、补领或复用旧会话；星宿断线成员保持left且不能领奖，剩余active成员的既有会话规则不受法宝改变。",
+    "actual_source_profile": null,
+    "actual_qualification": null,
+    "actual_receipt_schema": null
+  },
+  "future_loadout_snapshot_handoff": {
+    "purpose": "未来运行时只读冻结当前法宝与形态，避免挑战内局部换装；它不是现在的会话字段、进度记录或经济收据。",
+    "required_future_fields": ["actor_id", "actor_lifecycle_id", "active_artifact_spec_id", "selected_form_id", "loadout_revision", "session_or_raid_instance_id", "session_epoch", "authority_proof_ref"],
+    "must_not_change": ["chapter_progression", "session_admission", "member_snapshot", "phase_id", "rotation_snapshot", "qualification", "reward_plan", "cleanup_token"],
+    "actual_snapshot_schema": null,
+    "actual_runtime_field_keys": null
+  },
+  "legacy_and_migration_boundary": {
+    "legal_choices": [
+      "继续装备花果山定潮玄印或熔脉劫核",
+      "继续装备地府镇魂引灯或勘命业镜",
+      "选择周天校律盘的一种校律形态"
+    ],
+    "forbidden": [
+      "天庭推进自动消耗、降级、隐藏或删除前序法宝",
+      "要求某件花果山/地府法宝、星君称号、四圣称号或夜巡钥作为周天校律盘前置",
+      "把周天校律盘描述成旧法宝的纯数值上位替代",
+      "在没有独立经济和迁移收据合同前创建升级、重铸、回收或返还"
+    ],
+    "future_migration_contract": null,
+    "actual_migration_cost": null,
+    "actual_migration_receipt": null
+  },
+  "non_production_boundary": {
+    "actual_item_asset": null,
+    "actual_item_key": null,
+    "actual_ability_asset": null,
+    "combat_attributes": null,
+    "damage_values": null,
+    "cooldowns": null,
+    "durations": null,
+    "ranges": null,
+    "target_counts": null,
+    "recommended_numeric_equip_level": null,
+    "material_keys": null,
+    "material_quantities": null,
+    "recipe": null,
+    "consumption": null,
+    "source_profiles": null,
+    "drop_rates": null,
+    "pity": null,
+    "qualification": null,
+    "receipts": null,
+    "runtime_progression_key": null,
+    "runtime_session_key": null,
+    "y3_object": null,
+    "lua_implementation": null,
+    "economy_execution": false
+  },
+  "acceptance_matrix": [
+    {"acceptance_id": "TT-ART-COMPLETE-001", "rule": "唯一身份是TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT，正式展示名为周天校律盘，真实物品/能力/运行时键仍为空。"},
+    {"acceptance_id": "TT-ART-COMPLETE-002", "rule": "五段设计阶段与七星、凌霄外庭、四圣的既有节点一致；基础毕业不依赖噩梦团队内容。"},
+    {"acceptance_id": "TT-ART-COMPLETE-003", "rule": "三种形态均只回应玩家已经完成的正确反制，不自动解题、打断、移动、输出、复活、回滚或绕过清理。"},
+    {"acceptance_id": "TT-ART-COMPLETE-004", "rule": "每个构筑预设最多一件活动法宝和一种校律形态；死亡、断线、挑战与cleanup_pending期间不可局部切换。"},
+    {"acceptance_id": "TT-ART-COMPLETE-005", "rule": "七类残片分别映射七个单人试炼；天律校印映射凌霄外庭；四圣铸核只对应四象覆环的D5可选展示／叙事印证，不提供基础毕业或战斗强度。"},
+    {"acceptance_id": "TT-ART-COMPLETE-006", "rule": "星君称号的十枚同星规则、集合称号和周天校律盘不隐式共享、扣除或放大残片/效果；全部由未来唯一账本防双花。"},
+    {"acceptance_id": "TT-ART-COMPLETE-007", "rule": "四职业均可使用三形态且无职业锁；任何强度、最佳构筑或数值归因必须等待P0跨职业标定。"},
+    {"acceptance_id": "TT-ART-COMPLETE-008", "rule": "双通道可读性覆盖已验证、待验证、未建立和失败反馈，禁止颜色唯一信息与称号/法宝效果视觉混淆。"},
+    {"acceptance_id": "TT-ART-COMPLETE-009", "rule": "法宝不写进度、会话、资格、材料、称号、奖励或收据；失败、断线、left和cleanup规则始终优先。"},
+    {"acceptance_id": "TT-ART-COMPLETE-010", "rule": "所有真实数值、装备等级、物品、材料、数量、配方、概率、保底、资格、收据和Y3施工字段保持null/deferred。"}
+  ]
+}

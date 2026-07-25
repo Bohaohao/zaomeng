@@ -10,6 +10,8 @@
 
 独立的[天庭权威运行时基座与主线纵切](../../../../implementation/tianting-authority-vertical-slice/README.md) 只作为 Node/Fengari 受信任边界内的纯离线回归：它实现入章、周天观台和凌霄外庭的可验证模型，不提供 Y3 API、地图、存档、网络或真实证明服务。`NODE_PATH` 不是依赖来源，必须被拒绝。未来转接 Y3 前，必须先通过[天庭 Y3 施工预检](../../../../implementation/tianting-y3-construction-preflight/README.md)并读取真实地图根、Y3 API 基线和 UI 根；预检的合成 fixture 或当前仓库的 fail-closed 不能代替这些事实。
 
+[天庭毕业法宝定位与谱系合同](../artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json)与[周天校律盘完整设计合同](../artifact-graduation/complete-design/tianting-graduation-artifact-complete-design-contract.json)共同为未来逻辑提供单一活动法宝槽、构筑预设原子切换、挑战锁、定序／辨序／开序互斥响应，以及“不自动读题、反制、复活、回滚或绕过清理”的边界。完整设计把回应限定为当前角色已经取得的权威反制窗口的只读、一次性可读提示：定序只接受 `stabilize`、辨序只接受 `discern`、开序只接受 `open`；错配必须转为 `invalidated` 且不出回应卡。未来实现必须以 `(actor_id,response_window_id)` 幂等，死亡、断线、`left`、旧生命周期与 `cleanup_pending` 先使未结算回应失效。它们不是入章、主线、七星、星宿、夜巡资格或经济写入的替代品；在 P0 外部实证和独立 source-profile／收据合同采纳前，Lua/Y3 不得创建法宝、技能、材料、配方、属性、掉落、资格、收据或 economy-v2 调用。
+
 [七星会话离线参考包](../../../../implementation/tianting-seven-star-session-reference/README.md)与[星宿会话离线参考包](../../../../implementation/tianting-mansion-session-reference/README.md)只把既有权威合同的准入、快照、失败、清理和幂等边界固定为进程内回归；它们不能代替真实进度、时间、凭证、成员、会话或断线服务。未来 Lua/Y3 接入必须把这些事实交由可信提供方解析，不得从调用字段、系统时钟、客户端方位或参考模型记录推断。
 
 [二十八星官与四圣机制编排合同](../mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json)是未来团本战斗状态机的唯一离线语义输入：普通本按严格四段 `2+2+2+1` 和逐星官的读线/提交/反制/恢复推进，噩梦按同方位固定 `2+2+2+1` 链序与净宿集合推进。未来逻辑只能在既有会话确认 `active` 且完整绑定 raid/boss/epoch/`phase_id`/revision、轮换快照、方位、难度和每名成员的 actor/lifecycle/membership/status 权威元组后消费这些语义；`transition_index` 只能沿声明边前进，恢复不能跳段或倒退。`phase_id`、`revision` 与 `cleanup_token` 不可被用作或改写为战斗阶段，`cleanup_token` 更不得进入玩家机制输入。该合同不生成 Lua、权威事件、计时器、实际状态机或会话完成写入。

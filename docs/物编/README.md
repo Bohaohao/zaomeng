@@ -70,7 +70,9 @@
 
 当前机器可读成长规格包：[成长系统规格包](成长系统规格包/design-spec.json)。
 
-当前成长数值与经济裁决基线：[成长数值与经济裁决包](成长数值与经济裁决包/README.md)。`economy-v2` 已冻结经验、货币、掉落/保底、参与箱 P1、通天塔首轮奖励和可审计收据合同；`economy-v3` 只对未来花果山路线冻结 XP 修订与 `XP_PEACH`／`XP_CAVE` 的必经公共主线语义，不改写 v2、历史收据、掉落或塔规则。三篇成长谱系继续冻结 Lv20→Lv60 的非运行时可达路径；天庭完成/会话只新增[零价值收据输入交接](../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json)，不分配 profile 或奖励。`economy-v1` 保留为哈希绑定的历史冻结表。包内[标定候选](成长数值与经济裁决包/calibration/README.md)已明确降为历史证据，不能覆盖当前基线，也不解除生产门禁。
+当前成长数值与经济裁决基线：[成长数值与经济裁决包](成长数值与经济裁决包/README.md)。`economy-v2` 已冻结经验、货币、掉落/保底、参与箱 P1、通天塔首轮奖励和可审计收据合同；`economy-v3` 只对未来花果山路线冻结 XP 修订与 `XP_PEACH`／`XP_CAVE` 的必经公共主线语义，不改写 v2、历史收据、掉落或塔规则。三篇成长谱系继续冻结 Lv20→Lv60 的非运行时可达路径；其中[地府中期法宝裁决包](成长数值与经济裁决包/地府中期法宝裁决包/README.md)已细化 `medium` 双法宝构筑：镇魂引灯、勘命业镜与共享回正，[天庭毕业法宝定位与谱系包](天庭篇主线遭遇与通天塔规格包/artifact-graduation/README.md)补齐 `high_endgame` 单槽、七曜校律、单人基础路径与前序保留边界，但二者均不创建资产或经济结果；天庭完成/会话只新增[零价值收据输入交接](../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json)，不分配 profile 或奖励。`economy-v1` 保留为哈希绑定的历史冻结表。包内[标定候选](成长数值与经济裁决包/calibration/README.md)已明确降为历史证据，不能覆盖当前基线，也不解除生产门禁。
+
+[三篇法宝详细设计与材料来源包](成长数值与经济裁决包/三篇法宝详细设计与材料来源包/README.md)已将五件法宝的设计级获取路线、作用、推荐携带阶段、材料主题／来源点和相对难度统一复审；它不创建真实物品、材料、掉率、配方、数值、资格或收据。
 
 当前地府篇前置接口包：[地府篇前置接口包](地府篇前置接口包/README.md)。它给出花果山→地府的“鲨魔王逐人有效参与 → 熔脉裂口发现 → 唯一常规收束证明 → 同角色 Lv20 入章”生产者/消费者边界，以及“阎罗殿写入角色级 `DF_PROGRESS_YANLUO_HALL_CLEARED`、转轮殿为首发团队本、龙宫逆潮在 `Lv38` 后只消费受信任查询”和团队成员死亡回当前篇章初始出生点但保持清理锁的跨篇契约与施工顺序；不创建地府资产、地图、奖励、数值或生产运行时。
 

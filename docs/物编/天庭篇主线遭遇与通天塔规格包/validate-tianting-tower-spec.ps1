@@ -26,6 +26,11 @@ $ObjectFieldReservationRunner = Join-Path $ObjectFieldReservationRoot 'tests\run
 $MansionEncounterOrchestrationRoot = Join-Path $PackageRoot 'mansion-orchestration'
 $MansionEncounterOrchestrationContractPath = Join-Path $MansionEncounterOrchestrationRoot 'tianting-mansion-encounter-orchestration-contract.json'
 $MansionEncounterOrchestrationRunner = Join-Path $MansionEncounterOrchestrationRoot 'tests\run-all.ps1'
+$ArtifactGraduationRoot = Join-Path $PackageRoot 'artifact-graduation'
+$ArtifactGraduationContractPath = Join-Path $ArtifactGraduationRoot 'tianting-endgame-artifact-positioning-and-lineage-contract.json'
+$ArtifactGraduationCompleteDesignRoot = Join-Path $ArtifactGraduationRoot 'complete-design'
+$ArtifactGraduationCompleteDesignContractPath = Join-Path $ArtifactGraduationCompleteDesignRoot 'tianting-graduation-artifact-complete-design-contract.json'
+$ArtifactGraduationCompleteDesignRunner = Join-Path $ArtifactGraduationCompleteDesignRoot 'validate-tianting-graduation-artifact-complete-design.ps1'
 $ConstructionReadinessRunner = Join-Path $WorkspaceRoot 'implementation\run-all-tianting-construction-readiness.ps1'
 
 function Test-HasProperty {
@@ -82,6 +87,17 @@ function Assert-RequiredProperties {
   foreach ($PropertyName in $Names) {
     Assert-Condition (Test-HasProperty $Object $PropertyName) "$Name property exists: $PropertyName"
   }
+}
+
+function Assert-ExactPropertyNames {
+  param($Object, [string[]]$Expected, [string]$Name)
+
+  Assert-Condition ($null -ne $Object) "$Name object exists"
+  if ($null -eq $Object) {
+    return
+  }
+
+  Assert-ExactArray @($Object.PSObject.Properties | ForEach-Object { [string]$_.Name }) $Expected "$Name property names"
 }
 
 function Assert-AllRuntimeKeysNull {
@@ -179,6 +195,19 @@ try {
     'mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json',
     'mansion-orchestration/tests/Test-MansionEncounterOrchestration.ps1',
     'mansion-orchestration/tests/run-all.ps1',
+    'artifact-graduation/README.md',
+    'artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json',
+    'artifact-graduation/天庭毕业法宝定位与谱系规格.md',
+    'artifact-graduation/decision-register.md',
+    'artifact-graduation/design-spec.json',
+    'artifact-graduation/validation-report.md',
+    'artifact-graduation/complete-design/README.md',
+    'artifact-graduation/complete-design/tianting-graduation-artifact-complete-design-contract.json',
+    'artifact-graduation/complete-design/天庭毕业法宝完整设计.md',
+    'artifact-graduation/complete-design/decision-register.md',
+    'artifact-graduation/complete-design/design-spec.json',
+    'artifact-graduation/complete-design/validation-report.md',
+    'artifact-graduation/complete-design/validate-tianting-graduation-artifact-complete-design.ps1',
     'object-preallocation/README.md',
     'object-preallocation/天庭物编字段预占规格.md',
     'object-preallocation/tianting-object-field-reservation-contract.json',
@@ -391,8 +420,17 @@ try {
   }
   Assert-Condition ($MansionEncounterOrchestrationSnapshotDigest -eq $MansionEncounterOrchestrationValidatedDigest) 'mansion encounter choreography master snapshot exactly matches the child-validated contract'
 
+  $ArtifactGraduationCompleteDesignOutput = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ArtifactGraduationCompleteDesignRunner 2>&1)
+  $ArtifactGraduationCompleteDesignExitCode = $LASTEXITCODE
+  if ($ArtifactGraduationCompleteDesignExitCode -ne 0) {
+    throw "artifact graduation complete-design validation failed (exit $ArtifactGraduationCompleteDesignExitCode): $($ArtifactGraduationCompleteDesignOutput -join [Environment]::NewLine)"
+  }
+  Assert-Condition (($ArtifactGraduationCompleteDesignOutput -join [Environment]::NewLine) -match 'PASS: TianTing graduation artifact complete-design contract is internally consistent') 'artifact graduation complete-design runner passes validation'
+
   $Contract = Read-JsonFile (Join-Path $PackageRoot 'tianting-mainline-tower-contract.json')
   $Expansion = Read-JsonFile (Join-Path $PackageRoot 'tianting-content-expansion-contract.json')
+  $ArtifactGraduation = Read-JsonFile $ArtifactGraduationContractPath
+  $ArtifactGraduationCompleteDesign = Read-JsonFile $ArtifactGraduationCompleteDesignContractPath
   $Authority = Read-JsonFile (Join-Path $PackageRoot 'authority/tianting-progression-and-instance-authority-contract.json')
   $FirstCycle = Read-JsonFile (Join-Path $PackageRoot 'tower-first-cycle-state-contract.json')
   $Design = Read-JsonFile (Join-Path $PackageRoot 'design-spec.json')
@@ -521,6 +559,8 @@ try {
     'mainline-boss/tianting-mainline-boss-contract.json',
     'mainline-presentation/tianting-mainline-presentation-contract.json',
     'mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json',
+    'artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json',
+    'artifact-graduation/complete-design/tianting-graduation-artifact-complete-design-contract.json',
     '../../../implementation/tianting-seven-star-session-reference/package-contract.json',
     '../../../implementation/tianting-mansion-session-reference/contract/mansion-session-time-qualification-reference-contract.json',
     'tower-economy/mansion-economy-global-tower-run-season-contract.json'
@@ -551,6 +591,10 @@ try {
   Assert-Equal $DerivedContractsByName['tianting_mainline_narrative_presentation'].status 'offline_narrative_presentation_spec' 'main contract mainline-presentation derivative status'
   Assert-Equal $DerivedContractsByName['tianting_mansion_encounter_orchestration'].artifact 'mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json' 'main contract mansion encounter choreography derivative artifact'
   Assert-Equal $DerivedContractsByName['tianting_mansion_encounter_orchestration'].status 'offline_encounter_choreography_spec' 'main contract mansion encounter choreography derivative status'
+  Assert-Equal $DerivedContractsByName['tianting_endgame_artifact_positioning_and_lineage'].artifact 'artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json' 'main contract artifact graduation derivative artifact'
+  Assert-Equal $DerivedContractsByName['tianting_endgame_artifact_positioning_and_lineage'].status 'accepted_offline_design' 'main contract artifact graduation derivative status'
+  Assert-Equal $DerivedContractsByName['tianting_graduation_artifact_complete_design'].artifact 'artifact-graduation/complete-design/tianting-graduation-artifact-complete-design-contract.json' 'main contract artifact graduation complete-design derivative artifact'
+  Assert-Equal $DerivedContractsByName['tianting_graduation_artifact_complete_design'].status 'accepted_offline_design' 'main contract artifact graduation complete-design derivative status'
   Assert-Equal $DerivedContractsByName['tianting_authority_vertical_slice'].artifact '../../../implementation/tianting-authority-vertical-slice/package-contract.json' 'main contract vertical-slice artifact'
   Assert-Equal $DerivedContractsByName['tianting_authority_vertical_slice'].status 'offline_tested_reference_only' 'main contract vertical-slice status'
   Assert-Equal $DerivedContractsByName['tianting_seven_star_session_reference'].artifact '../../../implementation/tianting-seven-star-session-reference/package-contract.json' 'main contract seven-star reference artifact'
@@ -560,6 +604,8 @@ try {
   Assert-Equal $DerivedContractsByName['mansion_economy_global_tower_run_season'].artifact 'tower-economy/mansion-economy-global-tower-run-season-contract.json' 'main contract tower-economy candidate artifact'
   Assert-Equal $DerivedContractsByName['mansion_economy_global_tower_run_season'].status 'tianting_offline_candidate_pending_global_tower_adoption' 'main contract tower-economy candidate status'
   Assert-Condition ($Contract.non_production_boundaries -contains 'Candidate layout coordinates, session galleries, preview images and logic-resource candidates do not create a current Y3 map, entrance, teleport, spawn, editor resource or runtime key.') 'main contract candidate layout remains non-production'
+  Assert-Condition ($Contract.non_production_boundaries -contains 'The Tianting endgame artifact contract only fixes optional single-slot positioning, semantic forms and future lineage/receipt preconditions; it does not create an item, ability, material, recipe, numeric effect, source profile, receipt or economy output.') 'main contract artifact graduation remains non-production'
+  Assert-Condition ($Contract.non_production_boundaries -contains 'The TianTing graduation artifact complete-design contract only freezes player-readable form responses, source-evidence shapes, accessibility and failure boundaries; it does not create an item, ability, material, recipe, numeric effect, source profile, receipt, economy output or runtime state.') 'main contract artifact graduation complete design remains non-production'
   Assert-Condition ($Contract.non_production_boundaries -contains 'Combat readability does not create skills, battle values, progression writes, credentials, source profiles, handoff routes or settlement inputs.') 'main contract combat remains non-production'
   Assert-Condition ($Contract.non_production_boundaries -contains 'Enemy ecology and mainline Boss deepening only define readable responsibilities and interfaces; they do not create units, objects, skills, AI, waves, maps, authority writes, rewards or economy inputs.') 'main contract enemy and Boss packages remain non-production'
   Assert-Condition ($Contract.non_production_boundaries -contains 'Object field reservation only defines logical source cards and all-null future bindings; it does not create y3-object-config assets or mode, plugins, stable object keys, copyFrom templates, resources, raw fields, runtime writes or economic effects.') 'main contract object field reservation remains non-production'
@@ -1262,7 +1308,177 @@ try {
   Assert-Null $Expansion.seven_star_solo.aggregate_title.display_name 'seven-star aggregate title name remains deferred'
   Assert-Equal $Expansion.seven_star_solo.aggregate_title.unlock_rule '七个星君称号均已获得时自动解锁。' 'seven-star aggregate title auto unlock'
   Assert-Equal $Expansion.seven_star_solo.graduation_artifact.spec_id 'TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT' 'graduation artifact spec id'
-  Assert-Null $Expansion.seven_star_solo.graduation_artifact.display_name 'graduation artifact name remains deferred'
+  Assert-Equal $Expansion.seven_star_solo.graduation_artifact.display_name '周天校律盘' 'graduation artifact formal display name'
+  Assert-Equal $Expansion.seven_star_solo.graduation_artifact.name_status 'accepted_offline_design' 'graduation artifact formal name status'
+  Assert-Equal $Expansion.seven_star_solo.graduation_artifact.positioning_contract.contract_id 'TT_SPEC_ENDGAME_ARTIFACT_POSITIONING_AND_LINEAGE_V1' 'graduation artifact positioning contract id'
+  Assert-Equal $Expansion.seven_star_solo.graduation_artifact.positioning_contract.path 'artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json' 'graduation artifact positioning contract path'
+  Assert-Equal $Expansion.seven_star_solo.graduation_artifact.positioning_contract.status 'accepted-offline-design' 'graduation artifact positioning contract status'
+  foreach ($FieldName in @('actual_logical_artifact_key', 'stats', 'ability_values', 'materials', 'recipe', 'receipts')) {
+    Assert-Null $Expansion.seven_star_solo.graduation_artifact.positioning_contract.$FieldName "graduation artifact positioning contract deferred field: $FieldName"
+  }
+
+  Assert-ExactPropertyNames $ArtifactGraduation @(
+    'version', 'contract_id', 'artifact_kind', 'package_status', 'production_gate', 'non_production', 'scope',
+    'source_contracts', 'identity', 'slot_and_loadout_contract', 'stage_positioning', 'core_play_semantics',
+    'materials_and_ownership_boundary', 'legacy_replacement_and_lineage', 'authority_and_settlement_boundary',
+    'complete_design_contract', 'deferred', 'acceptance_invariants'
+  ) 'artifact graduation root'
+  Assert-ExactPropertyNames $ArtifactGraduation.identity @(
+    'graduation_artifact_spec_id', 'display_name', 'display_name_status', 'documentation_name',
+    'actual_logical_artifact_key', 'runtime_item_key', 'tier', 'chapter_band', 'positioning'
+  ) 'artifact graduation identity'
+  Assert-ExactPropertyNames $ArtifactGraduation.slot_and_loadout_contract @(
+    'inherits_artifact_slot_version', 'active_artifact_slot_count', 'inactive_artifact_default_combat_effect',
+    'artifact_active_ability_occupies_five_active_skill_slots', 'selection_rule', 'switching_rule', 'forbidden'
+  ) 'artifact graduation slot and loadout'
+  Assert-ExactPropertyNames $ArtifactGraduation.stage_positioning @(
+    'collection_start_boundary', 'base_graduation_boundary', 'recommended_equip_level', 'recommended_equip_band_note',
+    'not_a_requirement_for'
+  ) 'artifact graduation stage positioning'
+  Assert-ExactPropertyNames $ArtifactGraduation.core_play_semantics @(
+    'semantic_ability_label', 'actual_ability_key', 'actual_effect_values', 'cooldown', 'duration', 'damage',
+    'core_loop', 'build_forms', 'form_exclusivity', 'title_non_duplication_rule'
+  ) 'artifact graduation play semantics'
+  Assert-ExactPropertyNames $ArtifactGraduation.materials_and_ownership_boundary @(
+    'seven_star_fragment_requirement', 'title_relation', 'base_catalyst_route', 'four_sacred_relation',
+    'actual_material_keys', 'actual_recipe', 'actual_consumption', 'actual_drop_profiles', 'actual_pity',
+    'actual_receipts', 'forbidden_material_assumptions'
+  ) 'artifact graduation materials boundary'
+  Assert-ExactPropertyNames $ArtifactGraduation.legacy_replacement_and_lineage @(
+    'legal_relationships', 'automatic_consumption_or_downgrade', 'specific_hg_or_df_artifact_prerequisite',
+    'future_migration_contract', 'forbidden'
+  ) 'artifact graduation legacy lineage'
+  Assert-ExactPropertyNames $ArtifactGraduation.authority_and_settlement_boundary @(
+    'entry_or_progression_writer', 'session_authority_writer', 'cleanup_bypass', 'current_economy_v2_input',
+    'current_source_profile', 'current_reward_slot', 'future_evidence_requirements', 'future_settlement_rule'
+  ) 'artifact graduation authority boundary'
+  Assert-ExactPropertyNames $ArtifactGraduation.complete_design_contract @(
+    'contract_id', 'path', 'status', 'display_name', 'actual_item_key', 'actual_ability_key',
+    'actual_material_keys', 'actual_recipe', 'actual_receipts'
+  ) 'artifact graduation complete-design pointer'
+  Assert-ExactPropertyNames $ArtifactGraduation.deferred @(
+    'asset_display_binding', 'artifact_asset', 'logical_item_key', 'runtime_item_key', 'ability_asset', 'attributes',
+    'skill_values', 'materials', 'recipe', 'consumption', 'source_profiles', 'drop_rates', 'pity',
+    'qualification', 'receipt_schema', 'migration', 'ui_asset', 'y3_object'
+  ) 'artifact graduation deferred fields'
+  Assert-NoForbiddenPropertyNames $ArtifactGraduation @(
+    'object_id', 'resource_id', 'asset_id', 'item_id', 'ability_id', 'skill_id', 'material_id',
+    'source_profile_id', 'receipt_id', 'drop_rate', 'pity_count', 'reward_value', 'stat_bonus',
+    'damage_multiplier', 'cooldown_seconds', 'duration_seconds'
+  ) 'artifact graduation'
+
+  Assert-ExactArray @($ArtifactGraduation.source_contracts | ForEach-Object { [string]$_.path }) @(
+    '../tianting-content-expansion-contract.json',
+    '../authority/tianting-progression-and-instance-authority-contract.json',
+    '../../成长数值与经济裁决包/three-chapter-growth-lineage-contract.json',
+    '../../成长数值与经济裁决包/地府中期法宝裁决包/difu-midgame-artifact-positioning-and-replacement-contract.json',
+    '../../19-装备、法宝、宠物与材料物编规格.md',
+    '../../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json'
+  ) 'artifact graduation source-contract paths'
+  foreach ($SourceContract in @($ArtifactGraduation.source_contracts)) {
+    Assert-ExactPropertyNames $SourceContract @('path', 'role') "artifact graduation source contract: $($SourceContract.path)"
+    Assert-Condition (-not [string]::IsNullOrWhiteSpace([string]$SourceContract.role)) "artifact graduation source role: $($SourceContract.path)"
+    $SourceContractPath = Join-Path $ArtifactGraduationRoot ([string]$SourceContract.path)
+    Assert-Condition (Test-Path -LiteralPath $SourceContractPath -PathType Leaf) "artifact graduation source exists: $($SourceContract.path)"
+    if (Test-Path -LiteralPath $SourceContractPath -PathType Leaf) {
+      $ResolvedSourceContractPath = (Resolve-Path -LiteralPath $SourceContractPath).Path
+      $WorkspaceRootWithSeparator = $WorkspaceRoot.TrimEnd([char[]]'\') + '\'
+      Assert-Condition (($ResolvedSourceContractPath -eq $WorkspaceRoot) -or $ResolvedSourceContractPath.StartsWith($WorkspaceRootWithSeparator, [System.StringComparison]::OrdinalIgnoreCase)) "artifact graduation source stays in workspace: $($SourceContract.path)"
+    }
+  }
+
+  Assert-Equal $ArtifactGraduation.version 1 'artifact graduation contract version'
+  Assert-Equal $ArtifactGraduation.contract_id 'TT_SPEC_ENDGAME_ARTIFACT_POSITIONING_AND_LINEAGE_V1' 'artifact graduation contract id'
+  Assert-Equal $ArtifactGraduation.artifact_kind 'offline_tianting_endgame_artifact_positioning_and_lineage_contract' 'artifact graduation contract kind'
+  Assert-Equal $ArtifactGraduation.package_status 'offline-design-spec' 'artifact graduation contract status'
+  Assert-Equal $ArtifactGraduation.production_gate 'closed' 'artifact graduation production gate'
+  Assert-Condition ($ArtifactGraduation.non_production -eq $true) 'artifact graduation remains non-production'
+  Assert-Equal $ArtifactGraduation.identity.graduation_artifact_spec_id 'TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT' 'artifact graduation reuses seven-star identity'
+  Assert-Equal $ArtifactGraduation.identity.display_name '周天校律盘' 'artifact graduation formal display name'
+  Assert-Equal $ArtifactGraduation.identity.display_name_status 'accepted_offline_design' 'artifact graduation display-name status'
+  Assert-Null $ArtifactGraduation.identity.actual_logical_artifact_key 'artifact graduation logical artifact key'
+  Assert-Null $ArtifactGraduation.identity.runtime_item_key 'artifact graduation runtime item key'
+  Assert-Equal $ArtifactGraduation.identity.tier 'high_endgame' 'artifact graduation identity tier'
+  Assert-Equal $ArtifactGraduation.identity.chapter_band 'TT_LV41_TO_60' 'artifact graduation chapter band'
+  Assert-Equal $ArtifactGraduation.identity.documentation_name '七曜毕业法宝' 'artifact graduation documentation name'
+  Assert-Condition ([string]$ArtifactGraduation.identity.positioning -match '可选') 'artifact graduation is optional positioning'
+  Assert-Equal $ArtifactGraduation.slot_and_loadout_contract.inherits_artifact_slot_version 'v1' 'artifact graduation slot version'
+  Assert-Equal $ArtifactGraduation.slot_and_loadout_contract.active_artifact_slot_count 1 'artifact graduation active-slot count'
+  Assert-Condition ($ArtifactGraduation.slot_and_loadout_contract.inactive_artifact_default_combat_effect -eq $false) 'artifact graduation inactive effect remains disabled'
+  Assert-Condition ($ArtifactGraduation.slot_and_loadout_contract.artifact_active_ability_occupies_five_active_skill_slots -eq $false) 'artifact graduation active does not consume five-skill slot'
+  Assert-Condition ([string]$ArtifactGraduation.slot_and_loadout_contract.selection_rule -match '同一个活动法宝槽') 'artifact graduation shares one active slot'
+  Assert-Condition ([string]$ArtifactGraduation.slot_and_loadout_contract.switching_rule -match '挑战锁') 'artifact graduation respects challenge lock'
+  Assert-Equal @($ArtifactGraduation.slot_and_loadout_contract.forbidden).Count 3 'artifact graduation forbidden slot operations count'
+  Assert-Null $ArtifactGraduation.stage_positioning.recommended_equip_level 'artifact graduation exact equip level remains deferred'
+  Assert-Condition ([string]$ArtifactGraduation.stage_positioning.collection_start_boundary -match 'TT_SPEC_PROGRESS_CELESTIAL_OBSERVATORY_OPEN') 'artifact graduation collection follows observatory progress'
+  Assert-Condition ([string]$ArtifactGraduation.stage_positioning.base_graduation_boundary -match '可选长期目标') 'artifact graduation base route remains optional long-term positioning'
+  Assert-Condition (@($ArtifactGraduation.stage_positioning.not_a_requirement_for) -contains '天庭入章') 'artifact graduation is not an entry requirement'
+  Assert-Condition (@($ArtifactGraduation.stage_positioning.not_a_requirement_for) -contains '二十八星宿普通／噩梦准入或完成') 'artifact graduation is not a mansion requirement'
+  Assert-Equal $ArtifactGraduation.core_play_semantics.semantic_ability_label '七曜校律' 'artifact graduation semantic ability label'
+  foreach ($FieldName in @('actual_ability_key', 'actual_effect_values', 'cooldown', 'duration', 'damage')) {
+    Assert-Null $ArtifactGraduation.core_play_semantics.$FieldName "artifact graduation semantic deferred field: $FieldName"
+  }
+  Assert-ExactArray @($ArtifactGraduation.core_play_semantics.build_forms | ForEach-Object { $_.form_id }) @('TT_SPEC_ARTIFACT_FORM_STABILIZE_SEQUENCE', 'TT_SPEC_ARTIFACT_FORM_DISCERN_SEQUENCE', 'TT_SPEC_ARTIFACT_FORM_OPEN_SEQUENCE') 'artifact graduation build-form order'
+  $ExpectedArtifactFormSemanticSources = @(
+    @('天枢', '天权', '玉衡'),
+    @('天璇', '天玑'),
+    @('开阳', '瑶光')
+  )
+  for ($ArtifactFormIndex = 0; $ArtifactFormIndex -lt @($ArtifactGraduation.core_play_semantics.build_forms).Count; $ArtifactFormIndex++) {
+    $ArtifactForm = @($ArtifactGraduation.core_play_semantics.build_forms)[$ArtifactFormIndex]
+    Assert-ExactPropertyNames $ArtifactForm @('form_id', 'display_label', 'semantic_source', 'decision_role', 'must_not_do') "artifact graduation build form: $($ArtifactForm.form_id)"
+    Assert-ExactArray @($ArtifactForm.semantic_source) $ExpectedArtifactFormSemanticSources[$ArtifactFormIndex] "artifact graduation form semantic source: $($ArtifactForm.form_id)"
+    Assert-Equal @($ArtifactForm.must_not_do).Count 3 "artifact graduation form prohibited behavior count: $($ArtifactForm.form_id)"
+  }
+  Assert-Condition ([string]$ArtifactGraduation.core_play_semantics.form_exclusivity -match '只.*一个') 'artifact graduation forms are mutually exclusive'
+  Assert-Condition ([string]$ArtifactGraduation.core_play_semantics.title_non_duplication_rule -match '不.*叠加') 'artifact graduation does not duplicate title effects'
+  foreach ($FieldName in @('actual_material_keys', 'actual_recipe', 'actual_consumption', 'actual_drop_profiles', 'actual_pity', 'actual_receipts')) {
+    Assert-Null $ArtifactGraduation.materials_and_ownership_boundary.$FieldName "artifact graduation material deferred field: $FieldName"
+  }
+  Assert-Condition ([string]$ArtifactGraduation.materials_and_ownership_boundary.title_relation -match '双花') 'artifact graduation title relation prevents silent double-spend'
+  Assert-Condition ([string]$ArtifactGraduation.materials_and_ownership_boundary.base_catalyst_route -match '单人完整可达') 'artifact graduation base catalyst route is individually reachable'
+  Assert-Condition ([string]$ArtifactGraduation.materials_and_ownership_boundary.four_sacred_relation -match '不.*唯一') 'artifact graduation four sacred source is not unique'
+  Assert-Condition ([string]$ArtifactGraduation.materials_and_ownership_boundary.four_sacred_relation -match '四象覆环') 'artifact graduation four sacred source is limited to Four Symbols presentation'
+  Assert-Condition ([string]$ArtifactGraduation.materials_and_ownership_boundary.four_sacred_relation -match '不.*战斗') 'artifact graduation four sacred source has no combat strength'
+  Assert-Equal @($ArtifactGraduation.materials_and_ownership_boundary.forbidden_material_assumptions).Count 4 'artifact graduation forbidden material assumptions count'
+  Assert-Condition ((@($ArtifactGraduation.materials_and_ownership_boundary.forbidden_material_assumptions) -join '|') -match 'MAT_ARTIFACT_DUST') 'artifact graduation forbids Huaguoshan artifact dust inference'
+  Assert-Condition ((@($ArtifactGraduation.materials_and_ownership_boundary.forbidden_material_assumptions) -join '|') -match 'MAT_ADVANCE_HG') 'artifact graduation forbids Huaguoshan advance material inference'
+  Assert-Condition ($ArtifactGraduation.authority_and_settlement_boundary.entry_or_progression_writer -eq $false) 'artifact graduation cannot write entry or progression'
+  Assert-Condition ($ArtifactGraduation.authority_and_settlement_boundary.session_authority_writer -eq $false) 'artifact graduation cannot write session authority'
+  Assert-Condition ($ArtifactGraduation.authority_and_settlement_boundary.cleanup_bypass -eq $false) 'artifact graduation cannot bypass cleanup'
+  Assert-Condition ($ArtifactGraduation.authority_and_settlement_boundary.current_economy_v2_input -eq $false) 'artifact graduation has no current economy-v2 input'
+  Assert-Null $ArtifactGraduation.authority_and_settlement_boundary.current_source_profile 'artifact graduation source profile remains deferred'
+  Assert-Null $ArtifactGraduation.authority_and_settlement_boundary.current_reward_slot 'artifact graduation reward slot remains deferred'
+  Assert-Equal @($ArtifactGraduation.authority_and_settlement_boundary.future_evidence_requirements).Count 6 'artifact graduation future evidence requirement count'
+  Assert-Condition ((@($ArtifactGraduation.authority_and_settlement_boundary.future_evidence_requirements) -join '|') -match 'actor_id') 'artifact graduation future evidence includes actor identity'
+  Assert-Condition ((@($ArtifactGraduation.authority_and_settlement_boundary.future_evidence_requirements) -join '|') -match 'rotation_snapshot') 'artifact graduation future evidence includes mansion rotation snapshot'
+  Assert-Condition ((@($ArtifactGraduation.authority_and_settlement_boundary.future_evidence_requirements) -join '|') -match 'active') 'artifact graduation future evidence rejects non-active members'
+  Assert-Condition ([string]$ArtifactGraduation.authority_and_settlement_boundary.future_settlement_rule -match 'source-profile') 'artifact graduation future settlement requires source-profile adoption'
+  Assert-Equal $ArtifactGraduation.complete_design_contract.contract_id 'TT_SPEC_GRADUATION_ARTIFACT_COMPLETE_DESIGN_V1' 'artifact graduation complete-design contract id'
+  Assert-Equal $ArtifactGraduation.complete_design_contract.path 'complete-design/tianting-graduation-artifact-complete-design-contract.json' 'artifact graduation complete-design contract path'
+  Assert-Equal $ArtifactGraduation.complete_design_contract.status 'accepted-offline-design' 'artifact graduation complete-design contract status'
+  Assert-Equal $ArtifactGraduation.complete_design_contract.display_name '周天校律盘' 'artifact graduation complete-design display name'
+  foreach ($FieldName in @('actual_item_key', 'actual_ability_key', 'actual_material_keys', 'actual_recipe', 'actual_receipts')) {
+    Assert-Null $ArtifactGraduation.complete_design_contract.$FieldName "artifact graduation complete-design deferred field: $FieldName"
+  }
+  Assert-Equal $ArtifactGraduationCompleteDesign.contract_id $ArtifactGraduation.complete_design_contract.contract_id 'artifact graduation complete-design child identity agrees'
+  Assert-Equal $ArtifactGraduationCompleteDesign.identity.display_name $ArtifactGraduation.complete_design_contract.display_name 'artifact graduation complete-design child name agrees'
+  Assert-Null $ArtifactGraduation.legacy_replacement_and_lineage.future_migration_contract 'artifact graduation future migration remains deferred'
+  Assert-Condition ($ArtifactGraduation.legacy_replacement_and_lineage.automatic_consumption_or_downgrade -eq $false) 'artifact graduation forbids automatic legacy consumption'
+  Assert-Condition ($ArtifactGraduation.legacy_replacement_and_lineage.specific_hg_or_df_artifact_prerequisite -eq $false) 'artifact graduation has no specific HG or DF prerequisite'
+  Assert-ExactArray @($ArtifactGraduation.legacy_replacement_and_lineage.legal_relationships | ForEach-Object { $_.relationship_id }) @('TT_ARTIFACT_RETAIN_LEGACY', 'TT_ARTIFACT_SELECT_GRADUATION', 'TT_ARTIFACT_FUTURE_LINEAGE_MIGRATION') 'artifact graduation legacy relationship order'
+  foreach ($LegacyRelationship in @($ArtifactGraduation.legacy_replacement_and_lineage.legal_relationships)) {
+    Assert-ExactPropertyNames $LegacyRelationship @('relationship_id', 'meaning') "artifact graduation legacy relationship: $($LegacyRelationship.relationship_id)"
+  }
+  Assert-Condition ((@($ArtifactGraduation.legacy_replacement_and_lineage.forbidden) -join '|') -match 'ART_HG_TIDE_SEAL') 'artifact graduation preserves Tide Seal'
+  Assert-Condition ((@($ArtifactGraduation.legacy_replacement_and_lineage.forbidden) -join '|') -match 'ART_HG_FLAME_CORE') 'artifact graduation preserves Flame Core'
+  foreach ($Property in $ArtifactGraduation.deferred.PSObject.Properties) {
+    Assert-Null $Property.Value "artifact graduation deferred field: $($Property.Name)"
+  }
+  Assert-Equal @($ArtifactGraduation.acceptance_invariants).Count 8 'artifact graduation acceptance invariant count'
+  Assert-Condition ((@($ArtifactGraduation.acceptance_invariants) -join '|') -match '反制窗口.*不能自动') 'artifact graduation acceptance forbids automatic counterplay'
+  Assert-Condition ((@($ArtifactGraduation.acceptance_invariants) -join '|') -match '四圣噩梦.*不.*唯一') 'artifact graduation acceptance protects non-team base route'
+  Assert-AllRuntimeKeysNull $ArtifactGraduation 'artifactGraduation'
   $SevenStarSpecIds = @{}
   $SevenStarFragmentSpecIds = @{}
   $SevenStarTitleSpecIds = @{}
@@ -2756,7 +2972,7 @@ try {
     Assert-Null $Node.runtime_key "contract runtime key: $($Node.spec_id)"
   }
 
-  $RequiredDesignTop = @('version', 'project', 'sourceMaterials', 'worldview', 'playerExperience', 'coreLoop', 'sessionFlow', 'systems', 'content', 'mvp', 'handoffs', 'risks', 'unresolved', 'acceptanceCriteria', 'crossChapterBoundary', 'towerFirstCycleContract', 'contentExpansionContract', 'authorityProgressionAndInstanceContract', 'combatReadabilityContract', 'terrainLayoutDryRun', 'mapScaleAlignmentContract', 'uiAccessibilityInformationContract', 'objectArtVfxBlueprintContract', 'objectFieldReservationContract', 'enemyEcologyContract', 'mainlineBossDeepeningContract', 'authorityRuntimeVerticalSlice', 'sevenStarSessionReference', 'mansionSessionReference', 'mansionEncounterOrchestrationContract', 'mainlineNarrativePresentationContract', 'towerEconomyFullRunContract', 'economyV2AuthorityReceiptInputHandoff')
+  $RequiredDesignTop = @('version', 'project', 'sourceMaterials', 'worldview', 'playerExperience', 'coreLoop', 'sessionFlow', 'systems', 'content', 'mvp', 'handoffs', 'risks', 'unresolved', 'acceptanceCriteria', 'crossChapterBoundary', 'towerFirstCycleContract', 'contentExpansionContract', 'artifactGraduationContract', 'authorityProgressionAndInstanceContract', 'combatReadabilityContract', 'terrainLayoutDryRun', 'mapScaleAlignmentContract', 'uiAccessibilityInformationContract', 'objectArtVfxBlueprintContract', 'objectFieldReservationContract', 'enemyEcologyContract', 'mainlineBossDeepeningContract', 'authorityRuntimeVerticalSlice', 'sevenStarSessionReference', 'mansionSessionReference', 'mansionEncounterOrchestrationContract', 'mainlineNarrativePresentationContract', 'towerEconomyFullRunContract', 'economyV2AuthorityReceiptInputHandoff')
   foreach ($Name in $RequiredDesignTop) {
     Assert-Condition (Test-HasProperty $Design $Name) "design top-level field: $Name"
   }
@@ -2779,6 +2995,14 @@ try {
   Assert-Null $Design.contentExpansionContract.runtimeKey 'design content-expansion runtime key'
   Assert-Condition ($Design.contentExpansionContract.towerReuseDoesNotBindExistingBeats -eq $false) 'design content expansion permits only non-mutating fifth-beat annotation'
   Assert-Equal $Design.contentExpansionContract.allowedOuterBeatAnnotation 'fifth_beat_content_slot_only' 'design content expansion outer annotation boundary'
+  Assert-Equal $Design.artifactGraduationContract.artifact 'artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json' 'design artifact graduation contract artifact'
+  Assert-Equal $Design.artifactGraduationContract.status 'accepted_offline_design' 'design artifact graduation contract status'
+  Assert-Null $Design.artifactGraduationContract.runtimeKey 'design artifact graduation runtime key'
+  Assert-Null $Design.artifactGraduationContract.actualLogicalArtifactKey 'design artifact graduation logical key'
+  Assert-Null $Design.artifactGraduationContract.actualMaterialKeys 'design artifact graduation material keys'
+  Assert-Null $Design.artifactGraduationContract.actualRecipe 'design artifact graduation recipe'
+  Assert-Condition ($Design.artifactGraduationContract.currentEconomyV2Input -eq $false) 'design artifact graduation has no economy-v2 input'
+  Assert-Equal $Design.artifactGraduationContract.singleActiveSlotCount 1 'design artifact graduation single active slot'
   Assert-Equal $Design.authorityProgressionAndInstanceContract.artifact 'authority/tianting-progression-and-instance-authority-contract.json' 'design authority progression and instance artifact'
   Assert-Equal $Design.authorityProgressionAndInstanceContract.status 'offline_design' 'design authority progression and instance status'
   Assert-Null $Design.authorityProgressionAndInstanceContract.runtimeKey 'design authority progression and instance runtime key'
@@ -2912,6 +3136,8 @@ try {
   Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'docs/物编/天庭篇主线遭遇与通天塔规格包/mainline-presentation/tianting-mainline-presentation-contract.json' }).Count -eq 1) 'design source material includes mainline presentation contract'
   Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'docs/物编/天庭篇主线遭遇与通天塔规格包/mansion-orchestration/tianting-mansion-encounter-orchestration-contract.json' }).Count -eq 1) 'design source material includes mansion encounter choreography contract'
   Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'docs/物编/天庭篇主线遭遇与通天塔规格包/object-preallocation/tianting-object-field-reservation-contract.json' }).Count -eq 1) 'design source material includes object field reservation contract'
+  Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'docs/物编/天庭篇主线遭遇与通天塔规格包/artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json' }).Count -eq 1) 'design source material includes artifact graduation contract'
+  Assert-Condition (@($Design.sourceMaterials | Where-Object { $_.path -eq 'docs/物编/天庭篇主线遭遇与通天塔规格包/artifact-graduation/complete-design/tianting-graduation-artifact-complete-design-contract.json' }).Count -eq 1) 'design source material includes artifact graduation complete-design contract'
   Assert-Condition (@($Design.systems | Where-Object { $_.name -eq '天庭敌人生态与精英职责' -and $_.owner -eq 'enemy-ecology/tianting-enemy-ecology-contract.json' }).Count -eq 1) 'design system includes enemy ecology'
   Assert-Condition (@($Design.systems | Where-Object { $_.name -eq '天庭主线 Boss 深化' -and $_.owner -eq 'mainline-boss/tianting-mainline-boss-contract.json' }).Count -eq 1) 'design system includes mainline Boss deepening'
   Assert-Condition (@($Design.systems | Where-Object { $_.name -eq '天庭战斗数值与单位基线' -and $_.owner -eq 'combat-baseline/tianting-combat-numeric-unit-baseline-contract.json' }).Count -eq 1) 'design system includes combat numeric baseline'
@@ -2929,9 +3155,11 @@ try {
     Assert-Condition ($Collection.Count -gt 0) "design handoff collection is non-empty: $HandoffName"
   }
   Assert-Condition ((@($Design.handoffs.luaLogic) -join "`n") -match '七星/星宿会话离线参考包') 'design Lua handoff names the session references as test-only inputs'
+  Assert-Condition ((@($Design.handoffs.luaLogic) -join "`n") -match 'artifact-graduation') 'design Lua handoff names artifact graduation contract'
   Assert-Condition ((@($Design.handoffs.objectConfig) -join "`n") -match 'object-preallocation') 'design object handoff names field reservation package'
   Assert-Condition ((@($Design.handoffs.uiPipeline) -join "`n") -match 'mainline-presentation') 'design UI handoff names mainline presentation'
   Assert-Condition ((@($Design.handoffs.reviewPanel) -join "`n") -match '七星/星宿会话离线回归') 'design review handoff names session-reference review'
+  Assert-Condition ((@($Design.handoffs.reviewPanel) -join "`n") -match 'artifact-graduation') 'design review handoff names artifact graduation contract'
   foreach ($HandoffName in @('objectConfig', 'terrainLayout', 'luaLogic', 'uiPipeline', 'reviewPanel')) {
     Assert-Condition ((@($Design.handoffs.PSObject.Properties[$HandoffName].Value) -join "`n") -match 'mansion-orchestration') "design handoff names mansion encounter choreography: $HandoffName"
   }
@@ -2949,6 +3177,8 @@ try {
   Assert-Condition (@($Design.content.bosses | Where-Object { $_.specId -eq 'TT_SPEC_TIANTING_MAINLINE_BOSS_DEEPENING' -and $_.status -eq 'offline_design_requirements_only' }).Count -eq 1) 'design content includes mainline Boss deepening identity'
   Assert-Condition (@($Design.content.monsters | Where-Object { $_.specId -eq 'TT_SPEC_TIANTING_COMBAT_NUMERIC_UNIT_BASELINE' -and $_.status -eq 'accepted_relative_balance_baseline_offline_only' }).Count -eq 1) 'design monster content includes combat numeric identity'
   Assert-Condition (@($Design.content.bosses | Where-Object { $_.specId -eq 'TT_SPEC_TIANTING_COMBAT_NUMERIC_UNIT_BASELINE' -and $_.status -eq 'accepted_relative_balance_baseline_offline_only' }).Count -eq 1) 'design Boss content includes combat numeric identity'
+  Assert-Condition (@($Design.content.items | Where-Object { $_.specId -eq 'TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT' -and $_.status -eq 'accepted_offline_design' }).Count -eq 1) 'design item content includes artifact graduation identity'
+  Assert-Condition ((@($Design.mvp.mustHave) -join "`n") -match '周天校律盘') 'design MVP includes artifact graduation complete-design boundary'
 
   Assert-Equal $Design.combatNumericUnitBaselineContract.artifact 'combat-baseline/tianting-combat-numeric-unit-baseline-contract.json' 'design combat-numeric artifact'
   Assert-Equal $Design.combatNumericUnitBaselineContract.status 'accepted_relative_balance_baseline_offline_only' 'design combat-numeric status'
@@ -3057,6 +3287,7 @@ try {
   $AcceptanceMatrixText = Get-Content -LiteralPath (Join-Path $PackageRoot 'acceptance-matrix.md') -Raw -Encoding UTF8
   $DecisionRegisterText = Get-Content -LiteralPath (Join-Path $PackageRoot 'decision-register.md') -Raw -Encoding UTF8
   $ValidationReportText = Get-Content -LiteralPath (Join-Path $PackageRoot 'validation-report.md') -Raw -Encoding UTF8
+  $LuaBriefText = Get-Content -LiteralPath (Join-Path $PackageRoot 'handoff/lua-logic-brief.md') -Raw -Encoding UTF8
   Assert-Condition ($MasterReadmeText -match 'implementation/combat-calibration') 'master README links P0 calibration package'
   Assert-Condition ($MasterReadmeText -match 'implementation/combat-calibration/evidence-adoption') 'master README links P0 evidence-adoption package'
   Assert-Condition ($MasterReadmeText -match 'implementation/combat-calibration/external-capture-onboarding') 'master README links P0 external-capture-onboarding package'
@@ -3067,6 +3298,10 @@ try {
   Assert-Condition ($MasterReadmeText -match 'mainline-presentation') 'master README links mainline presentation package'
   Assert-Condition ($MasterReadmeText -match 'mansion-orchestration') 'master README links mansion encounter choreography package'
   Assert-Condition ($MasterReadmeText -match 'object-preallocation') 'master README links object field reservation package'
+  Assert-Condition ($MasterReadmeText -match 'artifact-graduation') 'master README links artifact graduation package'
+  Assert-Condition ($LuaBriefText -match 'artifact-graduation') 'Lua handoff links artifact graduation contract'
+  Assert-Condition ($LuaBriefText -match '单一活动法宝槽') 'Lua handoff preserves artifact single-slot boundary'
+  Assert-Condition ($LuaBriefText -match '不得创建法宝、技能、材料、配方、属性、掉落、资格、收据或 economy-v2 调用') 'Lua handoff preserves artifact zero-economy boundary'
   Assert-Condition ($MasterReadmeText -match 'construction-readiness-ledger.md') 'master README links construction-readiness ledger'
   Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-039') 'acceptance matrix includes P0 calibration row'
   Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-047') 'acceptance matrix includes P0 evidence-adoption row'
@@ -3079,6 +3314,7 @@ try {
   Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-045') 'acceptance matrix includes mainline presentation row'
   Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-046') 'acceptance matrix includes object field reservation row'
   Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-049') 'acceptance matrix includes mansion encounter choreography row'
+  Assert-Condition ($AcceptanceMatrixText -match 'TT-ACC-050') 'acceptance matrix includes artifact graduation row'
   Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-022') 'decision register includes P0 calibration decision'
   Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-027') 'decision register includes P0 evidence-adoption decision'
   Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-028') 'decision register includes P0 external-capture-onboarding decision'
@@ -3089,6 +3325,7 @@ try {
   Assert-Condition ($DecisionRegisterText -match 'TT-AUTH-010') 'decision register includes seven-star reference decision'
   Assert-Condition ($DecisionRegisterText -match 'TT-AUTH-011') 'decision register includes mansion reference decision'
   Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-029') 'decision register includes mansion encounter choreography decision'
+  Assert-Condition ($DecisionRegisterText -match 'TT-DESIGN-030') 'decision register includes artifact graduation decision'
   Assert-Condition ($ConstructionLedgerText -match 'tianting-seven-star-session-reference') 'construction ledger includes seven-star reference fixture'
   Assert-Condition ($ConstructionLedgerText -match 'implementation/combat-calibration/evidence-adoption') 'construction ledger includes P0 evidence-adoption fixture'
   Assert-Condition ($ConstructionLedgerText -match 'implementation/combat-calibration/external-capture-onboarding') 'construction ledger includes P0 external-capture-onboarding fixture'

@@ -93,7 +93,7 @@
         "docs/物编/成长数值与经济裁决包/tables/item-growth.json"
       ],
       "source_file_hashes": [
-        {"path": "docs/物编/19-装备、法宝、宠物与材料物编规格.md", "sha256": "AC46752AE7D4CCADE11E59E0FF6B112A34C9D2D1A8B7BC0661A20537204429D4"},
+        {"path": "docs/物编/19-装备、法宝、宠物与材料物编规格.md", "sha256": "0709721F32B68D481243177E1E49693A72F8A6B5AC67861BA784738D7F6BE61A"},
         {"path": "docs/物编/成长数值与经济裁决包/tables/item-growth.json", "sha256": "A8D0806BCE822482564723DB6F4B574B923D25614A6934778D997BBCB655B3FF"}
       ],
       "permitted_use": [
@@ -200,7 +200,7 @@
         "docs/07-花果山篇副本与掉落设计.md:36-46"
       ],
       "source_file_hashes": [
-        {"path": "docs/07-花果山篇副本与掉落设计.md", "sha256": "57E9FFBB53656B78387D0D6672661B760B26208EAEBFBA6D9B70E78B9AED2E10"}
+        {"path": "docs/07-花果山篇副本与掉落设计.md", "sha256": "B7A5EFF4ED88214C6D55E1981D0F8DEDFF3428E7E8576BDEBDF40EAEB88E1EBB"}
       ],
       "permitted_use": [
         "观察失败循环的既有战斗压力和时间窗口",

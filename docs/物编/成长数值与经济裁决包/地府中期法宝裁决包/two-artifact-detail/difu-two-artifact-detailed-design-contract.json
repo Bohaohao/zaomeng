@@ -1,0 +1,350 @@
+{
+  "contract_id": "DF_SPEC_TWO_MIDGAME_ARTIFACT_DETAIL_V1",
+  "schema_version": 1,
+  "artifact_kind": "offline_difu_two_midgame_artifact_detailed_design_contract",
+  "status": "accepted-offline-design",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "source_contracts": [
+    {
+      "path": "../difu-midgame-artifact-positioning-and-replacement-contract.json",
+      "role": "唯一上位的单槽、旧法宝保留、经济关闭与跨篇保护合同"
+    },
+    {
+      "path": "../../three-chapter-growth-lineage-contract.json",
+      "role": "花果山、地府与天庭的阶段谱系及非门槛边界"
+    },
+    {
+      "path": "../../../地府篇主线遭遇副本规格包/difu-mainline-encounter-contract.json",
+      "role": "接引院、判官殿、白骨秘境、阎罗殿与转轮殿的内容职责"
+    },
+    {
+      "path": "../../../地府篇主线遭遇副本规格包/combat/difu-combat-readability-contract.json",
+      "role": "命册证据→裁决→回正、双通道可读性与1–4人适配语法"
+    }
+  ],
+  "non_production_boundary": {
+    "design_only": true,
+    "actual_artifact_keys": null,
+    "runtime_item_identifiers": null,
+    "asset_ids": null,
+    "stat_values": null,
+    "ability_values": null,
+    "source_profile_mapping": null,
+    "reward_slots": null,
+    "material_keys": null,
+    "material_quantities": null,
+    "recipes": null,
+    "consumption_rules": null,
+    "drop_probability": null,
+    "pity_policy": null,
+    "qualification_snapshot": null,
+    "receipt_schema": null,
+    "actual_receipt_creation": false,
+    "actual_economic_execution": false,
+    "y3_object_allocation": null
+  },
+  "identity_policy": {
+    "artifact_spec_count": 2,
+    "actual_logical_artifact_keys": null,
+    "rule": "本合同只使用 spec-local 法宝身份与展示名；它们不是 ART_DF_* 逻辑物品键，也不是任何运行时、Y3 或持久化标识。"
+  },
+  "chapter_shared_resolution": {
+    "spec_axis_id": "DF_SPEC_ARTIFACT_AXIS_HUIZHENG",
+    "axis_name": "回正／归律",
+    "classification": "chapter_shared_correct_resolution",
+    "owned_by_an_artifact": false,
+    "meaning": "回正是地府所有遭遇在玩家完成证据、裁决与正确行动后得到的共同结果；两件法宝均不能自动触发、替代或独占它。",
+    "forbidden_interpretations": [
+      "把回正做成第三件法宝或两件法宝的免费附加万能技能",
+      "自动提交裁决、自动选择正确目标或跳过反制步骤",
+      "回滚会话、复写进度、撤销死亡、断线或清理结论"
+    ]
+  },
+  "artifacts": [
+    {
+      "artifact_spec_id": "DF_SPEC_ARTIFACT_GUIDING_LANTERN",
+      "display_name": "镇魂引灯",
+      "display_name_status": "accepted-by-user-directed-detailing",
+      "actual_logical_artifact_key": null,
+      "runtime_item_identifier": null,
+      "tier": "medium",
+      "primary_axis_id": "DF_SPEC_ARTIFACT_AXIS_ZHENHUN",
+      "primary_axis_name": "镇魂／守序",
+      "recommended_use_band": "接引院的魂印教学后至阎罗殿前；这是构筑推荐时序，不是等级、入场、拥有或装备门槛。",
+      "source_semantic_anchor": {
+        "content_node_id": "DF_NODE_GUIDING_COURT",
+        "encounter_reference": "接引院：魂印识别",
+        "anchor_kind": "regular_mainline_semantic_anchor",
+        "anchor_reason": "玩家已学习核验魂印、暂存、提交与拒绝伪造归属后，才理解“守住已被证明的正确秩序”并非自动判定。",
+        "actual_source_event": null,
+        "source_profile_mapping": null,
+        "qualification_rule": null,
+        "reward_slot": null,
+        "receipt_schema": null
+      },
+      "gameplay_card": {
+        "semantic_ability_name": "守序引路",
+        "actual_ability_key": null,
+        "player_precondition": "玩家已经亲自核验一条合法魂印、正确通路或待交接的证据关系。",
+        "player_input": "玩家指定这条已验证关系，主动建立一条可见的引灯护持。",
+        "correct_response": "当后续出现压力、遮蔽、错误牵引或干扰时，已证实关系仍保有可读的形态、方向与交接提示；玩家仍需自行处理另一侧压力、继续核验并手动完成回正。",
+        "incorrect_or_missing_precondition_feedback": "若指定的是未验证或错误关系，只给出明确的未证实／矛盾反馈，不替玩家修正目标，也不产生隐藏收益。",
+        "double_channel_feedback": [
+          "灯焰形态与路线投影或魂印轮廓",
+          "独立铃音、语音或UI守序状态文字"
+        ],
+        "forbidden_interpretations": [
+          "自动选择正确魂印、通路、目标或裁决",
+          "无条件减伤、免死、额外复活、强制控制或位移回退",
+          "死后继续处理、清理锁绕过、会话回滚或进度覆写"
+        ],
+        "damage": null,
+        "cooldown": null,
+        "duration": null,
+        "range": null,
+        "target_count": null,
+        "status_effect_values": null
+      },
+      "semantic_growth_route": [
+        {
+          "stage_id": "DF_LANTERN_STAGE_RECOGNIZE",
+          "stage_name": "认印",
+          "meaning": "只在已被玩家证实的魂印或通路上建立引灯；先读对，才谈守住。",
+          "material_theme_refs": ["DF_MATERIAL_THEME_SOUL_SEAL_WICK"]
+        },
+        {
+          "stage_id": "DF_LANTERN_STAGE_STABILIZE",
+          "stage_name": "定序",
+          "meaning": "在多目标、遮蔽或压力中，维持已验证关系的可读与可交接性，不替代另一条关系的判断。",
+          "material_theme_refs": ["DF_MATERIAL_THEME_SOUL_SEAL_WICK", "DF_MATERIAL_THEME_GUIDANCE_THREAD"]
+        },
+        {
+          "stage_id": "DF_LANTERN_STAGE_HANDOFF",
+          "stage_name": "明渡",
+          "meaning": "让已验证关系在正确处理后留下可复盘的交接痕迹；它不把错误处理倒回，也不产生额外结算。",
+          "material_theme_refs": ["DF_MATERIAL_THEME_GUIDANCE_THREAD"]
+        }
+      ],
+      "material_themes": [
+        {
+          "material_theme_id": "DF_MATERIAL_THEME_SOUL_SEAL_WICK",
+          "display_name": "魂印灯芯",
+          "narrative_role": "接引院中已被正确辨识的魂印与引路意象。",
+          "actual_material_key": null,
+          "quantity": null,
+          "drop_source": null,
+          "consumption": null
+        },
+        {
+          "material_theme_id": "DF_MATERIAL_THEME_GUIDANCE_THREAD",
+          "display_name": "引渡丝",
+          "narrative_role": "把已核验归属保持为可追溯交接关系的意象。",
+          "actual_material_key": null,
+          "quantity": null,
+          "drop_source": null,
+          "consumption": null
+        }
+      ],
+      "encounter_affinity": [
+        {
+          "content_node_id": "DF_NODE_WUCHANG_ALLEY",
+          "role": "暂缓一侧压力时，保留另一条已经核验的魂印，避免双目标被静默混同。"
+        },
+        {
+          "content_node_id": "DF_NODE_GHOST_GATE",
+          "role": "守住合法通行关系，使玩家能继续判断拦截、护持或绕行，而不是把冲门当作唯一答案。"
+        },
+        {
+          "content_node_id": "DF_NODE_GUIDING_COURT",
+          "role": "保护已确认归属，为冲突记录留下可校勘时间。"
+        },
+        {
+          "content_node_id": "DF_NODE_YANLUO_HALL",
+          "role": "让已保全的真证据在后续覆盖压力下保持可读；不替玩家完成最终裁决。"
+        },
+        {
+          "content_node_id": "DF_NODE_ZHUANLUN_HALL",
+          "role": "可辅助团队保留已互证的记忆交接，但不能成为任何成员的必带职责。"
+        }
+      ],
+      "lineage_and_upgrade_boundary": {
+        "current_upgrade_recipe": null,
+        "current_upgrade_cost": null,
+        "current_upgrade_receipt": null,
+        "current_migration_rule": null,
+        "rule": "三段仅冻结同一法宝的语义成长，不能据此生成数值升级、物品升阶、材料扣除或经济结算。"
+      }
+    },
+    {
+      "artifact_spec_id": "DF_SPEC_ARTIFACT_KARMIC_MIRROR",
+      "display_name": "勘命业镜",
+      "display_name_status": "accepted-by-user-directed-detailing",
+      "actual_logical_artifact_key": null,
+      "runtime_item_identifier": null,
+      "tier": "medium",
+      "primary_axis_id": "DF_SPEC_ARTIFACT_AXIS_KANMING",
+      "primary_axis_name": "勘命／破妄",
+      "recommended_use_band": "判官殿的命册校勘教学后至阎罗殿前；这是构筑推荐时序，不是等级、入场、拥有或装备门槛。",
+      "source_semantic_anchor": {
+        "content_node_id": "DF_NODE_JUDGE_HALL",
+        "encounter_reference": "判官殿：命册校勘",
+        "anchor_kind": "regular_mainline_semantic_anchor",
+        "anchor_reason": "玩家已亲自找出被改写条目、矛盾因果与反制时机后，才能理解业镜保留的是证据上下文，而不是真相自动答案。",
+        "actual_source_event": null,
+        "source_profile_mapping": null,
+        "qualification_rule": null,
+        "reward_slot": null,
+        "receipt_schema": null
+      },
+      "gameplay_card": {
+        "semantic_ability_name": "回照留痕",
+        "actual_ability_key": null,
+        "player_precondition": "玩家已经亲自完成一次对魂印、命册条目、因果链或行为线索的有效核验。",
+        "player_input": "玩家指定这条已呈现且已证实的证据关系，主动留下可回照的同源痕迹。",
+        "correct_response": "同源目标经历形态变化、记录改写或伪证覆盖后，玩家仍可追溯已证实的来源关系；下一次核验、驳回与回正仍须由玩家手动完成。",
+        "incorrect_or_missing_precondition_feedback": "若没有完成首轮核验或指定矛盾证据，只显示可读的未证实／冲突摘要；不提前暴露所有真伪，也不替代反制。",
+        "double_channel_feedback": [
+          "镜面纹路、同源刻痕或因果连线",
+          "独立回音、判词语音或UI证据摘要"
+        ],
+        "forbidden_interpretations": [
+          "自动鉴定所有真伪、提前显示未验证隐藏答案或自动打断",
+          "自动提交裁决、抹除幻象、改写敌人状态或跳过机制",
+          "会话回滚、完成键覆写、死亡撤销、断线重连豁免或清理锁绕过"
+        ],
+        "damage": null,
+        "cooldown": null,
+        "duration": null,
+        "range": null,
+        "target_count": null,
+        "status_effect_values": null
+      },
+      "semantic_growth_route": [
+        {
+          "stage_id": "DF_MIRROR_STAGE_TRACE",
+          "stage_name": "留痕",
+          "meaning": "保存玩家已经证实的线索来源，而不是替玩家完成第一轮判定。",
+          "material_theme_refs": ["DF_MATERIAL_THEME_KARMIC_MIRROR_GRAIN"]
+        },
+        {
+          "stage_id": "DF_MIRROR_STAGE_DISCERN",
+          "stage_name": "反证",
+          "meaning": "当同源证据被伪证或改写遮蔽时，仍让玩家看见可继续阅读的矛盾关系。",
+          "material_theme_refs": ["DF_MATERIAL_THEME_KARMIC_MIRROR_GRAIN", "DF_MATERIAL_THEME_VERDICT_INK"]
+        },
+        {
+          "stage_id": "DF_MIRROR_STAGE_REVIEW",
+          "stage_name": "正鉴",
+          "meaning": "在玩家亲自完成正确反制后，留下下一步手动回正所需的可读证据摘要和失败复盘线索。",
+          "material_theme_refs": ["DF_MATERIAL_THEME_VERDICT_INK"]
+        }
+      ],
+      "material_themes": [
+        {
+          "material_theme_id": "DF_MATERIAL_THEME_KARMIC_MIRROR_GRAIN",
+          "display_name": "业镜纹",
+          "narrative_role": "命册改写后仍可追溯同源因果的镜面刻痕意象。",
+          "actual_material_key": null,
+          "quantity": null,
+          "drop_source": null,
+          "consumption": null
+        },
+        {
+          "material_theme_id": "DF_MATERIAL_THEME_VERDICT_INK",
+          "display_name": "判词朱墨",
+          "narrative_role": "把已验证因果与可驳回伪证清楚记入复核语境的意象。",
+          "actual_material_key": null,
+          "quantity": null,
+          "drop_source": null,
+          "consumption": null
+        }
+      ],
+      "encounter_affinity": [
+        {
+          "content_node_id": "DF_NODE_JUDGE_HALL",
+          "role": "保留被篡改条目与真实因果链之间已证实的关系，供玩家继续校勘与手动反证。"
+        },
+        {
+          "content_node_id": "DF_SIDE_BAIGU_SECRET_REALM",
+          "role": "作为高匹配单人检验场：同源魂印跨形态持续存在，但玩家仍需自己区分遮蔽、诱导与暴露。"
+        },
+        {
+          "content_node_id": "DF_NODE_YANLUO_HALL",
+          "role": "命册再改写时，让已保全的证据继续作为反证依据；不自动完成最终归档。"
+        },
+        {
+          "content_node_id": "DF_NODE_ZHUANLUN_HALL",
+          "role": "可帮助成员显式交接已核验的记忆链，但不能替代互证，也不能成为团队准入或职责硬锁。"
+        }
+      ],
+      "lineage_and_upgrade_boundary": {
+        "current_upgrade_recipe": null,
+        "current_upgrade_cost": null,
+        "current_upgrade_receipt": null,
+        "current_migration_rule": null,
+        "rule": "三段仅冻结同一法宝的语义成长，不能据此生成数值升级、物品升阶、材料扣除或经济结算。"
+      }
+    }
+  ],
+  "cross_chapter_and_session_guards": {
+    "active_artifact_slot_count": 1,
+    "inactive_artifact_default_effect": false,
+    "challenge_local_switch_allowed": false,
+    "death_disconnect_or_cleanup_local_switch_allowed": false,
+    "difu_entry_requires_artifact": false,
+    "yanluo_completion_requires_artifact": false,
+    "zhuanlun_entry_requires_artifact": false,
+    "tianting_entry_requires_artifact": false,
+    "tianting_content_requires_artifact": false,
+    "protected_progress_key": "DF_PROGRESS_YANLUO_HALL_CLEARED",
+    "reads_or_writes_protected_progress_key": false,
+    "rule": "两件法宝不能成为进度、会话、资格、清理、奖励或跨篇交接的写入者、读取依据或替代证明。"
+  },
+  "optional_content_boundary": {
+    "baigu_secret_realm_role": "勘命业镜的可选单人机制检验场，不是基础取得、升级、材料、资格或配方的唯一来源。",
+    "zhuanlun_hall_role": "两件法宝的可选团队协作检验场，不是基础取得、升级、材料、资格或配方的唯一来源。",
+    "yanluo_hall_role": "两件法宝的常规主线高潮检验场，但其成功事件不能直接充当法宝授予、升级或迁移依据。"
+  },
+  "acceptance_matrix": [
+    {
+      "acceptance_id": "DF-ART-DETAIL-001",
+      "rule": "法宝规格身份恰好为镇魂引灯与勘命业镜两件，且二者的真实逻辑物品键与运行时标识保持 null。"
+    },
+    {
+      "acceptance_id": "DF-ART-DETAIL-002",
+      "rule": "镇魂引灯唯一主轴为镇魂／守序；勘命业镜唯一主轴为勘命／破妄；回正／归律是章节共享结果而不归属任何法宝。"
+    },
+    {
+      "acceptance_id": "DF-ART-DETAIL-003",
+      "rule": "两件均只锚定常规主线的接引院或判官殿语义节点；真实授予事件、资格、来源档案、奖励槽与收据均保持 null。"
+    },
+    {
+      "acceptance_id": "DF-ART-DETAIL-004",
+      "rule": "两件都先要求玩家完成亲自核验；任何未证实、错误或缺失前置都不得被法宝自动判真、自动回正或静默收益。"
+    },
+    {
+      "acceptance_id": "DF-ART-DETAIL-005",
+      "rule": "白骨秘境和转轮殿只能检验横向玩法，不能成为两件法宝的唯一取得、升级、材料、资格、配方或主线来源。"
+    },
+    {
+      "acceptance_id": "DF-ART-DETAIL-006",
+      "rule": "展示名、材料主题和三段语义成长不构成真实材料、配方、消耗、掉落、数值、技能秒数、经济结算或迁移授权。"
+    },
+    {
+      "acceptance_id": "DF-ART-DETAIL-007",
+      "rule": "两件始终共享唯一活动槽，不能绕过挑战锁、死亡、断线、清理、阎罗完成键或天庭交接证明。"
+    }
+  ],
+  "deferred": {
+    "absolute_combat_values": null,
+    "ability_cooldowns_and_durations": null,
+    "actual_materials_and_quantities": null,
+    "actual_grant_and_upgrade_events": null,
+    "source_profiles_and_reward_slots": null,
+    "qualification_and_receipts": null,
+    "economy_and_pity": null,
+    "migration_recipe_and_cost": null,
+    "art_and_y3_object_bindings": null
+  }
+}

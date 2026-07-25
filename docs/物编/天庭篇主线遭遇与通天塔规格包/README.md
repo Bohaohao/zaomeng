@@ -8,6 +8,7 @@ offline-design-spec / content-expanded / authority-contract-specified / authorit
 
 - 天庭主线：临时天庭 → 南天门 → 天宫道 → 天王殿外缘 → 周天观台 → 凌霄外庭常规收束。
 - 单人本：固定七星系列，天枢至瑶光各有机制、残片、星君称号和展示方向。
+- 毕业法宝：既有 `TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT` 的正式显示名为**周天校律盘**，已补齐为高阶、可选、单槽的七曜构筑收束；五段路径、三形态回应、来源证据、无障碍和失败边界均可离线验收，实际资产、数值、材料与配方仍为空，四圣噩梦不能锁死基础单人路线。
 - 团队本：二十八星宿按十二时辰四象轮换；普通教学七宿，噩梦由四圣兽与七宿双向加成构成版本终局。
 - 长期复用：七星与二十八星宿进入唯一全局通天塔的小 Boss 内容池；四十层、八段五拍、每五层 Boss 槽与每十层大 Boss 是待上位全局塔合同采纳的天庭侧离线候选。
 - 权威边界：入章、三段逻辑进度、主线终局、七星/星宿会话、时辰快照和噩梦逐人资格均已有纯离线合同语义。
@@ -43,7 +44,7 @@ offline-design-spec / content-expanded / authority-contract-specified / authorit
 | 主线终局 | 凌霄外庭·裂律观台使用私有 1–4 人会话；入场成员逐人校验已入章，只有权威确认的有效参与者获得常规完成。 | 真实实例、队列、地图、脚本与任何进度发放。 |
 | 七星单人本 | 天枢、天璇、天玑、天权、玉衡、开阳、瑶光；每星对应残片、星君称号和独立机制，并已纳入相对战斗基线。 | 实际副本、掉落、Boss 原始属性、对象与技能。 |
 | 七星称号 | 同一种残片累计十枚合成对应星君称号；集齐七称号自动解锁名称待定的集合称号。 | 数值、属性作用域、持久化与真实 title ID。 |
-| 毕业法宝 | 七种残片均齐备，加上珍贵材料候选，合成名称待定的天庭毕业法宝。 | 最终名称、配方数量、属性、是否强制团本材料。 |
+| 毕业法宝 | 周天校律盘以七种残片类别、天律校印与三种互斥校律回应形成高阶、可选、单槽的毕业构筑；基础路径必须保留单人完整可达来源，四圣噩梦只可作为四象覆环等可选展示／叙事精进。 | 配方数量、属性、实际材料／收据与是否存在后续迁移。 |
 | 七星与团队会话 | `TT_SPEC_SESSION_SEVEN_STAR`、`TT_SPEC_SESSION_MANSION_NORMAL` 与 `TT_SPEC_SESSION_MANSION_NIGHTMARE` 固定身份、版本、成员快照、失败、清理与幂等语义；死亡、超时、断线或生命周期失效进入清理，确认前不可重入。 | 真实会话服务、锁、复活、断线恢复或状态机实现。 |
 | 二十八星宿 | 四象各七宿；`TT_SPEC_TIME_BASIS_ASIA_SHANGHAI_SHICHEN` 按服务器 `Asia/Shanghai` 时辰四槽循环三次，首次成功创建会话时冻结不可变轮换快照。 | 权威时间服务、时辰边界计算、快照存储与实例实现。 |
 | 团本普通/噩梦 | 普通和噩梦均逐人要求天庭常规主线完成；噩梦还逐人验证 `TT_SPEC_MANSION_NIGHTMARE_CREDENTIAL` 的同方位不透明资格，且普通完成、凭证和本次噩梦快照三方位必须相同。 | 钥匙形态、消耗、奖励、Buff 数值和收据。 |
@@ -87,6 +88,8 @@ offline-design-spec / content-expanded / authority-contract-specified / authorit
 | [economy-v2 天庭权威收据输入合同](../../../implementation/economy-v2-authoritative-settlement/contract/tianting-authority-receipt-input-contract.json) | 天庭完成/会话事实到未来 economy-v2 收据输入候选的唯一交接件；字段映射和资格边界已冻结，所有经济值仍为 `null/deferred`。 |
 | [mainline-route.md](mainline-route.md) | 主线因果弧、公共遭遇和副本职责关系。 |
 | [instances/七星单人本规格.md](instances/七星单人本规格.md) | 七个单人试炼、称号、毕业法宝和学习闭环。 |
+| [天庭毕业法宝定位与谱系包](artifact-graduation/README.md) | 周天校律盘的单槽定位、七曜校律语义、材料／称号防双花、单人基础路径与前序保留边界。 |
+| [天庭毕业法宝完整设计子包](artifact-graduation/complete-design/README.md) | 周天校律盘的五段路径、三形态玩家回应、来源证据、四象覆环、跨职业兼容、可读性和失败优先级；不创建物品、数值、经济或运行时状态。 |
 | [instances/二十八星宿团队本规格.md](instances/二十八星宿团队本规格.md) | 十二时辰轮换、二十八星官签名动作、普通/噩梦与四圣称号。 |
 | [mansion-orchestration/二十八星官与四圣机制编排](mansion-orchestration/README.md) | 普通严格四段 `2+2+2+1`、28 星官读线/提交/反制/恢复、权威成员元组降级、普通/噩梦只读终局候选、四圣固定七链与不可跳段/倒退的离线语义编排；不生成状态机。 |
 | [combat/天庭战斗机制与可读性规格.md](combat/天庭战斗机制与可读性规格.md) | 主线、七星、普通星宿与四圣噩梦的预警、决策、反制、复盘、1–4 人适配和下游施工信息需求。 |

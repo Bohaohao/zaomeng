@@ -42,7 +42,7 @@
 - `{"name":"天庭章节进度合同","category":"progression","designIntent":"以入章、周天观台开启和常规主线完成三段角色级逻辑进度，建立不消费地府完成键的受信任章节边界。","requiredData":["DF_E_YANLUO_HALL 交接证明","Lv41 权威校验","三个唯一生产者","完成收据","(actor_id,event_id) 幂等","生命周期与清理边界"],"runtimeBehavior":"offline_design；仅定义 TT_SPEC 逻辑记录与权威接口，所有实际进度键、持久化和提供方保持未接入。","owner":"authority/tianting-progression-and-instance-authority-contract.json"}`
 - `{"name":"七星单人本与称号收藏","category":"instance","designIntent":"用七种不同的空间规则形成可重复单人精通与收藏闭环。","requiredData":["周天观台逻辑进度","单人会话身份","失败与匹配清理确认","资源表绑定","称号作用域","收据与持久化"],"runtimeBehavior":"offline_design；七星仅在周天观台逻辑记录后由权威单人会话准入，十枚同星配方倍率和集合称号关系已定，数值与资产未定。","owner":"后续副本、物编、战斗、经济与权威会话合同"}`
 - `{"name":"二十八星宿轮换团队本","category":"raid","designIntent":"用四象共享语法和二十八个签名动作，建立普通教学到噩梦综合考验的团队循环。","requiredData":["Asia/Shanghai 权威时间基准","冻结 rotation_snapshot","逐人主线完成校验","成员锁与清理","逐人夜巡资格","奖励收据"],"runtimeBehavior":"offline_design；轮换表、星官全名、机制方向、双向加成、时区语义与逐人资格已定，真实时间/会话/经济运行时未接入。","owner":"authority/tianting-progression-and-instance-authority-contract.json"}`
-- `{"name":"四圣称号与毕业法宝候选","category":"long_term","designIntent":"让七星收藏、四象高端挑战和法宝追求互相看得见，但不强制将单人毕业锁死为团本门票。","requiredData":["称号持久化","效果叠加规则","配方绑定","属性","经济周期"],"runtimeBehavior":"offline_design；名称待定部分、数值和资源均未创建。","owner":"后续成长、战斗、经济与物编复审"}`
+- `{"name":"四圣称号与毕业法宝候选","category":"long_term","designIntent":"让七星收藏、四象高端挑战和法宝追求互相看得见，但不强制将单人毕业锁死为团本门票。","requiredData":["称号持久化","效果叠加规则","配方绑定","属性","经济周期"],"runtimeBehavior":"offline_design；七曜集合称号名称待定，周天校律盘正式显示名已冻结；数值和资源均未创建。","owner":"后续成长、战斗、经济与物编复审"}`
 - `{"name":"通天塔天庭内容复用","category":"long_term","designIntent":"提出把七星和星宿编入唯一全局塔候选的五层 Boss 槽，并用四个十层大 Boss 形成四段可读阶段总结。","requiredData":["上位全局塔采纳","候选四十层/八段逻辑编排","第 1–7 段续段与第 8 段关闭规则","候选每五层 Boss 槽","四个无数值大 Boss 身份","赛季快照语义","奖励与记录边界"],"runtimeBehavior":"offline_design_candidate_pending_global_tower_adoption；可提出继承第五拍为内容槽但不改状态或转移；不创建 tower_mode、地图、实例、记录、奖励表或经济输入。","owner":"tower-economy/mansion-economy-global-tower-run-season-contract.json"}`
 - `{"name":"天庭战斗机制与可读性","category":"combat","designIntent":"把主线、七星、普通星宿与四圣噩梦统一成可读的预警、玩家决策、可见反制和可复盘失败，并确保一至四名成员都有完成路径。","requiredData":["战斗阶段权威状态","目标/路线/连线可见反馈","场地职责","双通道预警","成员快照","失败与清理边界"],"runtimeBehavior":"offline_design；只定义机制语言与验收，不创建技能、单位、伤害、计时、AI、同步、进度或结算。","owner":"combat/tianting-combat-readability-contract.json"}`
 - `{"name":"天庭战斗数值与单位基线","category":"combat_balance","designIntent":"以四职业 Lv41/45/50/55/60 裸装包络和八个无量纲标尺，为已登记小怪、精英、五组主线 Boss、七星、二十八星官和四圣建立可复算的相对压力与暴露基线。","requiredData":["四职业裸装公式","H0/A0/M0/I0/R0/B0/O0/S0","既有 TT_SPEC 身份映射","权威确认的 active 成员数量","绝对值标定门禁证据"],"runtimeBehavior":"accepted_relative_balance_baseline_offline_only；不写入 hp_max、攻击、双防、秒数、对象、Lua、会话、资格、经济或塔值；绝对投影持续为 null。","owner":"combat-baseline/tianting-combat-numeric-unit-baseline-contract.json"}`
@@ -164,6 +164,12 @@
                       "specId":  "TT_SPEC_TIANTING_REWARD_CANDIDATES",
                       "status":  "offline_design",
                       "role":  "夜巡钥、方位宿印、星官遗契、四圣铸核与圣兽遗珍仅是候选类别。",
+                      "runtimeKey":  null
+                  },
+                  {
+                      "specId":  "TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT",
+                      "status":  "accepted_offline_design",
+                      "role":  "周天校律盘是高阶可选单槽构筑收束；定序/辨序/开序只分别回应 stabilize/discern/open 的正确反制个人窗口，错配必须失效且不出回应卡；物品键、材料、配方、数值、收据和实际经济结果均保持 deferred。",
                       "runtimeKey":  null
                   }
               ],
@@ -296,12 +302,13 @@
                      "Boss 轮廓、前摇、特效层级和场地交互的无 ID 资产需求蓝图。",
                      "受信任 Node/Fengari 离线基座对入章、观台、凌霄逐人完成、当前生命周期、回放字段和清理身份的回归。",
                      "待上位全局塔采纳的天庭侧四十层、八段五拍、每五层 Boss 槽、四个十层大 Boss 创意身份与第八段禁止继续交接的离线候选。",
+                     "周天校律盘的高阶可选单槽定位、五段玩家路径、定序／辨序／开序与 stabilize/discern/open 的一对一个人回应、前序法宝保留、单人基础毕业保护、来源证据与失败优先级。",
                      "经济候选、通天塔复用和运行时施工的严格隔离。"
                  ],
     "shouldHave":  [
                        "七星/四圣称号的作用域、叠加、展示位和持久化裁决。",
-                       "天庭毕业法宝名称、配方、珍贵材料来源与属性裁决。",
-                       "七星/四圣称号的 UI 展示资产、天庭毕业法宝名称、配方、珍贵材料来源与属性裁决。"
+                       "周天校律盘的实际材料键、数量、配方、扣除、珍贵材料结算来源与属性裁决。",
+                       "七星/四圣称号的 UI 展示资产、周天校律盘的实际配方、珍贵材料收据、属性与对象绑定裁决。"
                    ],
     "later":  [
                   "候选布局之外的真实地图、对象、战斗数值、地图根 Lua、UI、存档、多人与性能施工。",
@@ -322,13 +329,13 @@
                           "handoff/terrain-layout-brief.json、terrain-layout/layout.json、scale-alignment/、mansion-orchestration/、enemy-ecology/、mainline-boss/、implementation/tianting-y3-construction-preflight 与 implementation/tianting-surface-construction-manifest：提供公共路线、五组主线首领级遭遇、七星星盘、四象阵台和四圣兽场地的读线职责；640×416 图解与 224×80/96×64 白盒口径均只供 dry-run，先经真实项目读取与结构预检，不含实际地图写入。"
                       ],
     "luaLogic":  [
-                     "authority/tianting-progression-and-instance-authority-contract.json、主线纵切离线包、七星/星宿会话离线参考包、mansion-orchestration/、implementation/tianting-y3-construction-preflight、combat/、combat-baseline/、implementation/combat-calibration、enemy-ecology/、mainline-boss/ 与 handoff/lua-logic-brief.md：明确权威进度、当前生命周期、字段漂移、会话/清理、注入时辰、表现职责、P0 绝对字段门禁和真实 Y3 根预检；参考包只作进程内测试，不含 Y3 地图根 Lua 或绝对属性写入。"
+                     "authority/tianting-progression-and-instance-authority-contract.json、主线纵切离线包、七星/星宿会话离线参考包、mansion-orchestration/、artifact-graduation/complete-design/、implementation/tianting-y3-construction-preflight、combat/、combat-baseline/、implementation/combat-calibration、enemy-ecology/、mainline-boss/ 与 handoff/lua-logic-brief.md：明确权威进度、当前生命周期、字段漂移、会话/清理、注入时辰、表现职责、周天校律盘的单槽／挑战锁／形态—标签一对一回应窗口／错配失效／零经济边界、P0 绝对字段门禁和真实 Y3 根预检；参考包只作进程内测试，不含 Y3 地图根 Lua 或绝对属性写入。"
                  ],
     "uiPipeline":  [
                        "handoff/ui-brief.md、ui/tianting-ui-accessibility-information-contract.json、mansion-orchestration/、mainline-presentation/ 与 implementation/tianting-surface-construction-manifest：描述轮换、队伍状态、失败复盘、称号收藏、双通道预警、星宿机制编排、五组主线表现职责、权威展示边界和未来 UI 根读取项；不含 UI 资产、节点或运行时命令写入。"
                    ],
     "reviewPanel":  [
-                        "handoff/review-brief.md、mansion-orchestration/：复审用户固定内容、跨篇禁令、经济隔离、时间/赛季快照、战斗可读性、相对数值基线、P0 绝对标定协议、敌人生态、主线 Boss 深化、二十八星官/四圣机制编排、七星/星宿会话离线回归、主线叙事表现、白盒口径、纵切回归、Y3 结构预检、表面发现清单与施工门禁。"
+                        "handoff/review-brief.md、mansion-orchestration/、artifact-graduation/complete-design/：复审用户固定内容、跨篇禁令、经济隔离、时间/赛季快照、战斗可读性、相对数值基线、P0 绝对标定协议、敌人生态、主线 Boss 深化、二十八星官/四圣机制编排、周天校律盘的单槽／来源证据／防双花／形态—标签一对一回应窗口、七星/星宿会话离线回归、主线叙事表现、白盒口径、纵切回归、Y3 结构预检、表面发现清单与施工门禁。"
                     ]
 }
 ```

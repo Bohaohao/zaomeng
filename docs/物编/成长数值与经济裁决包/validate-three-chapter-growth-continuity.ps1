@@ -158,13 +158,58 @@ function Get-ForbiddenPropertyPaths {
     return $paths
 }
 
+function Decode-Utf8Base64 {
+    param(
+        [Parameter(Mandatory = $true)][string]$Value
+    )
+
+    return [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($Value))
+}
+
 $packageRoot = Split-Path -Parent $PSCommandPath
 $v2Path = Join-Path $packageRoot 'tables/economy-v2-resource-table.json'
 $v3Path = Join-Path $packageRoot 'tables/economy-v3-resource-table.json'
 $lineagePath = Join-Path $packageRoot 'three-chapter-growth-lineage-contract.json'
+$difuArtifactDirectory = Decode-Utf8Base64 '5Zyw5bqc5Lit5pyf5rOV5a6d6KOB5Yaz5YyF'
+$difuArtifactFileName = 'difu-midgame-artifact-positioning-and-replacement-contract.json'
+$difuArtifactRelativePath = "$difuArtifactDirectory/$difuArtifactFileName"
+$difuArtifactPath = Join-Path (Join-Path $packageRoot $difuArtifactDirectory) $difuArtifactFileName
+$difuArtifactDetailDirectory = Join-Path $difuArtifactDirectory 'two-artifact-detail'
+$difuArtifactDetailFileName = 'difu-two-artifact-detailed-design-contract.json'
+$difuArtifactDetailRelativePath = "$difuArtifactDirectory/two-artifact-detail/$difuArtifactDetailFileName"
+$difuArtifactDetailPath = Join-Path (Join-Path $packageRoot $difuArtifactDetailDirectory) $difuArtifactDetailFileName
+$tiantingArtifactDirectory = Decode-Utf8Base64 '5aSp5bqt56+H5Li757q/6YGt6YGH5LiO6YCa5aSp5aGU6KeE5qC85YyF'
+$tiantingArtifactFileName = 'tianting-endgame-artifact-positioning-and-lineage-contract.json'
+$tiantingArtifactRelativePath = "../$tiantingArtifactDirectory/artifact-graduation/$tiantingArtifactFileName"
+$tiantingArtifactPath = Join-Path (Join-Path (Join-Path (Split-Path -Parent $packageRoot) $tiantingArtifactDirectory) 'artifact-graduation') $tiantingArtifactFileName
+$tiantingArtifactCompleteDesignFileName = 'tianting-graduation-artifact-complete-design-contract.json'
+$tiantingArtifactCompleteDesignRelativePath = "../$tiantingArtifactDirectory/artifact-graduation/complete-design/$tiantingArtifactCompleteDesignFileName"
+$tiantingArtifactCompleteDesignPath = Join-Path (Join-Path (Join-Path (Join-Path (Split-Path -Parent $packageRoot) $tiantingArtifactDirectory) 'artifact-graduation') 'complete-design') $tiantingArtifactCompleteDesignFileName
+$threeChapterArtifactDetailDirectory = Decode-Utf8Base64 '5LiJ56+H5rOV5a6d6K+m57uG6K6+6K6h5LiO5p2Q5paZ5p2l5rqQ5YyF'
+$threeChapterArtifactDetailFileName = 'three-chapter-artifact-detail-and-material-source-contract.json'
+$threeChapterArtifactDetailRelativePath = "$threeChapterArtifactDetailDirectory/$threeChapterArtifactDetailFileName"
+$threeChapterArtifactDetailPath = Join-Path (Join-Path $packageRoot $threeChapterArtifactDetailDirectory) $threeChapterArtifactDetailFileName
+$dfArtifactCombatGrammar = Decode-Utf8Base64 '5ZG95YaM6K+B5o2uIOKGkiDoo4HlhrMg4oaSIOWbnuatow=='
+$dfArtifactAtomicSwitchToken = Decode-Utf8Base64 '5Y6f5a2Q'
+$dfArtifactChallengeLockToken = Decode-Utf8Base64 '5oyR5oiY6ZSB'
+$dfArtifactPrimaryAxisToken = Decode-Utf8Base64 '5LiA5Liq5Li75Yqf6IO96L20'
+$dfArtifactNoLegacyToken = Decode-Utf8Base64 '5pyq5oul5pyJ5Lu75L2V6Iqx5p6c5bGx5rOV5a6d'
+$dfArtifactDetailLanternName = Decode-Utf8Base64 '6ZWH6a2C5byV54Gv'
+$dfArtifactDetailMirrorName = Decode-Utf8Base64 '5YuY5ZG95Lia6ZWc'
+$expectedDfArtifactForbiddenSources = @(
+    (Decode-Utf8Base64 '6Iqx5p6c5bGx6ZqQ6JeP5pys6aaW6YCa'),
+    (Decode-Utf8Base64 '6Iqx5p6c5bGx56iA5pyJ5o6J6JC9'),
+    (Decode-Utf8Base64 '55m96aqo56eY5aKD'),
+    (Decode-Utf8Base64 '6L2s6L2u5q6/5Zui6Zif5a6M5oiQ'),
+    (Decode-Utf8Base64 '56iA5pyJ5aWW5Yqx'),
+    (Decode-Utf8Base64 '6YeN5aSN5oyR5oiY'),
+    (Decode-Utf8Base64 '6YCa5aSp5aGU')
+)
+$dfArtifactSilentLegacyDestruction = Decode-Utf8Base64 '6Ieq5Yqo5raI6ICX44CB5Yig6Zmk44CB6ZmN57qn5oiW5peg6K6w5b2V6L2s5YyW6Iqx5p6c5bGx5rOV5a6d'
+$tiantingArtifactDisplayName = Decode-Utf8Base64 '5ZGo5aSp5qCh5b6L55uY'
 $expectedV2Hash = '3288BD9CD1BFBB516DB4808EF002C45FECCF5F1C7F4C80499DB81E31B2F84EAE'
 
-foreach ($path in @($v2Path, $v3Path, $lineagePath)) {
+foreach ($path in @($v2Path, $v3Path, $lineagePath, $difuArtifactPath, $difuArtifactDetailPath, $tiantingArtifactPath, $tiantingArtifactCompleteDesignPath, $threeChapterArtifactDetailPath)) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
         Add-Failure 'missing_contract_file' "Required file is missing: $path"
     }
@@ -177,8 +222,13 @@ if ($script:Failures.Count -eq 0) {
     $v2 = Get-Json $v2Path
     $v3 = Get-Json $v3Path
     $lineage = Get-Json $lineagePath
+    $difuArtifact = Get-Json $difuArtifactPath
+    $difuArtifactDetail = Get-Json $difuArtifactDetailPath
+    $tiantingArtifact = Get-Json $tiantingArtifactPath
+    $tiantingArtifactCompleteDesign = Get-Json $tiantingArtifactCompleteDesignPath
+    $threeChapterArtifactDetail = Get-Json $threeChapterArtifactDetailPath
 
-    if ($null -ne $v2 -and $null -ne $v3 -and $null -ne $lineage) {
+    if ($null -ne $v2 -and $null -ne $v3 -and $null -ne $lineage -and $null -ne $difuArtifact -and $null -ne $difuArtifactDetail -and $null -ne $tiantingArtifact -and $null -ne $tiantingArtifactCompleteDesign -and $null -ne $threeChapterArtifactDetail) {
         Assert-Equal ([string]$v2.resource_table_version) 'economy-v2' 'invalid_economy_v2_version' 'The inherited table version is invalid.'
         Assert-Equal ([string]$v3.table) 'economy-v3-resource-table-overlay' 'invalid_economy_v3_table' 'The v3 document must stay an overlay, not a copied base table.'
         Assert-Equal ([string]$v3.resource_table_version) 'economy-v3' 'invalid_economy_v3_version' 'The overlay version is invalid.'
@@ -534,6 +584,14 @@ if ($script:Failures.Count -eq 0) {
         Assert-Equal ([int]$matrix.artifact_slot_contract.active_artifact_slot_count) 1 'invalid_lineage_artifact_slot_count' 'v1 must have one active artifact slot.'
         Assert-Equal @($matrix.artifact_slot_contract.mainline_required_artifact_keys).Count 0 'invalid_lineage_artifact_mainline_requirement' 'No artifact may be mainline-required.'
         Assert-Equal @($matrix.artifact_slot_contract.entry_gate_required_artifact_keys).Count 0 'invalid_lineage_artifact_entry_requirement' 'No artifact may be an entry gate.'
+        $threeChapterArtifactDetailRef = $matrix.artifact_detail_and_material_source_contract
+        Assert-Equal ([string]$threeChapterArtifactDetailRef.contract_id) 'THREE_CHAPTER_ARTIFACT_DETAIL_AND_MATERIAL_SOURCE_V1' 'invalid_lineage_three_chapter_artifact_detail_id' 'The lineage must reference the canonical three-chapter artifact detail contract.'
+        Assert-Equal ([string]$threeChapterArtifactDetailRef.path) $threeChapterArtifactDetailRelativePath 'invalid_lineage_three_chapter_artifact_detail_path' 'The three-chapter artifact detail path is invalid.'
+        Assert-Equal ([string]$threeChapterArtifactDetailRef.status) 'accepted-offline-design' 'invalid_lineage_three_chapter_artifact_detail_status' 'The three-chapter artifact detail contract must remain offline-only.'
+        Assert-Equal ([int]$threeChapterArtifactDetailRef.artifact_spec_count) 5 'invalid_lineage_three_chapter_artifact_detail_count' 'The three-chapter artifact detail contract must retain exactly five artifact specs.'
+        foreach ($propertyName in @('actual_item_assets', 'actual_material_keys', 'material_quantities', 'recipes', 'combat_stats', 'source_profiles', 'receipts')) {
+            Assert-Null $threeChapterArtifactDetailRef.$propertyName 'invalid_lineage_three_chapter_artifact_detail_deferred' "The three-chapter artifact detail reference cannot allocate '$propertyName'."
+        }
         $stages = @($matrix.stages)
         $hgPublic = Get-SingleByProperty -Rows $stages -Property 'stage_id' -Value 'HG_PUBLIC_BASELINE' -Code 'invalid_lineage_hg_public_stage'
         $hgRareTrinket = Get-SingleByProperty -Rows $stages -Property 'stage_id' -Value 'HG_PUBLIC_RARE_TRINKET' -Code 'invalid_lineage_hg_rare_trinket_stage'
@@ -565,6 +623,65 @@ if ($script:Failures.Count -eq 0) {
                 Assert-Null $artifact.upgrade_recipe 'invalid_lineage_hg_artifact_recipe' "Artifact '$($artifact.logical_artifact_key)' cannot receive an invented upgrade recipe."
             }
         }
+        if ($null -ne $dfStage) {
+            Assert-Equal ([string]$dfStage.replacement_or_upgrade_rule) 'delegated_to_DF_SPEC_MIDGAME_ARTIFACT_POSITIONING_REPLACEMENT_V1' 'invalid_lineage_df_artifact_replacement_delegate' 'Difu replacement behavior must remain delegated to the dedicated offline contract.'
+            $dfPositioning = $dfStage.artifact_positioning_contract
+            Assert-Equal ([string]$dfPositioning.contract_id) 'DF_SPEC_MIDGAME_ARTIFACT_POSITIONING_REPLACEMENT_V1' 'invalid_lineage_df_artifact_contract_id' 'Difu must reference the dedicated artifact positioning contract.'
+            Assert-Equal ([string]$dfPositioning.path) $difuArtifactRelativePath 'invalid_lineage_df_artifact_contract_path' 'Difu artifact positioning path is invalid.'
+            Assert-Equal ([string]$dfPositioning.status) 'accepted-offline-design' 'invalid_lineage_df_artifact_contract_status' 'Difu artifact positioning contract must remain offline-only.'
+            Assert-Equal ([string]$dfPositioning.tier) 'medium' 'invalid_lineage_df_artifact_tier' 'Difu artifact stage must be medium tier.'
+            Assert-Null $dfPositioning.actual_logical_artifact_keys 'invalid_lineage_df_artifact_asset_keys' 'Difu positioning cannot allocate actual artifact keys.'
+            Assert-Null $dfPositioning.source_profile_mapping 'invalid_lineage_df_artifact_profile' 'Difu positioning cannot allocate source profiles.'
+            Assert-Null $dfPositioning.stats 'invalid_lineage_df_artifact_stats' 'Difu positioning cannot allocate stats.'
+            Assert-Null $dfPositioning.recipes 'invalid_lineage_df_artifact_recipes' 'Difu positioning cannot allocate recipes.'
+            Assert-Null $dfPositioning.consumption_rules 'invalid_lineage_df_artifact_consumption' 'Difu positioning cannot allocate consumption rules.'
+
+            $dfDetailRef = $dfStage.artifact_detailed_design_contract
+            Assert-Equal ([string]$dfDetailRef.contract_id) 'DF_SPEC_TWO_MIDGAME_ARTIFACT_DETAIL_V1' 'invalid_lineage_df_artifact_detail_contract_id' 'Difu must reference the detailed two-artifact contract.'
+            Assert-Equal ([string]$dfDetailRef.path) $difuArtifactDetailRelativePath 'invalid_lineage_df_artifact_detail_contract_path' 'Difu detailed artifact path is invalid.'
+            Assert-Equal ([string]$dfDetailRef.status) 'accepted-offline-design' 'invalid_lineage_df_artifact_detail_status' 'Difu detailed artifact contract must remain offline-only.'
+            Assert-Equal ([int]$dfDetailRef.artifact_spec_count) 2 'invalid_lineage_df_artifact_detail_count' 'Difu detailed artifact contract must retain exactly two specs.'
+            Assert-StringSetEqual -Actual @($dfDetailRef.artifact_spec_ids | ForEach-Object { [string]$_ }) -Expected @('DF_SPEC_ARTIFACT_GUIDING_LANTERN', 'DF_SPEC_ARTIFACT_KARMIC_MIRROR') -Code 'invalid_lineage_df_artifact_detail_ids' -Message 'Difu detailed artifact spec IDs are invalid.'
+            foreach ($propertyName in @('actual_logical_artifact_keys', 'source_profile_mapping', 'stats', 'recipes', 'consumption_rules')) {
+                Assert-Null $dfDetailRef.$propertyName 'invalid_lineage_df_artifact_detail_deferred' "Difu detailed artifact reference cannot allocate '$propertyName'."
+            }
+        }
+        if ($null -ne $ttStage) {
+            Assert-Equal ([string]$ttStage.replacement_or_upgrade_rule) 'delegated_to_TT_SPEC_ENDGAME_ARTIFACT_POSITIONING_AND_LINEAGE_V1' 'invalid_lineage_tt_artifact_replacement_delegate' 'Tianting replacement behavior must remain delegated to the dedicated offline contract.'
+            $ttPositioning = $ttStage.artifact_positioning_contract
+            Assert-Equal ([string]$ttPositioning.contract_id) 'TT_SPEC_ENDGAME_ARTIFACT_POSITIONING_AND_LINEAGE_V1' 'invalid_lineage_tt_artifact_contract_id' 'Tianting must reference the dedicated artifact positioning contract.'
+            Assert-Equal ([string]$ttPositioning.path) $tiantingArtifactRelativePath 'invalid_lineage_tt_artifact_contract_path' 'Tianting artifact positioning path is invalid.'
+            Assert-Equal ([string]$ttPositioning.status) 'accepted-offline-design' 'invalid_lineage_tt_artifact_contract_status' 'Tianting artifact positioning contract must remain offline-only.'
+            Assert-Equal ([string]$ttPositioning.tier) 'high_endgame' 'invalid_lineage_tt_artifact_tier' 'Tianting artifact stage must be high endgame tier.'
+            foreach ($propertyName in @('actual_logical_artifact_keys', 'source_profile_mapping', 'stats', 'recipes', 'consumption_rules')) {
+                Assert-Null $ttPositioning.$propertyName 'invalid_lineage_tt_artifact_deferred' "Tianting positioning cannot allocate '$propertyName'."
+            }
+            $ttCompleteDesign = $ttStage.artifact_complete_design_contract
+            Assert-Equal ([string]$ttCompleteDesign.contract_id) 'TT_SPEC_GRADUATION_ARTIFACT_COMPLETE_DESIGN_V1' 'invalid_lineage_tt_artifact_complete_design_id' 'Tianting complete-design contract identity is invalid.'
+            Assert-Equal ([string]$ttCompleteDesign.path) $tiantingArtifactCompleteDesignRelativePath 'invalid_lineage_tt_artifact_complete_design_path' 'Tianting complete-design path is invalid.'
+            Assert-Equal ([string]$ttCompleteDesign.status) 'accepted-offline-design' 'invalid_lineage_tt_artifact_complete_design_status' 'Tianting complete-design contract must remain offline-only.'
+            Assert-Equal ([string]$ttCompleteDesign.display_name) $tiantingArtifactDisplayName 'invalid_lineage_tt_artifact_complete_design_name' 'Tianting complete-design display name is invalid.'
+            foreach ($propertyName in @('actual_logical_artifact_key', 'actual_material_keys', 'actual_recipe', 'actual_receipts')) {
+                Assert-Null $ttCompleteDesign.$propertyName 'invalid_lineage_tt_artifact_complete_design_deferred' "Tianting complete-design reference cannot allocate '$propertyName'."
+            }
+        }
+        Assert-Equal ([string]$threeChapterArtifactDetail.contract_id) 'THREE_CHAPTER_ARTIFACT_DETAIL_AND_MATERIAL_SOURCE_V1' 'invalid_three_chapter_artifact_detail_id' 'The three-chapter artifact detail contract ID is invalid.'
+        Assert-Equal ([int]$threeChapterArtifactDetail.schema_version) 1 'invalid_three_chapter_artifact_detail_schema' 'The three-chapter artifact detail schema is invalid.'
+        Assert-Equal ([string]$threeChapterArtifactDetail.artifact_kind) 'offline_three_chapter_artifact_detail_and_material_source_contract' 'invalid_three_chapter_artifact_detail_kind' 'The three-chapter artifact detail kind is invalid.'
+        Assert-Equal ([string]$threeChapterArtifactDetail.status) 'accepted-offline-design' 'invalid_three_chapter_artifact_detail_status' 'The three-chapter artifact detail contract must remain offline design.'
+        Assert-Equal ([bool]$threeChapterArtifactDetail.runtime_handoff) $false 'invalid_three_chapter_artifact_detail_runtime' 'The three-chapter artifact detail contract must not enable runtime handoff.'
+        Assert-Equal ([string]$threeChapterArtifactDetail.production_gate) 'closed' 'invalid_three_chapter_artifact_detail_production' 'The three-chapter artifact detail contract must keep production closed.'
+        Assert-Equal ([int]$threeChapterArtifactDetail.global_artifact_rules.active_artifact_slot_count) 1 'invalid_three_chapter_artifact_detail_slot_count' 'The three-chapter artifact detail contract must retain one active slot.'
+        Assert-Equal ([bool]$threeChapterArtifactDetail.global_artifact_rules.mainline_or_entry_artifact_requirement) $false 'invalid_three_chapter_artifact_detail_mainline_gate' 'The three-chapter artifact detail contract cannot create artifact gates.'
+        $threeChapterArtifactBoundary = $threeChapterArtifactDetail.non_production_boundary
+        foreach ($propertyName in @('actual_item_assets', 'new_logical_artifact_keys', 'runtime_item_keys', 'ability_assets', 'combat_stat_values', 'cooldowns', 'durations', 'ranges', 'target_counts', 'new_material_keys', 'material_quantities', 'recipes', 'consumption_rules', 'new_source_profiles', 'new_drop_rates', 'new_pity_rules', 'qualification_snapshots', 'receipt_schemas', 'y3_object_allocation')) {
+            Assert-Null $threeChapterArtifactBoundary.$propertyName 'invalid_three_chapter_artifact_detail_nonproduction_value' "The three-chapter artifact detail contract cannot allocate '$propertyName'."
+        }
+        Assert-Equal ([bool]$threeChapterArtifactBoundary.economy_execution) $false 'invalid_three_chapter_artifact_detail_economy_execution' 'The three-chapter artifact detail contract cannot execute economy changes.'
+        $threeChapterArtifactChapters = @($threeChapterArtifactDetail.chapters)
+        Assert-StringSetEqual -Actual @($threeChapterArtifactChapters | ForEach-Object { [string]$_.chapter_id }) -Expected @('HG', 'DF', 'TT') -Code 'invalid_three_chapter_artifact_detail_chapters' -Message 'The three-chapter artifact detail contract must cover exactly HG, DF, and TT.'
+        $threeChapterArtifactCount = @($threeChapterArtifactChapters | ForEach-Object { @($_.artifacts) }).Count
+        Assert-Equal ([int]$threeChapterArtifactCount) 5 'invalid_three_chapter_artifact_detail_artifact_count' 'The three-chapter artifact detail contract must retain exactly five artifact specs.'
         foreach ($deferredStage in @($dfStage, $ttStage)) {
             if ($null -ne $deferredStage) {
                 Assert-Null $deferredStage.logical_equipment_keys 'invalid_lineage_deferred_equipment' "Deferred stage '$($deferredStage.stage_id)' cannot allocate equipment keys."
@@ -573,6 +690,254 @@ if ($script:Failures.Count -eq 0) {
                 Assert-Null $deferredStage.stats 'invalid_lineage_deferred_stats' "Deferred stage '$($deferredStage.stage_id)' cannot allocate stats."
             }
         }
+
+        Assert-Equal ([string]$difuArtifact.contract_id) 'DF_SPEC_MIDGAME_ARTIFACT_POSITIONING_REPLACEMENT_V1' 'invalid_df_artifact_contract_id' 'Difu artifact contract ID is invalid.'
+        Assert-Equal ([int]$difuArtifact.schema_version) 1 'invalid_df_artifact_schema_version' 'Difu artifact contract schema version is invalid.'
+        Assert-Equal ([string]$difuArtifact.artifact_kind) 'offline_difu_midgame_artifact_positioning_and_replacement_contract' 'invalid_df_artifact_kind' 'Difu artifact contract kind is invalid.'
+        Assert-Equal ([string]$difuArtifact.status) 'accepted-offline-design' 'invalid_df_artifact_status' 'Difu artifact contract must remain offline design.'
+        Assert-Equal ([bool]$difuArtifact.runtime_handoff) $false 'invalid_df_artifact_runtime_gate' 'Difu artifact contract must not enable runtime handoff.'
+        Assert-Equal ([string]$difuArtifact.production_gate) 'closed' 'invalid_df_artifact_production_gate' 'Difu artifact contract must keep production closed.'
+
+        $difuArtifactBoundary = $difuArtifact.non_production_boundary
+        Assert-Equal ([bool]$difuArtifactBoundary.design_only) $true 'invalid_df_artifact_design_only' 'Difu artifact contract must remain design-only.'
+        foreach ($propertyName in @('actual_artifact_keys', 'actual_asset_ids', 'source_profile_mapping', 'reward_values', 'drop_probability', 'pity_policy', 'recipes', 'consumption_rules', 'stats', 'active_abilities', 'runtime_keys', 'y3_object_allocation')) {
+            Assert-Null $difuArtifactBoundary.$propertyName 'invalid_df_artifact_nonproduction_value' "Difu artifact contract cannot allocate '$propertyName'."
+        }
+        Assert-Equal ([bool]$difuArtifactBoundary.actual_receipt_creation) $false 'invalid_df_artifact_receipt_execution' 'Difu artifact contract must not create receipts.'
+        Assert-Equal ([bool]$difuArtifactBoundary.actual_economic_execution) $false 'invalid_df_artifact_economy_execution' 'Difu artifact contract must not execute economy changes.'
+
+        Assert-Equal ([string]$difuArtifact.chapter_position.chapter_id) 'DF' 'invalid_df_artifact_chapter' 'Difu artifact contract must belong to DF.'
+        Assert-Equal ([string]$difuArtifact.chapter_position.level_band) 'Lv21-Lv40' 'invalid_df_artifact_level_band' 'Difu artifact level band is invalid.'
+        Assert-Equal ([string]$difuArtifact.chapter_position.tier) 'medium' 'invalid_df_artifact_position_tier' 'Difu artifact tier is invalid.'
+        Assert-Equal ([string]$difuArtifact.chapter_position.combat_grammar) $dfArtifactCombatGrammar 'invalid_df_artifact_combat_grammar' 'Difu artifact must use the chapter combat grammar.'
+
+        $slotContract = $difuArtifact.slot_and_loadout_contract
+        Assert-Equal ([string]$slotContract.inherits_artifact_slot_version) 'v1' 'invalid_df_artifact_slot_version' 'Difu artifact must inherit v1 slot contract.'
+        Assert-Equal ([int]$slotContract.active_artifact_slot_count) 1 'invalid_df_artifact_slot_count' 'Difu artifact must retain one active slot.'
+        Assert-Equal ([bool]$slotContract.adds_another_active_slot) $false 'invalid_df_artifact_second_slot' 'Difu artifact cannot add a second active slot.'
+        Assert-Equal ([bool]$slotContract.inactive_artifact_default_combat_effect) $false 'invalid_df_artifact_inactive_effect' 'Inactive artifacts cannot have default combat effects.'
+        Assert-Equal ([bool]$slotContract.artifact_active_ability_occupies_five_active_skill_slots) $false 'invalid_df_artifact_skill_slot' 'Artifact active must not occupy a five-active skill slot.'
+        Assert-True ([string]$slotContract.switching_rule -match $dfArtifactAtomicSwitchToken) 'invalid_df_artifact_switch_atomicity' 'Difu artifact switching must retain atomic loadout behavior.'
+        Assert-True ([string]$slotContract.switching_rule -match $dfArtifactChallengeLockToken) 'invalid_df_artifact_switch_lock' 'Difu artifact switching must retain challenge lock behavior.'
+
+        $axisContract = $difuArtifact.functional_axis_contract
+        Assert-Equal ([int]$axisContract.axis_count) 3 'invalid_df_artifact_axis_count' 'Difu artifact must retain exactly three functional axes.'
+        Assert-Equal ([int]$axisContract.artifact_primary_axis_count) 2 'invalid_df_artifact_primary_axis_count' 'Difu must retain exactly two artifact primary axes.'
+        Assert-Equal ([string]$axisContract.chapter_shared_resolution_axis_id) 'DF_SPEC_ARTIFACT_AXIS_HUIZHENG' 'invalid_df_artifact_shared_resolution_id' 'Difu shared resolution axis is invalid.'
+        Assert-Null $axisContract.actual_logical_artifact_keys 'invalid_df_artifact_axis_asset_keys' 'Functional axes cannot allocate artifact keys.'
+        $axisRows = @($axisContract.axes)
+        Assert-StringSetEqual -Actual @($axisRows | ForEach-Object { [string]$_.spec_axis_id }) -Expected @('DF_SPEC_ARTIFACT_AXIS_ZHENHUN', 'DF_SPEC_ARTIFACT_AXIS_KANMING', 'DF_SPEC_ARTIFACT_AXIS_HUIZHENG') -Code 'invalid_df_artifact_axis_set' -Message 'Difu artifact functional axes are invalid.'
+        foreach ($axis in $axisRows) {
+            Assert-Null $axis.stats 'invalid_df_artifact_axis_stats' "Axis '$($axis.spec_axis_id)' cannot allocate stats."
+            Assert-Null $axis.ability_detail 'invalid_df_artifact_axis_ability' "Axis '$($axis.spec_axis_id)' cannot allocate ability detail."
+        }
+        Assert-True ([string]$axisContract.primary_axis_exclusivity -match $dfArtifactPrimaryAxisToken) 'invalid_df_artifact_axis_exclusivity' 'A concrete Difu artifact must retain one primary functional axis.'
+        $zhenhunAxis = Get-SingleByProperty -Rows $axisRows -Property 'spec_axis_id' -Value 'DF_SPEC_ARTIFACT_AXIS_ZHENHUN' -Code 'invalid_df_artifact_zhenhun_axis'
+        $kanmingAxis = Get-SingleByProperty -Rows $axisRows -Property 'spec_axis_id' -Value 'DF_SPEC_ARTIFACT_AXIS_KANMING' -Code 'invalid_df_artifact_kanming_axis'
+        $huizhengAxis = Get-SingleByProperty -Rows $axisRows -Property 'spec_axis_id' -Value 'DF_SPEC_ARTIFACT_AXIS_HUIZHENG' -Code 'invalid_df_artifact_huizheng_axis'
+        if ($null -ne $zhenhunAxis) { Assert-Equal ([string]$zhenhunAxis.classification) 'artifact_primary_axis' 'invalid_df_artifact_zhenhun_classification' 'Zhenhun must remain an artifact primary axis.' }
+        if ($null -ne $kanmingAxis) { Assert-Equal ([string]$kanmingAxis.classification) 'artifact_primary_axis' 'invalid_df_artifact_kanming_classification' 'Kanming must remain an artifact primary axis.' }
+        if ($null -ne $huizhengAxis) { Assert-Equal ([string]$huizhengAxis.classification) 'chapter_shared_correct_resolution' 'invalid_df_artifact_huizheng_classification' 'Huizheng must remain a shared chapter resolution.' }
+
+        $detailContractRef = $difuArtifact.two_artifact_detailed_design_contract
+        Assert-Equal ([string]$detailContractRef.contract_id) 'DF_SPEC_TWO_MIDGAME_ARTIFACT_DETAIL_V1' 'invalid_df_artifact_detail_contract_id' 'Difu artifact detail contract ID is invalid.'
+        Assert-Equal ([string]$detailContractRef.path) "two-artifact-detail/$difuArtifactDetailFileName" 'invalid_df_artifact_detail_contract_path' 'Difu artifact detail contract path is invalid.'
+        Assert-Equal ([string]$detailContractRef.status) 'accepted-offline-design' 'invalid_df_artifact_detail_contract_status' 'Difu artifact detail contract must remain offline design.'
+        Assert-Equal ([int]$detailContractRef.artifact_spec_count) 2 'invalid_df_artifact_detail_contract_count' 'Difu artifact detail contract must retain two specs.'
+        Assert-StringSetEqual -Actual @($detailContractRef.artifact_spec_ids | ForEach-Object { [string]$_ }) -Expected @('DF_SPEC_ARTIFACT_GUIDING_LANTERN', 'DF_SPEC_ARTIFACT_KARMIC_MIRROR') -Code 'invalid_df_artifact_detail_contract_ids' -Message 'Difu artifact detail contract IDs are invalid.'
+        foreach ($propertyName in @('actual_logical_artifact_keys', 'source_profile_mapping', 'stats', 'recipes', 'consumption_rules')) {
+            Assert-Null $detailContractRef.$propertyName 'invalid_df_artifact_detail_contract_deferred' "Difu artifact detail contract cannot allocate '$propertyName'."
+        }
+
+        $accessContract = $difuArtifact.standard_access_contract
+        Assert-True ([string]$accessContract.player_facing_rule -match $dfArtifactNoLegacyToken) 'invalid_df_artifact_legacy_free_access' 'Difu standard access must cover characters without Huaguoshan artifacts.'
+        Assert-Null $accessContract.specific_source_node 'invalid_df_artifact_source_node' 'Difu artifact contract cannot allocate a source node.'
+        Assert-StringSetEqual -Actual @($accessContract.semantic_anchor_nodes | ForEach-Object { [string]$_ }) -Expected @('DF_NODE_GUIDING_COURT', 'DF_NODE_JUDGE_HALL') -Code 'invalid_df_artifact_semantic_anchor_nodes' -Message 'Difu artifact semantic anchors are invalid.'
+        Assert-Null $accessContract.source_profile_mapping 'invalid_df_artifact_source_profile' 'Difu artifact contract cannot allocate a source profile.'
+        Assert-Equal ([bool]$accessContract.automatic_grant_from_df_progress_key) $false 'invalid_df_artifact_progress_auto_grant' 'Difu artifact cannot auto-grant from the protected progress key.'
+        Assert-Equal ([bool]$accessContract.normal_mainline_equip_requirement) $false 'invalid_df_artifact_equip_gate' 'Difu normal mainline cannot require artifact equip.'
+        Assert-Equal ([bool]$accessContract.normal_mainline_ownership_requirement) $false 'invalid_df_artifact_ownership_gate' 'Difu normal mainline cannot require artifact ownership.'
+        Assert-StringSetEqual -Actual @($accessContract.forbidden_as_sole_or_required_source | ForEach-Object { [string]$_ }) -Expected $expectedDfArtifactForbiddenSources -Code 'invalid_df_artifact_forbidden_sources' -Message 'Difu artifact must reject optional, team, rare, repeat, and tower sources as a sole or required path.'
+
+        Assert-Equal ([string]$difuArtifactDetail.contract_id) 'DF_SPEC_TWO_MIDGAME_ARTIFACT_DETAIL_V1' 'invalid_df_artifact_detail_id' 'Difu detailed artifact contract ID is invalid.'
+        Assert-Equal ([int]$difuArtifactDetail.schema_version) 1 'invalid_df_artifact_detail_schema' 'Difu detailed artifact contract schema is invalid.'
+        Assert-Equal ([string]$difuArtifactDetail.artifact_kind) 'offline_difu_two_midgame_artifact_detailed_design_contract' 'invalid_df_artifact_detail_kind' 'Difu detailed artifact kind is invalid.'
+        Assert-Equal ([string]$difuArtifactDetail.status) 'accepted-offline-design' 'invalid_df_artifact_detail_status' 'Difu detailed artifact contract must remain offline design.'
+        Assert-Equal ([bool]$difuArtifactDetail.runtime_handoff) $false 'invalid_df_artifact_detail_runtime' 'Difu detailed artifact contract must not enable runtime handoff.'
+        Assert-Equal ([string]$difuArtifactDetail.production_gate) 'closed' 'invalid_df_artifact_detail_production_gate' 'Difu detailed artifact production gate must remain closed.'
+
+        $detailBoundary = $difuArtifactDetail.non_production_boundary
+        Assert-Equal ([bool]$detailBoundary.design_only) $true 'invalid_df_artifact_detail_design_only' 'Difu detailed artifact contract must remain design only.'
+        foreach ($propertyName in @('actual_artifact_keys', 'runtime_item_identifiers', 'asset_ids', 'stat_values', 'ability_values', 'source_profile_mapping', 'reward_slots', 'material_keys', 'material_quantities', 'recipes', 'consumption_rules', 'drop_probability', 'pity_policy', 'qualification_snapshot', 'receipt_schema', 'y3_object_allocation')) {
+            Assert-Null $detailBoundary.$propertyName 'invalid_df_artifact_detail_nonproduction_value' "Difu detailed artifact contract cannot allocate '$propertyName'."
+        }
+        Assert-Equal ([bool]$detailBoundary.actual_receipt_creation) $false 'invalid_df_artifact_detail_receipt_execution' 'Difu detailed artifact contract cannot create receipts.'
+        Assert-Equal ([bool]$detailBoundary.actual_economic_execution) $false 'invalid_df_artifact_detail_economy_execution' 'Difu detailed artifact contract cannot execute economy changes.'
+
+        $detailSources = @($difuArtifactDetail.source_contracts)
+        Assert-Equal $detailSources.Count 4 'invalid_df_artifact_detail_source_count' 'Difu detailed artifact contract must retain four source contracts.'
+        $detailDirectory = Split-Path -Parent $difuArtifactDetailPath
+        foreach ($source in $detailSources) {
+            $sourceText = [string]$source.path
+            Assert-True (-not [IO.Path]::IsPathRooted($sourceText)) 'invalid_df_artifact_detail_source_absolute' 'Difu detailed artifact sources must remain relative.'
+            $resolvedSource = [IO.Path]::GetFullPath((Join-Path $detailDirectory $sourceText))
+            Assert-True (Test-Path -LiteralPath $resolvedSource -PathType Leaf) 'invalid_df_artifact_detail_source_missing' "Difu detailed artifact source is missing: $sourceText"
+        }
+
+        $detailIdentity = $difuArtifactDetail.identity_policy
+        Assert-Equal ([int]$detailIdentity.artifact_spec_count) 2 'invalid_df_artifact_detail_identity_count' 'Difu detailed artifact identity count must be two.'
+        Assert-Null $detailIdentity.actual_logical_artifact_keys 'invalid_df_artifact_detail_identity_keys' 'Difu detailed artifact identities cannot allocate logical keys.'
+
+        $sharedResolution = $difuArtifactDetail.chapter_shared_resolution
+        Assert-Equal ([string]$sharedResolution.spec_axis_id) 'DF_SPEC_ARTIFACT_AXIS_HUIZHENG' 'invalid_df_artifact_detail_shared_axis' 'Difu detailed shared resolution axis is invalid.'
+        Assert-Equal ([string]$sharedResolution.classification) 'chapter_shared_correct_resolution' 'invalid_df_artifact_detail_shared_classification' 'Difu detailed shared resolution classification is invalid.'
+        Assert-Equal ([bool]$sharedResolution.owned_by_an_artifact) $false 'invalid_df_artifact_detail_shared_ownership' 'Difu shared resolution must not be owned by an artifact.'
+
+        $detailArtifacts = @($difuArtifactDetail.artifacts)
+        Assert-Equal $detailArtifacts.Count 2 'invalid_df_artifact_detail_artifact_count' 'Difu detailed contract must contain exactly two artifacts.'
+        Assert-StringSetEqual -Actual @($detailArtifacts | ForEach-Object { [string]$_.artifact_spec_id }) -Expected @('DF_SPEC_ARTIFACT_GUIDING_LANTERN', 'DF_SPEC_ARTIFACT_KARMIC_MIRROR') -Code 'invalid_df_artifact_detail_artifact_ids' -Message 'Difu detailed artifact IDs are invalid.'
+
+        $guidingLantern = Get-SingleByProperty -Rows $detailArtifacts -Property 'artifact_spec_id' -Value 'DF_SPEC_ARTIFACT_GUIDING_LANTERN' -Code 'invalid_df_artifact_detail_lantern'
+        $karmicMirror = Get-SingleByProperty -Rows $detailArtifacts -Property 'artifact_spec_id' -Value 'DF_SPEC_ARTIFACT_KARMIC_MIRROR' -Code 'invalid_df_artifact_detail_mirror'
+        $expectedDetailRows = @(
+            [pscustomobject]@{ row = $guidingLantern; id = 'DF_SPEC_ARTIFACT_GUIDING_LANTERN'; name = $dfArtifactDetailLanternName; axis = 'DF_SPEC_ARTIFACT_AXIS_ZHENHUN'; node = 'DF_NODE_GUIDING_COURT'; stages = @('DF_LANTERN_STAGE_RECOGNIZE', 'DF_LANTERN_STAGE_STABILIZE', 'DF_LANTERN_STAGE_HANDOFF'); affinity = @('DF_NODE_WUCHANG_ALLEY', 'DF_NODE_GHOST_GATE', 'DF_NODE_GUIDING_COURT', 'DF_NODE_YANLUO_HALL', 'DF_NODE_ZHUANLUN_HALL') },
+            [pscustomobject]@{ row = $karmicMirror; id = 'DF_SPEC_ARTIFACT_KARMIC_MIRROR'; name = $dfArtifactDetailMirrorName; axis = 'DF_SPEC_ARTIFACT_AXIS_KANMING'; node = 'DF_NODE_JUDGE_HALL'; stages = @('DF_MIRROR_STAGE_TRACE', 'DF_MIRROR_STAGE_DISCERN', 'DF_MIRROR_STAGE_REVIEW'); affinity = @('DF_NODE_JUDGE_HALL', 'DF_SIDE_BAIGU_SECRET_REALM', 'DF_NODE_YANLUO_HALL', 'DF_NODE_ZHUANLUN_HALL') }
+        )
+        foreach ($expectedDetail in $expectedDetailRows) {
+            $artifact = $expectedDetail.row
+            if ($null -eq $artifact) { continue }
+            Assert-Equal ([string]$artifact.artifact_spec_id) $expectedDetail.id 'invalid_df_artifact_detail_identity' 'Difu detailed artifact identity is invalid.'
+            Assert-Equal ([string]$artifact.display_name) $expectedDetail.name 'invalid_df_artifact_detail_name' 'Difu detailed artifact display name is invalid.'
+            Assert-Equal ([string]$artifact.display_name_status) 'accepted-by-user-directed-detailing' 'invalid_df_artifact_detail_name_status' 'Difu detailed artifact display name status is invalid.'
+            foreach ($propertyName in @('actual_logical_artifact_key', 'runtime_item_identifier')) {
+                Assert-Null $artifact.$propertyName 'invalid_df_artifact_detail_asset_identifier' "Difu detailed artifact cannot allocate '$propertyName'."
+            }
+            Assert-Equal ([string]$artifact.tier) 'medium' 'invalid_df_artifact_detail_tier' 'Difu detailed artifact tier is invalid.'
+            Assert-Equal ([string]$artifact.primary_axis_id) $expectedDetail.axis 'invalid_df_artifact_detail_primary_axis' 'Difu detailed artifact primary axis is invalid.'
+
+            $anchor = $artifact.source_semantic_anchor
+            Assert-Equal ([string]$anchor.content_node_id) $expectedDetail.node 'invalid_df_artifact_detail_anchor_node' 'Difu detailed artifact semantic anchor is invalid.'
+            Assert-Equal ([string]$anchor.anchor_kind) 'regular_mainline_semantic_anchor' 'invalid_df_artifact_detail_anchor_kind' 'Difu detailed artifact anchor must remain semantic and on the regular route.'
+            foreach ($propertyName in @('actual_source_event', 'source_profile_mapping', 'qualification_rule', 'reward_slot', 'receipt_schema')) {
+                Assert-Null $anchor.$propertyName 'invalid_df_artifact_detail_anchor_execution' "Difu detailed artifact semantic anchor cannot allocate '$propertyName'."
+            }
+
+            $card = $artifact.gameplay_card
+            Assert-Null $card.actual_ability_key 'invalid_df_artifact_detail_ability_key' 'Difu detailed artifact cannot allocate an ability key.'
+            foreach ($propertyName in @('damage', 'cooldown', 'duration', 'range', 'target_count', 'status_effect_values')) {
+                Assert-Null $card.$propertyName 'invalid_df_artifact_detail_ability_value' "Difu detailed artifact cannot allocate '$propertyName'."
+            }
+            Assert-True (-not [string]::IsNullOrWhiteSpace([string]$card.player_precondition)) 'invalid_df_artifact_detail_precondition' 'Difu detailed artifact must require a player verification precondition.'
+            Assert-True (@($card.forbidden_interpretations).Count -ge 3) 'invalid_df_artifact_detail_forbidden_interpretations' 'Difu detailed artifact must retain explicit anti-automation prohibitions.'
+
+            $growth = @($artifact.semantic_growth_route)
+            Assert-StringSetEqual -Actual @($growth | ForEach-Object { [string]$_.stage_id }) -Expected @($expectedDetail.stages) -Code 'invalid_df_artifact_detail_growth_stages' -Message 'Difu detailed artifact semantic growth stages are invalid.'
+            foreach ($theme in @($artifact.material_themes)) {
+                foreach ($propertyName in @('actual_material_key', 'quantity', 'drop_source', 'consumption')) {
+                    Assert-Null $theme.$propertyName 'invalid_df_artifact_detail_material_value' "Difu detailed artifact material theme cannot allocate '$propertyName'."
+                }
+            }
+            $affinityIds = @($artifact.encounter_affinity | ForEach-Object { [string]$_.content_node_id })
+            Assert-StringSetEqual -Actual $affinityIds -Expected @($expectedDetail.affinity) -Code 'invalid_df_artifact_detail_affinity' -Message 'Difu detailed artifact encounter affinities are invalid.'
+
+            $upgradeBoundary = $artifact.lineage_and_upgrade_boundary
+            foreach ($propertyName in @('current_upgrade_recipe', 'current_upgrade_cost', 'current_upgrade_receipt', 'current_migration_rule')) {
+                Assert-Null $upgradeBoundary.$propertyName 'invalid_df_artifact_detail_upgrade_value' "Difu detailed artifact cannot allocate '$propertyName'."
+            }
+        }
+
+        $detailGuards = $difuArtifactDetail.cross_chapter_and_session_guards
+        Assert-Equal ([int]$detailGuards.active_artifact_slot_count) 1 'invalid_df_artifact_detail_slot_count' 'Difu detailed artifact contract must retain one active slot.'
+        foreach ($propertyName in @('inactive_artifact_default_effect', 'challenge_local_switch_allowed', 'death_disconnect_or_cleanup_local_switch_allowed', 'difu_entry_requires_artifact', 'yanluo_completion_requires_artifact', 'zhuanlun_entry_requires_artifact', 'tianting_entry_requires_artifact', 'tianting_content_requires_artifact', 'reads_or_writes_protected_progress_key')) {
+            Assert-Equal ([bool]$detailGuards.$propertyName) $false 'invalid_df_artifact_detail_guard' "Difu detailed artifact guard '$propertyName' must remain false."
+        }
+        Assert-Equal ([string]$detailGuards.protected_progress_key) 'DF_PROGRESS_YANLUO_HALL_CLEARED' 'invalid_df_artifact_detail_progress_key' 'Difu detailed artifact progress key guard is invalid.'
+
+        Assert-StringSetEqual -Actual @($difuArtifactDetail.acceptance_matrix | ForEach-Object { [string]$_.acceptance_id }) -Expected @('DF-ART-DETAIL-001', 'DF-ART-DETAIL-002', 'DF-ART-DETAIL-003', 'DF-ART-DETAIL-004', 'DF-ART-DETAIL-005', 'DF-ART-DETAIL-006', 'DF-ART-DETAIL-007') -Code 'invalid_df_artifact_detail_acceptance_set' -Message 'Difu detailed artifact acceptance matrix is incomplete.'
+        foreach ($property in $difuArtifactDetail.deferred.PSObject.Properties) {
+            Assert-Null $property.Value 'invalid_df_artifact_detail_deferred_value' "Difu detailed artifact deferred field '$($property.Name)' must remain null."
+        }
+
+        $replacementContract = $difuArtifact.legacy_and_replacement_contract
+        Assert-StringSetEqual -Actual @($replacementContract.supported_legacy_entry_states | ForEach-Object { [string]$_ }) -Expected @('no_huaguoshan_artifact', 'ART_HG_TIDE_SEAL_only', 'ART_HG_FLAME_CORE_only', 'both_huaguoshan_artifacts') -Code 'invalid_df_artifact_legacy_state_set' -Message 'Difu artifact must cover all Huaguoshan ownership states.'
+        Assert-StringSetEqual -Actual @($replacementContract.relationship_modes | ForEach-Object { [string]$_.mode_id }) -Expected @('DF_ARTIFACT_RETAIN_LEGACY', 'DF_ARTIFACT_SELECT_MIDGAME', 'DF_ARTIFACT_FUTURE_LINEAGE_MIGRATION') -Code 'invalid_df_artifact_replacement_mode_set' -Message 'Difu artifact replacement modes are invalid.'
+        Assert-Null $replacementContract.current_migration_recipe 'invalid_df_artifact_current_recipe' 'Difu artifact contract cannot allocate a migration recipe.'
+        Assert-Null $replacementContract.current_migration_cost 'invalid_df_artifact_current_cost' 'Difu artifact contract cannot allocate a migration cost.'
+        Assert-Null $replacementContract.current_migration_receipt 'invalid_df_artifact_current_receipt' 'Difu artifact contract cannot allocate a migration receipt.'
+        Assert-True (@($replacementContract.forbidden_replacement_behaviors | ForEach-Object { [string]$_ }) -contains $dfArtifactSilentLegacyDestruction) 'invalid_df_artifact_legacy_destruction' 'Difu artifact contract must forbid silent legacy destruction.'
+
+        $crossChapter = $difuArtifact.cross_chapter_protection
+        foreach ($propertyName in @('difu_entry_requires_artifact', 'yanluo_regular_completion_requires_artifact', 'zhuanlun_team_entry_requires_artifact', 'tianting_entry_requires_artifact', 'tianting_normal_or_nightmare_instance_requires_artifact', 'tianting_graduation_recipe_requires_specific_df_artifact', 'this_contract_reads_or_writes_protected_difu_progress_key')) {
+            Assert-Equal ([bool]$crossChapter.$propertyName) $false 'invalid_df_artifact_cross_chapter_gate' "Difu artifact contract cannot enable '$propertyName'."
+        }
+        Assert-Equal ([string]$crossChapter.protected_difu_progress_key) 'DF_PROGRESS_YANLUO_HALL_CLEARED' 'invalid_df_artifact_protected_key' 'Difu artifact contract must protect the Yanluo progress key.'
+
+        $artifactEconomy = $difuArtifact.economy_and_receipt_boundary
+        Assert-Equal ([string]$artifactEconomy.owner_scope_when_future_economy_is_adopted) 'character' 'invalid_df_artifact_owner_scope' 'Future Difu artifact ownership must remain character-scoped.'
+        foreach ($propertyName in @('current_resource_table_version', 'current_reward_slot', 'current_qualification_rule', 'current_pity_rule', 'current_receipt_schema')) {
+            Assert-Null $artifactEconomy.$propertyName 'invalid_df_artifact_current_economy' "Difu artifact contract cannot allocate '$propertyName'."
+        }
+        Assert-Equal ([bool]$artifactEconomy.historical_huaguoshan_receipt_recalculation) $false 'invalid_df_artifact_history_recalculation' 'Difu artifact contract cannot recalculate Huaguoshan receipts.'
+
+        Assert-StringSetEqual -Actual @($difuArtifact.acceptance_matrix | ForEach-Object { [string]$_.acceptance_id }) -Expected @('DF-ART-ACC-001', 'DF-ART-ACC-002', 'DF-ART-ACC-003', 'DF-ART-ACC-004', 'DF-ART-ACC-005', 'DF-ART-ACC-006', 'DF-ART-ACC-007', 'DF-ART-ACC-008', 'DF-ART-ACC-009', 'DF-ART-ACC-010', 'DF-ART-ACC-011', 'DF-ART-ACC-012', 'DF-ART-ACC-013', 'DF-ART-ACC-014', 'DF-ART-ACC-015', 'DF-ART-ACC-016') -Code 'invalid_df_artifact_acceptance_set' -Message 'Difu artifact acceptance matrix is incomplete.'
+        Assert-True (@($matrix.lineage_invariants | ForEach-Object { [string]$_ }) -contains 'DF standard artifact access must remain reachable without Huaguoshan optional artifacts, rare awards, optional instances, team instances, repeat clears, or tower content, while ownership and equipping remain optional.') 'invalid_lineage_df_artifact_access_invariant' 'Three-chapter lineage must retain Difu standard-access invariant.'
+        Assert-True (@($matrix.lineage_invariants | ForEach-Object { [string]$_ }) -contains 'DF two-artifact detail must contain exactly Guiding Lantern on the Zhenhun primary axis and Karmic Mirror on the Kanming primary axis; Huizheng is a shared chapter resolution rather than a third or automatic artifact effect.') 'invalid_lineage_df_artifact_detail_invariant' 'Three-chapter lineage must retain the Difu two-artifact invariant.'
+        Assert-True (@($matrix.lineage_invariants | ForEach-Object { [string]$_ }) -contains 'DF detailed semantic anchors may reference only Guiding Court and Judge Hall on the standard route; Baigu Secret Realm and Zhuanlun Hall may test horizontal play but cannot be a required base, upgrade, material, qualification, recipe, or mainline source.') 'invalid_lineage_df_artifact_anchor_invariant' 'Three-chapter lineage must retain the Difu semantic-anchor invariant.'
+        Assert-True (@($matrix.lineage_invariants | ForEach-Object { [string]$_ }) -contains 'DF and TT chapter entry, regular completion, team eligibility, and graduation design may not require a specific Huaguoshan or Difu artifact until an explicit successor contract is separately adopted.') 'invalid_lineage_df_artifact_cross_chapter_invariant' 'Three-chapter lineage must retain artifact-free chapter and graduation gates.'
+
+        Assert-Equal ([int]$tiantingArtifact.version) 1 'invalid_tt_artifact_contract_version' 'Tianting artifact contract version is invalid.'
+        Assert-Equal ([string]$tiantingArtifact.contract_id) 'TT_SPEC_ENDGAME_ARTIFACT_POSITIONING_AND_LINEAGE_V1' 'invalid_tt_artifact_contract_id' 'Tianting artifact contract ID is invalid.'
+        Assert-Equal ([string]$tiantingArtifact.artifact_kind) 'offline_tianting_endgame_artifact_positioning_and_lineage_contract' 'invalid_tt_artifact_kind' 'Tianting artifact contract kind is invalid.'
+        Assert-Equal ([string]$tiantingArtifact.package_status) 'offline-design-spec' 'invalid_tt_artifact_status' 'Tianting artifact must remain offline design.'
+        Assert-Equal ([string]$tiantingArtifact.production_gate) 'closed' 'invalid_tt_artifact_production_gate' 'Tianting artifact production gate must remain closed.'
+        Assert-Equal ([bool]$tiantingArtifact.non_production) $true 'invalid_tt_artifact_nonproduction' 'Tianting artifact contract must remain non-production.'
+
+        $ttIdentity = $tiantingArtifact.identity
+        Assert-Equal ([string]$ttIdentity.graduation_artifact_spec_id) 'TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT' 'invalid_tt_artifact_identity' 'Tianting artifact must reuse the existing graduation concept identity.'
+        Assert-Equal ([string]$ttIdentity.display_name) $tiantingArtifactDisplayName 'invalid_tt_artifact_name' 'Tianting artifact display name is invalid.'
+        Assert-Equal ([string]$ttIdentity.display_name_status) 'accepted_offline_design' 'invalid_tt_artifact_name_status' 'Tianting artifact name status is invalid.'
+        Assert-Null $ttIdentity.actual_logical_artifact_key 'invalid_tt_artifact_asset_key' 'Tianting artifact cannot allocate an asset key.'
+        Assert-Null $ttIdentity.runtime_item_key 'invalid_tt_artifact_runtime_item_key' 'Tianting artifact cannot allocate a runtime item key.'
+        Assert-Equal ([string]$ttIdentity.tier) 'high_endgame' 'invalid_tt_artifact_identity_tier' 'Tianting artifact identity tier is invalid.'
+
+        $ttSlot = $tiantingArtifact.slot_and_loadout_contract
+        Assert-Equal ([string]$ttSlot.inherits_artifact_slot_version) 'v1' 'invalid_tt_artifact_slot_version' 'Tianting artifact must inherit v1 slot contract.'
+        Assert-Equal ([int]$ttSlot.active_artifact_slot_count) 1 'invalid_tt_artifact_slot_count' 'Tianting artifact must retain one active slot.'
+        Assert-Equal ([bool]$ttSlot.inactive_artifact_default_combat_effect) $false 'invalid_tt_artifact_inactive_effect' 'Inactive Tianting artifact cannot have a default combat effect.'
+        Assert-Equal ([bool]$ttSlot.artifact_active_ability_occupies_five_active_skill_slots) $false 'invalid_tt_artifact_skill_slot' 'Tianting artifact active must not occupy a five-active skill slot.'
+
+        $ttPlay = $tiantingArtifact.core_play_semantics
+        Assert-Equal ([string]$ttPlay.semantic_ability_label) (Decode-Utf8Base64 '5LiD5puc5qCh5b6L') 'invalid_tt_artifact_semantic_label' 'Tianting artifact semantic label is invalid.'
+        foreach ($propertyName in @('actual_ability_key', 'actual_effect_values', 'cooldown', 'duration', 'damage')) {
+            Assert-Null $ttPlay.$propertyName 'invalid_tt_artifact_semantic_value' "Tianting artifact cannot allocate '$propertyName'."
+        }
+        $ttForms = @($ttPlay.build_forms)
+        Assert-StringSetEqual -Actual @($ttForms | ForEach-Object { [string]$_.form_id }) -Expected @('TT_SPEC_ARTIFACT_FORM_STABILIZE_SEQUENCE', 'TT_SPEC_ARTIFACT_FORM_DISCERN_SEQUENCE', 'TT_SPEC_ARTIFACT_FORM_OPEN_SEQUENCE') -Code 'invalid_tt_artifact_form_set' -Message 'Tianting artifact build forms are invalid.'
+        Assert-Equal $ttForms.Count 3 'invalid_tt_artifact_form_count' 'Tianting artifact must retain exactly three mutually exclusive build forms.'
+
+        $ttMaterials = $tiantingArtifact.materials_and_ownership_boundary
+        foreach ($propertyName in @('actual_material_keys', 'actual_recipe', 'actual_consumption', 'actual_drop_profiles', 'actual_pity', 'actual_receipts')) {
+            Assert-Null $ttMaterials.$propertyName 'invalid_tt_artifact_material_value' "Tianting artifact cannot allocate '$propertyName'."
+        }
+
+        $ttAuthority = $tiantingArtifact.authority_and_settlement_boundary
+        foreach ($propertyName in @('entry_or_progression_writer', 'session_authority_writer', 'cleanup_bypass', 'current_economy_v2_input')) {
+            Assert-Equal ([bool]$ttAuthority.$propertyName) $false 'invalid_tt_artifact_authority_boundary' "Tianting artifact cannot enable '$propertyName'."
+        }
+        Assert-Null $ttAuthority.current_source_profile 'invalid_tt_artifact_source_profile' 'Tianting artifact cannot allocate a source profile.'
+        Assert-Null $ttAuthority.current_reward_slot 'invalid_tt_artifact_reward_slot' 'Tianting artifact cannot allocate a reward slot.'
+
+        Assert-Equal ([string]$tiantingArtifactCompleteDesign.contract_id) 'TT_SPEC_GRADUATION_ARTIFACT_COMPLETE_DESIGN_V1' 'invalid_tt_artifact_complete_design_contract_id' 'Tianting complete-design contract ID is invalid.'
+        Assert-Equal ([string]$tiantingArtifactCompleteDesign.identity.display_name) $tiantingArtifactDisplayName 'invalid_tt_artifact_complete_design_name' 'Tianting complete-design display name is invalid.'
+        Assert-Equal ([bool]$tiantingArtifactCompleteDesign.runtime_handoff) $false 'invalid_tt_artifact_complete_design_runtime' 'Tianting complete-design cannot enable runtime handoff.'
+        Assert-Equal ([string]$tiantingArtifactCompleteDesign.production_gate) 'closed' 'invalid_tt_artifact_complete_design_production' 'Tianting complete-design must keep production closed.'
+        Assert-Equal ([int](@($tiantingArtifactCompleteDesign.form_designs).Count)) 3 'invalid_tt_artifact_complete_design_forms' 'Tianting complete-design must retain three response forms.'
+        Assert-Equal ([bool]$tiantingArtifactCompleteDesign.authority_failure_and_settlement_boundary.economy_v2_input) $false 'invalid_tt_artifact_complete_design_economy' 'Tianting complete-design cannot write economy-v2 input.'
+
+        foreach ($property in $tiantingArtifact.deferred.PSObject.Properties) {
+            Assert-Null $property.Value 'invalid_tt_artifact_deferred_value' "Tianting artifact deferred field '$($property.Name)' must remain null."
+        }
+        Assert-True (@($matrix.lineage_invariants | ForEach-Object { [string]$_ }) -contains 'TT base graduation access must retain a future ordinary or celestial-law path that is individually reachable; nightmare Four Sacred content may be optional but cannot be the unique mandatory source.') 'invalid_lineage_tt_artifact_base_path_invariant' 'Three-chapter lineage must retain the Tianting non-team base-path invariant.'
 
         $resources = @($lineage.currency_material_and_receipt_boundary.resource_family_matrix)
         Assert-StringSetEqual -Actual @($resources | ForEach-Object { [string]$_.logical_key }) -Expected @('CUR_GOLD', 'CUR_RAID_MARK', 'CUR_TOWER_TOKEN', 'MAT_STRENGTHEN_SHARD', 'MAT_ADVANCE_HG', 'MAT_ARTIFACT_DUST') -Code 'invalid_lineage_resource_keys' -Message 'Currency/material lineage keys are invalid.'
@@ -614,6 +979,9 @@ if ($script:Failures.Count -eq 0) {
         $forbiddenPaths = @()
         $forbiddenPaths += @(Get-ForbiddenPropertyPaths -Node $v3 -Path 'economy-v3' -Forbidden $forbiddenRuntimeProperties)
         $forbiddenPaths += @(Get-ForbiddenPropertyPaths -Node $lineage -Path 'three-chapter-lineage' -Forbidden $forbiddenRuntimeProperties)
+        $forbiddenPaths += @(Get-ForbiddenPropertyPaths -Node $difuArtifact -Path 'difu-midgame-artifact' -Forbidden $forbiddenRuntimeProperties)
+        $forbiddenPaths += @(Get-ForbiddenPropertyPaths -Node $difuArtifactDetail -Path 'difu-two-artifact-detail' -Forbidden $forbiddenRuntimeProperties)
+        $forbiddenPaths += @(Get-ForbiddenPropertyPaths -Node $tiantingArtifact -Path 'tianting-endgame-artifact' -Forbidden $forbiddenRuntimeProperties)
         Assert-Equal $forbiddenPaths.Count 0 'forbidden_runtime_or_execution_key' "Offline contracts contain forbidden runtime/economic execution keys: $($forbiddenPaths -join ', ')."
     }
 }

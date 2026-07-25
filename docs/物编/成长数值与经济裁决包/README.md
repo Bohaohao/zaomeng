@@ -4,7 +4,7 @@
 
 - 版本：v3.0-economy-v2-base-plus-v3-route-overlay。
 - 建立日期：2026-07-17。
-- 最近采纳/离线复审：2026-07-24。
+- 最近采纳/离线复审：2026-07-25。
 - 状态：mixed decision-draft + economy-v2 accepted base design baseline + economy-v3 future-route overlay + offline-acceptance-passed / economy-v1 superseded-historical / production-gates-closed。
 - 范围：经验、货币、材料、装备成长、掉落、保底、公共 BOSS 参与箱、通天塔奖励和结算迁移。
 - 定位：`economy-v2` 仍是当前冻结的货币、材料、花果山掉落／保底、P1、通天塔首轮奖励和持久化收据设计基线；`economy-v3` 仅作为未来花果山首通的 XP 路线修订与两段必经公共主线语义（`XP_PEACH`／`XP_CAVE`）的显式覆盖层，修复可选鹏魔王被计为必经经验及历史分类与玩家路线脱节的缺口，不能静默改写 v2、历史收据或任何其他经济规则。`economy-v1` 仅保留为不可改写的历史冻结表。装备／法宝／宠物、真实地府／天庭来源分配、塔楼层／词缀／赛季仍是待决项。所有运行时与生产门禁仍关闭。
@@ -22,6 +22,8 @@
 - [economy-v3 花果山路线覆盖层](tables/economy-v3-resource-table.json)
 - [三篇成长路线与阶段谱系合同](three-chapter-growth-lineage-contract.json)
 - [三篇成长路线离线说明](three-chapter-growth-lineage-readme.md)
+- [三篇法宝详细设计与材料来源包](三篇法宝详细设计与材料来源包/README.md)
+- [天庭毕业法宝定位与谱系包](../天庭篇主线遭遇与通天塔规格包/artifact-graduation/README.md)
 - [economy-v1 历史冻结表](tables/economy-v1-resource-table.json)
 
 本轮用户已明确采纳 `economy-v2`，并将 `economy-v1` 固化为其哈希绑定的历史前身；此次连续性复审又采纳 `economy-v3` 的**限域路线覆盖**。旧的 proposal、deferred、conflict 和白盒候选仍保留为历史校准证据，不能覆盖 v2 基线或将 `implementation/growth/` 提升为运行时。
@@ -37,6 +39,9 @@
 | [economy-v2-resource-table.json](tables/economy-v2-resource-table.json) | 当前已采纳设计表：在不改变冻结数值的前提下，补强 XP、奖励投影、资格、保底、身份和终态收据语义。 |
 | [economy-v3-resource-table.json](tables/economy-v3-resource-table.json) | 未来花果山首通的版本化路线覆盖：保留 9,485 XP／55 分钟，要求“鹏魔王或裂口发现”恰选其一，并仅将 `XP_PEACH`／`XP_CAVE` 冻结为必经公共主线语义；不重算 v2 历史收据。 |
 | [three-chapter-growth-lineage-contract.json](three-chapter-growth-lineage-contract.json) | Lv20→地府→Lv41+阎罗交接→天庭→Lv60 的非运行时路线预算，以及装备／法宝／材料阶段边界。 |
+| [三篇法宝详细设计与材料来源包](三篇法宝详细设计与材料来源包/README.md) | 五件法宝的展示身份、非数值玩法卡、推荐携带阶段、设计级材料来源点与 D1–D5 相对难度；真实物品、材料、数值、配方、掉率与收据均保持空值。 |
+| [地府中期法宝裁决包](地府中期法宝裁决包/README.md) | 地府 `medium` 中期法宝的双法宝详细设计：镇魂引灯／勘命业镜、共享回正、单槽兼容、常规可达性、旧法宝保留与未来替换审计边界；不分配资产或经济结果。 |
+| [天庭毕业法宝定位与谱系包](../天庭篇主线遭遇与通天塔规格包/artifact-graduation/README.md) | 天庭 `high_endgame` 七曜毕业法宝的单槽定位、三种互斥校律语义、单人基础路径、前序保留与材料／收据延后边界；不分配真实资产或经济结果。 |
 | [validate-three-chapter-growth-continuity.ps1](validate-three-chapter-growth-continuity.ps1) | 校验 v2 哈希、v3 路径算术/反双领/必经公共主线语义、三篇等级连续性、零塔 XP 和阶段非强制边界。 |
 | [economy-v1-resource-table.json](tables/economy-v1-resource-table.json) | 历史冻结表：由 `economy-v2` 的 `supersedes` 哈希绑定，不再作为当前跨包基线。 |
 | [experience-progression.json](tables/experience-progression.json) | Lv1-60 经验与组队规则的字段、锚点和白盒输入边界。 |
@@ -75,7 +80,9 @@
 
 6. `economy-v3` 仅对未来花果山首通路线覆写 `XP_EASTSEA`、`XP_CHAPTER_CLEAR` 并新增 `XP_HG_CRACK_DISCOVERY`：玩家在可选鹏魔王与裂口发现之间恰选一个 500 XP 路径；同时把历史表中的 `XP_PEACH`／`XP_CAVE` 限域绑定为桃林／蝙蝠窟的必经公共主线语义，不创建 source profile、单人本或运行时映射。两支均在章节清算前达到 Lv19 的 8,340 XP、清算后达到 Lv20 的 9,485 XP。它不改变 v2 货币、材料、掉落、保底、P1、塔、收据或历史记录。
 
-7. 三篇成长谱系只冻结可达路径与预算：地府由 `Lv20 +` 花果山常规收束证明入章，天庭由 `Lv41 +` 阎罗殿不透明成功证明入章；团队、稀有、隐藏副本和塔不能成为升级或入章硬门槛。它不是实际 `source_profile` 分配或结算授权。
+7. 三篇成长谱系只冻结可达路径与预算：地府由 `Lv20 +` 花果山常规收束证明入章，天庭由 `Lv41 +` 阎罗殿不透明成功证明入章；团队、稀有、隐藏副本和塔不能成为升级或入章硬门槛。地府中期法宝已将“常规可达但非强制装备”的构筑转向细化为镇魂引灯／勘命业镜两件及共享回正，仍不冻结真实取得；天庭毕业法宝只补充 `high_endgame` 单槽、校律语义、单人基础路径与前序保留原则。二者均不是实际 `source_profile` 分配或结算授权。
+
+8. [三篇法宝详细设计与材料来源包](三篇法宝详细设计与材料来源包/README.md)已将花果山两件、地府两件、天庭一件的设计级获取路线、玩法作用、推荐携带阶段、材料主题／来源点与相对难度汇成统一合同。花果山继续只引用 `economy-v2` 的既有首通／稀有／保底事实；地府与天庭的材料条目仍是来源蓝图，不是新增掉落、物品键、配方、数量、资格或收据。
 
 仍待决的是装备／法宝／宠物数值、真实地府／天庭每个来源 profile 的分配、塔楼层／词缀／兑换目录／赛季，以及实际运行时接入。天庭已有零价值的完成／会话输入交接，但它不分配 profile、slot、owner、资格、roll、保底、XP 或奖励。
 

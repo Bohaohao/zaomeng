@@ -1,0 +1,727 @@
+{
+  "contract_id": "THREE_CHAPTER_ARTIFACT_DETAIL_AND_MATERIAL_SOURCE_V1",
+  "schema_version": 1,
+  "artifact_kind": "offline_three_chapter_artifact_detail_and_material_source_contract",
+  "status": "accepted-offline-design",
+  "runtime_handoff": false,
+  "production_gate": "closed",
+  "scope": "为花果山两件、地府两件与天庭一件法宝冻结设计级的获取路径、阶段定位、玩法语义、材料主题、材料来源点和相对难度；不创建任何新的运行时资产、数值、掉落、配方、经济执行或收据。",
+  "source_contracts": [
+    {
+      "path": "../three-chapter-growth-lineage-contract.json",
+      "role": "三篇阶段、唯一活动法宝槽、前序保留与非门槛边界"
+    },
+    {
+      "path": "../tables/economy-v2-resource-table.json",
+      "role": "花果山既有潮印首通、炎核稀有与保底的唯一已采纳经济事实"
+    },
+    {
+      "path": "../../../07-花果山篇副本与掉落设计.md",
+      "role": "花果山主线、龙宫旧潮、牛魔旧战场与梦墟劫痕世界观边界"
+    },
+    {
+      "path": "../地府中期法宝裁决包/difu-midgame-artifact-positioning-and-replacement-contract.json",
+      "role": "地府单活动槽、常规可达性、受保护阎罗进度键与前序法宝保留边界"
+    },
+    {
+      "path": "../地府中期法宝裁决包/two-artifact-detail/difu-two-artifact-detailed-design-contract.json",
+      "role": "镇魂引灯、勘命业镜、共享回正与既有语义能力卡"
+    },
+    {
+      "path": "../../地府篇主线遭遇副本规格包/difu-mainline-encounter-contract.json",
+      "role": "地府常规路线、白骨秘境与转轮殿的职责边界"
+    },
+    {
+      "path": "../../天庭篇主线遭遇与通天塔规格包/artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json",
+      "role": "周天校律盘的唯一活动槽、校律形态与经济延后边界"
+    },
+    {
+      "path": "../../天庭篇主线遭遇与通天塔规格包/artifact-graduation/complete-design/tianting-graduation-artifact-complete-design-contract.json",
+      "role": "周天校律盘的五段路径、个人回应、来源证据、四象覆环、可读性与失败优先级"
+    },
+    {
+      "path": "../../天庭篇主线遭遇与通天塔规格包/tianting-content-expansion-contract.json",
+      "role": "七星残片、星君称号、四圣铸核和主线节点身份"
+    }
+  ],
+  "non_production_boundary": {
+    "actual_item_assets": null,
+    "new_logical_artifact_keys": null,
+    "runtime_item_keys": null,
+    "ability_assets": null,
+    "combat_stat_values": null,
+    "cooldowns": null,
+    "durations": null,
+    "ranges": null,
+    "target_counts": null,
+    "new_material_keys": null,
+    "material_quantities": null,
+    "recipes": null,
+    "consumption_rules": null,
+    "new_source_profiles": null,
+    "new_drop_rates": null,
+    "new_pity_rules": null,
+    "qualification_snapshots": null,
+    "receipt_schemas": null,
+    "economy_execution": false,
+    "y3_object_allocation": null
+  },
+  "global_artifact_rules": {
+    "active_artifact_slot_count": 1,
+    "inactive_artifact_default_effect": false,
+    "challenge_local_switch_allowed": false,
+    "death_disconnect_or_cleanup_switch_allowed": false,
+    "mainline_or_entry_artifact_requirement": false,
+    "later_stage_auto_consumes_earlier_artifact": false,
+    "material_blueprint_meaning": "所有材料条目都是策划级的主题、来源点与相对难度蓝图。它们不是当前掉落、物品键、背包物、配方或扣除指令。",
+    "difficulty_bands": [
+      {
+        "band_id": "D1_REGULAR_TEACHING_GUARANTEED",
+        "meaning": "常规主线教学或明确的非随机选择机会；不靠概率、团队、反复刷取或塔。"
+      },
+      {
+        "band_id": "D2_NONTEAM_MECHANISM_VERIFICATION",
+        "meaning": "非团队的机制验证：可用于可选单人探索，也可用于常规主线中要求玩家亲自判断与完成的中段验证；不依赖概率、团队、重复刷取或塔，且不能锁住基础主线。"
+      },
+      {
+        "band_id": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+        "meaning": "常规后段终局确认或单人系列收集；要求理解本章机制，不要求团队或稀有。"
+      },
+      {
+        "band_id": "D4_TEAM_RARE_OR_MASTERY",
+        "meaning": "团队稀有、完整团队机制或高压协作；只能给可选横向、展示或后续精进，不能卡常规基础法宝。"
+      },
+      {
+        "band_id": "D5_NIGHTMARE_PINNACLE_OPTIONAL",
+        "meaning": "噩梦级最高端团队挑战；只可服务至臻、展示、等价催化或非基础精进。"
+      }
+    ]
+  },
+  "chapters": [
+    {
+      "chapter_id": "HG",
+      "chapter_name": "花果山",
+      "chapter_band": "Lv1-20",
+      "worldview_rule": "龙宫与牛魔均是可重复的梦墟劫痕或化身挑战；材料主题不得被解释为反复猎取龙王、牛魔真身，亦不得把真实火焰山错误地放入花果山地理。",
+      "artifacts": [
+        {
+          "artifact_spec_id": "HG_SPEC_ARTIFACT_TIDE_SEAL_DETAIL",
+          "existing_logical_artifact_key": "ART_HG_TIDE_SEAL",
+          "display_name": "定潮玄印",
+          "display_name_status": "accepted-offline-design",
+          "tier": "early_optional",
+          "recommended_carry_band": "龙宫旧潮完成后至花果山常规收束；适合仍在学习水压、面积预警与路线判断的 Lv10-20 阶段，并可作为后续横向保留。",
+          "recommended_equip_level": null,
+          "acquisition_route": {
+            "route_spec_id": "HG_ART_ROUTE_TIDE_SEAL_FIRST_CLEAR",
+            "kind": "existing_economy_v2_first_clear_reference",
+            "source_node_id": "HG_E_DRAGON_OLD_TIDE",
+            "source_semantics": "发现龙宫、达到既有 Lv8 与本职业核心路线前置后，以可选隐藏单人本完成旧潮首通；既有 economy-v2 保证该逻辑法宝的首通结果。",
+            "relative_difficulty_band": "D2_NONTEAM_MECHANISM_VERIFICATION",
+            "base_access_nonrandom": true,
+            "mainline_required": false,
+            "existing_authoritative_source_profile_reference": "HG_DROP_DRAGON_OLD",
+            "new_source_profile": null,
+            "new_grant_event": null,
+            "qualification_snapshot": null,
+            "receipt_schema": null
+          },
+          "gameplay_card": {
+            "semantic_ability_name": "止涌定界",
+            "actual_ability_key": null,
+            "player_precondition": "玩家已亲自护守一次水压直击，或正确离开已经显现的水压核，并已读出当前潮汐或面积预警的正确侧。",
+            "player_input": "玩家选择一个已经出现且已被证明有效的潮线或面积预警边界。",
+            "correct_response": "在下一次同类预警遮蔽或叠压时，保留该正确侧的潮线提示，帮助玩家重新判断路线；走位、受击、失败与机制结算仍由玩家和遭遇规则完成。",
+            "incorrect_or_missing_precondition_feedback": "未证实的边界只显示未定或冲突提示，绝不静默换成安全侧。",
+            "double_channel_feedback": [
+              "潮线纹路、海眼边界或场地波痕",
+              "独立潮音、铃响或UI方向文字"
+            ],
+            "forbidden_interpretations": [
+              "伤害、护盾、无敌、自动格挡、自动寻路或清除地面",
+              "自动完成潮痕、海眼、潮眼或其他交互",
+              "跳过死亡、清理、会话或进度规则"
+            ],
+            "damage": null,
+            "cooldown": null,
+            "duration": null,
+            "range": null,
+            "target_count": null
+          },
+          "semantic_growth": [
+            {
+              "stage_id": "HG_TIDE_STAGE_RECOGNIZE",
+              "stage_name": "识潮",
+              "meaning": "只记录已被玩家读对的潮线与安全侧。"
+            },
+            {
+              "stage_id": "HG_TIDE_STAGE_BOUNDARY",
+              "stage_name": "定界",
+              "meaning": "同类预警重叠时仍保留已经证实的边界来源。"
+            },
+            {
+              "stage_id": "HG_TIDE_STAGE_ECHO",
+              "stage_name": "回澜",
+              "meaning": "在同一遭遇阶段变化中保留判断来源，供玩家自行重读而非代替作答。"
+            }
+          ],
+          "material_source_blueprints": [
+            {
+              "material_spec_id": "HG_SPEC_MATERIAL_TIDE_CLARIFYING_SAND",
+              "display_name": "潮痕澄砂",
+              "role": "识潮与定界的主题载体。",
+              "drop_point_node_id": "HG_E_DRAGON_OLD_TIDE",
+              "drop_point_semantics": "旧潮劫痕中玩家亲自完成潮线校正后的单人精进来源蓝图。",
+              "relative_difficulty_band": "D2_NONTEAM_MECHANISM_VERIFICATION",
+              "required_for_existing_artifact_ownership": false,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "HG_SPEC_MATERIAL_SEA_EYE_PATTERN",
+              "display_name": "海眼定纹",
+              "role": "回澜阶段的来源可读性与复盘主题。",
+              "drop_point_node_id": "HG_E_DRAGON_OLD_TIDE",
+              "drop_point_semantics": "同一旧潮会话中对海眼、水压与撤离关系做出正确处理的精进来源蓝图；不得由客户端自行声称。",
+              "relative_difficulty_band": "D2_NONTEAM_MECHANISM_VERIFICATION",
+              "required_for_existing_artifact_ownership": false,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            }
+          ],
+          "existing_economy_preservation": {
+            "profile_reference": "HG_DROP_DRAGON_OLD",
+            "first_clear_artifact_result": "ART_HG_TIDE_SEAL",
+            "repeat_duplicate_conversion_owner": "economy-v2",
+            "new_materials_do_not_reinterpret_existing_conversion": true
+          }
+        },
+        {
+          "artifact_spec_id": "HG_SPEC_ARTIFACT_FLAME_CORE_DETAIL",
+          "existing_logical_artifact_key": "ART_HG_FLAME_CORE",
+          "display_name": "熔脉劫核",
+          "display_name_status": "accepted-offline-design",
+          "tier": "early_rare_horizontal",
+          "recommended_carry_band": "花果山后段至地府前中段的团队破韧与协作节奏横向选择；没有独立装备等级，也不默认取代定潮玄印或地府法宝。",
+          "recommended_equip_level": null,
+          "acquisition_route": {
+            "route_spec_id": "HG_ART_ROUTE_FLAME_CORE_RARE",
+            "kind": "existing_economy_v2_rare_reference",
+            "source_node_id": "HG_E_OX_BATTLEFIELD",
+            "source_semantics": "牛魔旧战场的权威成员快照、合格团本完成与既有稀有资格链路所对应的可选稀有授予。",
+            "relative_difficulty_band": "D4_TEAM_RARE_OR_MASTERY",
+            "base_access_nonrandom": false,
+            "mainline_required": false,
+            "existing_authoritative_source_profile_reference": "HG_DROP_OX_RAID",
+            "existing_rate_and_pity_owner": "economy-v2: 800 basis points with guarantee on the sixth eligible attempt",
+            "new_source_profile": null,
+            "new_grant_event": null,
+            "qualification_snapshot": null,
+            "receipt_schema": null
+          },
+          "gameplay_card": {
+            "semantic_ability_name": "劫痕锻势",
+            "actual_ability_key": null,
+            "player_precondition": "玩家是当前权威团本成员，已亲自参与并读出当前人形或披甲白牛阶段中已经打开的有效破韧窗口。",
+            "player_input": "在既有破韧窗口内主动选择已被团队确认的进压或撤离方向。",
+            "correct_response": "在当前窗口内展示可读的队伍锻势线，帮助成员同步站位承诺；它不延长窗口、不造成伤害、不改变Boss状态，也不替任何成员完成操作。",
+            "incorrect_or_missing_precondition_feedback": "非成员、过期窗口或未证实方向只给出失效提示，不产生隐藏协作收益。",
+            "double_channel_feedback": [
+              "熔脉裂线、白甲相位纹或进撤路径提示",
+              "独立锻鸣、号角节拍或UI协作文字"
+            ],
+            "forbidden_interpretations": [
+              "延长破韧、制造伤害、改变Boss相位或重置牛气冲天",
+              "生成贡献、参与资格、稀有资格、保底或奖励",
+              "代替走位、复活、清理确认或成员快照"
+            ],
+            "damage": null,
+            "cooldown": null,
+            "duration": null,
+            "range": null,
+            "target_count": null
+          },
+          "semantic_growth": [
+            {
+              "stage_id": "HG_FLAME_STAGE_RECOGNIZE",
+              "stage_name": "识势",
+              "meaning": "分辨已经被团队打开的破韧窗口，而非制造它。"
+            },
+            {
+              "stage_id": "HG_FLAME_STAGE_FORGE_LINE",
+              "stage_name": "成线",
+              "meaning": "把已确认的进压或撤离方向变成当前窗口内的协作提示。"
+            },
+            {
+              "stage_id": "HG_FLAME_STAGE_RESONATE",
+              "stage_name": "裂阵",
+              "meaning": "保留当前有效成员之间的协作来源，不改变成员、Boss或奖励状态。"
+            }
+          ],
+          "material_source_blueprints": [
+            {
+              "material_spec_id": "HG_SPEC_MATERIAL_RIFT_FORGE_ASH",
+              "display_name": "熔脉炉灰",
+              "role": "识势与成线的团队劫痕主题。",
+              "drop_point_node_id": "HG_E_OX_BATTLEFIELD",
+              "drop_point_semantics": "人形至披甲白牛的完整劫痕通关中，对已打开机制窗口完成正确协作的未来来源蓝图。",
+              "relative_difficulty_band": "D4_TEAM_RARE_OR_MASTERY",
+              "required_for_existing_artifact_ownership": false,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "HG_SPEC_MATERIAL_WHITE_ARMOR_CALAMITY_MARK",
+              "display_name": "白甲劫纹",
+              "role": "裂阵阶段的高压双阶段协作主题。",
+              "drop_point_node_id": "HG_E_OX_BATTLEFIELD",
+              "drop_point_semantics": "同一团队会话完成完整人形与披甲白牛两阶段后的精进来源蓝图；不是单独击杀、第二个稀有掉落或基础拥有门槛。",
+              "relative_difficulty_band": "D4_TEAM_RARE_OR_MASTERY",
+              "required_for_existing_artifact_ownership": false,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            }
+          ],
+          "existing_economy_preservation": {
+            "profile_reference": "HG_DROP_OX_RAID",
+            "rare_artifact_result": "ART_HG_FLAME_CORE",
+            "rate_and_pity_owner": "economy-v2",
+            "new_materials_cannot_require_second_rare_artifact": true,
+            "new_materials_do_not_reinterpret_existing_conversion": true
+          }
+        }
+      ]
+    },
+    {
+      "chapter_id": "DF",
+      "chapter_name": "地府",
+      "chapter_band": "Lv21-40",
+      "worldview_rule": "地府的法宝成长来自命册证据、裁决与回正，不是改写生死的特权；白骨秘境和转轮殿只能验证横向玩法，绝不成为基础法宝、材料或主线门槛。",
+      "artifacts": [
+        {
+          "artifact_spec_id": "DF_SPEC_ARTIFACT_GUIDING_LANTERN",
+          "display_name": "镇魂引灯",
+          "display_name_status": "accepted-offline-design",
+          "tier": "medium",
+          "recommended_carry_band": "接引院魂印教学后至阎罗殿前；用于守住玩家亲自核验过的秩序关系，不是等级或入场门槛。",
+          "recommended_equip_level": null,
+          "acquisition_route": {
+            "route_spec_id": "DF_ART_ROUTE_GUIDING_LANTERN_GUARANTEED_OFFER",
+            "kind": "future_design_only_regular_mainline_guaranteed_offer",
+            "source_node_id": "DF_NODE_GUIDING_COURT",
+            "source_semantics": "玩家亲自完成魂印辨识、暂存、提交或拒绝伪造归属后，获得可选择绑定或暂不绑定镇魂引灯的非随机机会。",
+            "relative_difficulty_band": "D1_REGULAR_TEACHING_GUARANTEED",
+            "base_access_nonrandom": true,
+            "mainline_required": false,
+            "actual_source_event": null,
+            "source_profile_mapping": null,
+            "qualification_snapshot": null,
+            "receipt_schema": null
+          },
+          "gameplay_card_reference": "守序引路；只保留已验证魂印、通路或交接关系的可读性，不能自动判真、复活、回滚或绕过清理。",
+          "semantic_growth": [
+            {
+              "stage_id": "DF_LANTERN_STAGE_RECOGNIZE",
+              "stage_name": "认印",
+              "source_node_id": "DF_NODE_GUIDING_COURT",
+              "relative_difficulty_band": "D1_REGULAR_TEACHING_GUARANTEED"
+            },
+            {
+              "stage_id": "DF_LANTERN_STAGE_STABILIZE",
+              "stage_name": "定序",
+              "source_node_id": "DF_NODE_JUDGE_HALL",
+              "relative_difficulty_band": "D2_NONTEAM_MECHANISM_VERIFICATION"
+            },
+            {
+              "stage_id": "DF_LANTERN_STAGE_HANDOFF",
+              "stage_name": "明渡",
+              "source_node_id": "DF_NODE_YANLUO_HALL",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"
+            }
+          ],
+          "material_source_blueprints": [
+            {
+              "material_spec_id": "DF_MATERIAL_THEME_SOUL_SEAL_WICK",
+              "display_name": "魂印灯芯",
+              "role": "认印的主题来源。",
+              "drop_point_node_id": "DF_NODE_GUIDING_COURT",
+              "drop_point_semantics": "正确魂印归属被玩家亲证的常规主线来源蓝图。",
+              "relative_difficulty_band": "D1_REGULAR_TEACHING_GUARANTEED",
+              "required_for_base_access": false,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "DF_MATERIAL_THEME_GUIDANCE_THREAD",
+              "display_name": "引渡丝",
+              "role": "定序与明渡的主题来源。",
+              "drop_point_node_id": "DF_NODE_JUDGE_HALL",
+              "drop_point_semantics": "玩家在冲突记录与判定压力中仍保全已验证关系、使其可交接的常规中段来源蓝图。",
+              "relative_difficulty_band": "D2_NONTEAM_MECHANISM_VERIFICATION",
+              "required_for_base_access": false,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            }
+          ],
+          "terminal_confirmation": {
+            "source_node_id": "DF_NODE_YANLUO_HALL",
+            "meaning": "玩家在终局裁决中正确交接此前保全的证据，确认明渡语义；不能将阎罗殿成功、DF_PROGRESS_YANLUO_HALL_CLEARED或任何天庭交接证明解释为材料、配方或自动升级。",
+            "actual_grant_event": null,
+            "receipt_schema": null
+          }
+        },
+        {
+          "artifact_spec_id": "DF_SPEC_ARTIFACT_KARMIC_MIRROR",
+          "display_name": "勘命业镜",
+          "display_name_status": "accepted-offline-design",
+          "tier": "medium",
+          "recommended_carry_band": "判官殿命册校勘教学后至阎罗殿前；用于追溯玩家亲自核验的证据关系，不是等级或入场门槛。",
+          "recommended_equip_level": null,
+          "acquisition_route": {
+            "route_spec_id": "DF_ART_ROUTE_KARMIC_MIRROR_GUARANTEED_OFFER",
+            "kind": "future_design_only_regular_mainline_guaranteed_offer",
+            "source_node_id": "DF_NODE_JUDGE_HALL",
+            "source_semantics": "玩家先亲自校出一次被改写条目或矛盾因果后，获得可选择绑定或暂不绑定勘命业镜的非随机机会。",
+            "relative_difficulty_band": "D2_NONTEAM_MECHANISM_VERIFICATION",
+            "base_access_nonrandom": true,
+            "mainline_required": false,
+            "actual_source_event": null,
+            "source_profile_mapping": null,
+            "qualification_snapshot": null,
+            "receipt_schema": null
+          },
+          "gameplay_card_reference": "回照留痕；只保留已验证证据在伪证、改写或变形后的可追溯关系，不能自动揭晓真相、自动裁决或跳机制。",
+          "semantic_growth": [
+            {
+              "stage_id": "DF_MIRROR_STAGE_TRACE",
+              "stage_name": "留痕",
+              "source_node_id": "DF_NODE_JUDGE_HALL",
+              "relative_difficulty_band": "D2_NONTEAM_MECHANISM_VERIFICATION"
+            },
+            {
+              "stage_id": "DF_MIRROR_STAGE_DISCERN",
+              "stage_name": "反证",
+              "source_node_id": "DF_NODE_YANLUO_HALL",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"
+            },
+            {
+              "stage_id": "DF_MIRROR_STAGE_REVIEW",
+              "stage_name": "正鉴",
+              "source_node_id": "DF_NODE_YANLUO_HALL",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"
+            }
+          ],
+          "material_source_blueprints": [
+            {
+              "material_spec_id": "DF_MATERIAL_THEME_KARMIC_MIRROR_GRAIN",
+              "display_name": "业镜纹",
+              "role": "留痕与反证的主题来源。",
+              "drop_point_node_id": "DF_NODE_JUDGE_HALL",
+              "drop_point_semantics": "玩家反证被改写的同源记录后仍可追溯其因果关系的常规中段来源蓝图。",
+              "relative_difficulty_band": "D2_NONTEAM_MECHANISM_VERIFICATION",
+              "required_for_base_access": false,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "DF_MATERIAL_THEME_VERDICT_INK",
+              "display_name": "判词朱墨",
+              "role": "正鉴与终局复盘的主题来源。",
+              "drop_point_node_id": "DF_NODE_YANLUO_HALL",
+              "drop_point_semantics": "玩家凭已留痕证据完成最终反证与正确归档的常规终局来源蓝图。",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+              "required_for_base_access": false,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            }
+          ],
+          "optional_content_protection": {
+            "DF_SIDE_BAIGU_SECRET_REALM": "仅为业镜跨形态同源痕迹的单人检验场，不产出核心材料、阶段或资格。",
+            "DF_NODE_ZHUANLUN_HALL": "仅为守序交接与记忆互证的团队检验场，不产出核心材料、阶段或资格。"
+          }
+        }
+      ]
+    },
+    {
+      "chapter_id": "TT",
+      "chapter_name": "天庭",
+      "chapter_band": "Lv41-60",
+      "worldview_rule": "周天校律盘把校星学习收束为一次正确反制后的校律回应；四圣铸核只对应四象覆环的可选展示／叙事印证，不能把天庭秩序变成团队付费、噩梦门票或战斗强度来源。",
+      "artifacts": [
+        {
+          "artifact_spec_id": "TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT",
+          "display_name": "周天校律盘",
+          "documentation_name": "七曜毕业法宝",
+          "display_name_status": "accepted_offline_design",
+          "tier": "high_endgame",
+          "recommended_carry_band": "周天观台开启后的七星收集开始，天庭常规后段形成可选长期构筑收束；不设未采纳的精确装备等级。",
+          "recommended_equip_level": null,
+          "acquisition_route": {
+            "route_spec_id": "TT_ART_ROUTE_SEVEN_STAR_GRADUATION",
+            "kind": "future_design_only_single_player_base_collection_route",
+            "source_node_id": "TT_SPEC_MAINLINE_NODE_04_CELESTIAL_OBSERVATORY",
+            "source_semantics": "同一角色观台开启后，七个固定单人校星试炼提供七类残片的设计级来源点；基础毕业还须由凌霄外庭的天律校印承担非团队珍贵催化剂来源。",
+            "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+            "base_access_nonrandom": true,
+            "mainline_required": false,
+            "actual_source_event": null,
+            "source_profile_mapping": null,
+            "qualification_snapshot": null,
+            "receipt_schema": null
+          },
+          "gameplay_card_reference": "七曜校律：在玩家正确读星并完成反制后，于定序、辨序、开序三种互斥形态中表达一次构筑偏好；不能自动读题、反制、复活、回滚、跳机制或绕过清理。",
+          "semantic_growth": [
+            {
+              "stage_id": "TT_GRADUATION_STAGE_SEVEN_STAR_LEARNING",
+              "stage_name": "校星",
+              "source_node_id": "TT_SPEC_MAINLINE_NODE_04_CELESTIAL_OBSERVATORY",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"
+            },
+            {
+              "stage_id": "TT_GRADUATION_STAGE_CELESTIAL_LAW_SEAL",
+              "stage_name": "校律",
+              "source_node_id": "TT_SPEC_MAINLINE_NODE_05_LINGXIAO_OUTER_COURT",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION"
+            },
+            {
+              "stage_id": "TT_GRADUATION_STAGE_OPTIONAL_SACRED_REFINEMENT",
+              "stage_name": "圣铸",
+              "source_node_id": "TT_SPEC_MANSION_NIGHTMARE_MODE",
+              "relative_difficulty_band": "D5_NIGHTMARE_PINNACLE_OPTIONAL"
+            }
+          ],
+          "material_source_blueprints": [
+            {
+              "material_spec_id": "TT_SPEC_MATERIAL_TIANSHU_FRAGMENT",
+              "display_name": "天枢残片",
+              "role": "七曜基础收集类别之一；对应定轴学习。",
+              "drop_point_node_id": "TT_SPEC_SOLO_TIANSHU",
+              "drop_point_semantics": "天枢单人试炼中玩家完成校星、试炼与回正后的设计级残片来源点。",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+              "required_for_base_collection_concept": true,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "TT_SPEC_MATERIAL_TIANXUAN_FRAGMENT",
+              "display_name": "天璇残片",
+              "role": "七曜基础收集类别之一；对应回环学习。",
+              "drop_point_node_id": "TT_SPEC_SOLO_TIANXUAN",
+              "drop_point_semantics": "天璇单人试炼中玩家完成校星、试炼与回正后的设计级残片来源点。",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+              "required_for_base_collection_concept": true,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "TT_SPEC_MATERIAL_TIANJI_FRAGMENT",
+              "display_name": "天玑残片",
+              "role": "七曜基础收集类别之一；对应辨真学习。",
+              "drop_point_node_id": "TT_SPEC_SOLO_TIANJI",
+              "drop_point_semantics": "天玑单人试炼中玩家完成校星、试炼与回正后的设计级残片来源点。",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+              "required_for_base_collection_concept": true,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "TT_SPEC_MATERIAL_TIANQUAN_FRAGMENT",
+              "display_name": "天权残片",
+              "role": "七曜基础收集类别之一；对应裁衡学习。",
+              "drop_point_node_id": "TT_SPEC_SOLO_TIANQUAN",
+              "drop_point_semantics": "天权单人试炼中玩家完成校星、试炼与回正后的设计级残片来源点。",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+              "required_for_base_collection_concept": true,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "TT_SPEC_MATERIAL_YUHENG_FRAGMENT",
+              "display_name": "玉衡残片",
+              "role": "七曜基础收集类别之一；对应调和学习。",
+              "drop_point_node_id": "TT_SPEC_SOLO_YUHENG",
+              "drop_point_semantics": "玉衡单人试炼中玩家完成校星、试炼与回正后的设计级残片来源点。",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+              "required_for_base_collection_concept": true,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "TT_SPEC_MATERIAL_KAIYANG_FRAGMENT",
+              "display_name": "开阳残片",
+              "role": "七曜基础收集类别之一；对应开阙学习。",
+              "drop_point_node_id": "TT_SPEC_SOLO_KAIYANG",
+              "drop_point_semantics": "开阳单人试炼中玩家完成校星、试炼与回正后的设计级残片来源点。",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+              "required_for_base_collection_concept": true,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "TT_SPEC_MATERIAL_YAOGUANG_FRAGMENT",
+              "display_name": "瑶光残片",
+              "role": "七曜基础收集类别之一；对应收束学习。",
+              "drop_point_node_id": "TT_SPEC_SOLO_YAOGUANG",
+              "drop_point_semantics": "瑶光单人试炼中玩家完成校星、试炼与回正后的设计级残片来源点。",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+              "required_for_base_collection_concept": true,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "TT_SPEC_MATERIAL_CELESTIAL_LAW_SEAL",
+              "display_name": "天律校印",
+              "role": "基础毕业路径的单人完整可达珍贵催化剂主题。",
+              "drop_point_node_id": "TT_SPEC_MAINLINE_NODE_05_LINGXIAO_OUTER_COURT",
+              "drop_point_semantics": "凌霄外庭裂律观台中保住临时可用天律后的常规主线来源蓝图；它保证基础配方不被团队噩梦锁死。",
+              "relative_difficulty_band": "D3_REGULAR_LATE_CHAPTER_OR_COLLECTION",
+              "required_for_base_collection_concept": true,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            },
+            {
+              "material_spec_id": "TT_SPEC_MATERIAL_FOUR_SACRED_FORGE_CORE",
+              "display_name": "四圣铸核",
+              "role": "四象覆环的可选展示／叙事印证主题，不提供基础毕业或战斗强度。",
+              "drop_point_node_id": "TT_SPEC_MANSION_NIGHTMARE_MODE",
+              "upstream_reward_family_spec_id": "TT_SPEC_REWARD_SACRED_BEAST_CORE",
+              "drop_point_semantics": "四圣兽噩梦终局的高端团队来源蓝图；可用于未来可选精进，不能成为七曜基础毕业的唯一或必需材料。",
+              "relative_difficulty_band": "D5_NIGHTMARE_PINNACLE_OPTIONAL",
+              "required_for_base_collection_concept": false,
+              "actual_material_key": null,
+              "quantity": null,
+              "drop_rate": null,
+              "pity": null,
+              "recipe": null,
+              "consumption": null
+            }
+          ],
+          "title_and_double_spend_boundary": {
+            "user_fixed_same_star_title_count": 10,
+            "rule": "同一星残片累计十枚合成相应星君称号是用户已锁定的收藏规则；该数值不是单次掉落量。毕业法宝、星君称号和七曜集合称号之间的计数、占用、扣除、退回与重放必须由一个未来经济合同唯一裁决。",
+            "current_consumption_rule": null,
+            "current_receipt_rule": null
+          },
+          "optional_content_protection": {
+            "TT_SPEC_MANSION_NIGHTMARE_MODE": "四圣铸核只服务四象覆环的可选展示／叙事印证，绝不锁死单人基础毕业或提供战斗强度。",
+            "ordinary_mansion_mode": "普通星宿和时辰轮换可提供后续长期挑战语境，但不能自动发放残片、催化剂或法宝。"
+          }
+        }
+      ]
+    }
+  ],
+  "cross_chapter_material_and_progression_rules": [
+    "所有基础法宝的取得均与是否装备分离；玩家可以不取得、不装备或继续使用前序法宝而完成常规主线。",
+    "花果山既有 economy-v2 掉落事实只可被引用，不能被本合同改写、扩展或反推为升级配方。",
+    "地府的基础可选取得机会只落在接引院与判官殿；鬼城、无常巷、鬼门关只承担叙事或机制预习，白骨秘境与转轮殿不产生基础材料、阶段、资格或配方。",
+    "地府阎罗殿只能确认两件法宝的终局语义成长；任何未来实现都必须消费独立权威完成证明，不能读取、写入或替代 DF_PROGRESS_YANLUO_HALL_CLEARED。",
+    "天庭七类残片只以七个对应单人试炼为设计级来源点；天律校印保障单人基础路径，四圣铸核只对应四象覆环的可选展示／叙事印证。",
+    "所有材料来源点都要求未来权威会话、资格、重放、断线和清理事实；本合同不得创建这些事实，也不得把客户端、队长、旁观或旧生命周期视为合法来源。",
+    "实际材料键、数量、配方、消耗、掉率、保底、资格、背包、收据、迁移、属性和Y3对象必须继续等待独立经济、P0跨职业标定与运行时合同。"
+  ],
+  "acceptance_matrix": [
+    {
+      "acceptance_id": "ART-3C-001",
+      "rule": "范围恰好包含花果山两件、地府两件与天庭一件法宝；候选龙王二阶、牛魔号角、宠物与额外法宝不得被偷渡为已设计资产。"
+    },
+    {
+      "acceptance_id": "ART-3C-002",
+      "rule": "每件法宝拥有展示身份或既有说明身份、阶段定位、非数值玩法卡、推荐携带阶段、取得路线、相对难度与至少两个材料来源蓝图。"
+    },
+    {
+      "acceptance_id": "ART-3C-003",
+      "rule": "花果山保持定潮玄印的旧潮首通和熔脉劫核的牛魔稀有事实；本合同不改写 economy-v2 的概率、保底、转换或收据。"
+    },
+    {
+      "acceptance_id": "ART-3C-004",
+      "rule": "地府引灯与业镜均为常规主线的可选非随机机会；白骨秘境和转轮殿不得成为基础取得、材料、阶段、资格、配方或主线来源。"
+    },
+    {
+      "acceptance_id": "ART-3C-005",
+      "rule": "天庭七类残片分别映射七个单人本，天律校印映射凌霄外庭，四圣铸核只对应四象覆环的可选噩梦展示／叙事印证；团队噩梦不能锁死基础毕业或提供战斗强度。"
+    },
+    {
+      "acceptance_id": "ART-3C-006",
+      "rule": "一律保持一个活动法宝槽、挑战内不可换装、前序法宝不被自动吞并、主线/入章不要求具体法宝。"
+    },
+    {
+      "acceptance_id": "ART-3C-007",
+      "rule": "真实战斗值、技能秒数、资产键、新材料键、数量、配方、消耗、掉率、保底、资格、收据与Y3对象均保持 null/deferred；用户指定的十枚同星称号规则仅是收藏计数事实。"
+    }
+  ],
+  "deferred": {
+    "absolute_combat_values": null,
+    "recommended_numeric_equip_levels": null,
+    "actual_item_assets": null,
+    "actual_material_keys_and_quantities": null,
+    "actual_recipe_and_consumption": null,
+    "actual_drop_profiles_and_rates": null,
+    "actual_pity_and_qualification": null,
+    "actual_receipts_and_backpack_rules": null,
+    "y3_object_and_lua_implementation": null
+  }
+}

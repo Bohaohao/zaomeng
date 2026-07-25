@@ -232,10 +232,22 @@
     },
     "graduation_artifact": {
       "spec_id": "TT_SPEC_SEVEN_STAR_GRADUATION_ARTIFACT",
-      "display_name": null,
-      "name_status": "deferred_by_user",
-      "stage_role": "天庭阶段毕业法宝。",
-      "recipe_rule": "需要七种残片均已齐备，并配合珍贵材料候选；候选可来自四圣噩梦与天律线，但最终配方不默认强制绑定任一团队轨道。各材料的实际消耗量、名称、来源资格与属性均 deferred。",
+      "display_name": "周天校律盘",
+      "name_status": "accepted_offline_design",
+      "stage_role": "天庭高阶、可选、单活动槽的毕业构筑收束；它不是主线、七星、星宿、通天塔或称号门票。",
+      "positioning_contract": {
+        "contract_id": "TT_SPEC_ENDGAME_ARTIFACT_POSITIONING_AND_LINEAGE_V1",
+        "path": "artifact-graduation/tianting-endgame-artifact-positioning-and-lineage-contract.json",
+        "status": "accepted-offline-design",
+        "tier": "high_endgame",
+        "actual_logical_artifact_key": null,
+        "stats": null,
+        "ability_values": null,
+        "materials": null,
+        "recipe": null,
+        "receipts": null
+      },
+      "recipe_rule": "需要七种残片类别均已齐备，并配合天律校印的珍贵催化来源；基础毕业路径必须保留单人完整可达的常规／天律催化剂。四圣噩梦只可对应四象覆环的可选展示／叙事印证候选，不能成为基础毕业材料、唯一团队门票或战斗强度来源。称号与毕业法宝的实际消耗、计数和防双花由定位合同指定的未来经济合同裁决；各材料的实际消耗量、名称、来源资格与属性均 deferred。",
       "runtime_item_key": null
     },
     "stars": [
